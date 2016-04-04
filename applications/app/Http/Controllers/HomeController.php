@@ -145,7 +145,7 @@ class HomeController extends Controller
       $tanggalini = date('d/m/Y');
       $pegawai = pegawai::where('skpd_id', $id)->get();
       $absensi = DB::select("select a.fid, nama, tanggal_log, jam_log
-                              from (select fid, nama from preson_pegawais where skpd_id = 15) as a
+                              from (select fid, nama from preson_pegawais where skpd_id = $id) as a
                               left join ta_log b on a.fid = b.fid
                               where b.tanggal_log = '$tanggalini'");
 
