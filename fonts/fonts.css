@@ -1,0 +1,29 @@
+@font-face {
+  font-family: 'din-bold';
+  src: url('din-bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DINLight';
+  src: url('DINLight.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+    font-family: 'andadaregular';
+    src: url('andada-regular-webfont.woff2') format('woff2'),
+         url('andada-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'andadabold';
+    src: url('andada-bold-webfont.woff2') format('woff2'),
+         url('andada-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
