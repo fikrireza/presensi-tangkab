@@ -1,14 +1,16 @@
 @extends('layout.master')
 
 @section('title')
-  <title>Intervensi</title>
+  <title>Kelola Intervensi</title>
+  <link rel="stylesheet" href="{{ asset('plugins/select2/select2.min.css') }}">
 @endsection
 
 @section('breadcrumb')
-  <h1>Intervensi</h1>
+  <h1>Kelola Intervensi</h1>
   <ol class="breadcrumb">
     <li><a href=""><i class="fa fa-dashboard"></i>Dashboard</a></li>
-    <li class="active">Intervensi</li>
+    <li><a href="{{ route('intervensi.index') }}">Intervensi</a></li>
+    <li class="active">Kelola Intervensi</li>
   </ol>
 @endsection
 
@@ -33,11 +35,10 @@
 </div>
 @endif
 
-
 {{-- Modal Tambah Intervensi--}}
 <div class="modal modal-default fade" id="modaltambahIntervensi" role="dialog">
   <div class="modal-dialog" style="width:600px;">
-    <form class="form-horizontal" action="{{ route('intervensi.post') }}" method="post">
+    <form class="form-horizontal" action="{{ route('intervensi.kelola.post') }}" method="post" enctype="multipart/form-data">
       {{ csrf_field() }}
       <div class="modal-content">
         <div class="modal-header">
@@ -45,6 +46,17 @@
           <h4 class="modal-title">Tambah Intervensi</h4>
         </div>
         <div class="modal-body">
+          <div class="form-group {{ $errors->has('pegawai_id') ? 'has-error' : '' }}">
+            <label class="col-md-3 control-label">Pegawai</label>
+            <div class="col-md-9">
+              <select class="form-control select2" name="pegawai_id">
+                <option value="">-- PILIH --</option>
+                @foreach ($pegawai as $key)
+                <option value="{{ $key->id }}" {{ old('pegawai_id') == $key->id ? 'selected' : ''}}>{{ $key->nama }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
           <div class="form-group {{ $errors->has('jenis_intervensi') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Jenis Intervensi</label>
             <div class="col-sm-9">
@@ -85,6 +97,13 @@
               <input type="text" name="keterangan" class="form-control" value="{{ old('keterangan') }}" placeholder="@if($errors->has('keterangan')){{ $errors->first('keterangan')}} @endif Keterangan" required="">
             </div>
           </div>
+          <div class="form-group {{ $errors->has('berkas') ? 'has-error' : ''}}">
+            <label class="col-sm-3 control-label">Berkas</label>
+            <div class="col-sm-9">
+              <input type="file" name="berkas" class="form-control" accept=".png, .jpg, .pdf" value="{{ old('berkas') }}">
+              <span style="color:red;">Hanya .jpg, .png, .pdf</br>*Kosongkan Jika Tidak Ingin Mengganti Berkas</span>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tidak</button>
@@ -95,73 +114,12 @@
   </div>
 </div>
 
-{{-- Modal Edit Intervensi --}}
-<div class="modal modal-default fade" id="modaleditIntervensi" role="dialog">
-  <div class="modal-dialog" style="width:800px;">
-    <form class="form-horizontal" action="{{ route('intervensi.edit') }}" method="post">
-      {{ csrf_field() }}
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Edit Data Hari Libur & Cuti Bersama</h4>
-        </div>
-        <div class="modal-body">
-          <div class="form-group {{ $errors->has('jenis_intervensi_edit') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Jenis Intervensi</label>
-            <div class="col-sm-9">
-              <select class="form-control select2" name="jenis_intervensi_edit">
-                <option value="">-- PILIH --</option>
-                <option value="Ijin" id="Ijin">Ijin</option>
-                <option value="Sakit" id="Sakit">Sakit</option>
-                <option value="Cuti" id="Cuti">Cuti</option>
-                <option value="DinasLuar" id="DinasLuar">Dinas Luar</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group {{ $errors->has('tanggal_mulai_edit') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Tanggal Mulai</label>
-            <div class="col-sm-9">
-              <div class="input-group date">
-                <div class="input-group-addon">
-                  <i class="fa fa-calendar"></i>
-                </div>
-                <input class="form-control pull-right tanggal_mulai_edit" id="tanggal_mulai_edit" type="text" name="tanggal_mulai_edit"  value="{{ old('tanggal_mulai_edit') }}" placeholder="@if($errors->has('tanggal_mulai_edit')){{ $errors->first('tanggal_mulai_edit')}}@endif Tanggal Mulai">
-              </div>
-            </div>
-          </div>
-          <div class="form-group {{ $errors->has('tanggal_akhir_edit') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Tanggal Akhir</label>
-            <div class="col-sm-9">
-              <div class="input-group date">
-                <div class="input-group-addon">
-                  <i class="fa fa-calendar"></i>
-                </div>
-                <input class="form-control pull-right tanggal_akhir_edit" id="tanggal_akhir_edit" type="text" name="tanggal_akhir_edit"  value="{{ old('tanggal_akhir_edit') }}" placeholder="@if($errors->has('tanggal_akhir_edit')){{ $errors->first('tanggal_akhir_edit')}}@endif Tanggal Akhir">
-              </div>
-            </div>
-          </div>
-          <div class="form-group {{ $errors->has('keterangan_edit') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Keterangan</label>
-            <div class="col-sm-9">
-              <input type="text" name="keterangan_edit" class="form-control" id="keterangan_edit" value="{{ old('keterangan_edit') }}" placeholder="@if($errors->has('keterangan_edit')){{ $errors->first('keterangan_edit')}} @endif Keterangan" required="">
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tidak</button>
-          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-
 <div class="row">
   <div class="col-md-12">
     <div class="box box-primary box-solid">
       <div class="box-header">
-        <h3 class="box-title">Intervensi</h3>
-        <a href="{{ route('intervensi.index')}}" class="btn bg-blue pull-right">Kembali</a>
+        <h3 class="box-title">Kelola Intervensi</h3>
+        <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahIntervensi">Tambah Intervensi Pegawai</a>
       </div>
       <div class="box-body">
         <table class="table table-bordered table-striped">
@@ -215,4 +173,46 @@
     </div>
   </div>
 </div>
+@endsection
+
+@section('script')
+<script src="{{ asset('plugins/select2/select2.full.min.js')}}"></script>
+<script>
+  $(".select2").select2();
+
+  var date = new Date();
+  date.setDate(date.getDate()-3);
+  $('#tanggal_mulai').datepicker({
+    autoclose: true,
+    format: 'yyyy-mm-dd',
+    startDate: date,
+    todayHighlight: true,
+    daysOfWeekDisabled: [0,6]
+  });
+  $('#tanggal_akhir').datepicker({
+    autoclose: true,
+    format: 'yyyy-mm-dd',
+    startDate: date,
+    todayHighlight: true,
+    daysOfWeekDisabled: [0,6]
+  });
+  $('.tanggal_mulai_edit').datepicker({
+    autoclose: true,
+    format: 'yyyy-mm-dd',
+    startDate: date,
+    todayHighlight: true,
+    daysOfWeekDisabled: [0,6]
+  });
+  $('.tanggal_akhir_edit').datepicker({
+    autoclose: true,
+    format: 'yyyy-mm-dd',
+    startDate: date,
+    todayHighlight: true,
+    daysOfWeekDisabled: [0,6]
+  });
+
+  @if ($errors->has('pegawai_id') || $errors->has('jenis_intervensi') || $errors->has('tanggal_mulai') || $errors->has('tanggal_akhir'))
+  $('#modaltambahIntervensi').modal('show');
+  @endif
+</script>
 @endsection

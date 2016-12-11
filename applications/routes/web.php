@@ -53,6 +53,8 @@ Route::get('intervensi/bind/{id}', 'IntervensiController@bind');
 Route::post('intervensi/edit', 'IntervensiController@edit')->name('intervensi.edit');
 Route::get('intervensi/kelola', 'IntervensiController@kelola')->name('intervensi.kelola');
 Route::get('intervensi/kelola/{id}', 'IntervensiController@kelolaAksi')->name('intervensi.kelola.aksi');
+Route::post('intervensi/kelola', 'IntervensiController@kelolaPost')->name('intervensi.kelola.post');
+Route::get('intervensi/kelola/approve/{id}', 'IntervensiController@kelolaApprove');
 
 // Absensi
 Route::get('absensi', 'AbsensiController@index')->name('absensi.index');
