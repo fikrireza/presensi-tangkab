@@ -57,11 +57,20 @@ Route::get('intervensi/kelola/{id}', 'IntervensiController@kelolaAksi')->name('i
 // Absensi
 Route::get('absensi', 'AbsensiController@index')->name('absensi.index');
 
+// Manajemen User
+Route::get('users', 'UserController@index')->name('user.index');
+Route::post('users', 'UserController@store')->name('user.create');
+Route::get('users/delete/{id}', 'UserController@delete');
+Route::get('users/reset', 'UserController@reset')->name('user.reset');
+Route::get('users/reset/{id}', 'UserController@resetPassword');
+
+
 
 // Auth::routes();
 Route::get('/', 'Auth\LoginController@showLoginForm')->name('index');
 Route::post('login', 'Auth\LoginController@loginProcess')->name('login.proses');
-Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-Route::get('firstLogin', 'Auth\LoginController@firstLogin')->name('firstLogin');
+Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+Route::get('firstLogin', 'UserController@firstLogin')->name('firstLogin');
+Route::post('firstLogin', 'UserController@ubahPassword');
 
 Route::get('cetakTpp', 'HomeController@cetakTPP')->name('cetakTPP');

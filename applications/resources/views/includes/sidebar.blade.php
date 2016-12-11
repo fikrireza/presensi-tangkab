@@ -39,6 +39,16 @@
                 <i class="fa fa-flag"></i> <span>Manajemen Apel</span>
               </a>
             </li>
+            <li class="treeview {{ Route::currentRouteNamed('user.index') ? 'active' : ''}}">
+              <a href="{{ route('user.index') }}">
+                <i class="fa fa-users"></i> <span>Manajemen User</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li class="{{ Route::currentRouteNamed('user.index') ? 'active' : ''}}"><a href="{{ route('user.index')}}"><i class="fa fa-circle-o"></i> Tambah Akun</a></li>
+                <li class="{{ Route::currentRouteNamed('user.reset') ? 'active' : ''}}"><a href="{{ route('user.reset')}}"><i class="fa fa-circle-o"></i> Reset Password</a></li>
+              </ul>
+            </li>
             @endif
             @if(session('status') == 'admin')
             <li class="{{ Route::currentRouteNamed('pegawai.index') ? 'active' : '' }}">

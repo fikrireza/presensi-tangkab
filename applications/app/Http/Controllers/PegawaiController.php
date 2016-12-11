@@ -88,7 +88,7 @@ class PegawaiController extends Controller
       {
         return redirect()->route('pegawai.create')->withErrors($validator)->withInput();
       }
-      
+
       $set = new pegawai;
       $set->nama = $request->nama_pegawai;
       $set->nip_sapk = $request->nip_sapk;
