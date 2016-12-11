@@ -1,0 +1,161 @@
+@extends('layout.master')
+
+@section('title')
+  <title>Kelola User</title>
+  <link rel="stylesheet" href="{{ asset('plugins/select2/select2.min.css') }}">
+@endsection
+
+@section('breadcrumb')
+
+@endsection
+
+@section('content')
+  <script>
+    window.setTimeout(function() {
+      $(".alert-success").fadeTo(500, 0).slideUp(500, function(){
+          $(this).remove();
+      });
+    }, 2000);
+  </script>
+
+  @if(Session::has('berhasil'))
+  <div class="row">
+    <div class="col-md-12">
+      <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><i class="icon fa fa-check"></i> Berhasil!</h4>
+        <p>{{ Session::get('berhasil') }}</p>
+      </div>
+    </div>
+  </div>
+  @endif
+
+  <div class="modal fade" id="myModalHapus" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Hapus Level Akses Akun</h4>
+        </div>
+        <div class="modal-body">
+          <p>Apakah anda yakin untuk menghapus akses akun ini?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="reset" class="btn btn-default pull-left btn-flat" data-dismiss="modal">Tidak</button>
+          <a class="btn btn-danger btn-flat" id="sethapus">Ya, saya yakin</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="row">
+  <!-- START FORM-->
+  <div class="col-md-4">
+    <div class="box box-primary box-solid">
+      <div class="box-header with-border">
+          <h3 class="box-title">Tambah Akun</h3>
+      </div>
+      <div class="box-body">
+        <form class="form-horizontal" method="post" action="{{ route('user.create') }}">
+        {{ csrf_field() }}
+        <div class="col-md-14 {{ $errors->has('role_id') ? 'has-error' : '' }}">
+          <label class="control-label">Level Akses</label>
+          <select class="form-control select2" name="role_id" id="role_id" required="">
+            <option value="-- Pilih --">-- Pilih --</option>
+            <option value="1" {{ old('role_id')=="1" ? 'selected' : '' }} >Administrator BKPPD</option>
+            <option value="2" {{ old('role_id')=="2" ? 'selected' : '' }} >Admin SKPD</option>
+          </select>
+          @if($errors->has('role_id'))
+            <span class="help-block">
+              <i>* {{$errors->first('role_id')}}</i>
+            </span>
+          @endif
+        </div>
+        <div id="skpdoption" class="col-md-14 {{ $errors->has('pegawai_id') ? 'has-error' : '' }}">
+          <label class="control-label">Nama Pegawai</label>
+          <select class="form-control select2" name="pegawai_id" required="">
+            <option value="-- Pilih --">-- Pilih --</option>
+            @foreach($getpegawai as $key)
+              <option value="{{ $key->pegawai_id }}" {{ old('pegawai_id')==$key->pegawai_id ? 'selected' : '' }}>{{ $key->nama_pegawai }} - {{ $key->nama_skpd }}</option>
+            @endforeach
+          </select>
+          @if($errors->has('pegawai_id'))
+            <span class="help-block">
+              <i>* {{$errors->first('pegawai_id')}}</i>
+            </span>
+          @endif
+        </div>
+      </div>
+      <div class="box-footer">
+        <button type="submit" class="btn btn-success pull-right btn-sm btn-flat">Simpan</button>
+      </div>
+    </form>
+    </div>
+  </div>
+  <!-- END FORM-->
+  <!-- START TABLE-->
+  <div class="col-md-8">
+    <div class="box box-primary box-solid">
+      <div class="box-header">
+        <h3 class="box-title">Seluruh Akun</h3>
+      </div>
+      <div class="box-body">
+        <table id="table_user" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th style="width:10px;">No</th>
+              <th>Level Akses</th>
+              <th>Pegawai</th>
+              <th>SKPD</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+          @if($getuser->isEmpty())
+          <tr>
+            <td colspan="7" class="text-muted" style="text-align:center;">Akun Pengelola Belum Ada.</td>
+          </tr>
+          @else
+          <?php $no = 1;?>
+          @foreach($getuser as $key)
+          <tr>
+            <td>{{ $no }}.</td>
+            <td>{{ $key->title }}</td>
+            <td>{{ $key->nama_pegawai }}</td>
+            <td>{{ $key->nama_skpd }}</td>
+            <td>
+              <span data-toggle="tooltip" title="Ubah Akun">
+                <a href="" class="btn btn-warning btn-flat btn-xs edit" data-toggle="modal" data-target="#myModalEdit" data-value="{{ $key->id }}"><i class="fa fa-edit"></i></a>
+              </span>
+              @if (Auth::user()->pegawai_id != $key->pegawai_id)
+                <span data-toggle="tooltip" title="Delete Akun">
+                  <a href="" class="btn btn-danger btn-flat btn-xs hapus" data-toggle="modal" data-target="#myModalHapus" data-value="{{ $key->pegawai_id }}"><i class="fa fa-remove"></i></a>
+                </span>
+              @endif
+            </td>
+          </tr>
+          <?php $no++; ?>
+          @endforeach
+          @endif
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </div>
+  <!-- START TABLE-->
+</div>
+@endsection
+
+@section('script')
+  <script src="{{ asset('plugins/select2/select2.full.min.js')}}"></script>
+  <script>
+    $(".select2").select2();
+    $(function () {
+      $("#table_user").DataTable();
+    });
+    $('a.hapus').click(function(){
+        var a = $(this).data('value');
+        $('#sethapus').attr('href', "{{ url('/') }}/users/delete/"+a);
+      });
+  </script>
+@endsection

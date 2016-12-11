@@ -69,13 +69,13 @@ class LoginController extends Controller
       {
         $user = Auth::user();
 
-        $set = User::find(Auth::user()->id);
+        $set = user::find(Auth::user()->id);
         $getcounter = $set->seen;
         $set->seen = $getcounter+1;
         $set->save();
 
         if($getcounter=="0") {
-          return redirect('home')->with('firsttimelogin', "Selamat Datang.");
+          return redirect('firstLogin')->with('firsttimelogin', "Selamat Datang. Ubah Password Anda Sekarang.");
         } else {
           return redirect('home');
         }

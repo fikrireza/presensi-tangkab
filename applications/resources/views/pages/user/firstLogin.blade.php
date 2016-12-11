@@ -6,27 +6,30 @@
 
 @section('content')
 
+@if(Session::has('firsttimelogin'))
 <div class="col-md-12">
-  @if(Session::has('firsttimelogin'))
-    <div class="alert alert-success panjang">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <h4><i class="icon fa fa-check"></i> Selamat Datang!</h4>
-      <p>{{ Session::get('firsttimelogin') }}</p>
-    </div>
-  @endif
+  <div class="alert alert-success panjang">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h4><i class="icon fa fa-check"></i> Selamat Datang!</h4>
+    <p>{{ Session::get('firsttimelogin') }}</p>
+  </div>
 </div>
+@endif
 
-<div class="row">
-  @if(Session::has('messagefilled'))
+@if(Session::has('erroroldpass'))
+<div class="col-md-12">
   <div class="alert alert-info alert-dismissable">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
     <h4><i class="icon fa fa-info"></i> Informasi</h4>
-    {{ Session::get('messagefilled') }}
+    {{ Session::get('erroroldpass') }}
   </div>
-  @endif
+</div>
+@endif
+
+<div class="row">
   <div class="col-md-9">
-    <div class="box box-info">
-      <div class="box-header with-border">
+    <div class="box box-primary box-solid">
+      <div class="box-header">
         <h3 class="box-title">Ubah Password</h3>
       </div>
 
@@ -38,7 +41,7 @@
             <div class="col-sm-9">
               <input name="oldpass" type="password" class="form-control" placeholder="Password Lama" @if(!$errors->has('oldpass'))
                 value="{{ old('oldpass') }}"@endif>
-              <input name="id" type="hidden" class="form-control" value="{{ $profiles->id }}">
+              <input name="pegawai_id" type="hidden" class="form-control" value="{{ Auth::user()->pegawai_id }}">
               @if($errors->has('oldpass'))
                 <span class="help-block">
                   <strong>{{ $errors->first('oldpass') }}
@@ -81,21 +84,11 @@
             </div>
           </div>
           <div class="box-footer">
-            <button type="submit" class="btn btn-info pull-right">Ubah Password</button>
+            <button type="submit" class="btn bg-purple pull-right">Ubah Password</button>
           </div>
         </div>
       </form>
     </div>
   </div>
 </div>
-@stop
-
-@section('script')
-  <script src="{{ asset('/plugins/iCheck/icheck.min.js') }}"></script>
-  <script>
-  $('input[type="radio"].minimal').iCheck({
-          radioClass: 'iradio_minimal-blue'
-  });
-  </script>
-  </script>
 @stop
