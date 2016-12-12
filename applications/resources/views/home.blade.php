@@ -96,7 +96,7 @@
                 	'Sat' => 'Sabtu'
                 );
                  ?>
-              <td>{{ $key->hari_ini }}</td>
+              <td>{{ $key->nama_pegawai }} || {{ $key->skpd }}</td>
               <td>{{ $dayList[$day] }}</td>
               <td>@if($key->Tanggal_Log != null) {{ $key->Tanggal_Log }} @else - @endif</td>
               <td>@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else - @endif</td>
