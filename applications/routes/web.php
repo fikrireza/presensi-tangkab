@@ -66,6 +66,8 @@ Route::get('users/delete/{id}', 'UserController@delete');
 Route::get('users/reset', 'UserController@reset')->name('user.reset');
 Route::get('users/reset/{id}', 'UserController@resetPassword');
 
+Route::get('profil', 'UserController@profil')->name('profil.index');
+
 
 
 // Auth::routes();
@@ -73,6 +75,6 @@ Route::get('/', 'Auth\LoginController@showLoginForm')->name('index');
 Route::post('login', 'Auth\LoginController@loginProcess')->name('login.proses');
 Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('firstLogin', 'UserController@firstLogin')->name('firstLogin');
-Route::post('firstLogin', 'UserController@ubahPassword');
+Route::post('firstLogin', 'UserController@ubahPassword')->name('firstLogin.post');
 
 Route::get('cetakTpp', 'HomeController@cetakTPP')->name('cetakTPP');
