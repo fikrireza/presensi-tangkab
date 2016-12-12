@@ -20,6 +20,7 @@
 
       <div class="content-wrapper">
         <section class="content-header">
+        <h4><span>{{ session('skpd') }}</span></h4>
         @yield('breadcrumb')
         </section>
 
