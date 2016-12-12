@@ -11,6 +11,8 @@ class Status  {
 	public function setLoginStatus($login)
 	{
 		session()->put('status', $login->user->role->slug);
+
+		session()->put('skpd', $login->user->skpd->nama);
 	}
 
 	/**

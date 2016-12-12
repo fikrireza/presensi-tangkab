@@ -37,4 +37,9 @@ class User extends Authenticatable
   	{
   		return $this->belongsTo('App\Models\Role');
   	}
+
+    public function skpd()
+    {
+      return $this->belongsTo('App\Models\Skpd');
+    }
 }

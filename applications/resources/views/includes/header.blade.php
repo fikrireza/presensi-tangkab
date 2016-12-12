@@ -21,14 +21,14 @@
                     <img src="{{ asset('images/userdefault.png') }}" class="img-circle" alt="User Image">
                     <p>
                       {{ Auth::user()->nama }}
-                      <small>Online</small>
+                      <small>{{ session('skpd') }}</small>
                     </p>
                   </li>
 
                   <li class="user-footer">
-                    {{-- <div class="pull-left">
-                      <a href="" class="btn btn-default btn-flat">Profile</a>
-                    </div> --}}
+                    <div class="pull-left">
+                      <a href="{{ route('profil.index')}}" class="btn btn-default btn-flat">Profile</a>
+                    </div>
                     <div class="pull-right">
                       <a href="{{ url('logout') }}" class="btn btn-default btn-flat">Sign out</a>
                     </div>

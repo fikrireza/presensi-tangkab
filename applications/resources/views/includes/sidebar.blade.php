@@ -39,6 +39,8 @@
                 <i class="fa fa-flag"></i> <span>Manajemen Apel</span>
               </a>
             </li>
+            @endif
+            @if(session('status') == 'administrator' || session('status') == 'admin')
             <li class="treeview {{ Route::currentRouteNamed('user.index') ? 'active' : ''}}">
               <a href="{{ route('user.index') }}">
                 <i class="fa fa-users"></i> <span>Manajemen User</span>

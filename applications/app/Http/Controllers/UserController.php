@@ -28,22 +28,46 @@ class UserController extends Controller
 
     public function index()
     {
-      $getpegawai = pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
+      if(session('status') == 'administrator')
+      {
+        $getpegawai = pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
                           ->join('preson_users', 'preson_users.pegawai_id', '=', 'preson_pegawais.id')
                           ->select('preson_pegawais.id as pegawai_id','preson_pegawais.nama as nama_pegawai', 'preson_skpd.nama as nama_skpd')
                           ->where('preson_users.role_id', '=', 3)
                           ->get();
+      }
+      elseif(session('status') == 'admin')
+      {
+        $getpegawai = pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
+                          ->join('preson_users', 'preson_users.pegawai_id', '=', 'preson_pegawais.id')
+                          ->select('preson_pegawais.id as pegawai_id','preson_pegawais.nama as nama_pegawai', 'preson_skpd.nama as nama_skpd')
+                          ->where('preson_users.role_id', '=', 3)
+                          ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                          ->get();
+      }
 
-      $getuser    = user::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_users.pegawai_id')
-                        ->join('preson_roles', 'preson_roles.id', '=', 'preson_users.role_id')
-                        ->join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
-                        ->select('preson_pegawais.id as pegawai_id','preson_pegawais.nama as nama_pegawai', 'preson_skpd.nama as nama_skpd', 'preson_roles.title')
-                        ->where('preson_users.role_id', '!=', 3)
-                        ->orderby('preson_skpd.id')
-                        ->orderby('preson_roles.id')
-                        ->get();
-
-
+      if(session('status') == 'administrator')
+      {
+        $getuser    = user::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_users.pegawai_id')
+                          ->join('preson_roles', 'preson_roles.id', '=', 'preson_users.role_id')
+                          ->join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
+                          ->select('preson_pegawais.id as pegawai_id','preson_pegawais.nama as nama_pegawai', 'preson_skpd.nama as nama_skpd', 'preson_roles.title')
+                          ->where('preson_users.role_id', '!=', 3)
+                          ->orderby('preson_skpd.id')
+                          ->orderby('preson_roles.id')
+                          ->get();
+      }
+      elseif(session('status') == 'admin')
+      {
+        $getuser    = user::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_users.pegawai_id')
+                          ->join('preson_roles', 'preson_roles.id', '=', 'preson_users.role_id')
+                          ->join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
+                          ->select('preson_pegawais.id as pegawai_id','preson_pegawais.nama as nama_pegawai', 'preson_skpd.nama as nama_skpd', 'preson_roles.title')
+                          ->where('preson_users.role_id', '=', 2)
+                          ->orderby('preson_skpd.id')
+                          ->orderby('preson_roles.id')
+                          ->get();
+      }
       return view('pages.user.index', compact('getpegawai', 'getuser'));
     }
 
@@ -115,7 +139,7 @@ class UserController extends Controller
     public function ubahPassword(Request $request)
     {
       $get = User::where('pegawai_id', $request->pegawai_id)->first();
-      
+
       $messages = [
         'oldpass.required' => "Mohon isi password lama anda.",
         'newpass.required' => "Mohon isi password baru anda.",
@@ -143,5 +167,10 @@ class UserController extends Controller
       else {
         return redirect()->route('firstLogin')->with('erroroldpass', 'Mohon masukkan password lama anda dengan benar.');
       }
+    }
+
+    public function profil()
+    {
+      return view('pages.user.profil');
     }
 }

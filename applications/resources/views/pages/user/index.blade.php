@@ -62,8 +62,12 @@
           <label class="control-label">Level Akses</label>
           <select class="form-control select2" name="role_id" id="role_id" required="">
             <option value="-- Pilih --">-- Pilih --</option>
+            @if(session('status') == 'administrator')
             <option value="1" {{ old('role_id')=="1" ? 'selected' : '' }} >Administrator BKPPD</option>
             <option value="2" {{ old('role_id')=="2" ? 'selected' : '' }} >Admin SKPD</option>
+            @elseif(session('status') == 'admin')
+            <option value="2" {{ old('role_id')=="2" ? 'selected' : '' }} >Admin SKPD</option>
+            @endif
           </select>
           @if($errors->has('role_id'))
             <span class="help-block">
@@ -124,9 +128,9 @@
             <td>{{ $key->nama_pegawai }}</td>
             <td>{{ $key->nama_skpd }}</td>
             <td>
-              <span data-toggle="tooltip" title="Ubah Akun">
+              {{-- <span data-toggle="tooltip" title="Ubah Akun">
                 <a href="" class="btn btn-warning btn-flat btn-xs edit" data-toggle="modal" data-target="#myModalEdit" data-value="{{ $key->id }}"><i class="fa fa-edit"></i></a>
-              </span>
+              </span> --}}
               @if (Auth::user()->pegawai_id != $key->pegawai_id)
                 <span data-toggle="tooltip" title="Delete Akun">
                   <a href="" class="btn btn-danger btn-flat btn-xs hapus" data-toggle="modal" data-target="#myModalHapus" data-value="{{ $key->pegawai_id }}"><i class="fa fa-remove"></i></a>
