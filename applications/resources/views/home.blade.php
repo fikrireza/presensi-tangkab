@@ -83,7 +83,7 @@
             <tr>
               <td>{{ $no }}</td>
               <?php
-                $day = explode('/', $key->Tanggal_Log);
+                $day = explode('/', $key->hari_ini);
                 $day = $day[1]."/".$day[0]."/".$day[2];
                 $day = date('D', strtotime($day));
                 $dayList = array(
@@ -96,7 +96,7 @@
                 	'Sat' => 'Sabtu'
                 );
                  ?>
-              <td>{{ $key->nama_pegawai }}</td>
+              <td>{{ $key->hari_ini }}</td>
               <td>{{ $dayList[$day] }}</td>
               <td>@if($key->Tanggal_Log != null) {{ $key->Tanggal_Log }} @else - @endif</td>
               <td>@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else - @endif</td>
