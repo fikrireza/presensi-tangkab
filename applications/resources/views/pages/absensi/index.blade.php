@@ -52,26 +52,33 @@
           </thead>
           <tbody>
             <?php $no = 1; ?>
-            @if ($absensi->isEmpty())
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            @else
-            @foreach ($absensi as $key)
-            @if($key->Jam_Log > '15:00:00')
+            @foreach ($absensi as $hari)
+            @foreach ($hari as $key)
             <tr class="table-active">
-            @endif
               <td>{{ $no }}</td>
-              <td>{{ date('l', strtotime($key->Tanggal_Log)) }}</td>
-              <td>{{ $key->Tanggal_Log }}</td>
-              <td>{{ $key->Jam_Log }}</td>
+              <?php
+                $day = explode('/', $key->Tanggal_Log);
+                $day = $day[1]."/".$day[0]."/".$day[2];
+                $day = date('D', strtotime($day));
+                $dayList = array(
+                	'Sun' => 'Minggu',
+                	'Mon' => 'Senin',
+                	'Tue' => 'Selasa',
+                	'Wed' => 'Rabu',
+                	'Thu' => 'Kamis',
+                	'Fri' => 'Jum&#039;at',
+                	'Sat' => 'Sabtu'
+                );
+              ?>
+             <td>{{ $key->nama_pegawai }}</td>
+             <td>{{ $dayList[$day] }}</td>
+             <td>@if($key->Tanggal_Log != null) {{ $key->Tanggal_Log }} @else - @endif</td>
+             <td>@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else - @endif</td>
+             <td>@if($key->Jam_Pulang != null) {{ $key->Jam_Pulang }} @else - @endif</td>
             </tr>
             <?php $no++; ?>
             @endforeach
-            @endif
+            @endforeach
           </tbody>
         </table>
       </div>
