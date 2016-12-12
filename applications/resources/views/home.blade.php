@@ -21,7 +21,7 @@
     <div class="col-lg-3 col-md-3 col-xs-12">
       <div class="small-box bg-teal">
         <div class="inner">
-          <h3>66</h3>
+          <h3>{{ $jumlahPegawai }}</h3>
           <p>Jumlah Pegawai</p>
         </div>
         {{-- <a href="" class="small-box-footer">Lihat Data Selengkapnya <i class="fa fa-arrow-circle-right"></i></a> --}}
@@ -69,6 +69,9 @@
           <thead>
             <tr>
               <th>No</th>
+              @if (session('status') == 'administrator')
+              <th>SKPD</th>
+              @endif
               <th>Nama</th>
               <th>Hari</th>
               <th>Tanggal</th>
@@ -83,7 +86,7 @@
             <tr>
               <td>{{ $no }}</td>
               <?php
-                $day = explode('/', $key->hari_ini);
+                $day = explode('/', $key->Tanggal_Log);
                 $day = $day[1]."/".$day[0]."/".$day[2];
                 $day = date('D', strtotime($day));
                 $dayList = array(
@@ -96,7 +99,10 @@
                 	'Sat' => 'Sabtu'
                 );
                  ?>
-              <td>{{ $key->nama_pegawai }} || {{ $key->skpd }}</td>
+              @if (session('status') == 'administrator')
+              <td>{{ $key->skpd }}</td>
+              @endif
+              <td>{{ $key->nama_pegawai }}</td>
               <td>{{ $dayList[$day] }}</td>
               <td>@if($key->Tanggal_Log != null) {{ $key->Tanggal_Log }} @else - @endif</td>
               <td>@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else - @endif</td>
