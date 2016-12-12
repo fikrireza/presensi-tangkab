@@ -65,7 +65,7 @@ class HomeController extends Controller
           }
           $absensi = collect($list);
 
-        }if(Auth::user()->role_id == 2)
+        }else if(Auth::user()->role_id == 2)
         {
           for($i=$start_time; $i<$end_time; $i+=86400)
           {
