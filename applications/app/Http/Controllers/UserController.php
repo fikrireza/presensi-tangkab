@@ -110,14 +110,27 @@ class UserController extends Controller
 
     public function reset()
     {
-
-      $getuser  = user::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_users.pegawai_id')
-                        ->join('preson_roles', 'preson_roles.id', '=', 'preson_users.role_id')
-                        ->join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
-                        ->select('preson_pegawais.id as pegawai_id', 'preson_pegawais.nip_sapk', 'preson_pegawais.nama as nama_pegawai', 'preson_skpd.nama as nama_skpd', 'preson_roles.title')
-                        ->orderby('preson_skpd.id')
-                        ->orderby('preson_roles.id')
-                        ->get();
+      if(session('status') == 'administrator')
+      {
+        $getuser  = user::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_users.pegawai_id')
+                          ->join('preson_roles', 'preson_roles.id', '=', 'preson_users.role_id')
+                          ->join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
+                          ->select('preson_pegawais.id as pegawai_id', 'preson_pegawais.nip_sapk', 'preson_pegawais.nama as nama_pegawai', 'preson_skpd.nama as nama_skpd', 'preson_roles.title')
+                          ->orderby('preson_skpd.id')
+                          ->orderby('preson_roles.id')
+                          ->get();
+      }
+      else if(session('status') == 'admin')
+      {
+        $getuser  = user::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_users.pegawai_id')
+                          ->join('preson_roles', 'preson_roles.id', '=', 'preson_users.role_id')
+                          ->join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
+                          ->select('preson_pegawais.id as pegawai_id', 'preson_pegawais.nip_sapk', 'preson_pegawais.nama as nama_pegawai', 'preson_skpd.nama as nama_skpd', 'preson_roles.title')
+                          ->where('preson_skpd.id', Auth::user()->skpd_id)
+                          ->orderby('preson_skpd.id')
+                          ->orderby('preson_roles.id')
+                          ->get();
+      }
 
       return view('pages.user.reset', compact('getuser'));
     }

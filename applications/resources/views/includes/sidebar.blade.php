@@ -40,15 +40,19 @@
               </a>
             </li>
             @endif
-            @if(session('status') == 'administrator' || session('status') == 'admin')
+            @if(session('status') != 'pegawai')
             <li class="treeview {{ Route::currentRouteNamed('user.index') ? 'active' : ''}}">
               <a href="{{ route('user.index') }}">
                 <i class="fa fa-users"></i> <span>Manajemen User</span>
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
+                @if(session('status') == 'administrator')
                 <li class="{{ Route::currentRouteNamed('user.index') ? 'active' : ''}}"><a href="{{ route('user.index')}}"><i class="fa fa-circle-o"></i> Tambah Akun</a></li>
+                @endif
+                @if(session('status') == 'administrator' || session('status') == 'admin')
                 <li class="{{ Route::currentRouteNamed('user.reset') ? 'active' : ''}}"><a href="{{ route('user.reset')}}"><i class="fa fa-circle-o"></i> Reset Password</a></li>
+                @endif
               </ul>
             </li>
             @endif
