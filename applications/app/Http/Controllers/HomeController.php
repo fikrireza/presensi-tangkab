@@ -59,6 +59,7 @@ class HomeController extends Controller
         ->with('tpp', $tpp)
         ->with('jumlahPegawai', $jumlahPegawai);
     }
+
     public function index()
     {
         $pegawai_id = Auth::user()->pegawai_id;
