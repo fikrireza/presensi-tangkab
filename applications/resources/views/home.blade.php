@@ -65,141 +65,29 @@
         <h3 class="box-title">Absensi</h3>
       </div>
       <div class="box-body">
-        @if (session('status') == 'admin')
-        <table id="table_absen" class="table table-bordered">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Nama</th>
-              <th>Hari</th>
-              <th>Tanggal</th>
-              <th>Jam Datang</th>
-              <th>Jam Pulang</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php $no = 1; ?>
-            @foreach ($absensi as $key)
-            <tr>
-              <td>{{ $no }}</td>
-              <?php
-                $day = date('d/m/Y');
-                $day = explode('/', $day);
-                $day = $day[1]."/".$day[0]."/".$day[2];
-                $day = date('D', strtotime($day));
-
-                $dayList = array(
-                	'Sun' => 'Minggu',
-                	'Mon' => 'Senin',
-                	'Tue' => 'Selasa',
-                	'Wed' => 'Rabu',
-                	'Thu' => 'Kamis',
-                	'Fri' => 'Jum&#039;at',
-                	'Sat' => 'Sabtu'
-                );
-                 ?>
-              <td>{{ $key->nama_pegawai }}</td>
-              <td>{{ $dayList[$day] }}</td>
-              <td>{{ $today = date('d/m/Y')}}</td>
-              <td>@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else x @endif</td>
-              <td>@if($key->Jam_Pulang != null) {{ $key->Jam_Pulang }} @else x @endif</td>
-            </tr>
-            <?php $no++; ?>
-            @endforeach
-          </tbody>
-        </table>
-        @elseif(session('status') == 'administrator')
-        <table id="table_absen" class="table table-bordered">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>SKPD</th>
-              <th>Nama</th>
-              <th>Hari</th>
-              <th>Tanggal</th>
-              <th>Jam Datang</th>
-              <th>Jam Pulang</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php $no = 1; ?>
-            @foreach ($absensi as $hari)
-            @foreach ($hari as $key)
-            <tr>
-              <td>{{ $no }}</td>
-              <?php
-                $day = explode('/', $key->Tanggal_Log);
-                $day = $day[1]."/".$day[0]."/".$day[2];
-                $day = date('D', strtotime($day));
-
-                $dayList = array(
-                  'Sun' => 'Minggu',
-                  'Mon' => 'Senin',
-                  'Tue' => 'Selasa',
-                  'Wed' => 'Rabu',
-                  'Thu' => 'Kamis',
-                  'Fri' => 'Jum&#039;at',
-                  'Sat' => 'Sabtu'
-                );
-                 ?>
-              <td>{{ $key->skpd }}</td>
-              <td>{{ $key->nama_pegawai }}</td>
-              <td>{{ $dayList[$day] }}</td>
-              <td>@if($key->Tanggal_Log != null) {{ $key->Tanggal_Log }} @else x @endif</td>
-              <td>@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else x @endif</td>
-              <td>@if($key->Jam_Pulang != null) {{ $key->Jam_Pulang }} @else x @endif</td>
-            </tr>
-            <?php $no++; ?>
-            @endforeach
-            @endforeach
-          </tbody>
-        </table>
-
-        @elseif(session('status') == 'pegawai')
+        @if (session('status') == 'administrator')
           <table id="table_absen" class="table table-bordered">
             <thead>
               <tr>
                 <th>No</th>
-                <th>Nama</th>
-                <th>Hari</th>
-                <th>Tanggal</th>
-                <th>Jam Datang</th>
-                <th>Jam Pulang</th>
+                <th>Nama SKPD</th>
+                <th>Jumlah Hadir</th>
               </tr>
             </thead>
             <tbody>
               <?php $no = 1; ?>
-              @foreach ($absensi as $hari)
-              @foreach ($hari as $key)
+              @foreach ($absensi as $key)
               <tr>
                 <td>{{ $no }}</td>
-                <?php
-                  $day = explode('/', $key->Tanggal_Log);
-                  $day = $day[1]."/".$day[0]."/".$day[2];
-                  $day = date('D', strtotime($day));
-
-                  $dayList = array(
-                    'Sun' => 'Minggu',
-                    'Mon' => 'Senin',
-                    'Tue' => 'Selasa',
-                    'Wed' => 'Rabu',
-                    'Thu' => 'Kamis',
-                    'Fri' => 'Jum&#039;at',
-                    'Sat' => 'Sabtu'
-                  );
-                   ?>
-                <td>{{ $key->nama_pegawai }}</td>
-                <td>{{ $dayList[$day] }}</td>
-                <td>@if($key->Tanggal_Log != null) {{ $key->Tanggal_Log }} @else x @endif</td>
-                <td>@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else x @endif</td>
-                <td>@if($key->Jam_Pulang != null) {{ $key->Jam_Pulang }} @else x @endif</td>
+                <td>{{ $key->skpd }}</td>
+                <td>{{ $key->jumlah_hadir }}</td>
               </tr>
               <?php $no++; ?>
-              @endforeach
               @endforeach
             </tbody>
           </table>
         @endif
+
       </div>
     </div>
   </div>
