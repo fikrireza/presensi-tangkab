@@ -88,18 +88,31 @@ class HomeController extends Controller
         $end_time = strtotime("+1 month", $start_time);
         $pegawai = pegawai::select('preson_skpd.nama as nama_skpd')->join('preson_skpd', 'preson_pegawais.skpd_id', '=', 'preson_skpd.id')->get();
 
+
         if(session('status') == 'administrator')
         {
           $tanggalini = date('d/m/Y');
+          $tanggalinter = date('Y-m-d');
+
+          $jumlahintervensi = DB::select("select c.nama, count(*) as 'jumlah_intervensi'
+          from preson_intervensis a
+          join preson_pegawais b on a.pegawai_id = b.id
+          join preson_skpd c on b.skpd_id = c.id
+          where a.tanggal_mulai <= '$tanggalinter'
+          and a.tanggal_akhir >= '$tanggalinter'
+          group by c.nama");
+
           $absensi = DB::select("select skpd, count(*) as 'jumlah_hadir'
                                   from
                                   (select c.nama as skpd, count(*) as kk
                                   from ta_log a join preson_pegawais b
                                   on a.fid = b.fid
                                   join preson_skpd c on b.skpd_id = c.id
-                                  where tanggal_log='04/04/2016'
+                                  where tanggal_log='$tanggalini'
                                   group by c.nama, a.fid) as ab
                                   group by skpd");
+
+          return view('home', compact('absensi', 'pegawai', 'jumlahintervensi', 'tpp', 'jumlahPegawai'));
         }
         else if(session('status') == 'admin')
         {
@@ -129,6 +142,7 @@ class HomeController extends Controller
                                 										and preson_pegawais.skpd_id = 15 LIMIT 1) as tabel_Tanggal_Log
                                 	ON pegawai.fid = tabel_Tanggal_Log.Fid");
           $absensi = collect($absensi);
+          return view('home', compact('absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai'));
         }else{
           for($i=$start_time; $i<$end_time; $i+=86400)
           {
@@ -150,9 +164,9 @@ class HomeController extends Controller
                                   LIMIT 1");
           }
           $absensi = collect($list);
+          return view('home', compact('absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai'));
         }
 
-        return view('home', compact('absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai'));
     }
 
 }
