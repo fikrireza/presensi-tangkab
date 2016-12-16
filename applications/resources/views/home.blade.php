@@ -124,7 +124,7 @@
             @foreach ($absensi as $key)
               <tr>
                 <td>{{ $no }}</td>
-                <td>{{ $key->skpd }}</td>
+                <td><a href="{{route('detail.absensi', $key->id)}}">{{ $key->skpd }}</a></td>
                 <td>{{ $key->jumlah_hadir }}</td>
                 <td>
                   @php

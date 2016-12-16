@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\TaLog;
 use App\Models\User;
 use App\Models\Pegawai;
+use App\Models\Skpd;
 
 use Auth;
 use DB;
@@ -71,9 +72,9 @@ class HomeController extends Controller
           and a.tanggal_akhir >= '$tanggalinter'
           group by c.nama");
 
-          $absensi = DB::select("select skpd, count(*) as 'jumlah_hadir'
+          $absensi = DB::select("select id, skpd, count(*) as 'jumlah_hadir'
                                   from
-                                  (select c.nama as skpd, count(*) as kk
+                                  (select c.id, c.nama as skpd, count(*) as kk
                                   from ta_log a join preson_pegawais b
                                   on a.fid = b.fid
                                   join preson_skpd c on b.skpd_id = c.id
@@ -135,7 +136,23 @@ class HomeController extends Controller
           $absensi = collect($list);
           return view('home', compact('absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai'));
         }
+    }
 
+    public function detailabsensi($id)
+    {
+      $getskpd = skpd::find($id);
+
+      $tanggalini = date('d/m/Y');
+      $pegawai = pegawai::where('skpd_id', $id)->get();
+      $absensi = DB::select("select a.fid, nama, tanggal_log, jam_log
+                              from (select fid, nama from preson_pegawais where skpd_id = 15) as a
+                              left join ta_log b on a.fid = b.fid
+                              where b.tanggal_log = '$tanggalini'");
+
+      return view('pages.absensi.detailabsen')
+        ->with('absensi', $absensi)
+        ->with('pegawai', $pegawai)
+        ->with('getskpd', $getskpd);
     }
 
 }

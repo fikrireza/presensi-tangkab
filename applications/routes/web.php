@@ -12,6 +12,7 @@
 */
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home/detail-absensi/{id}', 'HomeController@detailabsensi')->name('detail.absensi');
 
 // Pegawai
 Route::get('pegawai', 'PegawaiController@index')->name('pegawai.index');
