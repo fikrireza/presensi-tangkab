@@ -34,8 +34,8 @@
             </li>
             @endif
             @if(session('status') == 'administrator')
-            <li class="">
-              <a href="">
+            <li class="{{ Route::currentRouteNamed('apel.index') ? 'active' : ''}}">
+              <a href="{{ route('apel.index') }}">
                 <i class="fa fa-flag"></i> <span>Manajemen Apel</span>
               </a>
             </li>

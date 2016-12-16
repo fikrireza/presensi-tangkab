@@ -1,14 +1,14 @@
 @extends('layout.master')
 
 @section('title')
-  <title>Master Hari Libur & Cuti Bersama</title>
+  <title>Manajemen Apel</title>
 @endsection
 
 @section('breadcrumb')
-  <h1>Master Hari Libur & Cuti Bersama</h1>
+  <h1>Manajemen Apel</h1>
   <ol class="breadcrumb">
     <li><a href=""><i class="fa fa-dashboard"></i>Dashboard</a></li>
-    <li class="active">Hari Libur & Cuti Bersama</li>
+    <li class="active">Manajemen Apel</li>
   </ol>
 @endsection
 
@@ -34,25 +34,25 @@
 @endif
 
 
-{{-- Modal Tambah Golongan--}}
-<div class="modal modal-default fade" id="modaltambahharilibur" role="dialog">
+{{-- Modal Tambah Apel--}}
+<div class="modal modal-default fade" id="modaltambahApel" role="dialog">
   <div class="modal-dialog" style="width:600px;">
-    <form class="form-horizontal" action="{{ route('harilibur.post') }}" method="post">
+    <form class="form-horizontal" action="{{ route('apel.post') }}" method="post">
       {{ csrf_field() }}
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Tambah Hari Libur & Cuti Bersama</h4>
+          <h4 class="modal-title">Tambah Hari Apel</h4>
         </div>
         <div class="modal-body">
-          <div class="form-group {{ $errors->has('libur') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Hari Libur</label>
+          <div class="form-group {{ $errors->has('tanggal_apel') ? 'has-error' : '' }}">
+            <label class="col-sm-3 control-label">Tanggal Apel</label>
             <div class="col-sm-9">
               <div class="input-group date">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input class="form-control pull-right" id="datepicker1" type="text" name="libur"  value="{{ old('libur') }}" placeholder="@if($errors->has('libur')){{ $errors->first('libur')}}@endif Hari Libur">
+                <input class="form-control pull-right" id="tanggal_apel" type="text" name="tanggal_apel"  value="{{ old('tanggal_apel') }}" placeholder="@if($errors->has('tanggal_apel')){{ $errors->first('tanggal_apel')}}@endif Tanggal Apel">
               </div>
             </div>
           </div>
@@ -72,25 +72,25 @@
   </div>
 </div>
 
-{{-- Modal Edit SKPD --}}
-<div class="modal modal-default fade" id="modaleditharilibur" role="dialog">
+{{-- Modal Edit Hari Apel --}}
+<div class="modal modal-default fade" id="modaleditApel" role="dialog">
   <div class="modal-dialog" style="width:800px;">
-    <form class="form-horizontal" action="{{ route('harilibur.edit') }}" method="post">
+    <form class="form-horizontal" action="{{ route('apel.edit') }}" method="post">
       {{ csrf_field() }}
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Edit Data Hari Libur & Cuti Bersama</h4>
+          <h4 class="modal-title">Edit Data Hari Apel</h4>
         </div>
         <div class="modal-body">
-          <div class="form-group {{ $errors->has('libur_edit') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Hari Libur</label>
+          <div class="form-group {{ $errors->has('tanggal_apel_edit') ? 'has-error' : '' }}">
+            <label class="col-sm-3 control-label">Hari Apel</label>
             <div class="col-sm-9">
               <div class="input-group date">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input class="form-control pull-right datepicker1" id="libur_edit" type="text" name="libur_edit" value="{{ old('libur_edit') }}" placeholder="@if($errors->has('libur_edit')){{ $errors->first('libur_edit')}}@endif Hari Libur">
+                <input class="form-control pull-right tanggal_apel_edit" id="tanggal_apel_edit" type="text" name="tanggal_apel_edit" value="{{ old('tanggal_apel_edit') }}" placeholder="@if($errors->has('tanggal_apel_edit')){{ $errors->first('tanggal_apel_edit')}}@endif Hari Apel">
                 <input type="hidden" name="id" id="id">
               </div>
             </div>
@@ -115,14 +115,15 @@
   <div class="col-md-12">
     <div class="box box-primary box-solid">
       <div class="box-header">
-        <h3 class="box-title">Hari Libur & Cuti Bersama</h3>
-        <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahharilibur">Tambah Hari Libur & Cuti Bersama</a>
+        <h3 class="box-title">Hari Apel</h3>
+        <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahApel">Tambah Hari Apel</a>
       </div>
       <div class="box-body">
-        <table id="table_harilibur" class="table table-bordered table-striped">
+        <table id="table_apel" class="table table-bordered table-striped">
           <thead>
             <tr>
               <th>No</th>
+              <th>Hari</th>
               <th>Tanggal</th>
               <th>Keterangan</th>
               <th>Action</th>
@@ -130,20 +131,44 @@
           </thead>
           <tbody>
             <?php $no = 1; ?>
-            @if ($harilibur->isEmpty())
+            @if ($getApel->isEmpty())
             <tr>
+              <td>-</td>
               <td>-</td>
               <td>-</td>
               <td>-</td>
               <td>-</td>
             </tr>
             @else
-            @foreach ($harilibur as $key)
+            @foreach ($getApel as $key)
             <tr>
               <td>{{ $no }}</td>
-              <td>{{ $key->libur }}</td>
+              <?php
+                $day = explode('-', $key->tanggal_apel);
+                $day = $day[1]."/".$day[2]."/".$day[0];
+                $day = date('D', strtotime($day));
+
+                $dayList = array(
+                	'Sun' => 'Minggu',
+                	'Mon' => 'Senin',
+                	'Tue' => 'Selasa',
+                	'Wed' => 'Rabu',
+                	'Thu' => 'Kamis',
+                	'Fri' => 'Jum&#039;at',
+                	'Sat' => 'Sabtu'
+                );
+                 ?>
+              <td>{{ $dayList[$day] }}</td>
+              <td>@php
+                  $day = explode('-', $key->tanggal_apel);
+                  $tanggal_apel = $day[2]."/".$day[1]."/".$day[0];
+              @endphp{{ $tanggal_apel }}</td>
               <td>{{ $key->keterangan }}</td>
-              <td><a href="" data-value="{{ $key->id }}" class="editharilibur" data-toggle="modal" data-target="#modaleditharilibur"><i class="fa fa-edit"></i> Ubah</a></td>
+              <td>@if($key->tanggal_apel >= date('Y-m-d'))
+                <a href="" data-value="{{ $key->id }}" class="editApel" data-toggle="modal" data-target="#modaleditApel"><i class="fa fa-edit"></i> Ubah</a>
+              @else
+                -
+              @endif</td>
             </tr>
             <?php $no++; ?>
             @endforeach
@@ -160,15 +185,15 @@
 @section('script')
 <script>
 $(function () {
-  $("#table_harilibur").DataTable();
+  $("#table_apel").DataTable();
 });
-$('#datepicker1').datepicker({
+$('#tanggal_apel').datepicker({
   autoclose: true,
   format: 'yyyy-mm-dd',
   todayHighlight: true,
   daysOfWeekDisabled: [0,6]
 });
-$('.datepicker1').datepicker({
+$('.tanggal_apel_edit').datepicker({
   autoclose: true,
   format: 'yyyy-mm-dd',
   todayHighlight: true,
@@ -177,29 +202,29 @@ $('.datepicker1').datepicker({
 </script>
 
 <script type="text/javascript">
-@if ($errors->has('libur') || $errors->has('keterangan'))
-  $('#modaltambahharilibur').modal('show');
+@if ($errors->has('tanggal_apel') || $errors->has('keterangan'))
+  $('#modaltambahApel').modal('show');
 @endif
-@if ($errors->has('libur_edit') || $errors->has('keterangan_edit'))
-  $('#modaleditharilibur').modal('show');
+@if ($errors->has('tanggal_apel_edit') || $errors->has('keterangan_edit'))
+  $('#modaleditApel').modal('show');
 @endif
 </script>
 
 <script type="text/javascript">
   $(function(){
-    $('.editharilibur').click(function(){
+    $('.editApel').click(function(){
       var a = $(this).data('value');
       $.ajax({
-        url: "{{ url('/') }}/harilibur/"+a,
+        url: "{{ url('/') }}/apel/"+a,
         dataType: 'json',
         success: function(data){
           var id = data.id;
-          var libur_edit = data.libur;
+          var tanggal_apel_edit = data.tanggal_apel;
           var keterangan_edit = data.keterangan;
 
           // set
           $('#id').attr('value', id);
-          $('#libur_edit').attr('value', libur_edit);
+          $('#tanggal_apel_edit').attr('value', tanggal_apel_edit);
           $('#keterangan_edit').attr('value', keterangan_edit);
         }
       });

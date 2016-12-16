@@ -40,7 +40,7 @@ class HariLiburController extends Controller
       $set = new harilibur;
       $set->libur = $request->libur;
       $set->keterangan = $request->keterangan;
-      $set->actor = Auth::user()->id;
+      $set->actor = Auth::user()->pegawai_id;
       $set->save();
 
       return redirect()->route('harilibur.index')->with('berhasil', 'Berhasil Menambahkan Hari Libur');
@@ -75,7 +75,7 @@ class HariLiburController extends Controller
       $set = harilibur::find($request->id);
       $set->libur = $request->libur_edit;
       $set->keterangan = $request->keterangan_edit;
-      $set->actor = Auth::user()->id;
+      $set->actor = Auth::user()->pegawai_id;
       $set->save();
 
       return redirect()->route('harilibur.index')->with('berhasil', 'Berhasil Menambahkan Hari Libur');

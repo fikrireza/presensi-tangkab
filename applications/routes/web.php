@@ -69,6 +69,11 @@ Route::get('users/reset/{id}', 'UserController@resetPassword');
 Route::get('profil', 'UserController@profil')->name('profil.index');
 
 
+// Manajemen Apel
+Route::get('apel', 'ApelController@index')->name('apel.index');
+Route::post('apel', 'ApelController@store')->name('apel.post');
+Route::get('apel/{id}', 'ApelController@bind');
+Route::post('apel/edit', 'ApelController@edit')->name('apel.edit');
 
 // Auth::routes();
 Route::get('/', 'Auth\LoginController@showLoginForm')->name('index');
