@@ -116,6 +116,7 @@
               <th>SKPD</th>
               <th>Jumlah Hadir</th>
               <th>Jumlah Absen</th>
+              <th>Jumlah Intervensi</th>
             </tr>
           </thead>
           <tbody>
@@ -140,6 +141,19 @@
                     $jumlahabsen = $count - $key->jumlah_hadir;
                     echo $jumlahabsen;
                   @endphp
+                </td>
+                <td>
+                  @php
+                    $countintervensi = 0;
+                  @endphp
+                  @foreach ($jumlahintervensi as $keys)
+                    @if ($keys->nama == $key->skpd)
+                      @php
+                        $countintervensi++;
+                      @endphp
+                    @endif
+                  @endforeach
+                  {{$countintervensi}}
                 </td>
               </tr>
               @php
