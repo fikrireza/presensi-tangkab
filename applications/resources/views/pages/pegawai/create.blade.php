@@ -46,7 +46,7 @@
           <div class="form-group {{ $errors->has('fid') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Finger ID</label>
             <div class="col-sm-9">
-              <input type="text" name="fid" class="form-control" value="{{ old('fid') }}" placeholder="@if($errors->has('fid')){{ $errors->first('fid')}}@endif Finger ID" maxlength="5">
+              <input type="text" name="fid" class="form-control" value="{{ old('fid') }}" placeholder="@if($errors->has('fid')){{ $errors->first('fid')}}@endif Finger ID" maxlength="14">
             </div>
           </div>
           <div class="form-group {{ $errors->has('skpd_id') ? 'has-error' : '' }}">

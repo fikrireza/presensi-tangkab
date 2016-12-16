@@ -152,7 +152,7 @@ class PegawaiController extends Controller
       else {
         $skpd = skpd::select('id', 'nama')->get();
       }
-      
+
       $golongan = golongan::select('id', 'nama')->get();
       $struktural = struktural::select('id', 'nama')->get();
       $jabatan = jabatan::select('id', 'nama')->get();
