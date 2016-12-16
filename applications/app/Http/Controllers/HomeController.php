@@ -29,37 +29,6 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
-    public function index2()
-    {
-      // get jumlah pegawai
-      $pegawai_id = Auth::user()->pegawai_id;
-      if (session('status') == 'administrator') {
-        $jumlahPegawai = pegawai::count();
-      } elseif (session('status') == 'admin') {
-        $jumlahPegawai = pegawai::where('skpd_id', Auth::user()->skpd_id)->count();
-      }
-
-      // get tpp
-      $tpp = pegawai::where('id', $pegawai_id)->select('tpp_dibayarkan', 'fid')->first();
-
-      // get absensi
-      $absensi = DB::select("select skpd, count(*) as 'jumlah_hadir'
-                              from
-                              (select c.nama as skpd, count(*) as kk
-                              from ta_log a join preson_pegawais b
-                              on a.fid = b.fid
-                              join preson_skpd c on b.skpd_id = c.id
-                              where tanggal_log='04/04/2016'
-                              group by c.nama, a.fid) as ab
-                              group by skpd");
-
-      return view('home')
-        ->with('absensi', $absensi)
-        ->with('tpp', $tpp)
-        ->with('jumlahPegawai', $jumlahPegawai);
-    }
-
     public function index()
     {
         $pegawai_id = Auth::user()->pegawai_id;
@@ -97,7 +66,7 @@ class HomeController extends Controller
                                   from ta_log a join preson_pegawais b
                                   on a.fid = b.fid
                                   join preson_skpd c on b.skpd_id = c.id
-                                  where tanggal_log='04/04/2016'
+                                  where tanggal_log='06/04/2016'
                                   group by c.nama, a.fid) as ab
                                   group by skpd");
         }
