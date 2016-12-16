@@ -114,43 +114,37 @@
             <tr>
               <th>No</th>
               <th>SKPD</th>
-              <th>Nama</th>
-              <th>Hari</th>
-              <th>Tanggal</th>
-              <th>Jam Datang</th>
-              <th>Jam Pulang</th>
+              <th>Jumlah Hadir</th>
+              <th>Jumlah Absen</th>
             </tr>
           </thead>
           <tbody>
             <?php $no = 1; ?>
-            @foreach ($absensi as $hari)
-            @foreach ($hari as $key)
-            <tr>
-              <td>{{ $no }}</td>
-              <?php
-                $day = explode('/', $key->Tanggal_Log);
-                $day = $day[1]."/".$day[0]."/".$day[2];
-                $day = date('D', strtotime($day));
-
-                $dayList = array(
-                  'Sun' => 'Minggu',
-                  'Mon' => 'Senin',
-                  'Tue' => 'Selasa',
-                  'Wed' => 'Rabu',
-                  'Thu' => 'Kamis',
-                  'Fri' => 'Jum&#039;at',
-                  'Sat' => 'Sabtu'
-                );
-                 ?>
-              <td>{{ $key->skpd }}</td>
-              <td>{{ $key->nama_pegawai }}</td>
-              <td>{{ $dayList[$day] }}</td>
-              <td>@if($key->Tanggal_Log != null) {{ $key->Tanggal_Log }} @else x @endif</td>
-              <td>@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else x @endif</td>
-              <td>@if($key->Jam_Pulang != null) {{ $key->Jam_Pulang }} @else x @endif</td>
-            </tr>
-            <?php $no++; ?>
-            @endforeach
+            @foreach ($absensi as $key)
+              <tr>
+                <td>{{ $no }}</td>
+                <td>{{ $key->skpd }}</td>
+                <td>{{ $key->jumlah_hadir }}</td>
+                <td>
+                  @php
+                    $count=0;
+                  @endphp
+                  @foreach ($pegawai as $keys)
+                    @if ($key->skpd == $keys->nama_skpd)
+                      @php
+                        $count++;
+                      @endphp
+                    @endif
+                  @endforeach
+                  @php
+                    $jumlahabsen = $count - $key->jumlah_hadir;
+                    echo $jumlahabsen;
+                  @endphp
+                </td>
+              </tr>
+              @php
+                $no++;
+              @endphp
             @endforeach
           </tbody>
         </table>

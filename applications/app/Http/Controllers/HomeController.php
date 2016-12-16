@@ -86,33 +86,20 @@ class HomeController extends Controller
         $start_time = strtotime($start_date);
 
         $end_time = strtotime("+1 month", $start_time);
+        $pegawai = pegawai::select('preson_skpd.nama as nama_skpd')->join('preson_skpd', 'preson_pegawais.skpd_id', '=', 'preson_skpd.id')->get();
 
         if(session('status') == 'administrator')
         {
-          for($i=$start_time; $i<$end_time; $i+=86400)
-          {
-            $tanggalini = date('d/m/Y', $i);
-
-            foreach ($filterSKPD as $key) {
-              $list[] = DB::select("SELECT c.nama AS skpd, b.nama AS nama_pegawai, a.Tanggal_Log, a.DateTime,
-                                      (select MIN(Jam_Log) from ta_log
-                                    		where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
-                                    		and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '08:00:00'
-                                    		and Fid = '$key->fid') as Jam_Datang,
-                                    	(select MIN(Jam_Log) from ta_log
-                                    		where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
-                                    		and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '16:00:00'
-                                    		and Fid = '$key->fid') as Jam_Pulang
-                                    FROM ta_log a, preson_pegawais b, preson_skpd c
-                                    WHERE b.skpd_id = c.id
-                                    AND a.Fid = b.fid
-                                    AND a.Fid = '$key->fid'
-                                    AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
-                                    LIMIT 1");
-            }
-          }
-          $absensi = collect($list);
-          // dd($absensi);
+          $tanggalini = date('d/m/Y');
+          $absensi = DB::select("select skpd, count(*) as 'jumlah_hadir'
+                                  from
+                                  (select c.nama as skpd, count(*) as kk
+                                  from ta_log a join preson_pegawais b
+                                  on a.fid = b.fid
+                                  join preson_skpd c on b.skpd_id = c.id
+                                  where tanggal_log='04/04/2016'
+                                  group by c.nama, a.fid) as ab
+                                  group by skpd");
         }
         else if(session('status') == 'admin')
         {
@@ -141,12 +128,8 @@ class HomeController extends Controller
                                 										and ta_log.Fid = preson_pegawais.fid
                                 										and preson_pegawais.skpd_id = 15 LIMIT 1) as tabel_Tanggal_Log
                                 	ON pegawai.fid = tabel_Tanggal_Log.Fid");
-
           $absensi = collect($absensi);
-          // dd($absensi);
-
         }else{
-
           for($i=$start_time; $i<$end_time; $i+=86400)
           {
             $tanggalini = date('d/m/Y', $i);
@@ -167,10 +150,9 @@ class HomeController extends Controller
                                   LIMIT 1");
           }
           $absensi = collect($list);
-          // dd($absensi);
         }
 
-        return view('home', compact('absensi', 'list', 'tpp', 'jumlahPegawai'));
+        return view('home', compact('absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai'));
     }
 
 }
