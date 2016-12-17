@@ -23,7 +23,7 @@ class CreatePegawaisTable extends Migration
           $table->integer('skpd_id')->unsigned();
           $table->integer('golongan_id')->unsigned();
           $table->integer('struktural_id')->unsigned();
-          $table->integer('jabatan_id')->unsigned();
+          $table->string('jabatan', 200);
           $table->date('tanggal_lahir');
           $table->string('tempat_lahir', 30);
           $table->string('pendidikan_terakhir', 50);

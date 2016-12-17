@@ -82,15 +82,10 @@
               </select>
             </div>
           </div>
-          <div class="form-group {{ $errors->has('jabatan_id') ? 'has-error' : '' }}">
+          <div class="form-group {{ $errors->has('jabatan') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Jabatan</label>
             <div class="col-sm-9">
-              <select name="jabatan_id" class="form-control select2">
-                <option value="">-- Pilih --</option>
-                @foreach ($jabatan as $key)
-                <option value="{{$key->id}}" {{ old('jabatan_id') == $key->id ? 'selected' : '' }}>{{ $key->nama}}</option>
-                @endforeach
-              </select>
+              <input type="text" name="jabatan" class="form-control" value="{{ old('jabatan') }}" placeholder="@if($errors->has('jabatan')){{ $errors->first('jabatan')}}@endif Jabatan">
             </div>
           </div>
           <div class="form-group {{ $errors->has('tanggal_lahir') ? 'has-error' : '' }}">

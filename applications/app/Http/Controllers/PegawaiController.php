@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\Pegawai;
 use App\Models\Skpd;
 use App\Models\Golongan;
-use App\Models\Jabatan;
 use App\Models\Struktural;
 use App\Models\User;
 
@@ -34,17 +33,15 @@ class PegawaiController extends Controller
       if(session('status') == 'administrator'){
         $pegawai = pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
                           ->join('preson_golongans', 'preson_golongans.id', '=', 'preson_pegawais.golongan_id')
-                          ->join('preson_jabatans', 'preson_jabatans.id', '=', 'preson_pegawais.jabatan_id')
                           ->join('preson_strukturals', 'preson_strukturals.id', '=', 'preson_pegawais.struktural_id')
-                          ->select('preson_pegawais.id', 'preson_pegawais.fid', 'preson_pegawais.nama as nama_pegawai', 'preson_skpd.nama as nama_skpd', 'preson_golongans.nama as nama_golongan', 'preson_jabatans.nama as nama_jabatan', 'preson_strukturals.nama as nama_struktural')
+                          ->select('preson_pegawais.id', 'preson_pegawais.fid', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.jabatan', 'preson_skpd.nama as nama_skpd', 'preson_golongans.nama as nama_golongan', 'preson_strukturals.nama as nama_struktural')
                           ->get();
 
       }elseif(session('status') == 'admin'){
         $pegawai = pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
                           ->join('preson_golongans', 'preson_golongans.id', '=', 'preson_pegawais.golongan_id')
-                          ->join('preson_jabatans', 'preson_jabatans.id', '=', 'preson_pegawais.jabatan_id')
                           ->join('preson_strukturals', 'preson_strukturals.id', '=', 'preson_pegawais.struktural_id')
-                          ->select('preson_pegawais.id', 'preson_pegawais.fid', 'preson_pegawais.nama as nama_pegawai', 'preson_skpd.nama as nama_skpd', 'preson_golongans.nama as nama_golongan', 'preson_jabatans.nama as nama_jabatan', 'preson_strukturals.nama as nama_struktural')
+                          ->select('preson_pegawais.id', 'preson_pegawais.fid', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.jabatan', 'preson_skpd.nama as nama_skpd', 'preson_golongans.nama as nama_golongan', 'preson_strukturals.nama as nama_struktural')
                           ->where('preson_skpd.id', Auth::user()->skpd_id)
                           ->get();
 
@@ -64,9 +61,8 @@ class PegawaiController extends Controller
       }
       $golongan = golongan::select('id', 'nama')->get();
       $struktural = struktural::select('id', 'nama')->get();
-      $jabatan = jabatan::select('id', 'nama')->get();
 
-      return view('pages.pegawai.create', compact('skpd', 'golongan', 'struktural', 'jabatan'));
+      return view('pages.pegawai.create', compact('skpd', 'golongan', 'struktural'));
     }
 
     public function store(Request $request)
@@ -78,7 +74,7 @@ class PegawaiController extends Controller
         'fid.unique'  => 'Finger ID Sudah diPakai',
         'skpd_id.required' => 'Wajib di isi',
         'golongan_id.required' => 'Wajib di isi',
-        'jabatan_id.required' => 'Wajib di isi',
+        'jabatan.required' => 'Wajib di isi',
         'struktural_id.required' => 'Wajib di isi',
         'tanggal_lahir.required' => 'Wajib di isi',
         'tempat_lahir.required' => 'Wajib di isi',
@@ -93,7 +89,7 @@ class PegawaiController extends Controller
         'fid' => 'required|unique:preson_pegawais',
         'skpd_id' => 'required',
         'golongan_id' => 'required',
-        'jabatan_id' => 'required',
+        'jabatan' => 'required',
         'struktural_id' => 'required',
         'tanggal_lahir' => 'required',
         'tempat_lahir' => 'required',
@@ -114,7 +110,7 @@ class PegawaiController extends Controller
       $set->fid   = $request->fid;
       $set->skpd_id = $request->skpd_id;
       $set->golongan_id = $request->golongan_id;
-      $set->jabatan_id = $request->jabatan_id;
+      $set->jabatan = strtoupper($request->jabatan);
       $set->struktural_id = $request->struktural_id;
       $set->tanggal_lahir = $request->tanggal_lahir;
       $set->tempat_lahir = $request->tempat_lahir;
@@ -155,10 +151,9 @@ class PegawaiController extends Controller
 
       $golongan = golongan::select('id', 'nama')->get();
       $struktural = struktural::select('id', 'nama')->get();
-      $jabatan = jabatan::select('id', 'nama')->get();
 
 
-      return view('pages.pegawai.edit', compact('pegawai', 'skpd', 'golongan', 'struktural', 'jabatan'));
+      return view('pages.pegawai.edit', compact('pegawai', 'skpd', 'golongan', 'struktural'));
     }
 
     public function editStore(Request $request)
@@ -170,7 +165,7 @@ class PegawaiController extends Controller
         'fid.unique'  => 'Finger ID Sudah diPakai',
         'skpd_id.required' => 'Wajib di isi',
         'golongan_id.required' => 'Wajib di isi',
-        'jabatan_id.required' => 'Wajib di isi',
+        'jabatan.required' => 'Wajib di isi',
         'struktural_id.required' => 'Wajib di isi',
         'tanggal_lahir.required' => 'Wajib di isi',
         'tempat_lahir.required' => 'Wajib di isi',
@@ -185,7 +180,7 @@ class PegawaiController extends Controller
         'fid' => 'required|unique:preson_pegawais,id',
         'skpd_id' => 'required',
         'golongan_id' => 'required',
-        'jabatan_id' => 'required',
+        'jabatan' => 'required',
         'struktural_id' => 'required',
         'tanggal_lahir' => 'required',
         'tempat_lahir' => 'required',
@@ -206,7 +201,7 @@ class PegawaiController extends Controller
       $set->fid   = $request->fid;
       $set->skpd_id = $request->skpd_id;
       $set->golongan_id = $request->golongan_id;
-      $set->jabatan_id = $request->jabatan_id;
+      $set->jabatan = strtoupper($request->jabatan);
       $set->struktural_id = $request->struktural_id;
       $set->tanggal_lahir = $request->tanggal_lahir;
       $set->tempat_lahir = $request->tempat_lahir;

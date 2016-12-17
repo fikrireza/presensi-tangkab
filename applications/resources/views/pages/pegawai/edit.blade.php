@@ -47,7 +47,7 @@
           <div class="form-group {{ $errors->has('fid') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Finger ID</label>
             <div class="col-sm-9">
-              <input type="text" name="fid" class="form-control" value="{{ $pegawai->fid }}" placeholder="@if($errors->has('fid')){{ $errors->first('fid')}}@endif Finger ID" maxlength="5">
+              <input type="text" name="fid" class="form-control" value="{{ $pegawai->fid }}" placeholder="@if($errors->has('fid')){{ $errors->first('fid')}}@endif Finger ID" maxlength="14">
             </div>
           </div>
           <div class="form-group {{ $errors->has('skpd_id') ? 'has-error' : '' }}">
@@ -95,19 +95,10 @@
               </select>
             </div>
           </div>
-          <div class="form-group {{ $errors->has('jabatan_id') ? 'has-error' : '' }}">
+          <div class="form-group {{ $errors->has('jabatan') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Jabatan</label>
             <div class="col-sm-9">
-              <select name="jabatan_id" class="form-control select2">
-                <option value="">-- Pilih --</option>
-                @foreach ($jabatan as $key)
-                @if ($key->id == $pegawai->jabatan_id )
-                <option value="{{$key->id}}" selected="">{{ $key->nama}}</option>
-                @else
-                <option value="{{$key->id}}" {{ old('jabatan_id') == $key->id ? 'selected' : '' }}>{{ $key->nama}}</option>
-                @endif
-                @endforeach
-              </select>
+              <input type="text" name="jabatan" class="form-control" value="{{ $pegawai->jabatan }}" placeholder="@if($errors->has('jabatan')){{ $errors->first('jabatan')}}@endif Jabatan">
             </div>
           </div>
           <div class="form-group {{ $errors->has('tanggal_lahir') ? 'has-error' : '' }}">

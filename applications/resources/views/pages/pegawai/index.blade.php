@@ -74,7 +74,7 @@
               <td>{{ $key->nama_pegawai }}</td>
               <td>{{ $key->nama_skpd }}</td>
               <td>{{ $key->nama_golongan }}</td>
-              <td>{{ $key->nama_jabatan }}</td>
+              <td>{{ $key->jabatan }}</td>
               <td>{{ $key->nama_struktural }}</td>
               <td>{{ $key->fid }}</td>
               <td><a href="{{ url('pegawai/edit', $key->id) }}"><i class="fa fa-edit"></i> Ubah</a></td>
