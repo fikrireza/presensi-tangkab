@@ -35,7 +35,7 @@
   </div>
 
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-12">
     <div class="box box-primary box-solid">
       <div class="box-header with-border">
         <h3 class="box-title" style="line-height:30px;">Tindak Intervensi</h3>
@@ -66,6 +66,12 @@
             <label class="col-sm-3 control-label">Tanggal Akhir</label>
             <div class="col-sm-9">
               {{ $intervensi->tanggal_mulai}}
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Jumlah Hari</label>
+            <div class="col-sm-9">
+              {{ $intervensi->jumlah_hari}}
             </div>
           </div>
           <div class="form-group">

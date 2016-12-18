@@ -36,7 +36,7 @@
 
 {{-- Modal Tambah Intervensi--}}
 <div class="modal modal-default fade" id="modaltambahIntervensi" role="dialog">
-  <div class="modal-dialog" style="width:600px;">
+  <div class="modal-dialog" style="width:800px;">
     <form class="form-horizontal" action="{{ route('intervensi.post') }}" method="post" enctype="multipart/form-data">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -75,8 +75,14 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input class="form-control pull-right" id="tanggal_akhir" type="text" name="tanggal_akhir"  value="{{ old('tanggal_akhir') }}" placeholder="@if($errors->has('tanggal_akhir')){{ $errors->first('tanggal_akhir')}}@endif Tanggal Akhir">
+                <input class="form-control pull-right" id="tanggal_akhir" type="text" name="tanggal_akhir"  value="{{ old('tanggal_akhir') }}" placeholder="@if($errors->has('tanggal_akhir')){{ $errors->first('tanggal_akhir')}}@endif Tanggal Akhir" onchange="durationDay()">
               </div>
+            </div>
+          </div>
+          <div class="form-group {{ $errors->has('jumlah_hari') ? 'has-error' : '' }}">
+            <label class="col-sm-3 control-label">Jumlah Hari</label>
+            <div class="col-sm-9">
+              <input type="text" name="jumlah_hari" id="jumlah_hari" class="form-control" value="{{ old('jumlah_hari') }}" placeholder="@if($errors->has('jumlah_hari')){{ $errors->first('jumlah_hari')}} @endif Jumlah Hari" required="" readonly="true">
             </div>
           </div>
           <div class="form-group {{ $errors->has('keterangan') ? 'has-error' : '' }}">
@@ -113,6 +119,12 @@
           <h4 class="modal-title">Edit Data Hari Libur & Cuti Bersama</h4>
         </div>
         <div class="modal-body">
+          <div class="form-group {{ $errors->has('id_edit') ? 'has-error' : '' }}" style="visibility: hidden;">
+            <label class="col-sm-3 control-label">id</label>
+            <div class="col-sm-9">
+              <input type="text" name="id_edit" class="form-control" id="id_edit" value="{{ old('id_edit') }}" placeholder="@if($errors->has('id_edit')){{ $errors->first('id_edit')}} @endif Jumlah Hari" required="" readonly="true">
+            </div>
+          </div>
           <div class="form-group {{ $errors->has('jenis_intervensi_edit') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Jenis Intervensi</label>
             <div class="col-sm-9">
@@ -143,8 +155,14 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input class="form-control pull-right tanggal_akhir_edit" id="tanggal_akhir_edit" type="text" name="tanggal_akhir_edit"  value="{{ old('tanggal_akhir_edit') }}" placeholder="@if($errors->has('tanggal_akhir_edit')){{ $errors->first('tanggal_akhir_edit')}}@endif Tanggal Akhir">
+                <input class="form-control pull-right tanggal_akhir_edit" id="tanggal_akhir_edit" type="text" name="tanggal_akhir_edit"  value="{{ old('tanggal_akhir_edit') }}" placeholder="@if($errors->has('tanggal_akhir_edit')){{ $errors->first('tanggal_akhir_edit')}}@endif Tanggal Akhir" onchange="durationDayEdit()">
               </div>
+            </div>
+          </div>
+          <div class="form-group {{ $errors->has('jumlah_hari_edit') ? 'has-error' : '' }}">
+            <label class="col-sm-3 control-label">Jumlah Hari</label>
+            <div class="col-sm-9">
+              <input type="text" name="jumlah_hari_edit" class="form-control" id="jumlah_hari_edit" value="{{ old('jumlah_hari_edit') }}" placeholder="@if($errors->has('jumlah_hari_edit')){{ $errors->first('jumlah_hari_edit')}} @endif Jumlah Hari" required="" readonly="true">
             </div>
           </div>
           <div class="form-group {{ $errors->has('keterangan_edit') ? 'has-error' : '' }}">
@@ -285,9 +303,10 @@ $('.tanggal_akhir_edit').datepicker({
         dataType: 'json',
         success: function(data){
           var id_edit = data.id;
-          var jenis_intervensi_edit = data.libur;
+          var jenis_intervensi_edit = data.jenis_intervensi;
           var tanggal_mulai_edit = data.tanggal_mulai;
           var tanggal_akhir_edit = data.tanggal_akhir;
+          var jumlah_hari_edit = data.jumlah_hari;
           var keterangan_edit = data.deskripsi;
 
           // set
@@ -295,6 +314,7 @@ $('.tanggal_akhir_edit').datepicker({
           $('#jenis_intervensi_edit').attr('value', jenis_intervensi_edit);
           $('#tanggal_akhir_edit').attr('value', tanggal_akhir_edit);
           $('#tanggal_mulai_edit').attr('value', tanggal_mulai_edit);
+          $('#jumlah_hari_edit').attr('value', jumlah_hari_edit);
           $('#keterangan_edit').attr('value', keterangan_edit);
 
           if(jenis_intervensi_edit=="Ijin")
@@ -309,7 +329,7 @@ $('.tanggal_akhir_edit').datepicker({
           {
             $('#Cuti').attr('selected', 'true');
           }
-          else if(jenis_intervensi_edit=="Sakit")
+          else if(jenis_intervensi_edit=="DinasLuar")
           {
             $('#DinasLuar').attr('selected', 'true');
           }
@@ -317,5 +337,39 @@ $('.tanggal_akhir_edit').datepicker({
       });
     });
   });
+</script>
+
+<script type="text/javascript">
+  function durationDay(){
+    $(document).ready(function() {
+      $('#tanggal_mulai, #tanggal_akhir').on('change textInput input', function () {
+            if ( ($("#tanggal_mulai").val() != "") && ($("#tanggal_akhir").val() != "")) {
+                var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+                var firstDate = new Date($("#tanggal_mulai").val());
+                var secondDate = new Date($("#tanggal_akhir").val());
+                var diffDays = Math.round(Math.round((secondDate.getTime() - firstDate.getTime()) / (oneDay))); 
+                $("#jumlah_hari").val(diffDays);
+            }
+        });
+    });
+
+  }
+</script>
+
+<script type="text/javascript">
+  function durationDayEdit(){
+    $(document).ready(function() {
+      $('#tanggal_mulai_edit, #tanggal_akhir_edit').on('change textInput input', function () {
+            if ( ($("#tanggal_mulai_edit").val() != "") && ($("#tanggal_akhir_edit").val() != "")) {
+                var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+                var firstDate = new Date($("#tanggal_mulai_edit").val());
+                var secondDate = new Date($("#tanggal_akhir_edit").val());
+                var diffDays = Math.round(Math.round((secondDate.getTime() - firstDate.getTime()) / (oneDay))); 
+                $("#jumlah_hari_edit").val(diffDays);
+            }
+        });
+    });
+
+  }
 </script>
 @endsection

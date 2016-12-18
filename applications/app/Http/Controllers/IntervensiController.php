@@ -26,10 +26,12 @@ class IntervensiController extends Controller
 
     public function store(Request $request)
     {
+      
       $message = [
         'jenis_intervensi.required' => 'Wajib di isi',
         'tanggal_mulai.required' => 'Wajib di isi',
         'tanggal_akhir.required' => 'Wajib di isi',
+        'jumlah_hari.required' => 'Wajib di isi',
         'keterangan.required' => 'Wajib di isi',
         'berkas'  => 'Hanya .jpg, .png, .pdf'
       ];
@@ -38,6 +40,7 @@ class IntervensiController extends Controller
         'jenis_intervensi' => 'required',
         'tanggal_mulai' => 'required',
         'tanggal_akhir' => 'required',
+        'jumlah_hari' => 'required',
         'keterangan' => 'required',
         'berkas'  => 'mimes:jpeg,png,pdf,jpg'
       ], $message);
@@ -62,6 +65,7 @@ class IntervensiController extends Controller
       $set->jenis_intervensi = $request->jenis_intervensi;
       $set->tanggal_mulai = $request->tanggal_mulai;
       $set->tanggal_akhir = $request->tanggal_akhir;
+      $set->jumlah_hari = $request->jumlah_hari;
       $set->deskripsi = $request->keterangan;
       $set->berkas = $photo_name;
       $set->flag_status = 0;
@@ -73,6 +77,7 @@ class IntervensiController extends Controller
 
     public function bind($id)
     {
+
       $find = intervensi::find($id);
 
       return $find;
@@ -80,11 +85,11 @@ class IntervensiController extends Controller
 
     public function edit(Request $request)
     {
-      dd($request);
       $message = [
         'jenis_intervensi_edit.required' => 'Wajib di isi',
         'tanggal_mulai_edit.required' => 'Wajib di isi',
         'tanggal_akhir_edit.required' => 'Wajib di isi',
+        'jumlah_hari_edit.required' => 'Wajib di isi',
         'keterangan_edit.required' => 'Wajib di isi',
         'berkas'  => 'Hanya .jpg, .png, .pdf'
       ];
@@ -93,6 +98,7 @@ class IntervensiController extends Controller
         'jenis_intervensi_edit' => 'required',
         'tanggal_mulai_edit' => 'required',
         'tanggal_akhir_edit' => 'required',
+        'jumlah_hari_edit' => 'required',
         'keterangan_edit' => 'required',
         'berkas'  => 'mimes:jpeg,png,pdf,jpg'
       ], $message);
@@ -102,26 +108,36 @@ class IntervensiController extends Controller
         return redirect()->route('intervensi.index')->withErrors($validator)->withInput();
       }
 
-      $file = $request->file('berkas');
-
+      $file = $request->file('berkas_edit');
+     
       if($file != null)
       {
         $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_mulai.'-'.$request->jenis_intervensi.'.' . $file->getClientOriginalExtension();
         Image::make($file)->save('documents/'. $photo_name);
-      }else{
-        $photo_name;
-      }
 
-      $set = new intervensi;
-      $set->pegawai_id = Auth::user()->pegawai_id;
-      $set->jenis_intervensi = $request->jenis_intervensi;
-      $set->tanggal_mulai = $request->tanggal_mulai;
-      $set->tanggal_akhir = $request->tanggal_akhir;
-      $set->deskripsi = $request->keterangan;
-      $set->berkas = $photo_name;
-      $set->flag_status = 0;
-      $set->actor = Auth::user()->pegawai_id;
-      $set->save();
+        $set = intervensi::find($request->id_edit);
+        $set->pegawai_id = Auth::user()->pegawai_id;
+        $set->jenis_intervensi = $request->jenis_intervensi_edit;
+        $set->tanggal_mulai = $request->tanggal_mulai_edit;
+        $set->tanggal_akhir = $request->tanggal_akhir_edit;
+        $set->jumlah_hari = $request->jumlah_hari_edit;
+        $set->deskripsi = $request->keterangan_edit;
+        $set->berkas = $photo_name;
+        $set->flag_status = 0;
+        $set->actor = Auth::user()->pegawai_id;
+        $set->save();
+      }else{
+         $set = intervensi::find($request->id_edit);
+        $set->pegawai_id = Auth::user()->pegawai_id;
+        $set->jenis_intervensi = $request->jenis_intervensi_edit;
+        $set->tanggal_mulai = $request->tanggal_mulai_edit;
+        $set->tanggal_akhir = $request->tanggal_akhir_edit;
+        $set->jumlah_hari = $request->jumlah_hari_edit;
+        $set->deskripsi = $request->keterangan_edit;
+        $set->flag_status = 0;
+        $set->actor = Auth::user()->pegawai_id;
+        $set->save();
+      }
 
       return redirect()->route('intervensi.index')->with('berhasil', 'Berhasil Mengubah Intervensi');
     }
@@ -178,6 +194,7 @@ class IntervensiController extends Controller
         'jenis_intervensi.required' => 'Wajib di isi',
         'tanggal_mulai.required' => 'Wajib di isi',
         'tanggal_akhir.required' => 'Wajib di isi',
+        'jumlah_hari.required' => 'Wajib di isi',
         'keterangan.required' => 'Wajib di isi',
         'berkas'  => 'Hanya .jpg, .png, .pdf'
       ];
@@ -187,6 +204,7 @@ class IntervensiController extends Controller
         'jenis_intervensi' => 'required',
         'tanggal_mulai' => 'required',
         'tanggal_akhir' => 'required',
+        'jumlah_hari' => 'required',
         'keterangan' => 'required',
         'berkas'  => 'mimes:jpeg,png,pdf,jpg'
       ], $message);
@@ -211,6 +229,7 @@ class IntervensiController extends Controller
       $set->jenis_intervensi = $request->jenis_intervensi;
       $set->tanggal_mulai = $request->tanggal_mulai;
       $set->tanggal_akhir = $request->tanggal_akhir;
+      $set->jumlah_hari = $request->jumlah_hari;
       $set->deskripsi = $request->keterangan;
       $set->berkas = $photo_name;
       $set->flag_status = 0;
