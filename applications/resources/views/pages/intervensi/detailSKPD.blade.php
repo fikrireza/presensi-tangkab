@@ -1,16 +1,17 @@
 @extends('layout.master')
 
 @section('title')
-  <title>Kelola Intervensi</title>
+  <title>SKPD Detail Intervensi</title>
   <link rel="stylesheet" href="{{ asset('plugins/select2/select2.min.css') }}">
 @endsection
 
 @section('breadcrumb')
-  <h1>Kelola Intervensi</h1>
+  <h1>SKPD Detail Intervensi</h1>
   <ol class="breadcrumb">
     <li><a href=""><i class="fa fa-dashboard"></i>Dashboard</a></li>
     <li><a href="{{ route('intervensi.index') }}">Intervensi</a></li>
-    <li class="active">Kelola Intervensi</li>
+    <li><a href="{{ route('intervensi.kelola') }}">Kelola Intervensi</a></li>
+    <li class="active">Detail Intervensi</li>
   </ol>
 @endsection
 
@@ -37,7 +38,7 @@
 
 {{-- Modal Tambah Intervensi--}}
 <div class="modal modal-default fade" id="modaltambahIntervensi" role="dialog">
-  <div class="modal-dialog" style="width:800px;">
+  <div class="modal-dialog" style="width:600px;">
     <form class="form-horizontal" action="{{ route('intervensi.kelola.post') }}" method="post" enctype="multipart/form-data">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -49,7 +50,7 @@
           <div class="form-group {{ $errors->has('pegawai_id') ? 'has-error' : '' }}">
             <label class="col-md-3 control-label">Pegawai</label>
             <div class="col-md-9">
-              <select class="form-control select2" name="pegawai_id" style="width:100%;">
+              <select class="form-control select2" name="pegawai_id">
                 <option value="">-- PILIH --</option>
                 @foreach ($pegawai as $key)
                 <option value="{{ $key->id }}" {{ old('pegawai_id') == $key->id ? 'selected' : ''}}>{{ $key->nama }}</option>
@@ -60,7 +61,7 @@
           <div class="form-group {{ $errors->has('jenis_intervensi') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Jenis Intervensi</label>
             <div class="col-sm-9">
-              <select class="form-control select2" name="jenis_intervensi" style="width:100%;">
+              <select class="form-control select2" name="jenis_intervensi">
                 <option value="">-- PILIH --</option>
                 <option value="Ijin" {{ old('jenis_interrvensi') == 'Ijin' ? 'selected' : ''}}>Ijin</option>
                 <option value="Sakit" {{ old('jenis_intervensi') == 'Sakit' ? 'selected' : ''}}>Sakit</option>
@@ -87,14 +88,8 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input class="form-control pull-right" id="tanggal_akhir" type="text" name="tanggal_akhir"  value="{{ old('tanggal_akhir') }}" placeholder="@if($errors->has('tanggal_akhir')){{ $errors->first('tanggal_akhir')}}@endif Tanggal Akhir" onchange="durationDay()">
+                <input class="form-control pull-right" id="tanggal_akhir" type="text" name="tanggal_akhir"  value="{{ old('tanggal_akhir') }}" placeholder="@if($errors->has('tanggal_akhir')){{ $errors->first('tanggal_akhir')}}@endif Tanggal Akhir">
               </div>
-            </div>
-          </div>
-          <div class="form-group {{ $errors->has('jumlah_hari') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Jumlah Hari</label>
-            <div class="col-sm-9">
-              <input type="text" name="jumlah_hari" id="jumlah_hari" class="form-control" value="{{ old('jumlah_hari') }}" placeholder="@if($errors->has('jumlah_hari')){{ $errors->first('jumlah_hari')}} @endif Jumlah Hari" required="" readonly="true">
             </div>
           </div>
           <div class="form-group {{ $errors->has('keterangan') ? 'has-error' : '' }}">
@@ -128,7 +123,6 @@
         <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahIntervensi">Tambah Intervensi Pegawai</a>
       </div>
       <div class="box-body">
-        @if(session('status') == 'admin')
         <table class="table table-bordered table-striped">
           <thead>
             <tr>
@@ -139,7 +133,6 @@
               <th>Tanggal Mulai</th>
               <th>Tanggal Akhir</th>
               <th>Status Intervensi</th>
-              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -164,41 +157,12 @@
               @else
                 <small class="label label-danger">Tidak diSetujui</small>
               @endif</td>
-              <td>@if ($key->flag_status == 0)
-                  <a href="{{ route('intervensi.kelola.aksi', $key->id) }}"><i class="fa fa-edit"></i> Lihat</a>
-                  @else
-                    -
-                  @endif
-              </td>
             </tr>
             <?php $no++; ?>
             @endforeach
             @endif
           </tbody>
         </table>
-
-        @elseif(session('status') == 'administrator')
-        <table id="table_skpd" class="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>SKPD</th>
-              <th>Lihat Detail</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php $no = 1; ?>
-            @foreach ($getSKPD as $key)
-            <tr>
-              <td>{{ $no }}</td>
-              <td>{{ $key->nama }}</td>
-              <td><a href="{{ route('intervensi.skpd', $key->id) }}"><i class="fa fa-edit"></i> Lihat</a></td>
-            </tr>
-            <?php $no++; ?>
-            @endforeach
-          </tbody>
-        </table>
-        @endif
       </div>
     </div>
   </div>
@@ -248,21 +212,5 @@
   @if ($errors->has('pegawai_id') || $errors->has('jenis_intervensi') || $errors->has('tanggal_mulai') || $errors->has('tanggal_akhir'))
   $('#modaltambahIntervensi').modal('show');
   @endif
-</script>
-<script type="text/javascript">
-  function durationDay(){
-    $(document).ready(function() {
-      $('#tanggal_mulai, #tanggal_akhir').on('change textInput input', function () {
-            if ( ($("#tanggal_mulai").val() != "") && ($("#tanggal_akhir").val() != "")) {
-                var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
-                var firstDate = new Date($("#tanggal_mulai").val());
-                var secondDate = new Date($("#tanggal_akhir").val());
-                var diffDays = Math.round(Math.round((secondDate.getTime() - firstDate.getTime()) / (oneDay))); 
-                $("#jumlah_hari").val(diffDays);
-            }
-        });
-    });
-
-  }
 </script>
 @endsection

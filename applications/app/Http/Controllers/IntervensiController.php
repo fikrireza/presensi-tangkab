@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Intervensi;
 use App\Models\Pegawai;
 use App\Models\Users;
+use App\Models\Skpd;
 
 use Validator;
 use Auth;
@@ -148,24 +149,21 @@ class IntervensiController extends Controller
       {
         $intervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
                               ->join('preson_users', 'preson_users.skpd_id', '=', 'preson_pegawais.skpd_id')
-                              ->where('preson_users.id', Auth::user()->id)
+                              ->where('preson_users.pegawai_id', Auth::user()->pegawai_id)
                               ->select('preson_intervensis.*', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.nip_sapk')
+                              ->orderBy('tanggal_mulai', 'desc')
                               ->get();
 
         $pegawai = pegawai::select('id', 'nama')->where('skpd_id', Auth::user()->skpd_id)->get();
       }
       elseif(session('status') === 'administrator')
       {
-        $intervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
-                              ->join('preson_users', 'preson_users.skpd_id', '=', 'preson_pegawais.skpd_id')
-                              ->where('preson_users.id', Auth::user()->id)
-                              ->select('preson_intervensis.*', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.nip_sapk')
-                              ->get();
+        $getSKPD = skpd::get();
 
         $pegawai = pegawai::select('id', 'nama')->get();
       }
 
-      return view('pages.intervensi.kelola', compact('intervensi', 'pegawai'));
+      return view('pages.intervensi.kelola', compact('getSKPD', 'pegawai', 'intervensi'));
     }
 
     public function kelolaAksi($id)
@@ -237,5 +235,19 @@ class IntervensiController extends Controller
       $set->save();
 
       return redirect()->route('intervensi.kelola')->with('berhasil', 'Berhasil Menambahkan Intervensi');
+    }
+
+    public function skpd($id)
+    {
+      $intervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                            ->join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
+                            ->select('preson_intervensis.*', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.nip_sapk')
+                            ->where('preson_skpd.id', $id)
+                            ->orderBy('tanggal_mulai', 'desc')
+                            ->get();
+
+      $pegawai = pegawai::select('id', 'nama')->where('skpd_id', Auth::user()->skpd_id)->get();
+
+      return view('pages.intervensi.detailSKPD', compact('intervensi', 'pegawai'));
     }
 }
