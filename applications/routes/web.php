@@ -58,8 +58,14 @@ Route::post('intervensi/kelola', 'IntervensiController@kelolaPost')->name('inter
 Route::get('intervensi/kelola/approve/{id}', 'IntervensiController@kelolaApprove');
 Route::get('intervensi/skpd/{id}', 'IntervensiController@skpd')->name('intervensi.skpd');
 
-// Absensi
+// Absensi Administrator
 Route::get('absensi', 'AbsensiController@index')->name('absensi.index');
+// Absensi Pegawai
+Route::get('absensi-detail', 'AbsensiController@detailPegawai')->name('absensi.pegawai');
+Route::post('absensi-detail', 'AbsensiController@filterMonth')->name('absensi.filterMonth');
+// Absensi SKPD
+Route::get('absensi-skpd', 'AbsensiController@absenSKPD')->name('absensi.skpd');
+
 
 // Manajemen User
 Route::get('users', 'UserController@index')->name('user.index');

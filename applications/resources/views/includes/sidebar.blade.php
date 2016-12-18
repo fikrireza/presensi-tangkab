@@ -50,17 +50,17 @@
                 @if(session('status') == 'administrator')
                 <li class="{{ Route::currentRouteNamed('user.index') ? 'active' : ''}}"><a href="{{ route('user.index')}}"><i class="fa fa-circle-o"></i> Tambah Akun</a></li>
                 @endif
+                @if(session('status') == 'admin')
+                <li class="{{ Route::currentRouteNamed('pegawai.index') ? 'active' : '' }}">
+                  <a href="{{ route('pegawai.index') }}">
+                    <i class="fa fa-circle-o"></i> <span>Pegawai</span>
+                  </a>
+                </li>
+                @endif
                 @if(session('status') == 'administrator' || session('status') == 'admin')
                 <li class="{{ Route::currentRouteNamed('user.reset') ? 'active' : ''}}"><a href="{{ route('user.reset')}}"><i class="fa fa-circle-o"></i> Reset Password</a></li>
                 @endif
               </ul>
-            </li>
-            @endif
-            @if(session('status') == 'admin')
-            <li class="{{ Route::currentRouteNamed('pegawai.index') ? 'active' : '' }}">
-              <a href="{{ route('pegawai.index') }}">
-                <i class="fa fa-users"></i> <span>Pegawai</span>
-              </a>
             </li>
             @endif
             @if(session('status') == 'administrator' || session('status') == 'admin' || session('status') == 'pegawai')
@@ -70,9 +70,23 @@
               </a>
             </li>
             @endif
-            @if(session('status') == 'administrator' || session('status') == 'admin' || session('status') == 'pegawai')
+            @if(session('status') == 'administrator')
             <li class="{{ Route::currentRouteNamed('absensi.index') ? 'active' : '' }}">
               <a href="{{ route('absensi.index') }}">
+                <i class="fa fa-file"></i> <span>Absensi</span>
+              </a>
+            </li>
+            @endif
+            @if(session('status') == 'admin')
+            <li class="{{ Route::currentRouteNamed('absensi.skpd') ? 'active' : '' }}">
+              <a href="{{ route('absensi.skpd') }}">
+                <i class="fa fa-file"></i> <span>Absensi</span>
+              </a>
+            </li>
+            @endif
+            @if(session('status') == 'pegawai')
+            <li class="{{ Route::currentRouteNamed('absensi.pegawai') ? 'active' : '' }}">
+              <a href="{{ route('absensi.pegawai') }}">
                 <i class="fa fa-file"></i> <span>Absensi</span>
               </a>
             </li>

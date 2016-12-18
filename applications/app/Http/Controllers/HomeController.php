@@ -121,11 +121,11 @@ class HomeController extends Controller
             $list[] = DB::select("SELECT c.nama AS skpd, b.id as pegawai_id, b.nama AS nama_pegawai, a.Tanggal_Log, a.DateTime,
                                     (select MIN(Jam_Log) from ta_log
                                   		where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
-                                  		and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '08:00:00'
+                                  		and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
                                   		and Fid = '$tpp->fid') as Jam_Datang,
                                   	(select MIN(Jam_Log) from ta_log
                                   		where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
-                                  		and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '16:00:00'
+                                  		and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '15:00:00'
                                   		and Fid = '$tpp->fid') as Jam_Pulang
                                   FROM ta_log a, preson_pegawais b, preson_skpd c
                                   WHERE b.skpd_id = c.id
@@ -134,7 +134,7 @@ class HomeController extends Controller
                                   AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                   LIMIT 1");
           }
-          // dd($tanggalBulan);
+          
           $absensi = collect($list);
 
           $intervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
@@ -145,18 +145,7 @@ class HomeController extends Controller
                                   ->get();
 
           $hariLibur = hariLibur::where('libur', 'LIKE', '%'.$month.'%')->get();
-          // dd($intervensi);
-          // dd($absensi);
-          // foreach ($absensi as $absen) {
-          //   if($absen != null)
-          //   foreach ($absen as $key) {
-          //     print_r($absen).'</pre>';
-          //   }
-          //   elseif($absen == null){
-          //     print_r('kosong</br>').'</pre>';
-          //   }
-          // }
-          // die();
+
           return view('home', compact('absensi', 'pegawai', 'tanggalBulan', 'intervensi', 'hariLibur', 'tpp', 'jumlahPegawai'));
         }
     }
