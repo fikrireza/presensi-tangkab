@@ -8,6 +8,8 @@ use App\Models\TaLog;
 use App\Models\User;
 use App\Models\Pegawai;
 use App\Models\Skpd;
+use App\Models\Intervensi;
+use App\Models\HariLibur;
 
 use Auth;
 use DB;
@@ -114,8 +116,9 @@ class HomeController extends Controller
         }else{
           for($i=$start_time; $i<$end_time; $i+=86400)
           {
+            $tanggalBulan[] = date('d/m/Y', $i);
             $tanggalini = date('d/m/Y', $i);
-            $list[] = DB::select("SELECT c.nama AS skpd, b.nama AS nama_pegawai, a.Tanggal_Log, a.DateTime,
+            $list[] = DB::select("SELECT c.nama AS skpd, b.id as pegawai_id, b.nama AS nama_pegawai, a.Tanggal_Log, a.DateTime,
                                     (select MIN(Jam_Log) from ta_log
                                   		where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                   		and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '08:00:00'
@@ -131,8 +134,30 @@ class HomeController extends Controller
                                   AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                   LIMIT 1");
           }
+          // dd($tanggalBulan);
           $absensi = collect($list);
-          return view('home', compact('absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai'));
+
+          $intervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                  ->select('preson_pegawais.id as pegawai_id', 'preson_intervensis.tanggal_mulai', 'preson_intervensis.jumlah_hari', 'preson_intervensis.tanggal_akhir', 'preson_intervensis.deskripsi')
+                                  ->where('preson_pegawais.id', $pegawai_id)
+                                  ->where('preson_intervensis.tanggal_mulai', 'LIKE', '%'.$month.'%')
+                                  ->where('preson_intervensis.flag_status', 1)
+                                  ->get();
+
+          $hariLibur = hariLibur::where('libur', 'LIKE', '%'.$month.'%')->get();
+          // dd($intervensi);
+          // dd($absensi);
+          // foreach ($absensi as $absen) {
+          //   if($absen != null)
+          //   foreach ($absen as $key) {
+          //     print_r($absen).'</pre>';
+          //   }
+          //   elseif($absen == null){
+          //     print_r('kosong</br>').'</pre>';
+          //   }
+          // }
+          // die();
+          return view('home', compact('absensi', 'pegawai', 'tanggalBulan', 'intervensi', 'hariLibur', 'tpp', 'jumlahPegawai'));
         }
     }
 

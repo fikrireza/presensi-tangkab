@@ -30,7 +30,7 @@
     <div class="col-lg-3 col-md-3 col-xs-12">
       <div class="small-box bg-yellow">
         <div class="inner">
-          <h3>65<sup style="font-size: 20px"></sup></h3>
+          <h3>-<sup style="font-size: 20px"></sup></h3>
           <p>Jumlah Hadir</p>
         </div>
         {{-- <a class="small-box-footer">
@@ -50,7 +50,7 @@
     <div class="col-lg-3 col-md-3 col-xs-12">
       <div class="small-box bg-maroon">
         <div class="inner">
-          <h3><sup style="font-size: 20px">Rp. 12.345.678,-</sup></h3>
+          <h3><sup style="font-size: 20px">Rp. 0,-</sup></h3>
           <p>Yang Dibayarkan</p>
         </div>
       </div>
@@ -64,7 +64,7 @@
       <div class="box-header">
         <h3 class="box-title">Absensi</h3>
       </div>
-      <div class="box-body">
+      <div class="box-body table-responsive">
         @if (session('status') == 'admin')
         <table id="table_absen" class="table table-bordered">
           <thead>
@@ -168,42 +168,75 @@
             <thead>
               <tr>
                 <th>No</th>
-                <th>Nama</th>
-                <th>Hari</th>
                 <th>Tanggal</th>
+                <th>Hari</th>
                 <th>Jam Datang</th>
                 <th>Jam Pulang</th>
               </tr>
             </thead>
             <tbody>
-              <?php $no = 1; ?>
-              @foreach ($absensi as $hari)
-              @foreach ($hari as $key)
+              @php
+                $no = 1;
+              @endphp
+              @foreach ($tanggalBulan as $tanggal)
               <tr>
                 <td>{{ $no }}</td>
-                <?php
-                  $day = explode('/', $key->Tanggal_Log);
-                  $day = $day[1]."/".$day[0]."/".$day[2];
-                  $day = date('D', strtotime($day));
+                <td>{{ $tanggal }}</td>
+                @php
+                $day = explode('/', $tanggal);
+                $day = $day[1]."/".$day[0]."/".$day[2];
+                $day = date('D', strtotime($day));
 
-                  $dayList = array(
-                    'Sun' => 'Minggu',
-                    'Mon' => 'Senin',
-                    'Tue' => 'Selasa',
-                    'Wed' => 'Rabu',
-                    'Thu' => 'Kamis',
-                    'Fri' => 'Jum&#039;at',
-                    'Sat' => 'Sabtu'
-                  );
-                   ?>
-                <td>{{ $key->nama_pegawai }}</td>
+                $dayList = array(
+                  'Sun' => 'Minggu',
+                  'Mon' => 'Senin',
+                  'Tue' => 'Selasa',
+                  'Wed' => 'Rabu',
+                  'Thu' => 'Kamis',
+                  'Fri' => 'Jum&#039;at',
+                  'Sat' => 'Sabtu'
+                );
+                @endphp
                 <td>{{ $dayList[$day] }}</td>
-                <td>@if($key->Tanggal_Log != null) {{ $key->Tanggal_Log }} @else x @endif</td>
-                <td>@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else x @endif</td>
-                <td>@if($key->Jam_Pulang != null) {{ $key->Jam_Pulang }} @else x @endif</td>
+                @foreach ($absensi as $absen)
+                  @foreach ($absen as $key)
+                    @if ($key->Tanggal_Log == $tanggal)
+                      <td align="center">@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else x @endif</td>
+                      <td align="center">@if($key->Jam_Pulang != null) {{ $key->Jam_Pulang }} @else x @endif</td>
+                    @endif
+                  @endforeach
+                  @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
+                    <td colspan="2" align="center">Libur</td>
+                    @break
+                  @endif
+                  @foreach ($hariLibur as $libur)
+                    @php
+                    $holiday = explode('-', $libur->libur);
+                    $holiday = $holiday[2]."/".$holiday[1]."/".$holiday[0];
+                    @endphp
+                    @if($holiday == $tanggal)
+                      <td colspan="2" align="center">{{ $libur->keterangan }}</td>
+                    @endif
+                  @endforeach
+                  @foreach ($intervensi as $interv)
+                    @php
+                    $mulai = explode('-', $interv->tanggal_mulai);
+                    $mulai = $mulai[2]."/".$mulai[1]."/".$mulai[0];
+                    $akhir = explode('-', $interv->tanggal_akhir);
+                    $akhir = $akhir[2]."/".$akhir[1]."/".$akhir[0];
+                    @endphp
+                    @if($tanggal == $mulai)
+                      <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
+                    @endif
+                    @if($tanggal == $akhir)
+                      <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
+                    @endif
+                  @endforeach
+                @endforeach
               </tr>
-              <?php $no++; ?>
-              @endforeach
+              @php
+                $no++
+              @endphp
               @endforeach
             </tbody>
           </table>
