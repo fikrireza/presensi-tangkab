@@ -147,7 +147,7 @@ class IntervensiController extends Controller
         $pegawai = pegawai::select('id', 'nama')->get();
       }
 
-      return view('pages.intervensi.kelola', compact('getSKPD', 'pegawai'));
+      return view('pages.intervensi.kelola', compact('getSKPD', 'pegawai', 'intervensi'));
     }
 
     public function kelolaAksi($id)
