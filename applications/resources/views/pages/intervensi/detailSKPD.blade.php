@@ -38,7 +38,7 @@
 
 {{-- Modal Tambah Intervensi--}}
 <div class="modal modal-default fade" id="modaltambahIntervensi" role="dialog">
-  <div class="modal-dialog" style="width:600px;">
+  <div class="modal-dialog" style="width:800px;">
     <form class="form-horizontal" action="{{ route('intervensi.kelola.post') }}" method="post" enctype="multipart/form-data">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -50,7 +50,7 @@
           <div class="form-group {{ $errors->has('pegawai_id') ? 'has-error' : '' }}">
             <label class="col-md-3 control-label">Pegawai</label>
             <div class="col-md-9">
-              <select class="form-control select2" name="pegawai_id">
+              <select class="form-control select2" name="pegawai_id" style="width:100%;">
                 <option value="">-- PILIH --</option>
                 @foreach ($pegawai as $key)
                 <option value="{{ $key->id }}" {{ old('pegawai_id') == $key->id ? 'selected' : ''}}>{{ $key->nama }}</option>
@@ -58,10 +58,10 @@
               </select>
             </div>
           </div>
-          <div class="form-group {{ $errors->has('jenis_intervensi') ? 'has-error' : '' }}">
+          <div class="form-group {{ $errors->has('jenis_intervensi') ? 'has-error' : '' }}" >
             <label class="col-sm-3 control-label">Jenis Intervensi</label>
             <div class="col-sm-9">
-              <select class="form-control select2" name="jenis_intervensi">
+              <select class="form-control select2" name="jenis_intervensi" style="width:100%;">
                 <option value="">-- PILIH --</option>
                 <option value="Ijin" {{ old('jenis_interrvensi') == 'Ijin' ? 'selected' : ''}}>Ijin</option>
                 <option value="Sakit" {{ old('jenis_intervensi') == 'Sakit' ? 'selected' : ''}}>Sakit</option>
@@ -88,8 +88,14 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input class="form-control pull-right" id="tanggal_akhir" type="text" name="tanggal_akhir"  value="{{ old('tanggal_akhir') }}" placeholder="@if($errors->has('tanggal_akhir')){{ $errors->first('tanggal_akhir')}}@endif Tanggal Akhir">
+                <input class="form-control pull-right" id="tanggal_akhir" type="text" name="tanggal_akhir"  value="{{ old('tanggal_akhir') }}" placeholder="@if($errors->has('tanggal_akhir')){{ $errors->first('tanggal_akhir')}}@endif Tanggal Akhir" onchange="durationDay()">
               </div>
+            </div>
+          </div>
+          <div class="form-group {{ $errors->has('jumlah_hari') ? 'has-error' : '' }}">
+            <label class="col-sm-3 control-label">Jumlah Hari</label>
+            <div class="col-sm-9">
+              <input type="text" name="jumlah_hari" id="jumlah_hari" class="form-control" value="{{ old('jumlah_hari') }}" placeholder="@if($errors->has('jumlah_hari')){{ $errors->first('jumlah_hari')}} @endif Jumlah Hari" required="" readonly="true">
             </div>
           </div>
           <div class="form-group {{ $errors->has('keterangan') ? 'has-error' : '' }}">
@@ -212,5 +218,21 @@
   @if ($errors->has('pegawai_id') || $errors->has('jenis_intervensi') || $errors->has('tanggal_mulai') || $errors->has('tanggal_akhir'))
   $('#modaltambahIntervensi').modal('show');
   @endif
+</script>
+<script type="text/javascript">
+  function durationDay(){
+    $(document).ready(function() {
+      $('#tanggal_mulai, #tanggal_akhir').on('change textInput input', function () {
+            if ( ($("#tanggal_mulai").val() != "") && ($("#tanggal_akhir").val() != "")) {
+                var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+                var firstDate = new Date($("#tanggal_mulai").val());
+                var secondDate = new Date($("#tanggal_akhir").val());
+                var diffDays = Math.round(Math.round((secondDate.getTime() - firstDate.getTime()) / (oneDay))); 
+                $("#jumlah_hari").val(diffDays);
+            }
+        });
+    });
+
+  }
 </script>
 @endsection
