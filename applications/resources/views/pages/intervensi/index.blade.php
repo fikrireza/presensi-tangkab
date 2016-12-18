@@ -177,7 +177,7 @@
         <h3 class="box-title">Intervensi</h3>
         <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahIntervensi">Tambah Intervensi</a>
         @if(session('status') != 'pegawai')
-        <a href="{{ route('intervensi.kelola') }}" class="btn bg-green pull-right">Kelola Intervensi</a>
+        <a href="{{ route('intervensi.kelola') }}" class="btn bg-green pull-right">Lihat Intervensi</a>
         @endif
       </div>
       <div class="box-body">

@@ -1,16 +1,17 @@
 @extends('layout.master')
 
 @section('title')
-  <title>Kelola Intervensi</title>
+  <title>SKPD Detail Intervensi</title>
   <link rel="stylesheet" href="{{ asset('plugins/select2/select2.min.css') }}">
 @endsection
 
 @section('breadcrumb')
-  <h1>Kelola Intervensi</h1>
+  <h1>SKPD Detail Intervensi</h1>
   <ol class="breadcrumb">
     <li><a href=""><i class="fa fa-dashboard"></i>Dashboard</a></li>
     <li><a href="{{ route('intervensi.index') }}">Intervensi</a></li>
-    <li class="active">Kelola Intervensi</li>
+    <li><a href="{{ route('intervensi.kelola') }}">Kelola Intervensi</a></li>
+    <li class="active">Detail Intervensi</li>
   </ol>
 @endsection
 
@@ -122,7 +123,6 @@
         <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahIntervensi">Tambah Intervensi Pegawai</a>
       </div>
       <div class="box-body">
-        @if(session('status') == 'admin')
         <table class="table table-bordered table-striped">
           <thead>
             <tr>
@@ -133,7 +133,6 @@
               <th>Tanggal Mulai</th>
               <th>Tanggal Akhir</th>
               <th>Status Intervensi</th>
-              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -158,41 +157,12 @@
               @else
                 <small class="label label-danger">Tidak diSetujui</small>
               @endif</td>
-              <td>@if ($key->flag_status == 0)
-                  <a href="{{ route('intervensi.kelola.aksi', $key->id) }}"><i class="fa fa-edit"></i> Lihat</a>
-                  @else
-                    -
-                  @endif
-              </td>
             </tr>
             <?php $no++; ?>
             @endforeach
             @endif
           </tbody>
         </table>
-
-        @elseif(session('status') == 'administrator')
-        <table id="table_skpd" class="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>SKPD</th>
-              <th>Lihat Detail</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php $no = 1; ?>
-            @foreach ($getSKPD as $key)
-            <tr>
-              <td>{{ $no }}</td>
-              <td>{{ $key->nama }}</td>
-              <td><a href="{{ route('intervensi.skpd', $key->id) }}"><i class="fa fa-edit"></i> Lihat</a></td>
-            </tr>
-            <?php $no++; ?>
-            @endforeach
-          </tbody>
-        </table>
-        @endif
       </div>
     </div>
   </div>
