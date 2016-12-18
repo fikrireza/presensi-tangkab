@@ -198,26 +198,45 @@
                 );
                 @endphp
                 <td>{{ $dayList[$day] }}</td>
+
+                @php
+                  $flag=0;
+                @endphp
                 @foreach ($absensi as $absen)
+
                   @foreach ($absen as $key)
                     @if ($key->Tanggal_Log == $tanggal)
+                      @php
+                        $flag++;
+                      @endphp
                       <td align="center">@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else x @endif</td>
                       <td align="center">@if($key->Jam_Pulang != null) {{ $key->Jam_Pulang }} @else x @endif</td>
                     @endif
                   @endforeach
+
                   @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
-                    <td colspan="2" align="center">Libur</td>
+                    @php
+                      $flag++;
+                    @endphp
+                    <td align="center">Libur</td>
+                    <td align="center">Libur</td>
                     @break
                   @endif
+
                   @foreach ($hariLibur as $libur)
                     @php
                     $holiday = explode('-', $libur->libur);
                     $holiday = $holiday[2]."/".$holiday[1]."/".$holiday[0];
                     @endphp
                     @if($holiday == $tanggal)
-                      <td colspan="2" align="center">{{ $libur->keterangan }}</td>
+                      @php
+                        $flag++;
+                      @endphp
+                      <td align="center">{{ $libur->keterangan }}</td>
+                      <td align="center">{{ $libur->keterangan }}</td>
                     @endif
                   @endforeach
+
                   @foreach ($intervensi as $interv)
                     @php
                     $mulai = explode('-', $interv->tanggal_mulai);
@@ -226,13 +245,27 @@
                     $akhir = $akhir[2]."/".$akhir[1]."/".$akhir[0];
                     @endphp
                     @if($tanggal == $mulai)
-                      <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
+                      @php
+                        $flag++;
+                      @endphp
+                      <td align="center">{{ $interv->deskripsi }}</td>
+                      <td align="center">{{ $interv->deskripsi }}</td>
                     @endif
                     @if($tanggal == $akhir)
-                      <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
+                      @php
+                        $flag++;
+                      @endphp
+                      <td align="center">{{ $interv->deskripsi }}</td>
+                      <td align="center">{{ $interv->deskripsi }}</td>
                     @endif
                   @endforeach
                 @endforeach
+
+                {{-- kalo doi ga masuk maka kasih td kosong 2 biar alert data table ga muncul. --}}
+                @if ($flag==0)
+                  <td></td>
+                  <td></td>
+                @endif
               </tr>
               @php
                 $no++
