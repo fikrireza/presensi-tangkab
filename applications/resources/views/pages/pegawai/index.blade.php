@@ -45,6 +45,7 @@
           <thead>
             <tr>
               <th>No</th>
+              <th>NIP</th>
               <th>Nama</th>
               <th>SKPD</th>
               <th>Golongan</th>
@@ -66,11 +67,13 @@
               <td>-</td>
               <td>-</td>
               <td>-</td>
+              <td>-</td>
             </tr>
             @else
             @foreach ($pegawai as $key)
             <tr>
               <td>{{ $no }}</td>
+              <td>{{ $key->nip_sapk }}</td>
               <td>{{ $key->nama_pegawai }}</td>
               <td>{{ $key->nama_skpd }}</td>
               <td>{{ $key->nama_golongan }}</td>

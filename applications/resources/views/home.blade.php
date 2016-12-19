@@ -38,7 +38,6 @@
         </a> --}}
       </div>
     </div>
-    @endif
     <div class="col-lg-3 col-md-3 col-xs-12">
       <div class="small-box bg-purple">
         <div class="inner">
@@ -47,6 +46,17 @@
         </div>
       </div>
     </div>
+    @endif
+    @if (session('status') == 'pegawai')  
+    <div class="col-lg-3 col-md-3 col-xs-12">
+      <div class="small-box bg-purple">
+        <div class="inner">
+          <h3><sup style="font-size: 20px">Rp. {{ number_format($tpp->tpp_dibayarkan,0,',','.') }},-</sup></h3>
+          <p>Jumlah TPP</p>
+        </div>
+      </div>
+    </div>
+    @endif
     <div class="col-lg-3 col-md-3 col-xs-12">
       <div class="small-box bg-maroon">
         <div class="inner">

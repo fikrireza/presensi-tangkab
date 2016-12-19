@@ -91,7 +91,6 @@ class HomeController extends Controller
                                   where tanggal_log='$tanggalini'
                                   group by c.nama, a.fid) as ab
                                   group by skpd");
-                                  // dd($absensi, $jumlahPegawaiSKPD);
 
           return view('home', compact('absensi', 'pegawai', 'jumlahintervensi', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'jumlahPegawaiSKPD'));
         }

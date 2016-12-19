@@ -63,14 +63,13 @@
           </div>
         </div>
       </form>
-      {{-- <a href="#">Lupa password? Klik disini</a><br> --}}
     </div>
 	</div>
 	<div class="footer">
     <div class="pull-right hidden-xs">
       <b>Version</b> 2.0
     </div>
-		<h4><strong>Copyright © 2017 <a href="">Presesnsi Online</a>.</strong> All rights reserved.</h4>
+		<h4><strong>Copyright © 2017 <a href="">Presensi Online</a>.</strong> All rights reserved.</h4>
 	</div>
 </div>
 
