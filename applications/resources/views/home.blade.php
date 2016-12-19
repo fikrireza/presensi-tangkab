@@ -42,7 +42,7 @@
     <div class="col-lg-3 col-md-3 col-xs-12">
       <div class="small-box bg-purple">
         <div class="inner">
-          <h3><sup style="font-size: 20px">Rp. {{ number_format($tpp->tpp_dibayarkan,0,',','.') }},-</sup></h3>
+          <h3><sup style="font-size: 20px">Rp. {{ number_format($jumlahTPP[0]->jumlah_tpp,0,',','.') }},-</sup></h3>
           <p>Jumlah TPP</p>
         </div>
       </div>
@@ -114,9 +114,11 @@
             <tr>
               <th>No</th>
               <th>SKPD</th>
+              <th>Jumlah Pegawai</th>
               <th>Jumlah Hadir</th>
               <th>Jumlah Absen</th>
               <th>Jumlah Intervensi</th>
+              <th>Tanggal Update</td>
             </tr>
           </thead>
           <tbody>
@@ -125,6 +127,11 @@
               <tr>
                 <td>{{ $no }}</td>
                 <td><a href="{{route('detail.absensi', $key->id)}}">{{ $key->skpd }}</a></td>
+                @foreach ($jumlahPegawaiSKPD as $pegSKPD)
+                  @if($key->id == $pegSKPD->skpd_id)
+                    <td>{{ $pegSKPD->jumlah_pegawai }}</td>
+                  @endif
+                @endforeach
                 <td>{{ $key->jumlah_hadir }}</td>
                 <td>
                   @php
@@ -155,6 +162,7 @@
                   @endforeach
                   {{$countintervensi}}
                 </td>
+                <td></td>
               </tr>
               @php
                 $no++;

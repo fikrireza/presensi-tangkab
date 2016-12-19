@@ -35,14 +35,17 @@ class HomeController extends Controller
     public function index()
     {
         $pegawai_id = Auth::user()->pegawai_id;
+        $skpd_id   = Auth::user()->skpd_id;
 
         if(session('status') == 'administrator')
         {
           $jumlahPegawai = pegawai::count();
+          $jumlahTPP = DB::select("select sum(preson_pegawais.tpp_dibayarkan) as jumlah_tpp from preson_pegawais");
         }
         elseif(session('status') == 'admin')
         {
           $jumlahPegawai = pegawai::where('skpd_id', Auth::user()->skpd_id)->count();
+          $jumlahTPP = DB::select("select sum(preson_pegawais.tpp_dibayarkan) as jumlah_tpp from preson_pegawais where preson_pegawais.skpd_id = '$skpd_id'");
         }
 
         $tpp = pegawai::where('id', $pegawai_id)->select('tpp_dibayarkan', 'fid')->first();
@@ -74,6 +77,11 @@ class HomeController extends Controller
           and a.tanggal_akhir >= '$tanggalinter'
           group by c.nama");
 
+          $jumlahPegawaiSKPD = DB::select("select b.nama as skpd, a.skpd_id, count(a.skpd_id) as jumlah_pegawai
+                                          from preson_pegawais a, preson_skpd b
+                                          where a.skpd_id = b.id
+                                          group by skpd_id");
+
           $absensi = DB::select("select id, skpd, count(*) as 'jumlah_hadir'
                                   from
                                   (select c.id, c.nama as skpd, count(*) as kk
@@ -83,8 +91,9 @@ class HomeController extends Controller
                                   where tanggal_log='$tanggalini'
                                   group by c.nama, a.fid) as ab
                                   group by skpd");
+                                  // dd($absensi, $jumlahPegawaiSKPD);
 
-          return view('home', compact('absensi', 'pegawai', 'jumlahintervensi', 'tpp', 'jumlahPegawai'));
+          return view('home', compact('absensi', 'pegawai', 'jumlahintervensi', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'jumlahPegawaiSKPD'));
         }
         else if(session('status') == 'admin')
         {
@@ -112,7 +121,7 @@ class HomeController extends Controller
                                 	ON pegawai.fid = tabel_Jam_Pulang.Fid
                                 	GROUP BY nama_pegawai");
           $absensi = collect($absensi);
-          return view('home', compact('absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai'));
+          return view('home', compact('absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai', 'jumlahTPP'));
         }else{
           for($i=$start_time; $i<$end_time; $i+=86400)
           {
@@ -145,7 +154,7 @@ class HomeController extends Controller
                                   ->get();
 
           $hariLibur = hariLibur::where('libur', 'LIKE', '____-'.$month.'-__')->get();
-          
+
           // dd($intervensi);
           // dd($absensi);
           // foreach ($absensi as $absen) {
