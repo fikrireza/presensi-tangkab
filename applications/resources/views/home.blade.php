@@ -213,8 +213,7 @@
                     @php
                       $flag++;
                     @endphp
-                    <td align="center">{{ $lib->keterangan }}</td>
-                    <td align="center">{{ $lib->keterangan }}</td>
+                    <td colspan="2" align="center">{{ $lib->keterangan }}</td>
                   @endif
                 @endforeach
 
