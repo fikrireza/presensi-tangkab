@@ -144,7 +144,7 @@ class HomeController extends Controller
                                   ->where('preson_intervensis.flag_status', 1)
                                   ->get();
 
-          $hariLibur = hariLibur::where('libur', 'LIKE', '%'.$month.'%')->get();
+          $hariLibur = hariLibur::where('libur', 'LIKE', '____-'.$month.'-__')->get();
           // dd($intervensi);
           // dd($absensi);
           // foreach ($absensi as $absen) {

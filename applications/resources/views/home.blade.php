@@ -178,6 +178,7 @@
               @php
                 $no = 1;
               @endphp
+
               @foreach ($tanggalBulan as $tanggal)
               <tr>
                 <td>{{ $no }}</td>
@@ -202,6 +203,21 @@
                 @php
                   $flag=0;
                 @endphp
+
+                @foreach ($hariLibur as $lib)
+                  @php
+                    $holiday = explode('-', $lib->libur);
+                    $holiday = $holiday[2]."/".$holiday[1]."/".$holiday[0];
+                  @endphp
+                  @if($holiday == $tanggal)
+                    @php
+                      $flag++;
+                    @endphp
+                    <td align="center">{{ $lib->keterangan }}</td>
+                    <td align="center">{{ $lib->keterangan }}</td>
+                  @endif
+                @endforeach
+                
                 @foreach ($absensi as $absen)
 
                   @foreach ($absen as $key)
@@ -222,20 +238,6 @@
                     <td align="center">Libur</td>
                     @break
                   @endif
-
-                  @foreach ($hariLibur as $libur)
-                    @php
-                    $holiday = explode('-', $libur->libur);
-                    $holiday = $holiday[2]."/".$holiday[1]."/".$holiday[0];
-                    @endphp
-                    @if($holiday == $tanggal)
-                      @php
-                        $flag++;
-                      @endphp
-                      <td align="center">{{ $libur->keterangan }}</td>
-                      <td align="center">{{ $libur->keterangan }}</td>
-                    @endif
-                  @endforeach
 
                   @foreach ($intervensi as $interv)
                     @php
