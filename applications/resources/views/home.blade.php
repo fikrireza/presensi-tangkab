@@ -164,7 +164,7 @@
         </table>
 
         @elseif(session('status') == 'pegawai')
-          <table id="table_absen" class="table table-bordered">
+          <table class="table table-bordered">
             <thead>
               <tr>
                 <th>No</th>
@@ -217,7 +217,7 @@
                     <td align="center">{{ $lib->keterangan }}</td>
                   @endif
                 @endforeach
-                
+
                 @foreach ($absensi as $absen)
 
                   @foreach ($absen as $key)
@@ -234,8 +234,7 @@
                     @php
                       $flag++;
                     @endphp
-                    <td align="center">Libur</td>
-                    <td align="center">Libur</td>
+                    <td colspan="2" align="center">Libur</td>
                     @break
                   @endif
 
@@ -250,23 +249,20 @@
                       @php
                         $flag++;
                       @endphp
-                      <td align="center">{{ $interv->deskripsi }}</td>
-                      <td align="center">{{ $interv->deskripsi }}</td>
+                      <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
                     @endif
                     @if($tanggal == $akhir)
                       @php
                         $flag++;
                       @endphp
-                      <td align="center">{{ $interv->deskripsi }}</td>
-                      <td align="center">{{ $interv->deskripsi }}</td>
+                      <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
                     @endif
                   @endforeach
                 @endforeach
 
                 {{-- kalo doi ga masuk maka kasih td kosong 2 biar alert data table ga muncul. --}}
                 @if ($flag==0)
-                  <td></td>
-                  <td></td>
+                  <td colspan="2" align="center">Alpa</td>
                 @endif
               </tr>
               @php
