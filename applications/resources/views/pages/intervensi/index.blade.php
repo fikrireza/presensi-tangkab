@@ -348,7 +348,7 @@ $('.tanggal_akhir_edit').datepicker({
                 var firstDate = new Date($("#tanggal_mulai").val());
                 var secondDate = new Date($("#tanggal_akhir").val());
                 var diffDays = Math.round(Math.round((secondDate.getTime() - firstDate.getTime()) / (oneDay))); 
-                $("#jumlah_hari").val(diffDays);
+                $("#jumlah_hari").val(diffDays+1);
             }
         });
     });
@@ -365,7 +365,7 @@ $('.tanggal_akhir_edit').datepicker({
                 var firstDate = new Date($("#tanggal_mulai_edit").val());
                 var secondDate = new Date($("#tanggal_akhir_edit").val());
                 var diffDays = Math.round(Math.round((secondDate.getTime() - firstDate.getTime()) / (oneDay))); 
-                $("#jumlah_hari_edit").val(diffDays);
+                $("#jumlah_hari_edit").val(diffDays+1);
             }
         });
     });
