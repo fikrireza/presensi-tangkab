@@ -38,7 +38,16 @@
         </a> --}}
       </div>
     </div>
+    <div class="col-lg-3 col-md-3 col-xs-12">
+      <div class="small-box bg-purple">
+        <div class="inner">
+          <h3><sup style="font-size: 20px">Rp. {{ number_format($jumlahTPP[0]->jumlah_tpp,0,',','.') }},-</sup></h3>
+          <p>Jumlah TPP</p>
+        </div>
+      </div>
+    </div>
     @endif
+    @if (session('status') == 'pegawai')  
     <div class="col-lg-3 col-md-3 col-xs-12">
       <div class="small-box bg-purple">
         <div class="inner">
@@ -47,6 +56,7 @@
         </div>
       </div>
     </div>
+    @endif
     <div class="col-lg-3 col-md-3 col-xs-12">
       <div class="small-box bg-maroon">
         <div class="inner">
@@ -114,9 +124,11 @@
             <tr>
               <th>No</th>
               <th>SKPD</th>
+              <th>Jumlah Pegawai</th>
               <th>Jumlah Hadir</th>
               <th>Jumlah Absen</th>
               <th>Jumlah Intervensi</th>
+              <th>Tanggal Update</td>
             </tr>
           </thead>
           <tbody>
@@ -125,6 +137,11 @@
               <tr>
                 <td>{{ $no }}</td>
                 <td><a href="{{route('detail.absensi', $key->id)}}">{{ $key->skpd }}</a></td>
+                @foreach ($jumlahPegawaiSKPD as $pegSKPD)
+                  @if($key->id == $pegSKPD->skpd_id)
+                    <td>{{ $pegSKPD->jumlah_pegawai }}</td>
+                  @endif
+                @endforeach
                 <td>{{ $key->jumlah_hadir }}</td>
                 <td>
                   @php
@@ -155,6 +172,7 @@
                   @endforeach
                   {{$countintervensi}}
                 </td>
+                <td></td>
               </tr>
               @php
                 $no++;
@@ -164,7 +182,7 @@
         </table>
 
         @elseif(session('status') == 'pegawai')
-          <table id="table_absen" class="table table-bordered">
+          <table class="table table-bordered">
             <thead>
               <tr>
                 <th>No</th>
@@ -178,6 +196,7 @@
               @php
                 $no = 1;
               @endphp
+
               @foreach ($tanggalBulan as $tanggal)
               <tr>
                 <td>{{ $no }}</td>
@@ -198,41 +217,78 @@
                 );
                 @endphp
                 <td>{{ $dayList[$day] }}</td>
+
+                @php
+                  $flag=0;
+                @endphp
+
+                @foreach ($hariLibur as $lib)
+                  @php
+                    $holiday = explode('-', $lib->libur);
+                    $holiday = $holiday[2]."/".$holiday[1]."/".$holiday[0];
+                  @endphp
+                  @if($holiday == $tanggal)
+                    @php
+                      $flag++;
+                    @endphp
+                    <td colspan="2" align="center">{{ $lib->keterangan }}</td>
+                  @endif
+                @endforeach
+
+                @php
+                    $flaginter = 0;
+                @endphp
+
+                @foreach ($intervensi as $interv)
+                  @php
+                  $mulai = explode('-', $interv->tanggal_mulai);
+                  $mulai = $mulai[2]."/".$mulai[1]."/".$mulai[0];
+                  $akhir = explode('-', $interv->tanggal_akhir);
+                  $akhir = $akhir[2]."/".$akhir[1]."/".$akhir[0];
+                  @endphp
+                  @if($tanggal == $mulai)
+                    @php
+                      $flag++;
+                      $flaginter++;
+                    @endphp
+                    <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
+                  @endif
+                  @if($tanggal == $akhir)
+                    @php
+                      $flag++;
+                      $flaginter++;
+                    @endphp
+                    <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
+                  @endif
+                @endforeach
+
                 @foreach ($absensi as $absen)
+
                   @foreach ($absen as $key)
-                    @if ($key->Tanggal_Log == $tanggal)
+                    @if ($key->Tanggal_Log == $tanggal && $flaginter == 0)
+                      @php
+                        $flag++;
+                      @endphp
                       <td align="center">@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else x @endif</td>
                       <td align="center">@if($key->Jam_Pulang != null) {{ $key->Jam_Pulang }} @else x @endif</td>
                     @endif
                   @endforeach
+
                   @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
+                    @php
+                      $flag++;
+                    @endphp
                     <td colspan="2" align="center">Libur</td>
                     @break
                   @endif
-                  @foreach ($hariLibur as $libur)
-                    @php
-                    $holiday = explode('-', $libur->libur);
-                    $holiday = $holiday[2]."/".$holiday[1]."/".$holiday[0];
-                    @endphp
-                    @if($holiday == $tanggal)
-                      <td colspan="2" align="center">{{ $libur->keterangan }}</td>
-                    @endif
-                  @endforeach
-                  @foreach ($intervensi as $interv)
-                    @php
-                    $mulai = explode('-', $interv->tanggal_mulai);
-                    $mulai = $mulai[2]."/".$mulai[1]."/".$mulai[0];
-                    $akhir = explode('-', $interv->tanggal_akhir);
-                    $akhir = $akhir[2]."/".$akhir[1]."/".$akhir[0];
-                    @endphp
-                    @if($tanggal == $mulai)
-                      <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
-                    @endif
-                    @if($tanggal == $akhir)
-                      <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
-                    @endif
-                  @endforeach
+
+
                 @endforeach
+
+                {{-- kalo doi ga masuk maka kasih td kosong 2 biar alert data table ga muncul. --}}
+                @if ($flag==0)
+                  <td colspan="2" align="center">Alpa</td>
+                @endif
               </tr>
               @php
                 $no++

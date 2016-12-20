@@ -35,14 +35,17 @@ class HomeController extends Controller
     public function index()
     {
         $pegawai_id = Auth::user()->pegawai_id;
+        $skpd_id   = Auth::user()->skpd_id;
 
         if(session('status') == 'administrator')
         {
           $jumlahPegawai = pegawai::count();
+          $jumlahTPP = DB::select("select sum(preson_pegawais.tpp_dibayarkan) as jumlah_tpp from preson_pegawais");
         }
         elseif(session('status') == 'admin')
         {
           $jumlahPegawai = pegawai::where('skpd_id', Auth::user()->skpd_id)->count();
+          $jumlahTPP = DB::select("select sum(preson_pegawais.tpp_dibayarkan) as jumlah_tpp from preson_pegawais where preson_pegawais.skpd_id = '$skpd_id'");
         }
 
         $tpp = pegawai::where('id', $pegawai_id)->select('tpp_dibayarkan', 'fid')->first();
@@ -74,6 +77,11 @@ class HomeController extends Controller
           and a.tanggal_akhir >= '$tanggalinter'
           group by c.nama");
 
+          $jumlahPegawaiSKPD = DB::select("select b.nama as skpd, a.skpd_id, count(a.skpd_id) as jumlah_pegawai
+                                          from preson_pegawais a, preson_skpd b
+                                          where a.skpd_id = b.id
+                                          group by skpd_id");
+
           $absensi = DB::select("select id, skpd, count(*) as 'jumlah_hadir'
                                   from
                                   (select c.id, c.nama as skpd, count(*) as kk
@@ -84,7 +92,7 @@ class HomeController extends Controller
                                   group by c.nama, a.fid) as ab
                                   group by skpd");
 
-          return view('home', compact('absensi', 'pegawai', 'jumlahintervensi', 'tpp', 'jumlahPegawai'));
+          return view('home', compact('absensi', 'pegawai', 'jumlahintervensi', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'jumlahPegawaiSKPD'));
         }
         else if(session('status') == 'admin')
         {
@@ -112,7 +120,7 @@ class HomeController extends Controller
                                 	ON pegawai.fid = tabel_Jam_Pulang.Fid
                                 	GROUP BY nama_pegawai");
           $absensi = collect($absensi);
-          return view('home', compact('absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai'));
+          return view('home', compact('absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai', 'jumlahTPP'));
         }else{
           for($i=$start_time; $i<$end_time; $i+=86400)
           {
@@ -121,11 +129,11 @@ class HomeController extends Controller
             $list[] = DB::select("SELECT c.nama AS skpd, b.id as pegawai_id, b.nama AS nama_pegawai, a.Tanggal_Log, a.DateTime,
                                     (select MIN(Jam_Log) from ta_log
                                   		where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
-                                  		and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '08:00:00'
+                                  		and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
                                   		and Fid = '$tpp->fid') as Jam_Datang,
                                   	(select MIN(Jam_Log) from ta_log
                                   		where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
-                                  		and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '16:00:00'
+                                  		and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '15:00:00'
                                   		and Fid = '$tpp->fid') as Jam_Pulang
                                   FROM ta_log a, preson_pegawais b, preson_skpd c
                                   WHERE b.skpd_id = c.id
@@ -134,7 +142,7 @@ class HomeController extends Controller
                                   AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                   LIMIT 1");
           }
-          // dd($tanggalBulan);
+
           $absensi = collect($list);
 
           $intervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
@@ -144,7 +152,8 @@ class HomeController extends Controller
                                   ->where('preson_intervensis.flag_status', 1)
                                   ->get();
 
-          $hariLibur = hariLibur::where('libur', 'LIKE', '%'.$month.'%')->get();
+          $hariLibur = hariLibur::where('libur', 'LIKE', '____-'.$month.'-__')->get();
+
           // dd($intervensi);
           // dd($absensi);
           // foreach ($absensi as $absen) {
@@ -157,6 +166,7 @@ class HomeController extends Controller
           //   }
           // }
           // die();
+
           return view('home', compact('absensi', 'pegawai', 'tanggalBulan', 'intervensi', 'hariLibur', 'tpp', 'jumlahPegawai'));
         }
     }
