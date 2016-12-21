@@ -60,11 +60,13 @@ Route::get('intervensi/skpd/{id}', 'IntervensiController@skpd')->name('intervens
 
 // Absensi Administrator
 Route::get('absensi', 'AbsensiController@index')->name('absensi.index');
+Route::post('absensi', 'AbsensiController@filterAdministrator')->name('absensi.filterAdministrator');
 // Absensi Pegawai
 Route::get('absensi-detail', 'AbsensiController@detailPegawai')->name('absensi.pegawai');
 Route::post('absensi-detail', 'AbsensiController@filterMonth')->name('absensi.filterMonth');
 // Absensi SKPD
 Route::get('absensi-skpd', 'AbsensiController@absenSKPD')->name('absensi.skpd');
+Route::post('absensi-skpd', 'AbsensiController@filterAdmin')->name('absensi.filterAdmin');
 
 
 // Manajemen User

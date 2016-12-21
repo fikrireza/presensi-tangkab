@@ -54,8 +54,8 @@ class HomeController extends Controller
                             ->select('preson_skpd.*', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.fid', 'preson_pegawais.tpp_dibayarkan')
                             ->get();
 
-        $month = "08";
-        $year = "2016";
+        $month = date('m');
+        $year = date('Y');
 
         $start_date = "01-".$month."-".$year;
         $start_time = strtotime($start_date);

@@ -47,7 +47,7 @@
       </div>
     </div>
     @endif
-    @if (session('status') == 'pegawai')  
+    @if (session('status') == 'pegawai')
     <div class="col-lg-3 col-md-3 col-xs-12">
       <div class="small-box bg-purple">
         <div class="inner">
@@ -285,9 +285,13 @@
 
                 @endforeach
 
-                {{-- kalo doi ga masuk maka kasih td kosong 2 biar alert data table ga muncul. --}}
                 @if ($flag==0)
-                  <td colspan="2" align="center">Alpa</td>
+                  @if ($tanggal > date("d/m/Y"))
+                    <td align="center">x</td>
+                    <td align="center">x</td>
+                  @else
+                    <td colspan="2" align="center">Alpa</td>
+                  @endif
                 @endif
               </tr>
               @php

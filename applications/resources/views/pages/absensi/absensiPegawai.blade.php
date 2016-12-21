@@ -76,10 +76,50 @@
               @php
                 $flag=0;
               @endphp
+              @foreach ($hariLibur as $lib)
+                @php
+                  $holiday = explode('-', $lib->libur);
+                  $holiday = $holiday[2]."/".$holiday[1]."/".$holiday[0];
+                @endphp
+                @if ($holiday == $tanggal)
+                  @php
+                    $flag++
+                  @endphp
+                  <td colspan="2" align="center">{{ $lib->keterangan}}</td>
+                @endif
+              @endforeach
+
+              @php
+                $flaginter = 0;
+              @endphp
+
+              @foreach ($intervensi as $interv)
+                @php
+                $mulai = explode('-', $interv->tanggal_mulai);
+                $mulai = $mulai[2]."/".$mulai[1]."/".$mulai[0];
+                $akhir = explode('-', $interv->tanggal_akhir);
+                $akhir = $akhir[2]."/".$akhir[1]."/".$akhir[0];
+                @endphp
+                @if($tanggal == $mulai)
+                  @php
+                    $flag++;
+                    $flaginter++;
+                  @endphp
+                  <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
+                @endif
+                @if($tanggal == $akhir)
+                  @php
+                    $flag++;
+                    $flaginter++;
+                  @endphp
+                  <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
+                @endif
+              @endforeach
+
               @foreach ($absensi as $absen)
 
                 @foreach ($absen as $key)
-                  @if ($key->Tanggal_Log == $tanggal)
+                  @if ($key->Tanggal_Log == $tanggal && $flaginter == 0)
                     @php
                       $flag++;
                     @endphp
@@ -95,44 +135,15 @@
                   <td colspan="2" align="center">Libur</td>
                   @break
                 @endif
-
-                @foreach ($hariLibur as $libur)
-                  @php
-                  $holiday = explode('-', $libur->libur);
-                  $holiday = $holiday[2]."/".$holiday[1]."/".$holiday[0];
-                  @endphp
-                  @if($holiday == $tanggal)
-                    @php
-                      $flag++;
-                    @endphp
-                    <td colspan="2" align="center">{{ $libur->keterangan }}</td>
-                  @endif
-                @endforeach
-
-                @foreach ($intervensi as $interv)
-                  @php
-                  $mulai = explode('-', $interv->tanggal_mulai);
-                  $mulai = $mulai[2]."/".$mulai[1]."/".$mulai[0];
-                  $akhir = explode('-', $interv->tanggal_akhir);
-                  $akhir = $akhir[2]."/".$akhir[1]."/".$akhir[0];
-                  @endphp
-                  @if($tanggal == $mulai)
-                    @php
-                      $flag++;
-                    @endphp
-                    <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
-                  @endif
-                  @if($tanggal == $akhir)
-                    @php
-                      $flag++;
-                    @endphp
-                    <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
-                  @endif
-                @endforeach
               @endforeach
+
               @if ($flag==0)
-                <td></td>
-                <td></td>
+                @if ($tanggal > date("d/m/Y"))
+                  <td align="center">x</td>
+                  <td align="center">x</td>
+                @else
+                  <td colspan="2" align="center">Alpa</td>
+                @endif
               @endif
             </tr>
             @php
