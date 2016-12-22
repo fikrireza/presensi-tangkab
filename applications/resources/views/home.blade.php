@@ -172,7 +172,11 @@
                   @endforeach
                   {{$countintervensi}}
                 </td>
-                <td></td>
+                <td>@foreach ($lastUpdate as $update)
+                  @if ($update->id == $key->id)
+                    {{ $update->last_update }}
+                  @endif
+                @endforeach</td>
               </tr>
               @php
                 $no++;

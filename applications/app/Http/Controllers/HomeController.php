@@ -92,7 +92,13 @@ class HomeController extends Controller
                                   group by c.nama, a.fid) as ab
                                   group by skpd");
 
-          return view('home', compact('absensi', 'pegawai', 'jumlahintervensi', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'jumlahPegawaiSKPD'));
+          $lastUpdate = DB::select("select c.id, c.nama, max(str_to_date(a.DateTime, '%d/%m/%Y %H:%i:%s')) as last_update
+                                    from ta_log a, preson_pegawais b, preson_skpd c
+                                    where c.id = b.skpd_id
+                                    and b.fid = a.Fid
+                                    GROUP BY c.id");
+
+          return view('home', compact('absensi', 'pegawai', 'jumlahintervensi', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'jumlahPegawaiSKPD', 'lastUpdate'));
         }
         else if(session('status') == 'admin')
         {
