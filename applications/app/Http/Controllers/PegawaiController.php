@@ -141,6 +141,10 @@ class PegawaiController extends Controller
     {
       $pegawai = pegawai::find($id);
 
+      if($pegawai == null){
+        abort(404);
+      }
+
       if(session('status') == 'admin')
       {
         $skpd = skpd::where('id', Auth::user()->skpd_id)->select('id', 'nama')->get();

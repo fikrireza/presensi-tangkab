@@ -154,19 +154,6 @@ class HomeController extends Controller
 
           $hariLibur = hariLibur::where('libur', 'LIKE', '____-'.$month.'-__')->get();
 
-          // dd($intervensi);
-          // dd($absensi);
-          // foreach ($absensi as $absen) {
-          //   if($absen != null)
-          //   foreach ($absen as $key) {
-          //     print_r($absen).'</pre>';
-          //   }
-          //   elseif($absen == null){
-          //     print_r('kosong</br>').'</pre>';
-          //   }
-          // }
-          // die();
-
           return view('home', compact('absensi', 'pegawai', 'tanggalBulan', 'intervensi', 'hariLibur', 'tpp', 'jumlahPegawai'));
         }
     }
@@ -174,6 +161,10 @@ class HomeController extends Controller
     public function detailabsensi($id)
     {
       $getskpd = skpd::find($id);
+
+      if($getskpd == null){
+        abort(404);
+      }
 
       $tanggalini = date('d/m/Y');
       $pegawai = pegawai::where('skpd_id', $id)->get();

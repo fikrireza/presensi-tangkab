@@ -27,7 +27,7 @@ class IntervensiController extends Controller
 
     public function store(Request $request)
     {
-      
+
       $message = [
         'jenis_intervensi.required' => 'Wajib di isi',
         'tanggal_mulai.required' => 'Wajib di isi',
@@ -110,7 +110,7 @@ class IntervensiController extends Controller
       }
 
       $file = $request->file('berkas_edit');
-     
+
       if($file != null)
       {
         $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_mulai.'-'.$request->jenis_intervensi.'.' . $file->getClientOriginalExtension();
@@ -172,6 +172,10 @@ class IntervensiController extends Controller
                             ->select('preson_pegawais.nama as nama_pegawai', 'preson_intervensis.*')
                             ->where('preson_intervensis.id', $id)->first();
 
+      if($intervensi == null){
+        abort(404);
+      }
+      
       return view('pages.intervensi.aksi', compact('intervensi'));
     }
 
@@ -239,6 +243,12 @@ class IntervensiController extends Controller
 
     public function skpd($id)
     {
+      $id = skpd::find($id);
+
+      if($id == null){
+        abort(404);
+      }
+
       $intervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
                             ->join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
                             ->select('preson_intervensis.*', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.nip_sapk')
