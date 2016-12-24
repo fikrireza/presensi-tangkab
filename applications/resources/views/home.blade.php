@@ -249,20 +249,27 @@
                   $mulai = $mulai[2]."/".$mulai[1]."/".$mulai[0];
                   $akhir = explode('-', $interv->tanggal_akhir);
                   $akhir = $akhir[2]."/".$akhir[1]."/".$akhir[0];
+
+                  $mulai = new DateTime($interv->tanggal_mulai);
+                  $akhir   = new DateTime($interv->tanggal_akhir);
+
                   @endphp
-                  @if($tanggal == $mulai)
+                  @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
                     @php
-                      $flag++;
-                      $flaginter++;
+                    $flag++;
                     @endphp
-                    <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
-                  @endif
-                  @if($tanggal == $akhir)
-                    @php
-                      $flag++;
-                      $flaginter++;
-                    @endphp
-                    <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
+                    <td colspan="2" align="center">Libur</td>
+                    @break
+                  @else
+                  @for($i = $mulai; $mulai <= $akhir; $i->modify('+1 day'))
+                    @if ($tanggal == $i->format("d/m/Y"))
+                        @php
+                        $flag++;
+                        $flaginter++;
+                        @endphp
+                      <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
+                    @endif
+                  @endfor
                   @endif
                 @endforeach
 
@@ -278,12 +285,14 @@
                     @endif
                   @endforeach
 
-                  @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
-                    @php
-                      $flag++;
-                    @endphp
-                    <td colspan="2" align="center">Libur</td>
-                    @break
+                  @if ($intervensi->isEmpty())
+                    @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
+                      @php
+                        $flag++;
+                      @endphp
+                      <td colspan="2" align="center">Libur</td>
+                      @break
+                    @endif
                   @endif
 
 
