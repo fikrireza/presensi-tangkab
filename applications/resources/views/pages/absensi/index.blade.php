@@ -98,7 +98,11 @@
               <td>{{ $detailAbsen->Jumlah_Terlambat }}</td>
               <td>{{ $detailAbsen->Jumlah_Pulcep }}</td>
               <td>0</td>
-              <td>0</td>
+                @if ($detailAbsen->nip_sapk == $hasilTanpaKeterangan['nip_sapk'])
+                  <td>{{ $hasilTanpaKeterangan['hasil']}}</td>
+                @else
+                  <td>0</td>
+                @endif
               <td>0</td>
             </tr>
             @php

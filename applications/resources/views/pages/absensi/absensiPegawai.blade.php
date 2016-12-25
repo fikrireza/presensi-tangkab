@@ -52,6 +52,7 @@
             @php
               $no = 1;
             @endphp
+
             @foreach ($tanggalBulan as $tanggal)
             <tr>
               <td>{{ $no }}</td>
@@ -76,21 +77,22 @@
               @php
                 $flag=0;
               @endphp
+
               @foreach ($hariLibur as $lib)
                 @php
                   $holiday = explode('-', $lib->libur);
                   $holiday = $holiday[2]."/".$holiday[1]."/".$holiday[0];
                 @endphp
-                @if ($holiday == $tanggal)
+                @if($holiday == $tanggal)
                   @php
-                    $flag++
+                    $flag++;
                   @endphp
-                  <td colspan="2" align="center">{{ $lib->keterangan}}</td>
+                  <td colspan="2" align="center">{{ $lib->keterangan }}</td>
                 @endif
               @endforeach
 
               @php
-                $flaginter = 0;
+                  $flaginter = 0;
               @endphp
 
               @foreach ($intervensi as $interv)
@@ -99,20 +101,27 @@
                 $mulai = $mulai[2]."/".$mulai[1]."/".$mulai[0];
                 $akhir = explode('-', $interv->tanggal_akhir);
                 $akhir = $akhir[2]."/".$akhir[1]."/".$akhir[0];
+
+                $mulai = new DateTime($interv->tanggal_mulai);
+                $akhir   = new DateTime($interv->tanggal_akhir);
+
                 @endphp
-                @if($tanggal == $mulai)
+                @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
                   @php
-                    $flag++;
-                    $flaginter++;
+                  $flag++;
                   @endphp
-                  <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
-                @endif
-                @if($tanggal == $akhir)
-                  @php
-                    $flag++;
-                    $flaginter++;
-                  @endphp
-                  <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
+                  <td colspan="2" align="center">Libur</td>
+                  @break
+                @else
+                @for($i = $mulai; $mulai <= $akhir; $i->modify('+1 day'))
+                  @if ($tanggal == $i->format("d/m/Y"))
+                      @php
+                      $flag++;
+                      $flaginter++;
+                      @endphp
+                    <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
+                  @endif
+                @endfor
                 @endif
               @endforeach
 
@@ -128,13 +137,17 @@
                   @endif
                 @endforeach
 
-                @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
-                  @php
-                    $flag++;
-                  @endphp
-                  <td colspan="2" align="center">Libur</td>
-                  @break
+                @if ($intervensi->isEmpty())
+                  @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
+                    @php
+                      $flag++;
+                    @endphp
+                    <td colspan="2" align="center">Libur</td>
+                    @break
+                  @endif
                 @endif
+
+
               @endforeach
 
               @if ($flag==0)

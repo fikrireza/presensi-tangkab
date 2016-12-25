@@ -15,6 +15,9 @@ use App\Models\HariLibur;
 use Auth;
 use Validator;
 use DB;
+use DateTime;
+use DateInterval;
+use DatePeriod;
 
 class AbsensiController extends Controller
 {
@@ -39,6 +42,95 @@ class AbsensiController extends Controller
       $end_date = explode('/', $end_dateR);
       $end_date = $end_date[2].'-'.$end_date[1].'-'.$end_date[0];
 
+      // Mencari Hari Libur Dalam Periode Tertentu
+      $potongHariLibur = harilibur::select('libur')->whereBetween('libur', array($start_date, $end_date))->get();
+      $potongHariLibur->pluck('libur');
+      foreach ($potongHariLibur as $liburs) {
+        $hariLibur[] = $liburs->libur;
+      }
+
+      //--------- Menghitung Berapa Jumlah Tanpa Keterangan/Absen Pegawai dalam Periode Tertentu, Sudah termasuk Intervensi dan Hari Libur
+      $getPegawaiSKPD = pegawai::where('skpd_id', $skpd_id)->get();
+      foreach ($getPegawaiSKPD as $pegawai) {
+        //Mencari Apakah Pegawai Ada Intervensi Atau Tidak
+        $potongIntervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                    ->select('preson_pegawais.id as pegawai_id', 'preson_intervensis.tanggal_mulai', 'preson_intervensis.jumlah_hari', 'preson_intervensis.tanggal_akhir')
+                                    ->where('preson_pegawais.id', $pegawai->id)
+                                    ->where('preson_intervensis.tanggal_mulai', '>=', $start_date)
+                                    ->where('preson_intervensis.tanggal_akhir', '<=', $end_date)
+                                    ->where('preson_intervensis.flag_status', 1)
+                                    ->get();
+
+        // menghitung Jumlah Hadir Dengan Periode Tertentu
+        $jumlahMasuk = DB::select("SELECT b.id as pegawai_id, b.fid, count(DISTINCT a.Tanggal_Log) as Jumlah_Masuk
+                                    FROM ta_log a, preson_pegawais b
+                                    WHERE a.Fid = b.fid
+                                    AND b.id = $pegawai->id
+                                    AND str_to_date(a.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'");
+        $jumlahMasuk = $jumlahMasuk[0]->Jumlah_Masuk;
+
+
+        $hasilTanpaKeterangan = array();
+        if($potongIntervensi->isEmpty()){
+          $workingDays = [1, 2, 3, 4, 5]; # date format = N (1 = Senin, ...)
+          $holidayDays = $hariLibur;
+
+          $from = new DateTime($start_date);
+          $to = new DateTime($end_date);
+          // $to->modify('+1 day'); H+1 Hari
+          $interval = new DateInterval('P1D');
+          $periods = new DatePeriod($from, $interval, $to);
+
+          $days = 0;
+          foreach ($periods as $period) {
+            if (!in_array($period->format('N'), $workingDays)) continue;
+            if (in_array($period->format('Y-m-d'), $holidayDays)) continue;
+            if (in_array($period->format('*-m-d'), $holidayDays)) continue;
+            $days++;
+          }
+          $hasilTanpaKeterangan['nip_sapk'] = $pegawai->nip_sapk;
+          $hasilTanpaKeterangan['hasil'] = $days - $jumlahMasuk;
+
+        }else{
+          foreach ($potongIntervensi as $intervensi) {
+            $pegawai_id = $intervensi->pegawai_id;
+            $tanggal_mulai = $intervensi->tanggal_mulai;
+            $tanggal_akhir = $intervensi->tanggal_akhir;
+            $mulai = new DateTime($tanggal_mulai);
+            $akhir   = new DateTime($tanggal_akhir);
+
+            for($i = $mulai; $mulai <= $akhir; $i->modify('+1 day'))
+            {
+              $intervensiHasil[] =  $i->format("Y-m-d");
+            }
+
+            $workingDays = [1, 2, 3, 4, 5]; # date format = N (1 = Senin, ...)
+            $holidayDays = array_merge($hariLibur, $intervensiHasil);
+
+            $from = new DateTime($start_date);
+            $to = new DateTime($end_date);
+            // $to->modify('+1 day');
+            $interval = new DateInterval('P1D');
+            $periods = new DatePeriod($from, $interval, $to);
+
+            $days = 0;
+            foreach ($periods as $period) {
+              if (!in_array($period->format('N'), $workingDays)) continue;
+              if (in_array($period->format('Y-m-d'), $holidayDays)) continue;
+              if (in_array($period->format('*-m-d'), $holidayDays)) continue;
+              $days++;
+            }
+            $hasilTanpaKeterangan['nip_sapk'] = $pegawai->nip_sapk;
+            $hasilTanpaKeterangan['hasil'] = $days - $jumlahMasuk;
+
+          }
+        }
+        $hasilTanpaKeterangan;
+      }
+      // Menghitung Berapa Jumlah Ketidakhadiran Pegawai dalam Periode Tertentu, Sudah termasuk Intervensi dan Hari Libur -------------//
+
+
+      // Menghitung Jumlah Terlambat dan Pulang Cepat
       $rekapAbsenPeriode = DB::select("SELECT pegawai.nip_sapk, pegawai.fid, pegawai.nama as nama_pegawai,
                                     				IFNULL(tabel_Jam_Datang_Terlambat.Jumlah_Terlambat, 0) as Jumlah_Terlambat,
                                     				IFNULL(tabel_Jam_Pulang_Cepat.Jumlah_Pulcep,0) as Jumlah_Pulcep
@@ -64,14 +156,13 @@ class AbsensiController extends Controller
                                     	ON pegawai.fid = tabel_Jam_Pulang_Cepat.Fid
                                     	GROUP BY nama_pegawai ");
 
-      return view('pages.absensi.index', compact('getSkpd', 'skpd_id', 'start_dateR', 'end_dateR', 'rekapAbsenPeriode'));
-
+      return view('pages.absensi.index', compact('getSkpd', 'skpd_id', 'start_dateR', 'end_dateR', 'rekapAbsenPeriode', 'hasilTanpaKeterangan'));
     }
 
 
     public function detailPegawai()
     {
-      $pegawai_id = pegawai::where('id', Auth::user()->pegawai_id)->select('fid')->first();
+      $pegawai_id = pegawai::where('id', Auth::user()->pegawai_id)->select('fid', 'id')->first();
 
       $month = date('m');
       $year = "2016";
@@ -105,12 +196,12 @@ class AbsensiController extends Controller
 
       $intervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
                               ->select('preson_pegawais.id as pegawai_id', 'preson_intervensis.tanggal_mulai', 'preson_intervensis.jumlah_hari', 'preson_intervensis.tanggal_akhir', 'preson_intervensis.deskripsi')
-                              ->where('preson_pegawais.id', $pegawai_id)
+                              ->where('preson_pegawais.id', $pegawai_id->id)
                               ->where('preson_intervensis.tanggal_mulai', 'LIKE', '%'.$month.'%')
                               ->where('preson_intervensis.flag_status', 1)
                               ->get();
 
-      $hariLibur = hariLibur::where('libur', 'LIKE', '%'.$month.'%')->get();
+      $hariLibur = hariLibur::where('libur', 'LIKE', '____-'.$month.'-__')->get();
 
       return view('pages.absensi.absensiPegawai', compact('absensi', 'tanggalBulan', 'intervensi', 'hariLibur'));
     }
