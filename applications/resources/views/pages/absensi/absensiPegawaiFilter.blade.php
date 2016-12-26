@@ -151,12 +151,7 @@
               @endforeach
 
               @if ($flag==0)
-                @if ($tanggal > date("d/m/Y"))
-                  <td align="center">x</td>
-                  <td align="center">x</td>
-                @else
-                  <td colspan="2" align="center">Alpa</td>
-                @endif
+                <td colspan="2" align="center">Alpa</td>
               @endif
             </tr>
             @php

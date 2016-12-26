@@ -12,40 +12,40 @@
 */
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/home/detail-absensi/{id}', 'HomeController@detailabsensi')->name('detail.absensi');
+Route::get('/home/detail-absensi/{id}', 'HomeController@detailabsensi')->name('detail.absensi')->middleware('administrator');
 
 // Pegawai
-Route::get('pegawai', 'PegawaiController@index')->name('pegawai.index');
-Route::get('pegawai/create', 'PegawaiController@create')->name('pegawai.create');
-Route::post('pegawai', 'PegawaiController@store')->name('pegawai.post');
-Route::get('pegawai/edit/{id}', 'PegawaiController@edit')->name('pegawai.edit');
-Route::post('pegawai/edit', 'PegawaiController@editStore')->name('pegawai.editStore');
+Route::get('pegawai', 'PegawaiController@index')->name('pegawai.index')->middleware('administrator', 'admin');
+Route::get('pegawai/create', 'PegawaiController@create')->name('pegawai.create')->middleware('administrator', 'admin');
+Route::post('pegawai', 'PegawaiController@store')->name('pegawai.post')->middleware('administrator', 'admin');
+Route::get('pegawai/edit/{id}', 'PegawaiController@edit')->name('pegawai.edit')->middleware('administrator', 'admin');
+Route::post('pegawai/edit', 'PegawaiController@editStore')->name('pegawai.editStore')->middleware('administrator', 'admin');
 
 // SKPD
-Route::get('skpd', 'SkpdController@index')->name('skpd.index');
-Route::post('skpd', 'SkpdController@store')->name('skpd.post');
+Route::get('skpd', 'SkpdController@index')->name('skpd.index')->middleware('administrator');
+Route::post('skpd', 'SkpdController@store')->name('skpd.post')->middleware('administrator');
 Route::get('skpd/{id}', 'SkpdController@bind');
-Route::post('skpd/edit', 'SkpdController@edit')->name('skpd.edit');
+Route::post('skpd/edit', 'SkpdController@edit')->name('skpd.edit')->middleware('administrator');
 
 // Golongan
-Route::get('golongan', 'GolonganController@index')->name('golongan.index');
-Route::post('golongan', 'GolonganController@store')->name('golongan.post');
+Route::get('golongan', 'GolonganController@index')->name('golongan.index')->middleware('administrator');
+Route::post('golongan', 'GolonganController@store')->name('golongan.post')->middleware('administrator');
 
 // Jabatan
-Route::get('jabatan', 'JabatanController@index')->name('jabatan.index');
-Route::post('jabatan', 'JabatanController@store')->name('jabatan.post');
+Route::get('jabatan', 'JabatanController@index')->name('jabatan.index')->middleware('administrator');
+Route::post('jabatan', 'JabatanController@store')->name('jabatan.post')->middleware('administrator');
 Route::get('jabatan/{id}', 'JabatanController@bind');
-Route::post('jabatan/edit', 'JabatanController@edit')->name('jabatan.edit');
+Route::post('jabatan/edit', 'JabatanController@edit')->name('jabatan.edit')->middleware('administrator');
 
 // Struktural
-Route::get('struktural', 'StrukturalController@index')->name('struktural.index');
-Route::post('struktural', 'StrukturalController@store')->name('struktural.post');
+Route::get('struktural', 'StrukturalController@index')->name('struktural.index')->middleware('administrator');
+Route::post('struktural', 'StrukturalController@store')->name('struktural.post')->middleware('administrator');
 
 // Hari Libur
-Route::get('harilibur', 'HariLiburController@index')->name('harilibur.index');
-Route::post('harilibur', 'HariLiburController@store')->name('harilibur.post');
+Route::get('harilibur', 'HariLiburController@index')->name('harilibur.index')->middleware('administrator');
+Route::post('harilibur', 'HariLiburController@store')->name('harilibur.post')->middleware('administrator');
 Route::get('harilibur/{id}', 'HariLiburController@bind');
-Route::post('harilibur/edit', 'HariLiburController@edit')->name('harilibur.edit');
+Route::post('harilibur/edit', 'HariLiburController@edit')->name('harilibur.edit')->middleware('administrator');
 
 // Intervensi
 Route::get('intervensi', 'IntervensiController@index')->name('intervensi.index');
@@ -59,14 +59,14 @@ Route::get('intervensi/kelola/approve/{id}', 'IntervensiController@kelolaApprove
 Route::get('intervensi/skpd/{id}', 'IntervensiController@skpd')->name('intervensi.skpd');
 
 // Absensi Administrator
-Route::get('absensi', 'AbsensiController@index')->name('absensi.index');
-Route::post('absensi', 'AbsensiController@filterAdministrator')->name('absensi.filterAdministrator');
+Route::get('absensi', 'AbsensiController@index')->name('absensi.index')->middleware('administrator');
+Route::post('absensi', 'AbsensiController@filterAdministrator')->name('absensi.filterAdministrator')->middleware('administrator');
 // Absensi Pegawai
-Route::get('absensi-detail', 'AbsensiController@detailPegawai')->name('absensi.pegawai');
-Route::post('absensi-detail', 'AbsensiController@filterMonth')->name('absensi.filterMonth');
+Route::get('absensi-detail', 'AbsensiController@detailPegawai')->name('absensi.pegawai')->middleware('pegawai');
+Route::post('absensi-detail', 'AbsensiController@filterMonth')->name('absensi.filterMonth')->middleware('pegawai');
 // Absensi SKPD
-Route::get('absensi-skpd', 'AbsensiController@absenSKPD')->name('absensi.skpd');
-Route::post('absensi-skpd', 'AbsensiController@filterAdmin')->name('absensi.filterAdmin');
+Route::get('absensi-skpd', 'AbsensiController@absenSKPD')->name('absensi.skpd')->middleware('admin');
+Route::post('absensi-skpd', 'AbsensiController@filterAdmin')->name('absensi.filterAdmin')->middleware('admin');
 
 
 // Manajemen User
@@ -80,10 +80,10 @@ Route::get('profil', 'UserController@profil')->name('profil.index');
 
 
 // Manajemen Apel
-Route::get('apel', 'ApelController@index')->name('apel.index');
-Route::post('apel', 'ApelController@store')->name('apel.post');
+Route::get('apel', 'ApelController@index')->name('apel.index')->middleware('administrator');
+Route::post('apel', 'ApelController@store')->name('apel.post')->middleware('administrator');
 Route::get('apel/{id}', 'ApelController@bind');
-Route::post('apel/edit', 'ApelController@edit')->name('apel.edit');
+Route::post('apel/edit', 'ApelController@edit')->name('apel.edit')->middleware('administrator');
 
 // Auth::routes();
 Route::get('/', 'Auth\LoginController@showLoginForm')->name('index');

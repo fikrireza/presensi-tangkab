@@ -98,11 +98,64 @@
               <td>{{ $detailAbsen->Jumlah_Terlambat }}</td>
               <td>{{ $detailAbsen->Jumlah_Pulcep }}</td>
               <td>0</td>
-                @if ($detailAbsen->nip_sapk == $hasilTanpaKeterangan['nip_sapk'])
-                  <td>{{ $hasilTanpaKeterangan['hasil']}}</td>
-                @else
-                  <td>0</td>
+              @foreach ($potongIntervensi as $intervensi)
+                @if ($detailAbsen->nip_sapk == $intervensi->nip_sapk)
+                @php
+                if($intervensi->Tanggal_Mulai == null){
+                  $workingDays = [1, 2, 3, 4, 5]; # date format = N (1 = Senin, ...)
+                  $holidayDays = $hariLibur;
+
+                  $from = new DateTime($start_date);
+                  $to = new DateTime($end_date);
+                  $interval = new DateInterval('P1D');
+                  $periods = new DatePeriod($from, $interval, $to);
+
+                  $days1 = 0;
+                  foreach ($periods as $period) {
+                    if (!in_array($period->format('N'), $workingDays)) continue;
+                    if (in_array($period->format('Y-m-d'), $holidayDays)) continue;
+                    if (in_array($period->format('*-m-d'), $holidayDays)) continue;
+                    $days1++;
+                  }
+
+                  $jumlahAbsen = (int)$days1 - (int)$intervensi->Jumlah_Masuk;
+                  print '<td>'.$jumlahAbsen.'</td>';
+
+                }else{
+                  $tanggal_mulai = $intervensi->Tanggal_Mulai;
+                  $tanggal_akhir = $intervensi->Tanggal_Akhir;
+                  $mulai = new DateTime($tanggal_mulai);
+                  $akhir   = new DateTime($tanggal_akhir);
+
+                  for($i = $mulai; $mulai <= $akhir; $i->modify('+1 day'))
+                  {
+                    $intervensiHasil[] =  $i->format("Y-m-d");
+                  }
+                  $workingDays = [1, 2, 3, 4, 5]; # date format = N (1 = Senin, ...)
+                  $holidayDays = array_merge($hariLibur, $intervensiHasil);
+// print_r($holidayDays);exit();
+                  $from = new DateTime($start_date);
+                  $to = new DateTime($end_date);
+                  $to->modify('+1 day');
+                  $interval = new DateInterval('P1D');
+                  $periods = new DatePeriod($from, $interval, $to);
+
+                  $days = 0;
+                  foreach ($periods as $period) {
+                    if (!in_array($period->format('N'), $workingDays)) continue;
+                    if (in_array($period->format('Y-m-d'), $holidayDays)) continue;
+                    if (in_array($period->format('*-m-d'), $holidayDays)) continue;
+                    $days++;
+                  }
+
+                  $jumlahAbsen = (int)$days - (int)$intervensi->Jumlah_Masuk;
+                  // print_r($holidayDays);print_r($days);print_r(" ".$intervensi->Jumlah_Masuk);print_r(" ".$jumlahAbsen);exit();
+                  echo '<td>'.$jumlahAbsen.'</td>';
+
+                }
+                @endphp
                 @endif
+              @endforeach
               <td>0</td>
             </tr>
             @php
