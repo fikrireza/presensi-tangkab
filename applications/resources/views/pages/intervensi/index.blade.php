@@ -226,14 +226,18 @@
               <td>{{ $key->tanggal_akhir }}</td>
               <td>{{ $key->deskripsi }}</td>
               <td>@if ($key->flag_status == 0)
-                Belum di Approve
+                <small class="label label-info">Belum diSetujui</small>
               @elseif($key->flag_status == 1)
-                Sudah di Approve
+                <small class="label label-success">Sudah diSetujui</small>
               @else
-                Tidak di Approve
+                <small class="label label-danger">Tidak diSetujui</small>
               @endif</td>
               <td>@if ($key->flag_status == 0)
-                  <a href="" data-value="{{ $key->id }}" class="editIntervensi" data-toggle="modal" data-target="#modaleditIntervensi"><i class="fa fa-edit"></i> Ubah</a>
+                  @if ($key->tanggal_mulai >= date('Y-m-d'))
+                    <a href="" data-value="{{ $key->id }}" class="editIntervensi" data-toggle="modal" data-target="#modaleditIntervensi"><i class="fa fa-edit"></i> Ubah</a>
+                  @else
+                    -
+                  @endif
                   @else
                     -
                   @endif
@@ -347,7 +351,7 @@ $('.tanggal_akhir_edit').datepicker({
                 var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
                 var firstDate = new Date($("#tanggal_mulai").val());
                 var secondDate = new Date($("#tanggal_akhir").val());
-                var diffDays = Math.round(Math.round((secondDate.getTime() - firstDate.getTime()) / (oneDay))); 
+                var diffDays = Math.round(Math.round((secondDate.getTime() - firstDate.getTime()) / (oneDay)));
                 $("#jumlah_hari").val(diffDays+1);
             }
         });
@@ -364,7 +368,7 @@ $('.tanggal_akhir_edit').datepicker({
                 var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
                 var firstDate = new Date($("#tanggal_mulai_edit").val());
                 var secondDate = new Date($("#tanggal_akhir_edit").val());
-                var diffDays = Math.round(Math.round((secondDate.getTime() - firstDate.getTime()) / (oneDay))); 
+                var diffDays = Math.round(Math.round((secondDate.getTime() - firstDate.getTime()) / (oneDay)));
                 $("#jumlah_hari_edit").val(diffDays+1);
             }
         });

@@ -165,7 +165,9 @@
                 <small class="label label-danger">Tidak diSetujui</small>
               @endif</td>
               <td>@if ($key->flag_status == 0)
-                  <a href="{{ route('intervensi.kelola.aksi', $key->id) }}"><i class="fa fa-edit"></i> Lihat</a>
+                    @if ($key->tanggal_akhir >= date('Y-m-d'))
+                    <a href="{{ route('intervensi.kelola.aksi', $key->id) }}"><i class="fa fa-edit"></i> Lihat</a>
+                    @endif
                   @else
                     -
                   @endif
@@ -257,7 +259,7 @@
                 var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
                 var firstDate = new Date($("#tanggal_mulai").val());
                 var secondDate = new Date($("#tanggal_akhir").val());
-                var diffDays = Math.round(Math.round((secondDate.getTime() - firstDate.getTime()) / (oneDay))); 
+                var diffDays = Math.round(Math.round((secondDate.getTime() - firstDate.getTime()) / (oneDay)));
                 $("#jumlah_hari").val(diffDays+1);
             }
         });

@@ -145,7 +145,7 @@
             <?php $no = 1; ?>
             @if ($intervensi->isEmpty())
             <tr>
-              <td colspan="7" align="center"> Anda Belum Pernah Melakukan Intervensi </td>
+              <td colspan="7" align="center"> Tidak ada Intervensi</td>
             </tr>
             @else
             @foreach ($intervensi as $key)
@@ -227,7 +227,7 @@
                 var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
                 var firstDate = new Date($("#tanggal_mulai").val());
                 var secondDate = new Date($("#tanggal_akhir").val());
-                var diffDays = Math.round(Math.round((secondDate.getTime() - firstDate.getTime()) / (oneDay))); 
+                var diffDays = Math.round(Math.round((secondDate.getTime() - firstDate.getTime()) / (oneDay)));
                 $("#jumlah_hari").val(diffDays+1);
             }
         });

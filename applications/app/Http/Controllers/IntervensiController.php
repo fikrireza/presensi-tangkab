@@ -175,7 +175,7 @@ class IntervensiController extends Controller
       if($intervensi == null){
         abort(404);
       }
-      
+
       return view('pages.intervensi.aksi', compact('intervensi'));
     }
 
@@ -186,7 +186,17 @@ class IntervensiController extends Controller
       $approve->actor = Auth::user()->pegawai_id;
       $approve->update();
 
-      return redirect()->route('intervensi.kelola')->with('berhasil', 'Berhasil Approve Intervensi');
+      return redirect()->route('intervensi.kelola')->with('berhasil', 'Berhasil Setujui Intervensi');
+    }
+
+    public function kelolaDecline($id)
+    {
+      $approve = intervensi::find($id);
+      $approve->flag_status = 2;
+      $approve->actor = Auth::user()->pegawai_id;
+      $approve->update();
+
+      return redirect()->route('intervensi.kelola')->with('berhasil', 'Berhasil Tolak Intervensi');
     }
 
     public function kelolaPost(Request $request)
