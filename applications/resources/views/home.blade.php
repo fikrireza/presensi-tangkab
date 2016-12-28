@@ -30,7 +30,12 @@
     <div class="col-lg-3 col-md-3 col-xs-12">
       <div class="small-box bg-yellow">
         <div class="inner">
-          <h3>-<sup style="font-size: 20px"></sup></h3>
+          <h3>@if ($totalHadir != null)
+                {{ $totalHadir }}<sup style="font-size: 20px"></sup>
+              @else
+                -
+            @endif
+          </h3>
           <p>Jumlah Hadir</p>
         </div>
         {{-- <a class="small-box-footer">

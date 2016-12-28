@@ -92,13 +92,15 @@ class HomeController extends Controller
                                   group by c.nama, a.fid) as ab
                                   group by skpd");
 
+          $totalHadir = collect($absensi)->sum('jumlah_hadir');
+
           $lastUpdate = DB::select("select c.id, c.nama, max(str_to_date(a.DateTime, '%d/%m/%Y %H:%i:%s')) as last_update
                                     from ta_log a, preson_pegawais b, preson_skpd c
                                     where c.id = b.skpd_id
                                     and b.fid = a.Fid
                                     GROUP BY c.id");
 
-          return view('home', compact('absensi', 'pegawai', 'jumlahintervensi', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'jumlahPegawaiSKPD', 'lastUpdate'));
+          return view('home', compact('absensi', 'pegawai', 'jumlahintervensi', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'jumlahPegawaiSKPD', 'lastUpdate', 'totalHadir'));
         }
         else if(session('status') == 'admin')
         {
@@ -126,7 +128,9 @@ class HomeController extends Controller
                                 	ON pegawai.fid = tabel_Jam_Pulang.Fid
                                 	GROUP BY nama_pegawai");
           $absensi = collect($absensi);
-          return view('home', compact('absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai', 'jumlahTPP'));
+
+          $totalHadir = '';
+          return view('home', compact('absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'totalHadir'));
         }else{
           for($i=$start_time; $i<$end_time; $i+=86400)
           {
