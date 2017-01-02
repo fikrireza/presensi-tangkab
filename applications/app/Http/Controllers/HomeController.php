@@ -107,29 +107,39 @@ class HomeController extends Controller
           $tanggalini = date('d/m/Y');
           $absensi = DB::select("SELECT pegawai.fid, pegawai.nama as nama_pegawai, Tanggal_Log,
                                 				tabel_Jam_Datang.Jam_Datang, tabel_Jam_Pulang.Jam_Pulang
-                                	FROM (select nama, fid from preson_pegawais where preson_pegawais.skpd_id = 15) as pegawai
+                                	FROM (select nama, fid from preson_pegawais where preson_pegawais.skpd_id = $skpd_id) as pegawai
                                 	LEFT OUTER JOIN (select Tanggal_Log, ta_log.Fid as Fid from ta_log, preson_pegawais
                                 										where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                  									  and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '15:00:00'
                                 										and ta_log.Fid = preson_pegawais.fid
-                                										and preson_pegawais.skpd_id = 15) as tabel_Tanggal_Log
+                                										and preson_pegawais.skpd_id = $skpd_id) as tabel_Tanggal_Log
                                 	ON pegawai.fid = tabel_Tanggal_Log.Fid
                                 	LEFT OUTER JOIN (select Jam_Log as Jam_Datang, ta_log.Fid as Fid from ta_log, preson_pegawais
                                 										where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                 										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
                                 										and ta_log.Fid = preson_pegawais.fid
-                                										and preson_pegawais.skpd_id = 15) as tabel_Jam_Datang
+                                										and preson_pegawais.skpd_id = $skpd_id) as tabel_Jam_Datang
                                 	ON pegawai.fid = tabel_Jam_Datang.Fid
                                 	LEFT OUTER JOIN (select Jam_Log as Jam_Pulang, ta_log.Fid as Fid from ta_log, preson_pegawais
                                 										where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                 										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '15:00:00'
                                 										and ta_log.Fid = preson_pegawais.fid
-                                										and preson_pegawais.skpd_id = 15) as tabel_Jam_Pulang
+                                										and preson_pegawais.skpd_id = $skpd_id) as tabel_Jam_Pulang
                                 	ON pegawai.fid = tabel_Jam_Pulang.Fid
                                 	GROUP BY nama_pegawai");
           $absensi = collect($absensi);
 
-          $totalHadir = '';
+          $totalHadir = DB::select("select count(*) as 'jumlah_hadir'
+                                    from
+                                    (select c.id, c.nama as skpd, count(*) as kk
+                                    from ta_log a join preson_pegawais b
+                                    on a.fid = b.fid
+                                    join preson_skpd c on b.skpd_id = c.id
+                                    where tanggal_log='$tanggalini'
+                                    and b.skpd_id = $skpd_id
+                                    group by c.nama, a.fid) as ab");
+          $totalHadir = $totalHadir[0]->jumlah_hadir;
+
           return view('home', compact('absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'totalHadir'));
         }else{
           for($i=$start_time; $i<$end_time; $i+=86400)

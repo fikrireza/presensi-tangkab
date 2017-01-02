@@ -73,21 +73,28 @@
             @if(session('status') == 'administrator')
             <li class="{{ Route::currentRouteNamed('absensi.index') ? 'active' : '' }}">
               <a href="{{ route('absensi.index') }}">
-                <i class="fa fa-file"></i> <span>Absensi</span>
+                <i class="fa fa-calendar"></i> <span>Absensi</span>
               </a>
             </li>
             @endif
             @if(session('status') == 'admin')
             <li class="{{ Route::currentRouteNamed('absensi.skpd') ? 'active' : '' }}">
               <a href="{{ route('absensi.skpd') }}">
-                <i class="fa fa-file"></i> <span>Absensi</span>
+                <i class="fa fa-calendar"></i> <span>Absensi</span>
               </a>
             </li>
             @endif
             @if(session('status') == 'pegawai')
             <li class="{{ Route::currentRouteNamed('absensi.pegawai') ? 'active' : '' }}">
               <a href="{{ route('absensi.pegawai') }}">
-                <i class="fa fa-file"></i> <span>Absensi</span>
+                <i class="fa fa-calendar"></i> <span>Absensi</span>
+              </a>
+            </li>
+            @endif
+            @if(session('status') == 'administrator' || session('status') == 'admin')
+            <li class="{{ Route::currentRouteNamed('pejabatdokumen.index') ? 'active' : '' }}">
+              <a href="{{ route('pejabatdokumen.index') }}">
+                <i class="fa fa-check-circle"></i> <span>Pejabat Dokumen</span>
               </a>
             </li>
             @endif

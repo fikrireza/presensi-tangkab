@@ -94,3 +94,10 @@ Route::get('firstLogin', 'UserController@firstLogin')->name('firstLogin');
 Route::post('firstLogin', 'UserController@ubahPassword')->name('firstLogin.post');
 
 Route::get('cetakTpp', 'HomeController@cetakTPP')->name('cetakTPP');
+
+
+// Pejabat Dokumen
+Route::get('pejabat-dokumen', 'PejabatDokumenController@index')->name('pejabatdokumen.index');
+Route::post('pejabat-dokumen', 'PejabatDokumenController@store')->name('pejabatdokumen.post');
+Route::get('pejabat-dokumen/{id}', 'PejabatDokumenController@bind');
+Route::post('pejabat-dokumen/edit', 'PejabatDokumenController@edit')->name('pejabatdokumen.edit');
