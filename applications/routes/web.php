@@ -15,11 +15,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/home/detail-absensi/{id}', 'HomeController@detailabsensi')->name('detail.absensi')->middleware('administrator');
 
 // Pegawai
-Route::get('pegawai', 'PegawaiController@index')->name('pegawai.index')->middleware('administrator', 'admin');
-Route::get('pegawai/create', 'PegawaiController@create')->name('pegawai.create')->middleware('administrator', 'admin');
-Route::post('pegawai', 'PegawaiController@store')->name('pegawai.post')->middleware('administrator', 'admin');
-Route::get('pegawai/edit/{id}', 'PegawaiController@edit')->name('pegawai.edit')->middleware('administrator', 'admin');
-Route::post('pegawai/edit', 'PegawaiController@editStore')->name('pegawai.editStore')->middleware('administrator', 'admin');
+Route::get('pegawai', 'PegawaiController@index')->name('pegawai.index');
+Route::get('pegawai/create', 'PegawaiController@create')->name('pegawai.create');
+Route::post('pegawai', 'PegawaiController@store')->name('pegawai.post');
+Route::get('pegawai/edit/{id}', 'PegawaiController@edit')->name('pegawai.edit');
+Route::post('pegawai/edit', 'PegawaiController@editStore')->name('pegawai.editStore');
 
 // SKPD
 Route::get('skpd', 'SkpdController@index')->name('skpd.index')->middleware('administrator');
@@ -101,3 +101,8 @@ Route::get('pejabat-dokumen', 'PejabatDokumenController@index')->name('pejabatdo
 Route::post('pejabat-dokumen', 'PejabatDokumenController@store')->name('pejabatdokumen.post');
 Route::get('pejabat-dokumen/{id}', 'PejabatDokumenController@bind');
 Route::post('pejabat-dokumen/edit', 'PejabatDokumenController@edit')->name('pejabatdokumen.edit');
+
+
+// Laporan
+Route::get('laporan', 'LaporanController@index')->name('laporanall.index');
+Route::post('laporan', 'LaporanController@filterAdministrator')->name('filterAdministrator');

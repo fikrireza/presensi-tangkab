@@ -91,19 +91,25 @@
               </a>
             </li>
             @endif
-            @if(session('status') == 'administrator' || session('status') == 'admin')
-            <li class="{{ Route::currentRouteNamed('pejabatdokumen.index') ? 'active' : '' }}">
-              <a href="{{ route('pejabatdokumen.index') }}">
-                <i class="fa fa-check-circle"></i> <span>Pejabat Dokumen</span>
+            <li class="treeview {{ Route::currentRouteNamed('tpp.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pejabatdokumen.index') ? 'active' : '' }}">
+              <a href="{{ route('user.index') }}">
+                <i class="fa fa fa-file"></i> <span>Laporan</span>
+                <i class="fa fa-angle-left pull-right"></i>
               </a>
+              <ul class="treeview-menu">
+                <li class="{{ Route::currentRouteNamed('tpp.index') ? 'active' : '' }}">
+                  <a href="{{ route('laporanall.index') }}">
+                    <i class="fa fa-circle-o"></i> <span>Cetak TPP</span>
+                  </a>
+                </li>
+                @if(session('status') == 'administrator' || session('status') == 'admin')
+                <li class="{{ Route::currentRouteNamed('pejabatdokumen.index') ? 'active' : '' }}">
+                  <a href="{{ route('pejabatdokumen.index') }}">
+                    <i class="fa fa-circle-o"></i> <span>Pejabat Dokumen</span>
+                  </a>
+                </li>
+                @endif
+              </ul>
             </li>
-            @endif
-            @if(session('status') == 'administrator' || session('status') == 'admin' || session('status') == 'pegawai')
-            <li class="{{ Route::currentRouteNamed('tpp.index') ? 'active' : '' }}">
-              <a href="{{ url('documents/BKDpot2016.xls') }}">
-                <i class="fa fa-file"></i> <span>Cetak TPP</span>
-              </a>
-            </li>
-            @endif
           </ul>
         </section>

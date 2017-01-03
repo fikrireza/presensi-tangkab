@@ -10,7 +10,7 @@
 		"laravelcollective/html": "~5.0",
         "guzzlehttp/guzzle": "~5.3|~6.0",
         "intervention/image": "^2.3.8",
-        "maatwebsite/excel": "~2.1.0",
+        "maatwebsite/excel": "~2.1.8",
         "doctrine/dbal": "^2.5",
 		"dompdf/dompdf": "dev-master"
     },
