@@ -59,6 +59,9 @@
       </div>
       <div class="box-footer">
         <button class="btn btn-block bg-purple">Pilih</button>
+        @if (isset($rekapAbsenPeriode))
+          <a href="{{ route('laporan.cetakAdministrator', ['download'=>'pdf', 'start_date'=>$start_dateR, 'end_date'=>$end_dateR, 'skpd_id'=>$skpd_id]) }}" class="btn btn-block bg-green">Download PDF</a>
+        @endif
       </div>
       </form>
     </div>
@@ -70,9 +73,6 @@
     <div class="box box-primary box-solid">
       <div class="box-header">
         <h3 class="box-title">Detil Absensi</h3>
-      @if(isset($rekapAbsenPeriode))
-        <a href="" class="btn bg-red pull-right">Cetak</a>
-      @endif
     </div>
       <div class="box-body table-responsive">
         @if(isset($rekapAbsenPeriode))

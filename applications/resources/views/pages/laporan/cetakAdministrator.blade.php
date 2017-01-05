@@ -7,8 +7,8 @@
     <div class="box box-primary box-solid">
       <div class="box-header">
         <h3 class="box-title" style="font-size:16px;">PERIODE TANGGAL {{ $start_dateR }} S/D {{ $end_dateR }}</h3>
-      </div>
-      <div class="box-body">
+    </div>
+      <div class="box-body table-responsive">
         <table class="table table-bordered" style="border: 1px solid black;border-collapse: collapse;font-size: 16px;">
           <thead>
             <tr style="border: 1px solid black;border-collapse: collapse;font-size: 16px;">
@@ -43,7 +43,7 @@
               <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;">{{ $no }}</td>
               <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;">{{ $detailAbsen->nip_sapk }}</td>
               <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;">{{ $detailAbsen->nama_pegawai }}</td>
-              <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;">{{ number_format($detailAbsen->tpp_dibayarkan,0,',','.') }}</td>
+              <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;" align="right">{{ number_format($detailAbsen->tpp_dibayarkan,0,',','.') }}</td>
               <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;" align="center">@if ($detailAbsen->Jumlah_Terlambat == 0) - @else {{ $detailAbsen->Jumlah_Terlambat }} @endif</td>
               <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;" align="right">@php
                 $pot_terlambat = ($detailAbsen->tpp_dibayarkan*60/100)*2/100*$detailAbsen->Jumlah_Terlambat;
@@ -117,9 +117,9 @@
                 @endif
               @endforeach
               <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;" align="center">-</td>
-              <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;" align="center">0</td>
+              <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;" align="right">0</td>
               <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;" align="center">-</td>
-              <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;" align="center">0</td>
+              <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;" align="right">0</td>
               <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;" align="right">{{ number_format($pot_pulcep+$pot_absen+$pot_terlambat,0,',','.') }}</td>
               @php
                 $sum_totalPot += $pot_pulcep+$pot_absen+$pot_terlambat;
@@ -134,7 +134,7 @@
             @endphp
             @endforeach
             <tr height="50px">
-              <td valign="middle" colspan="16" align="right" style="border: 1px solid black;border-collapse: collapse;font-size: 15px;"><b>Jumlah</b>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              <td valign="middle" colspan="16" align="right" style="border: 1px solid black;border-collapse: collapse;font-size: 15px;"><b>Jumlah</b></td>
               <td valign="middle" style="border: 1px solid black;border-collapse: collapse;font-size: 15px;" align="right"><b>{{ number_format($sum_totalPot,0,',','.') }}</b></td>
               <td valign="middle" style="border: 1px solid black;border-collapse: collapse;font-size: 15px;" align="right"><b>{{ number_format($sum_tppDibayarkan,0,',','.') }}</b></td>
             </tr>

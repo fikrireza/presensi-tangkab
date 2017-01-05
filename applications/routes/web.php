@@ -107,7 +107,8 @@ Route::get('pejabat/flagstatus/{id}', 'PejabatDokumenController@changeflag')->na
 // Laporan BKKPD
 Route::get('laporan', 'LaporanController@index')->name('laporanall.index')->middleware('administrator');
 Route::post('laporan', 'LaporanController@filterAdministrator')->name('filterAdministrator')->middleware('administrator');
+Route::get('cetakAdministrator', 'LaporanController@cetakAdministrator')->name('laporan.cetakAdministrator')->middleware('administrator');
 // Laporan SKPD
 Route::get('laporan-skpd', 'LaporanController@laporanSKPD')->name('laporan.skpd')->middleware('admin');
 Route::post('laporan-skpd', 'LaporanController@laporanAdmin')->name('laporan.filterAdmin')->middleware('admin');
-Route::get('cetakAdmin', 'LaporanController@cetakAdmin')->name('laporan.cetakAdmin');
+Route::get('cetakAdmin', 'LaporanController@cetakAdmin')->name('laporan.cetakAdmin')->middleware('admin');
