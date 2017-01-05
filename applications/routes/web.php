@@ -103,6 +103,10 @@ Route::get('pejabat-dokumen/{id}', 'PejabatDokumenController@bind');
 Route::post('pejabat-dokumen/edit', 'PejabatDokumenController@edit')->name('pejabatdokumen.edit');
 
 
-// Laporan
-Route::get('laporan', 'LaporanController@index')->name('laporanall.index');
-Route::post('laporan', 'LaporanController@filterAdministrator')->name('filterAdministrator');
+// Laporan BKKPD
+Route::get('laporan', 'LaporanController@index')->name('laporanall.index')->middleware('administrator');
+Route::post('laporan', 'LaporanController@filterAdministrator')->name('filterAdministrator')->middleware('administrator');
+// Laporan SKPD
+Route::get('laporan-skpd', 'LaporanController@laporanSKPD')->name('laporan.skpd')->middleware('admin');
+Route::post('laporan-skpd', 'LaporanController@laporanAdmin')->name('laporan.filterAdmin')->middleware('admin');
+Route::get('cetakAdmin', 'LaporanController@cetakAdmin')->name('laporan.cetakAdmin');

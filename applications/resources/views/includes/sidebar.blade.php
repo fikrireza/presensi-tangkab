@@ -97,11 +97,20 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
+                @if (session('status') == ('administrator'))
                 <li class="{{ Route::currentRouteNamed('tpp.index') ? 'active' : '' }}">
                   <a href="{{ route('laporanall.index') }}">
                     <i class="fa fa-circle-o"></i> <span>Cetak TPP</span>
                   </a>
                 </li>
+                @endif
+                @if (session('status') == ('admin'))
+                <li class="{{ Route::currentRouteNamed('laporan.skpd') ? 'active' : '' }}">
+                  <a href="{{ route('laporan.skpd') }}">
+                    <i class="fa fa-circle-o"></i> <span>Cetak TPP</span>
+                  </a>
+                </li>
+                @endif
                 @if(session('status') == 'administrator' || session('status') == 'admin')
                 <li class="{{ Route::currentRouteNamed('pejabatdokumen.index') ? 'active' : '' }}">
                   <a href="{{ route('pejabatdokumen.index') }}">
