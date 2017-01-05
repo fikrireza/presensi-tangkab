@@ -33,6 +33,23 @@
 </div>
 @endif
 
+<div class="modal fade" id="modalflagedit" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Ubah Status Pejabat</h4>
+      </div>
+      <div class="modal-body">
+        <p>Apakah anda yakin untuk mengubah status pejabat ini?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-default pull-left btn-flat" data-dismiss="modal">Tidak</button>
+        <a class="btn btn-danger  btn-flat" id="setflagedit">Ya, saya yakin</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 {{-- Modal Tambah Pejabat Dokumen--}}
 <div class="modal modal-default fade" id="modaltambahpejabat" role="dialog">
@@ -168,6 +185,7 @@
               <th>Jabatan</th>
               <th>Pangkat</th>
               <th>Posisi</th>
+              <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -184,11 +202,19 @@
             <tr>
               <td>{{ $no }}</td>
               <td>{{ $key->nip_sapk }}</td>
-              <td>{{ $key->nama }}</td>
-              <td>{{ $key->jabatan }}</td>
-              <td>{{ $key->pangkat }}</td>
-              <td>@if($key->posisi_ttd == 1) Kanan @else Kiri @endif
-              </td>
+              <td>{{ strtoupper($key->nama) }}</td>
+              <td>{{ strtoupper($key->jabatan) }}</td>
+              <td>{{ strtoupper($key->pangkat) }}</td>
+              <td>@if($key->posisi_ttd == 1) Kanan @else Kiri @endif</td>
+              <td>@if ($key->flag_status == 1)
+                <span data-toggle="tooltip" title="Non Aktifkan">
+                  <a href="#" class="btn btn-xs btn-danger btn-flat flagedit" data-toggle="modal" data-target="#modalflagedit" data-value="{{$key->id}}"><i class="fa fa-heartbeat"></i></a>
+                </span>
+              @else
+                <span data-toggle="tooltip" title="Aktifkan">
+                  <a href="#" class="btn btn-xs btn-success btn-flat flagedit" data-toggle="modal" data-target="#modalflagedit" data-value="{{$key->id}}"><i class="fa fa-heart"></i></a>
+                </span>
+              @endif</td>
               <td><a href="" data-value="{{ $key->id }}" class="editPejabat" data-toggle="modal" data-target="#modaleditPejabat"><i class="fa fa-edit"></i> Ubah</td>
             </tr>
             @php
@@ -214,6 +240,11 @@
 
 <script type="text/javascript">
   $(function(){
+    $('a.flagedit').click(function(){
+        var a = $(this).data('value');
+        $('#setflagedit').attr('href', '{{url('pejabat/flagstatus/')}}/'+a);
+      });
+
     $('.editPejabat').click(function(){
       var a = $(this).data('value');
       $.ajax({

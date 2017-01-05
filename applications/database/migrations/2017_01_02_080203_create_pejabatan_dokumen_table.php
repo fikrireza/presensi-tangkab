@@ -20,6 +20,7 @@ class CreatePejabatanDokumenTable extends Migration
           $table->integer('posisi_ttd')->unsigned()->nullable();
           $table->string('pangkat', 250);
           $table->string('jabatan', 250);
+          $table->integer('flag_status')->unsigned();
           $table->timestamps();
         });
     }

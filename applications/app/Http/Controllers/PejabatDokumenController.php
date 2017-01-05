@@ -57,6 +57,7 @@ class PejabatDokumenController extends Controller
       $set->jabatan = $request->jabatan;
       $set->pangkat = $request->pangkat;
       $set->posisi_ttd = $request->posisi_ttd;
+      $set->flag_status = 1;
       $set->save();
 
       return redirect()->route('pejabatdokumen.index')->with('berhasil', 'Berhasil Menambahkan Pejabat Dokumen');
@@ -80,5 +81,20 @@ class PejabatDokumenController extends Controller
       $set->update();
 
       return redirect()->route('pejabatdokumen.index')->with('berhasil', 'Berhasil Mengubah Data Pejabat Dokumen');
+    }
+
+    public function changeflag($id)
+    {
+      $get = pejabatdokumen::find($id);
+
+      if($get->flag_status=="1") {
+        $get->flag_status = "0";
+      } elseif($get->flag_status=="0") {
+        $get->flag_status = "1";
+      }
+
+      $get->save();
+
+      return redirect()->route('pejabatdokumen.index')->with('message', 'Berhasil Mengubah Status Pejabat.');
     }
 }

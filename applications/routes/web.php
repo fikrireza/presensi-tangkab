@@ -101,6 +101,7 @@ Route::get('pejabat-dokumen', 'PejabatDokumenController@index')->name('pejabatdo
 Route::post('pejabat-dokumen', 'PejabatDokumenController@store')->name('pejabatdokumen.post');
 Route::get('pejabat-dokumen/{id}', 'PejabatDokumenController@bind');
 Route::post('pejabat-dokumen/edit', 'PejabatDokumenController@edit')->name('pejabatdokumen.edit');
+Route::get('pejabat/flagstatus/{id}', 'PejabatDokumenController@changeflag')->name('pejabatdokumen.changeflag');
 
 
 // Laporan BKKPD
