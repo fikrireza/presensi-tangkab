@@ -30,6 +30,7 @@
     26 => 'Collective\\Html\\HtmlServiceProvider',
     27 => 'Intervention\\Image\\ImageServiceProvider',
     28 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
+    29 => 'Barryvdh\\DomPDF\\ServiceProvider',
   ),
   'eager' => 
   array (
@@ -49,6 +50,7 @@
     13 => 'App\\Providers\\RouteServiceProvider',
     14 => 'Intervention\\Image\\ImageServiceProvider',
     15 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
+    16 => 'Barryvdh\\DomPDF\\ServiceProvider',
   ),
   'deferred' => 
   array (

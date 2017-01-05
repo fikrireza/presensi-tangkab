@@ -7,12 +7,12 @@
     "require": {
         "php": ">=5.6.4",
         "laravel/framework": "5.3.*",
-		"laravelcollective/html": "~5.0",
+		    "laravelcollective/html": "~5.0",
         "guzzlehttp/guzzle": "~5.3|~6.0",
         "intervention/image": "^2.3.8",
         "maatwebsite/excel": "~2.1.8",
         "doctrine/dbal": "^2.5",
-		"dompdf/dompdf": "dev-master"
+        "barryvdh/laravel-dompdf": "^0.7.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
