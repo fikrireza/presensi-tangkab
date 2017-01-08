@@ -104,11 +104,15 @@ Route::post('pejabat-dokumen/edit', 'PejabatDokumenController@edit')->name('peja
 Route::get('pejabat/flagstatus/{id}', 'PejabatDokumenController@changeflag')->name('pejabatdokumen.changeflag');
 
 
-// Laporan BKKPD
-Route::get('laporan', 'LaporanController@index')->name('laporanall.index')->middleware('administrator');
-Route::post('laporan', 'LaporanController@filterAdministrator')->name('filterAdministrator')->middleware('administrator');
+// Laporan Administartor
+Route::get('laporan', 'LaporanController@laporanAdministrator')->name('laporanAdministrator')->middleware('administrator');
+Route::post('laporan', 'LaporanController@laporanAdministratorStore')->name('laporanAdministrator.store')->middleware('administrator');
 Route::get('cetakAdministrator', 'LaporanController@cetakAdministrator')->name('laporan.cetakAdministrator')->middleware('administrator');
-// Laporan SKPD
-Route::get('laporan-skpd', 'LaporanController@laporanSKPD')->name('laporan.skpd')->middleware('admin');
-Route::post('laporan-skpd', 'LaporanController@laporanAdmin')->name('laporan.filterAdmin')->middleware('admin');
+// Laporan Admin
+Route::get('laporan-skpd', 'LaporanController@laporanAdmin')->name('laporanAdmin')->middleware('admin');
+Route::post('laporan-skpd', 'LaporanController@laporanAdminStore')->name('laporanAdmin.store')->middleware('admin');
 Route::get('cetakAdmin', 'LaporanController@cetakAdmin')->name('laporan.cetakAdmin')->middleware('admin');
+// Laporan Pegawai
+Route::get('laporan-pegawai', 'LaporanController@laporanPegawai')->name('laporanPegawai')->middleware('pegawai');
+Route::post('laporan-pegawai', 'LaporanController@laporanPegawaiStore')->name('laporanPegawai.store')->middleware('pegawai');
+Route::get('cetakPegawai', 'LaporanController@cetakPegawai')->name('laporan.cetakPegawai')->middleware('pegawai');

@@ -98,15 +98,22 @@
               </a>
               <ul class="treeview-menu">
                 @if (session('status') == ('administrator'))
-                <li class="{{ Route::currentRouteNamed('tpp.index') ? 'active' : '' }}">
-                  <a href="{{ route('laporanall.index') }}">
+                <li class="{{ Route::currentRouteNamed('laporanAdministrator') ? 'active' : '' }}">
+                  <a href="{{ route('laporanAdministrator') }}">
                     <i class="fa fa-circle-o"></i> <span>Cetak TPP</span>
                   </a>
                 </li>
                 @endif
                 @if (session('status') == ('admin'))
-                <li class="{{ Route::currentRouteNamed('laporan.skpd') ? 'active' : '' }}">
-                  <a href="{{ route('laporan.skpd') }}">
+                <li class="{{ Route::currentRouteNamed('laporanAdmin') ? 'active' : '' }}">
+                  <a href="{{ route('laporanAdmin') }}">
+                    <i class="fa fa-circle-o"></i> <span>Cetak TPP</span>
+                  </a>
+                </li>
+                @endif
+                @if (session('status') == ('pegawai'))
+                <li class="{{ Route::currentRouteNamed('laporanPegawai') ? 'active' : '' }}">
+                  <a href="{{ route('laporanPegawai') }}">
                     <i class="fa fa-circle-o"></i> <span>Cetak TPP</span>
                   </a>
                 </li>

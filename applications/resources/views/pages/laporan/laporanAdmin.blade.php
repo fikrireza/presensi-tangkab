@@ -15,7 +15,7 @@
           <p>Pilih Periode</p>
         </div>
       </div>
-      <form action="{{ route('laporan.filterAdmin')}}" method="POST">
+      <form action="{{ route('laporanAdmin.store')}}" method="POST">
       {{ csrf_field() }}
       <div class="box-body">
         @if(isset($rekapAbsenPeriode))
