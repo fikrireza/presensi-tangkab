@@ -189,7 +189,7 @@ class LaporanController extends Controller
 
       if($request->has('download')){
         $pdf = PDF::loadView('pages.laporan.cetakAdministrator')->setPaper('a4', 'landscape');
-        return $pdf->download('Presensi Online - '.$nama_skpd->nama.'.pdf');
+        return $pdf->download('Presensi Online - '.$nama_skpd->nama.' Periode '.$start_date.' - '.$end_date.'.pdf');
       }
 
       return view('pages.laporan.cetakAdministrator');
@@ -368,7 +368,7 @@ class LaporanController extends Controller
 
       if($request->has('download')){
         $pdf = PDF::loadView('pages.laporan.cetakAdmin')->setPaper('a4', 'landscape');
-        return $pdf->download('Presensi Online - '.$nama_skpd->nama.'.pdf');
+        return $pdf->download('Presensi Online - '.$nama_skpd->nama.' Periode '.$start_date.' - '.$end_date.'.pdf');
       }
 
       return view('pages.laporan.cetakAdmin');

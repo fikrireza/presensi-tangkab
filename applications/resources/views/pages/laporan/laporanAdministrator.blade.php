@@ -108,7 +108,7 @@
             @foreach ($rekapAbsenPeriode as $detailAbsen)
             <tr>
               <td>{{ $no }}</td>
-              <td>{{ $detailAbsen->nip_sapk }}</td>
+              <td><a href="{{ route('laporan.cetakPegawai', ['download'=>'pdf', 'start_date'=>$start_dateR, 'end_date'=>$end_dateR, 'nip_sapk'=>$detailAbsen->nip_sapk]) }}">{{ $detailAbsen->nip_sapk }}</a></td>
               <td>{{ $detailAbsen->nama_pegawai }}</td>
               <td>{{ number_format($detailAbsen->tpp_dibayarkan,0,',','.') }}</td>
               <td>{{ $detailAbsen->Jumlah_Terlambat }}</td>

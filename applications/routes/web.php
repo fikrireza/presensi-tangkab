@@ -115,4 +115,4 @@ Route::get('cetakAdmin', 'LaporanController@cetakAdmin')->name('laporan.cetakAdm
 // Laporan Pegawai
 Route::get('laporan-pegawai', 'LaporanController@laporanPegawai')->name('laporanPegawai')->middleware('pegawai');
 Route::post('laporan-pegawai', 'LaporanController@laporanPegawaiStore')->name('laporanPegawai.store')->middleware('pegawai');
-Route::get('cetakPegawai', 'LaporanController@cetakPegawai')->name('laporan.cetakPegawai')->middleware('pegawai');
+Route::get('cetakPegawai', 'LaporanController@cetakPegawai')->name('laporan.cetakPegawai');

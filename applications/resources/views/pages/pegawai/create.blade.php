@@ -34,7 +34,7 @@
           <div class="form-group {{ $errors->has('nip_sapk') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">NIP</label>
             <div class="col-sm-9">
-              <input type="text" name="nip_sapk" class="form-control" value="{{ old('nip_sapk') }}" placeholder="@if($errors->has('nip_sapk')){{ $errors->first('nip_sapk')}}@endif NIP">
+              <input type="text" name="nip_sapk" class="form-control" value="{{ old('nip_sapk') }}" onkeypress="return isNumber(event)" placeholder="@if($errors->has('nip_sapk')){{ $errors->first('nip_sapk')}}@endif NIP">
             </div>
           </div>
           <div class="form-group {{ $errors->has('nip_lm') ? 'has-error' : '' }}">
@@ -46,7 +46,7 @@
           <div class="form-group {{ $errors->has('fid') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Finger ID</label>
             <div class="col-sm-9">
-              <input type="text" name="fid" class="form-control" value="{{ old('fid') }}" placeholder="@if($errors->has('fid')){{ $errors->first('fid')}}@endif Finger ID" maxlength="14">
+              <input type="text" name="fid" class="form-control" value="{{ old('fid') }}" onkeypress="return isNumber(event)" placeholder="@if($errors->has('fid')){{ $errors->first('fid')}}@endif Finger ID" maxlength="14">
             </div>
           </div>
           <div class="form-group {{ $errors->has('skpd_id') ? 'has-error' : '' }}">
