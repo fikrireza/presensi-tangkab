@@ -114,7 +114,7 @@
                 @if (session('status') == ('pegawai'))
                 <li class="{{ Route::currentRouteNamed('laporanPegawai') ? 'active' : '' }}">
                   <a href="{{ route('laporanPegawai') }}">
-                    <i class="fa fa-circle-o"></i> <span>Cetak TPP</span>
+                    <i class="fa fa-circle-o"></i> <span>Cetak Absensi</span>
                   </a>
                 </li>
                 @endif

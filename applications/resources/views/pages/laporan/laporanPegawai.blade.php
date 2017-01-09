@@ -18,7 +18,7 @@
       <form action="{{ route('laporanPegawai.store')}}" method="POST">
       {{ csrf_field() }}
       <div class="box-body">
-        @if(isset($rekapAbsenPeriode))
+        @if(isset($absensi))
         <div class="row">
           <div class="col-xs-6">
             <input type="text" class="form-control" name="start_date" id="start_date" value="{{ $start_dateR }}" placeholder="dd/mm/yyyy" required="">
@@ -42,7 +42,7 @@
       </div>
       <div class="box-footer">
         <button class="btn btn-block bg-purple">Pilih</button>
-        @if (isset($rekapAbsenPeriode))
+        @if (isset($absensi))
           <a href="{{ route('laporan.cetakPegawai', ['download'=>'pdf', 'start_date'=>$start_dateR, 'end_date'=>$end_dateR, 'nip_sapk'=>$nip_sapk]) }}" class="btn btn-block bg-green">Download PDF</a>
         @endif
       </div>
@@ -58,7 +58,7 @@
         <h3 class="box-title">Absensi</h3>
       </div>
       <div class="box-body table-responsive">
-        @if(isset($rekapAbsenPeriode))
+        @if(isset($absensi))
         <table class="table table-bordered">
           <thead>
             <tr>
@@ -70,119 +70,123 @@
             </tr>
           </thead>
           <tbody>
-            @php
-            $no = 1;
-            $flag = 0;
-            $flaginter = 0;
-
-            $date_from = strtotime($start_date); // Convert date to a UNIX timestamp
-            $date_to = strtotime($end_date); // Convert date to a UNIX timestamp
-
-            for ($i=$date_from; $i<=$date_to; $i+=86400) {
-
-            @endphp
-            <tr>
-              <td>{{ $no }}</td>
-              <td>{{ $tanggal = date("d/m/Y", $i) }}</td>
               @php
-              $day = explode('/', $tanggal);
-              $day = $day[1]."/".$day[0]."/".$day[2];
-              $day = date('D', strtotime($day));
-
-              $dayList = array(
-                'Sun' => 'Minggu',
-                'Mon' => 'Senin',
-                'Tue' => 'Selasa',
-                'Wed' => 'Rabu',
-                'Thu' => 'Kamis',
-                'Fri' => 'Jum&#039;at',
-                'Sat' => 'Sabtu'
-              );
+                $no = 1;
               @endphp
-              <td>{{ $dayList[$day] }}</td>
-              @foreach ($hariLibur as $libur)
-                @if ($libur->libur == date("Y-m-d", $i))
-                  <td colspan="2" align="center">{{ $libur->keterangan }}</td>
-                @endif
-              @endforeach
-              @foreach ($intervensi as $interv)
+
+              @foreach ($tanggalBulan as $tanggal)
+              <tr>
+                <td>{{ $no }}</td>
+                <td>{{ $tanggal }}</td>
                 @php
-                $mulai = explode('-', $interv->tanggal_mulai);
-                $mulai = $mulai[2]."/".$mulai[1]."/".$mulai[0];
-                $akhir = explode('-', $interv->tanggal_akhir);
-                $akhir = $akhir[2]."/".$akhir[1]."/".$akhir[0];
+                $day = explode('/', $tanggal);
+                $day = $day[1]."/".$day[0]."/".$day[2];
+                $day = date('D', strtotime($day));
 
-                $mulai = new DateTime($interv->tanggal_mulai);
-                $akhir   = new DateTime($interv->tanggal_akhir);
-
+                $dayList = array(
+                  'Sun' => 'Minggu',
+                  'Mon' => 'Senin',
+                  'Tue' => 'Selasa',
+                  'Wed' => 'Rabu',
+                  'Thu' => 'Kamis',
+                  'Fri' => 'Jum&#039;at',
+                  'Sat' => 'Sabtu'
+                );
                 @endphp
-                @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
+                <td>{{ $dayList[$day] }}</td>
+
+                @php
+                  $flag=0;
+                @endphp
+
+                @foreach ($hariLibur as $lib)
                   @php
-                  $flag++;
-                  $flaginter++;
+                    $holiday = explode('-', $lib->libur);
+                    $holiday = $holiday[2]."/".$holiday[1]."/".$holiday[0];
                   @endphp
-                  <td colspan="2" align="center">Libur</td>
-                  @break
-                @else
-                @for($tglInterv = $mulai; $mulai <= $akhir; $tglInterv->modify('+1 day'))
-                  @if ($tanggal == $tglInterv->format("d/m/Y"))
+                  @if($holiday == $tanggal)
+                    @php
+                      $flag++;
+                    @endphp
+                    <td colspan="2" align="center">{{ $lib->keterangan }}</td>
+                  @endif
+                @endforeach
+
+                @php
+                    $flaginter = 0;
+                @endphp
+
+                @foreach ($intervensi as $interv)
+                  @php
+                  $mulai = explode('-', $interv->tanggal_mulai);
+                  $mulai = $mulai[2]."/".$mulai[1]."/".$mulai[0];
+                  $akhir = explode('-', $interv->tanggal_akhir);
+                  $akhir = $akhir[2]."/".$akhir[1]."/".$akhir[0];
+
+                  $mulai = new DateTime($interv->tanggal_mulai);
+                  $akhir   = new DateTime($interv->tanggal_akhir);
+
+                  @endphp
+                  @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
                     @php
                     $flag++;
-                    $flaginter++;
                     @endphp
-                  <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
+                    <td colspan="2" align="center">Libur</td>
+                    @break
+                  @else
+                  @for($i = $mulai; $mulai <= $akhir; $i->modify('+1 day'))
+                    @if ($tanggal == $i->format("d/m/Y"))
+                        @php
+                        $flag++;
+                        $flaginter++;
+                        @endphp
+                      <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
+                    @endif
+                  @endfor
                   @endif
-                @endfor
+                @endforeach
+
+                @foreach ($absensi as $absen)
+
+                  @foreach ($absen as $key)
+                    @if ($key->Tanggal_Log == $tanggal && $flaginter == 0)
+                      @php
+                        $flag++;
+                      @endphp
+                      <td align="center">@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else x @endif</td>
+                      <td align="center">@if($key->Jam_Pulang != null) {{ $key->Jam_Pulang }} @else x @endif</td>
+                    @endif
+                  @endforeach
+
+                  @if ($intervensi == null)
+                    @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
+                      @php
+                        $flag++;
+                      @endphp
+                      <td colspan="2" align="center">Libur</td>
+                      @break
+                    @endif
+                  @endif
+
+
+                @endforeach
+
+                @if ($flag==0)
+                  @if ($tanggal > date("d/m/Y"))
+                    <td align="center">x</td>
+                    <td align="center">x</td>
+                  @else
+                    <td colspan="2" align="center">Alpa</td>
+                  @endif
                 @endif
+              </tr>
+              @php
+                $no++
+              @endphp
               @endforeach
-              <td>
-                @php
-                  $flagmasuk=0;
-                @endphp
-                @foreach ($rekapAbsenPeriode as $keys)
-                  @if ($keys->Tanggal_Log == $tanggal)
-                    @php
-                      $jammasuk = 100000;
-                      $jamlog = (int) str_replace(':','',$keys->Jam_Log);
-                    @endphp
-                    @if ($jamlog<$jammasuk)
-                      @php
-                        $flagmasuk=1;
-                      @endphp
-                      {{ $keys->Jam_Log }}
-                    @endif
-                  @endif
-                @endforeach
-                @if ($flagmasuk==0)
-                  x
-                @endif
-              </td>
-              <td>
-                @php
-                  $flagpulang=0;
-                @endphp
-                @foreach ($rekapAbsenPeriode as $keys)
-                  @if ($keys->Tanggal_Log == $tanggal)
-                    @php
-                      $jampulang = 140000;
-                      $jamlog = (int)str_replace(':','',$keys->Jam_Log);
-                    @endphp
-                    @if ($jamlog>$jampulang)
-                      @php
-                        $flagpulang=1;
-                      @endphp
-                      {{$keys->Jam_Log}}
-                    @endif
-                  @endif
-                @endforeach
-                @if ($flagpulang==0)
-                  x
-                @endif
-              </td>
             </tr>
             @php
-            $no++;
-            }
+            $no++
             @endphp
           </tbody>
         </table>

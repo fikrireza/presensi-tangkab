@@ -382,6 +382,7 @@ class LaporanController extends Controller
     public function laporanPegawaiStore(Request $request)
     {
       $nip_sapk = $request->nip_sapk;
+      $fid = pegawai::select('fid')->where('nip_sapk', $nip_sapk)->first();
       $start_dateR = $request->start_date;
       $start_date = explode('/', $start_dateR);
       $start_date = $start_date[2].'-'.$start_date[1].'-'.$start_date[0];
@@ -400,18 +401,38 @@ class LaporanController extends Controller
       $hariLibur = harilibur::select('libur', 'keterangan')->whereBetween('libur', array($start_date, $end_date))->get();
 
       // Mengambil data Absen Pegawai per Periode
-      $rekapAbsenPeriode = DB::select("select b.nip_sapk, b.nama, a.Tanggal_Log, a.Jam_Log, a.DateTime
-                                        from ta_log a, preson_pegawais b
-                                        where a.Fid = b.fid
-                                        and b.nip_sapk = '$nip_sapk'
-                                        and str_to_date(a.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'");
+      $date_from = strtotime($start_date); // Convert date to a UNIX timestamp
+      $date_to = strtotime($end_date); // Convert date to a UNIX timestamp
 
-      return view('pages.laporan.laporanPegawai', compact('start_dateR', 'end_dateR', 'intervensi', 'rekapAbsenPeriode', 'hariLibur', 'start_date', 'end_date', 'nip_sapk'));
+      for ($i=$date_from; $i<=$date_to; $i+=86400) {
+        $tanggalBulan[] = date('d/m/Y', $i);
+        $tanggalini = date('d/m/Y', $i);
+        $list[] = DB::select("SELECT b.id as pegawai_id, a.Tanggal_Log, a.DateTime,
+                                (select MIN(Jam_Log) from ta_log
+                                  where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
+                                  and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
+                                  and Fid = '$fid->fid') as Jam_Datang,
+                                (select MIN(Jam_Log) from ta_log
+                                  where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
+                                  and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
+                                  and Fid = '$fid->fid') as Jam_Pulang
+                              FROM ta_log a, preson_pegawais b, preson_skpd c
+                              WHERE b.skpd_id = c.id
+                              AND a.Fid = b.fid
+                              AND a.Fid = '$fid->fid'
+                              AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
+                              LIMIT 1");
+      }
+
+      $absensi = collect($list);
+
+      return view('pages.laporan.laporanPegawai', compact('start_dateR', 'end_dateR', 'intervensi', 'absensi', 'hariLibur', 'nip_sapk', 'tanggalBulan'));
     }
 
     public function cetakPegawai(Request $request)
     {
       $nip_sapk = $request->nip_sapk;
+      $fid = pegawai::select('fid', 'nama')->where('nip_sapk', $nip_sapk)->first();
       $start_dateR = $request->start_date;
       $start_date = explode('/', $start_dateR);
       $start_date = $start_date[2].'-'.$start_date[1].'-'.$start_date[0];
@@ -430,24 +451,43 @@ class LaporanController extends Controller
       $hariLibur = harilibur::select('libur', 'keterangan')->whereBetween('libur', array($start_date, $end_date))->get();
 
       // Mengambil data Absen Pegawai per Periode
-      $rekapAbsenPeriode = DB::select("select b.nip_sapk, b.nama, a.Tanggal_Log, a.Jam_Log, a.DateTime
-                                        from ta_log a, preson_pegawais b
-                                        where a.Fid = b.fid
-                                        and b.nip_sapk = '$nip_sapk'
-                                        and str_to_date(a.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'");
+      $date_from = strtotime($start_date); // Convert date to a UNIX timestamp
+      $date_to = strtotime($end_date); // Convert date to a UNIX timestamp
+
+      for ($i=$date_from; $i<=$date_to; $i+=86400) {
+        $tanggalBulan[] = date('d/m/Y', $i);
+        $tanggalini = date('d/m/Y', $i);
+        $list[] = DB::select("SELECT b.id as pegawai_id, a.Tanggal_Log, a.DateTime,
+                                (select MIN(Jam_Log) from ta_log
+                                  where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
+                                  and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
+                                  and Fid = '$fid->fid') as Jam_Datang,
+                                (select MIN(Jam_Log) from ta_log
+                                  where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
+                                  and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
+                                  and Fid = '$fid->fid') as Jam_Pulang
+                              FROM ta_log a, preson_pegawais b, preson_skpd c
+                              WHERE b.skpd_id = c.id
+                              AND a.Fid = b.fid
+                              AND a.Fid = '$fid->fid'
+                              AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
+                              LIMIT 1");
+      }
+
+      $absensi = collect($list);
 
       view()->share('start_dateR', $start_dateR);
       view()->share('end_dateR', $end_dateR);
-      view()->share('rekapAbsenPeriode', $rekapAbsenPeriode);
+      view()->share('absensi', $absensi);
+      view()->share('tanggalBulan', $tanggalBulan);
       view()->share('intervensi', $intervensi);
       view()->share('hariLibur', $hariLibur);
-      view()->share('start_date', $start_date);
-      view()->share('end_date', $end_date);
       view()->share('nip_sapk', $nip_sapk);
+      view()->share('fid', $fid);
 
       if($request->has('download')){
         $pdf = PDF::loadView('pages.laporan.cetakPegawai')->setPaper('a4', 'potrait');
-        return $pdf->download('Presensi Online - '.$nip_sapk.'.pdf');
+        return $pdf->download('Presensi Online - '.$nip_sapk.' Periode '.$start_date.' - '.$end_date.'.pdf');
       }
 
       return view('pages.laporan.cetakPegawai');

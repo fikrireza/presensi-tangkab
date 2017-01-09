@@ -2,10 +2,10 @@
 
 <div class="row">
   <div class="col-md-12">
-    <h2 style="font-size:36px;">REKAP ABSENSI {{ strtoupper($nip_sapk) }}</h2>
+    <h2 style="font-size:33px;">REKAP ABSENSI {{ strtoupper($nip_sapk) }} - {{ $fid->nama }}</h2>
     <div class="box box-primary box-solid">
       <div class="box-header">
-        <h3 class="box-title" style="font-size:30px;">PERIODE TANGGAL {{ $start_dateR }} S/D {{ $end_dateR }}</h3>
+        <h3 class="box-title" style="font-size:29px;">PERIODE TANGGAL {{ $start_dateR }} s/d {{ $end_dateR }}</h3>
       </div>
       <div class="box-body table-responsive">
         <table class="table table-bordered" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">
@@ -20,19 +20,13 @@
           </thead>
           <tbody>
             @php
-            $no = 1;
-            $flag = 0;
-            $flaginter = 0;
-
-            $date_from = strtotime($start_date); // Convert date to a UNIX timestamp
-            $date_to = strtotime($end_date); // Convert date to a UNIX timestamp
-
-            for ($i=$date_from; $i<=$date_to; $i+=86400) {
-
+              $no = 1;
             @endphp
-            <tr style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">
-              <td style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">{{ $no }}</td>
-              <td style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">{{ $tanggal = date("d/m/Y", $i) }}</td>
+
+            @foreach ($tanggalBulan as $tanggal)
+            <tr align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">
+              <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">{{ $no }}</td>
+              <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">{{ $tanggal }}</td>
               @php
               $day = explode('/', $tanggal);
               $day = $day[1]."/".$day[0]."/".$day[2];
@@ -48,12 +42,29 @@
                 'Sat' => 'Sabtu'
               );
               @endphp
-              <td style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">{{ $dayList[$day] }}</td>
-              @foreach ($hariLibur as $libur)
-                @if ($libur->libur == date("Y-m-d", $i))
-                  <td colspan="2" align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">{{ $libur->keterangan }}</td>
+              <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">{{ $dayList[$day] }}</td>
+
+              @php
+                $flag=0;
+              @endphp
+
+              @foreach ($hariLibur as $lib)
+                @php
+                  $holiday = explode('-', $lib->libur);
+                  $holiday = $holiday[2]."/".$holiday[1]."/".$holiday[0];
+                @endphp
+                @if($holiday == $tanggal)
+                  @php
+                    $flag++;
+                  @endphp
+                  <td colspan="2" align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">{{ $lib->keterangan }}</td>
                 @endif
               @endforeach
+
+              @php
+                  $flaginter = 0;
+              @endphp
+
               @foreach ($intervensi as $interv)
                 @php
                 $mulai = explode('-', $interv->tanggal_mulai);
@@ -68,71 +79,64 @@
                 @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
                   @php
                   $flag++;
-                  $flaginter++;
                   @endphp
                   <td colspan="2" align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">Libur</td>
                   @break
                 @else
-                @for($tglInterv = $mulai; $mulai <= $akhir; $tglInterv->modify('+1 day'))
-                  @if ($tanggal == $tglInterv->format("d/m/Y"))
-                    @php
-                    $flag++;
-                    $flaginter++;
-                    @endphp
-                  <td colspan="2" align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">{{ $interv->deskripsi }}</td>
+                @for($i = $mulai; $mulai <= $akhir; $i->modify('+1 day'))
+                  @if ($tanggal == $i->format("d/m/Y"))
+                      @php
+                      $flag++;
+                      $flaginter++;
+                      @endphp
+                    <td colspan="2" align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">{{ $interv->deskripsi }}</td>
                   @endif
                 @endfor
                 @endif
               @endforeach
-              <td style="border: 1px solid black;border-collapse: collapse;font-size: 28px;" align="center">
-                @php
-                  $flagmasuk=0;
-                @endphp
-                @foreach ($rekapAbsenPeriode as $keys)
-                  @if ($keys->Tanggal_Log == $tanggal)
+
+              @foreach ($absensi as $absen)
+
+                @foreach ($absen as $key)
+                  @if ($key->Tanggal_Log == $tanggal && $flaginter == 0)
                     @php
-                      $jammasuk = 100000;
-                      $jamlog = (int) str_replace(':','',$keys->Jam_Log);
+                      $flag++;
                     @endphp
-                    @if ($jamlog<$jammasuk)
-                      @php
-                        $flagmasuk=1;
-                      @endphp
-                      {{ $keys->Jam_Log }}
-                    @endif
+                    <td  align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else x @endif</td>
+                    <td  align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">@if($key->Jam_Pulang != null) {{ $key->Jam_Pulang }} @else x @endif</td>
                   @endif
                 @endforeach
-                @if ($flagmasuk==0)
-                  x
-                @endif
-              </td>
-              <td style="border: 1px solid black;border-collapse: collapse;font-size: 28px;" align="center">
-                @php
-                  $flagpulang=0;
-                @endphp
-                @foreach ($rekapAbsenPeriode as $keys)
-                  @if ($keys->Tanggal_Log == $tanggal)
+
+                @if ($intervensi == null)
+                  @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
                     @php
-                      $jampulang = 140000;
-                      $jamlog = (int)str_replace(':','',$keys->Jam_Log);
+                      $flag++;
                     @endphp
-                    @if ($jamlog>$jampulang)
-                      @php
-                        $flagpulang=1;
-                      @endphp
-                      {{$keys->Jam_Log}}
-                    @endif
+                    <td colspan="2" align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">Libur</td>
+                    @break
                   @endif
-                @endforeach
-                @if ($flagpulang==0)
-                  x
                 @endif
-              </td>
+
+
+              @endforeach
+
+              @if ($flag==0)
+                @if ($tanggal > date("d/m/Y"))
+                  <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">x</td>
+                  <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">x</td>
+                @else
+                  <td colspan="2" align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 28px;">Alpa</td>
+                @endif
+              @endif
             </tr>
             @php
-            $no++;
-            }
+              $no++
             @endphp
+            @endforeach
+          </tr>
+          @php
+          $no++
+          @endphp
           </tbody>
         </table>
       </div>
