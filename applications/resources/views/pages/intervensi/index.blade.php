@@ -215,7 +215,7 @@
             <?php $no = 1; ?>
             @if ($intervensi->isEmpty())
             <tr>
-              <td colspan="7" align="center"> Anda Belum Pernah Melakukan Intervensi </td>
+              <td colspan="7" align="center">Dinas Anda Belum Pernah Melakukan Intervensi </td>
             </tr>
             @else
             @foreach ($intervensi as $key)
@@ -225,7 +225,7 @@
               <td>{{ $key->tanggal_mulai }}</td>
               <td>{{ $key->tanggal_akhir }}</td>
               <td>{{ $key->deskripsi }}</td>
-              <td>@if ($key->flag_status == 0)
+              <td>@if (($key->flag_status == 0) && ($key->tanggal_akhir >= date('Y-m-d')))
                 <small class="label label-info">Belum diSetujui</small>
               @elseif($key->flag_status == 1)
                 <small class="label label-success">Sudah diSetujui</small>
@@ -233,7 +233,7 @@
                 <small class="label label-danger">Tidak diSetujui</small>
               @endif</td>
               <td>@if ($key->flag_status == 0)
-                  @if ($key->tanggal_mulai >= date('Y-m-d'))
+                  @if ($key->tanggal_akhir >= date('Y-m-d'))
                     <a href="" data-value="{{ $key->id }}" class="editIntervensi" data-toggle="modal" data-target="#modaleditIntervensi"><i class="fa fa-edit"></i> Ubah</a>
                   @else
                     -

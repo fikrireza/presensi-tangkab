@@ -157,7 +157,7 @@
               <td>{{ $key->jenis_intervensi }}</td>
               <td>{{ $key->tanggal_mulai }}</td>
               <td>{{ $key->tanggal_akhir }}</td>
-              <td>@if ($key->flag_status == 0)
+              <td>@if (($key->flag_status == 0) && ($key->tanggal_akhir >= date('Y-m-d')))
                 <small class="label label-info">Belum diSetujui</small>
               @elseif($key->flag_status == 1)
                 <small class="label label-success">Sudah diSetujui</small>

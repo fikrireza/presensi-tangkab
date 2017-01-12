@@ -56,7 +56,7 @@ class IntervensiController extends Controller
       if($file != null)
       {
         $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_mulai.'-'.$request->jenis_intervensi.'.' . $file->getClientOriginalExtension();
-        Image::make($file)->resize(443,350)->save('documents/'. $photo_name);
+        $file->move('documents/', $photo_name);
       }else{
         $photo_name;
       }
@@ -114,7 +114,7 @@ class IntervensiController extends Controller
       if($file != null)
       {
         $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_mulai.'-'.$request->jenis_intervensi.'.' . $file->getClientOriginalExtension();
-        Image::make($file)->save('documents/'. $photo_name);
+        $file->move('documents/', $photo_name);
 
         $set = intervensi::find($request->id_edit);
         $set->pegawai_id = Auth::user()->pegawai_id;
@@ -231,7 +231,7 @@ class IntervensiController extends Controller
       if($file != null)
       {
         $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_mulai.'-'.$request->jenis_intervensi.'.' . $file->getClientOriginalExtension();
-        $file->move('documents/', $photo_name );
+        $file->move('documents/', $photo_name);
       }else{
         $photo_name = '';
       }
