@@ -25,7 +25,7 @@ class PegawaiController extends Controller
      */
     public function __construct()
     {
-
+        $this->middleware('auth');
     }
 
     public function index()
@@ -166,7 +166,7 @@ class PegawaiController extends Controller
         'nama_pegawai.required' => 'Wajib di isi',
         'nip_sapk.required' => 'Wajib di isi',
         'fid.required' => 'Wajib di isi',
-        'fid.unique'  => 'Finger ID Sudah diPakai',
+        'fid.unique'  => 'Finger ID ini Sudah di Pakai',
         'skpd_id.required' => 'Wajib di isi',
         'golongan_id.required' => 'Wajib di isi',
         'jabatan.required' => 'Wajib di isi',
@@ -181,7 +181,7 @@ class PegawaiController extends Controller
       $validator = Validator::make($request->all(), [
         'nama_pegawai' => 'required',
         'nip_sapk' => 'required',
-        'fid' => 'required|unique:preson_pegawais,id',
+        'fid' => 'required|unique:preson_pegawais,fid,'.$request->pegawai_id,
         'skpd_id' => 'required',
         'golongan_id' => 'required',
         'jabatan' => 'required',

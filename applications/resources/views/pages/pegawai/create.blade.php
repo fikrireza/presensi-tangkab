@@ -47,6 +47,12 @@
             <label class="col-sm-3 control-label">Finger ID</label>
             <div class="col-sm-9">
               <input type="text" name="fid" class="form-control" value="{{ old('fid') }}" onkeypress="return isNumber(event)" placeholder="@if($errors->has('fid')){{ $errors->first('fid')}}@endif Finger ID" maxlength="14">
+              @if($errors->has('fid'))
+                <span class="help-block">
+                  <strong>{{ $errors->first('fid')}}
+                  </strong>
+                </span>
+              @endif
             </div>
           </div>
           <div class="form-group {{ $errors->has('skpd_id') ? 'has-error' : '' }}">
