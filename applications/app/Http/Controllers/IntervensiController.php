@@ -58,7 +58,7 @@ class IntervensiController extends Controller
         $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_mulai.'-'.$request->jenis_intervensi.'.' . $file->getClientOriginalExtension();
         $file->move('documents/', $photo_name);
       }else{
-        $photo_name;
+        $photo_name = "-";
       }
 
       $set = new intervensi;
