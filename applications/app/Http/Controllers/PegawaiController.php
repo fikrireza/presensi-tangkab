@@ -216,6 +216,12 @@ class PegawaiController extends Controller
       $set->status = 1;
       $set->update();
 
+      $update = user::where('pegawai_id', '=', $request->pegawai_id)->first();
+      $update->nama = $request->nama_pegawai;
+      $update->nip_sapk = $request->nip_sapk;
+      $update->skpd_id = $request->skpd_id;
+      $update->update();
+
       return redirect()->route('pegawai.index')->with('berhasil', 'Behasil Mengubah Data Pegawai');
     }
 }
