@@ -92,6 +92,12 @@ class HomeController extends Controller
                                   group by c.nama, a.fid) as ab
                                   group by skpd");
 
+          $skpdall = DB::select("select a.id as 'id_skpd', a.nama as 'nama_skpd', b.nama as 'nama_pegawai', count(*) as 'jumlah_pegawai'
+                                  from preson_skpd a
+                                  left join preson_pegawais b
+                                  on a.id = b.skpd_id
+                                  group by a.nama");
+
           $totalHadir = collect($absensi)->sum('jumlah_hadir');
 
           $lastUpdate = DB::select("select c.id, c.nama, max(str_to_date(a.DateTime, '%d/%m/%Y %H:%i:%s')) as last_update
@@ -100,7 +106,7 @@ class HomeController extends Controller
                                     and b.fid = a.Fid
                                     GROUP BY c.id");
 
-          return view('home', compact('absensi', 'pegawai', 'jumlahintervensi', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'jumlahPegawaiSKPD', 'lastUpdate', 'totalHadir'));
+          return view('home', compact('skpdall', 'absensi', 'pegawai', 'jumlahintervensi', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'jumlahPegawaiSKPD', 'lastUpdate', 'totalHadir'));
         }
         else if(session('status') == 'admin')
         {
