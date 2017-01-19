@@ -59,6 +59,7 @@ class IntervensiController extends Controller
         $file->move('documents/', $photo_name);
       }else{
         $photo_name = "-";
+        
       }
 
       $set = new intervensi;
