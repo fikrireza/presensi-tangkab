@@ -133,12 +133,93 @@
               <th>Jumlah Hadir</th>
               <th>Jumlah Absen</th>
               <th>Jumlah Intervensi</th>
-              <th>Tanggal Update</td>
+              <th>Tanggal Update</th>
             </tr>
           </thead>
           <tbody>
             <?php $no = 1; ?>
-            @foreach ($absensi as $key)
+            @foreach ($skpdall as $key)
+              <tr>
+                <td>{{$no}}</td>
+                <td>{{$key->nama_skpd}}</td>
+                <td>
+                  @if (!is_null($key->nama_pegawai))
+                    {{$key->jumlah_pegawai}}
+                  @else
+                    0
+                  @endif
+                </td>
+                <td>
+                  @php
+                    $flagjumlahhadir=0;
+                    $jumlahhadir=0;
+                  @endphp
+                  @foreach ($absensi as $keys)
+                    @if ($keys->id == $key->id_skpd)
+                      {{$keys->jumlah_hadir}}
+                      @php
+                        $flagjumlahhadir=1;
+                        $jumlahhadir = $keys->jumlah_hadir
+                      @endphp
+                    @endif
+                  @endforeach
+                  @if ($flagjumlahhadir==0)
+                    {{$flagjumlahhadir}}
+                  @endif
+                </td>
+                <td>
+                  @php
+                    $count=0;
+                  @endphp
+                  @foreach ($pegawai as $keys)
+                    @if ($key->nama_skpd == $keys->nama_skpd)
+                      @php
+                        $count++;
+                      @endphp
+                    @endif
+                  @endforeach
+                  @php
+                    $jumlahabsen = $count - $jumlahhadir;
+                    echo $jumlahabsen;
+                  @endphp
+                </td>
+                <td>
+                  @php
+                    $countintervensi = 0;
+                  @endphp
+                  @foreach ($jumlahintervensi as $keys)
+                    @if ($keys->nama == $key->nama_skpd)
+                      @php
+                        $countintervensi++;
+                      @endphp
+                    @endif
+                  @endforeach
+                  {{$countintervensi}}
+                </td>
+                <td>
+                  @php
+                    $flagtanggalupdate=0;
+                  @endphp
+                  @foreach ($lastUpdate as $update)
+                    @if ($update->id == $key->id_skpd)
+                      {{ $update->last_update }}
+                      @php
+                        $flagtanggalupdate=1;
+                      @endphp
+                    @endif
+                  @endforeach
+                  @if ($flagtanggalupdate==0)
+                    -
+                  @endif
+                </td>
+              </tr>
+              @php
+                $no++;
+              @endphp
+            @endforeach
+
+            {{-- KODE YANG LAMA CUUY, SEBELUM REVISI BANG BANG.. --}}
+            {{-- @foreach ($absensi as $key)
               <tr>
                 <td>{{ $no }}</td>
                 <td><a href="{{route('detail.absensi', $key->id)}}">{{ $key->skpd }}</a></td>
@@ -186,7 +267,7 @@
               @php
                 $no++;
               @endphp
-            @endforeach
+            @endforeach --}}
           </tbody>
         </table>
 
