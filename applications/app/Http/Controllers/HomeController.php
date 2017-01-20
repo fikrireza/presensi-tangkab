@@ -116,7 +116,7 @@ class HomeController extends Controller
                                 	FROM (select nama, fid from preson_pegawais where preson_pegawais.skpd_id = $skpd_id) as pegawai
                                 	LEFT OUTER JOIN (select Tanggal_Log, ta_log.Fid as Fid from ta_log, preson_pegawais
                                 										where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
-                                 									  and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '15:00:00'
+                                 									  and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
                                 										and ta_log.Fid = preson_pegawais.fid
                                 										and preson_pegawais.skpd_id = $skpd_id) as tabel_Tanggal_Log
                                 	ON pegawai.fid = tabel_Tanggal_Log.Fid
@@ -128,7 +128,7 @@ class HomeController extends Controller
                                 	ON pegawai.fid = tabel_Jam_Datang.Fid
                                 	LEFT OUTER JOIN (select Jam_Log as Jam_Pulang, ta_log.Fid as Fid from ta_log, preson_pegawais
                                 										where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
-                                										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '15:00:00'
+                                										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
                                 										and ta_log.Fid = preson_pegawais.fid
                                 										and preson_pegawais.skpd_id = $skpd_id) as tabel_Jam_Pulang
                                 	ON pegawai.fid = tabel_Jam_Pulang.Fid
@@ -159,7 +159,7 @@ class HomeController extends Controller
                                   		and Fid = '$tpp->fid') as Jam_Datang,
                                   	(select MIN(Jam_Log) from ta_log
                                   		where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
-                                  		and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '15:00:00'
+                                  		and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
                                   		and Fid = '$tpp->fid') as Jam_Pulang
                                   FROM ta_log a, preson_pegawais b, preson_skpd c
                                   WHERE b.skpd_id = c.id

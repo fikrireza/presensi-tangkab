@@ -141,7 +141,7 @@
             @foreach ($skpdall as $key)
               <tr>
                 <td>{{$no}}</td>
-                <td>{{$key->nama_skpd}}</td>
+                <td><a href="{{ route('detail.absensi', ['id' => $key->id_skpd])}}">{{$key->nama_skpd}}</a></td>
                 <td>
                   @if (!is_null($key->nama_pegawai))
                     {{$key->jumlah_pegawai}}
@@ -202,7 +202,7 @@
                   @endphp
                   @foreach ($lastUpdate as $update)
                     @if ($update->id == $key->id_skpd)
-                      {{ $update->last_update }}
+                      {{ date("d-m-Y H:i:s", strtotime($update->last_update))}}
                       @php
                         $flagtanggalupdate=1;
                       @endphp
