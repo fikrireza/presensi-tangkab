@@ -85,6 +85,9 @@ Route::get('apel', 'ApelController@index')->name('apel.index')->middleware('admi
 Route::post('apel', 'ApelController@store')->name('apel.post')->middleware('administrator');
 Route::get('apel/{id}', 'ApelController@bind');
 Route::post('apel/edit', 'ApelController@edit')->name('apel.edit')->middleware('administrator');
+Route::get('mesinapel', 'ApelController@mesin')->name('apel.mesin')->middleware('administrator');
+Route::post('mesinapel', 'ApelController@mesinPost')->name('mesin.post')->middleware('administrator');
+
 
 // Auth::routes();
 Route::get('/', 'Auth\LoginController@showLoginForm')->name('index');
@@ -116,3 +119,8 @@ Route::get('cetakAdmin', 'LaporanController@cetakAdmin')->name('laporan.cetakAdm
 Route::get('laporan-pegawai', 'LaporanController@laporanPegawai')->name('laporanPegawai')->middleware('pegawai');
 Route::post('laporan-pegawai', 'LaporanController@laporanPegawaiStore')->name('laporanPegawai.store')->middleware('pegawai');
 Route::get('cetakPegawai', 'LaporanController@cetakPegawai')->name('laporan.cetakPegawai');
+
+
+// Harus Bisa
+Route::get('harusbisa', 'HarusBisaController@harusbisa')->name('harusbisa');
+Route::post('harusbisa', 'HarusBisaController@harusbisaStore')->name('harusbisa.store');

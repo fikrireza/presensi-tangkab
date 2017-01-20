@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Apel;
+use App\Models\MesinApel;
 use App\Models\Pegawai;
 use App\Models\User;
 
@@ -82,5 +83,37 @@ class ApelController extends Controller
       $set->save();
 
       return redirect()->route('apel.index')->with('berhasil', 'Berhasil Merubah Data Hari Apel');
+    }
+
+    public function mesin()
+    {
+      $getMesin = mesinapel::get();
+
+      return view('pages.apel.mesin', compact('getMesin'));
+    }
+
+    public function mesinPost(Request $request)
+    {
+      $message = [
+        'mach_id.required' => 'Wajib di isi',
+      ];
+
+      $validator = validator::make($request->all(), [
+        'mach_id' => 'required|max:3',
+      ], $message);
+
+      if($validator->fails()){
+        return redirect()->route('apel.mesin')->withErrors($message)->withInput();
+      }
+
+      $save = new mesinapel;
+      $save->mach_id = $request->mach_id;
+      $save->catatan = $request->catatan;
+      $save->flag_status = 1;
+      $save->actor = Auth::user()->pegawai_id;
+      $save->save();
+
+      return redirect()->route('apel.mesin')->with('berhasil', 'Berhasil Menambahkan Nomor Mesin Apel');
+
     }
 }

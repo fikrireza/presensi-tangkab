@@ -49,14 +49,16 @@
             <div class="col-sm-1"></div>
             <label class="col-sm-3">Nama</label>
             <div class="col-sm-6">
-              <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" placeholder="@if($errors->has('nama')){{ $errors->first('nama')}} @endif Nama" required="">
+              <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" placeholder="@if($errors->has('nama'))
+                {{ $errors->first('nama')}} @endif Nama" required="">
             </div>
           </div>
           <div class="form-group {{ $errors->has('singkatan') ? 'has-error' : '' }}">
             <div class="col-sm-1"></div>
             <label class="col-sm-3">Singkatan</label>
             <div class="col-sm-6">
-              <input type="text" name="singkatan" class="form-control" value="{{ old('singkatan') }}" placeholder="@if($errors->has('singkatan')){{ $errors->first('singkatan')}} @endif Singkatan">
+              <input type="text" name="singkatan" class="form-control" value="{{ old('singkatan') }}" placeholder="@if($errors->has('singkatan'))
+                {{ $errors->first('singkatan')}} @endif Singkatan">
             </div>
           </div>
         </div>
@@ -93,7 +95,8 @@
             <div class="col-sm-1"></div>
             <label class="col-sm-3">Singkatan</label>
             <div class="col-sm-6">
-              <input type="text" name="singkatan_skpd" class="form-control" id="singkatan_skpd" value="{{ old('singkatan_skpd') }}" placeholder="@if($errors->has('singkatan_skpd')){{ $errors->first('singkatan_skpd')}} @endif Singkatan">
+              <input type="text" name="singkatan_skpd" class="form-control" id="singkatan_skpd" value="{{ old('singkatan_skpd') }}" placeholder="@if($errors->has('singkatan_skpd'))
+                {{ $errors->first('singkatan_skpd')}} @endif Singkatan">
             </div>
           </div>
         </div>

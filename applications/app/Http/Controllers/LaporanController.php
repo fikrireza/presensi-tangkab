@@ -91,7 +91,7 @@ class LaporanController extends Controller
                                     										and b.skpd_id = '$skpd_id'
                                     										and str_to_date(a.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'
                                     										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '16:00:00'
-                                    										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '15:00:00'
+                                    										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
                                     										GROUP BY a.Fid) as tabel_Jam_Pulang_Cepat
                                     	ON pegawai.fid = tabel_Jam_Pulang_Cepat.Fid
                                     	GROUP BY nama_pegawai ");
@@ -162,7 +162,7 @@ class LaporanController extends Controller
                                     										and b.skpd_id = '$skpd_id'
                                     										and str_to_date(a.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'
                                     										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '16:00:00'
-                                    										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '15:00:00'
+                                    										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
                                     										GROUP BY a.Fid) as tabel_Jam_Pulang_Cepat
                                     	ON pegawai.fid = tabel_Jam_Pulang_Cepat.Fid
                                     	GROUP BY nama_pegawai ");
@@ -239,7 +239,7 @@ class LaporanController extends Controller
                                     	LEFT OUTER JOIN(SELECT b.id as pegawai_id, b.nip_sapk, count(DISTINCT a.Tanggal_Log) as Jumlah_Masuk
                                     										FROM ta_log a, preson_pegawais b
                                     										WHERE a.Fid = b.fid
-                                    										AND b.skpd_id = 15
+                                    										AND b.skpd_id = '$skpd_id'
                                     										AND str_to_date(a.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'
                                     										group By b.id) as tabel_Jumlah_Masuk
                                     	ON pegawai.id = tabel_Jumlah_Masuk.pegawai_id");
@@ -266,7 +266,7 @@ class LaporanController extends Controller
                                     										and b.skpd_id = '$skpd_id'
                                     										and str_to_date(a.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'
                                     										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '16:00:00'
-                                    										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '15:00:00'
+                                    										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
                                     										GROUP BY a.Fid) as tabel_Jam_Pulang_Cepat
                                     	ON pegawai.fid = tabel_Jam_Pulang_Cepat.Fid
                                     	GROUP BY nama_pegawai ");
@@ -316,7 +316,7 @@ class LaporanController extends Controller
                                     	LEFT OUTER JOIN(SELECT b.id as pegawai_id, b.nip_sapk, count(DISTINCT a.Tanggal_Log) as Jumlah_Masuk
                                     										FROM ta_log a, preson_pegawais b
                                     										WHERE a.Fid = b.fid
-                                    										AND b.skpd_id = 15
+                                    										AND b.skpd_id = '$skpd_id'
                                     										AND str_to_date(a.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'
                                     										group By b.id) as tabel_Jumlah_Masuk
                                     	ON pegawai.id = tabel_Jumlah_Masuk.pegawai_id");
@@ -343,7 +343,7 @@ class LaporanController extends Controller
                                     										and b.skpd_id = '$skpd_id'
                                     										and str_to_date(a.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'
                                     										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '16:00:00'
-                                    										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '15:00:00'
+                                    										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
                                     										GROUP BY a.Fid) as tabel_Jam_Pulang_Cepat
                                     	ON pegawai.fid = tabel_Jam_Pulang_Cepat.Fid
                                     	GROUP BY nama_pegawai ");
@@ -411,11 +411,15 @@ class LaporanController extends Controller
                                 (select MIN(Jam_Log) from ta_log
                                   where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                   and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
-                                  and Fid = '$fid->fid') as Jam_Datang,
+                                  and Fid = '$fid->fid'
+                                  and str_to_date(Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT tanggal_mulai FROM preson_intervensis)
+                                  and str_to_date(Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT libur FROM preson_harilibur)) as Jam_Datang,
                                 (select MIN(Jam_Log) from ta_log
                                   where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                   and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
-                                  and Fid = '$fid->fid') as Jam_Pulang
+                                  and Fid = '$fid->fid'
+                                  and str_to_date(Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT tanggal_mulai FROM preson_intervensis)
+                                  and str_to_date(Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT libur FROM preson_harilibur)) as Jam_Pulang
                               FROM ta_log a, preson_pegawais b, preson_skpd c
                               WHERE b.skpd_id = c.id
                               AND a.Fid = b.fid
@@ -461,11 +465,15 @@ class LaporanController extends Controller
                                 (select MIN(Jam_Log) from ta_log
                                   where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                   and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
-                                  and Fid = '$fid->fid') as Jam_Datang,
+                                  and Fid = '$fid->fid'
+                                  and str_to_date(Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT tanggal_mulai FROM preson_intervensis)
+                                  and str_to_date(Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT libur FROM preson_harilibur)) as Jam_Datang,
                                 (select MIN(Jam_Log) from ta_log
                                   where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                   and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
-                                  and Fid = '$fid->fid') as Jam_Pulang
+                                  and Fid = '$fid->fid'
+                                  and str_to_date(Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT tanggal_mulai FROM preson_intervensis)
+                                  and str_to_date(Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT libur FROM preson_harilibur)) as Jam_Pulang
                               FROM ta_log a, preson_pegawais b, preson_skpd c
                               WHERE b.skpd_id = c.id
                               AND a.Fid = b.fid

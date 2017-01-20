@@ -89,7 +89,7 @@
                   @foreach ($absensi as $keys)
                     @if ($keys->fid == $key->fid)
                       @php
-                        $jammasuk_upper = 80000;
+                        $jammasuk_upper = 100000;
                         $jammasuk_lower = 70000;
                         $jamlog = (int) str_replace(':','',$keys->jam_log);
                       @endphp
@@ -115,7 +115,7 @@
                   @foreach ($absensi as $keys)
                     @if ($keys->fid == $key->fid)
                       @php
-                        $jampulang_upper = 160000;
+                        $jampulang_upper = 140000;
                         $jamlog = (int)str_replace(':','',$keys->jam_log);
                       @endphp
                       @if ($jamlog>$jampulang_upper)

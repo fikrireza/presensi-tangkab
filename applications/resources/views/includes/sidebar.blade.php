@@ -34,10 +34,16 @@
             </li>
             @endif
             @if(session('status') == 'administrator')
-            <li class="{{ Route::currentRouteNamed('apel.index') ? 'active' : ''}}">
-              <a href="{{ route('apel.index') }}">
+            <li class="treeview {{ Route::currentRouteNamed('apel.index') ? 'active' : ''}}{{ Route::currentRouteNamed('apel.mesin') ? 'active' : ''}}">
+              <a href="#">
                 <i class="fa fa-flag"></i> <span>Manajemen Apel</span>
+                <i class="fa fa-angle-left pull-right"></i>
               </a>
+              <ul class="treeview-menu">
+                <li class=""><a href=""><i class="fa fa-circle-o"></i> </a></li>
+                <li class="{{ Route::currentRouteNamed('apel.index') ? 'active' : ''}}"><a href="{{ route('apel.index') }}"><i class="fa fa-circle-o"></i> Jadwal Apel</a></a></li>
+                <li class="{{ Route::currentRouteNamed('apel.mesin') ? 'active' : ''}}"><a href="{{ route('apel.mesin')}}"><i class="fa fa-circle-o"></i> Daftar Mesin Apel</a></li>
+              </ul>
             </li>
             @endif
             @if(session('status') != 'pegawai')

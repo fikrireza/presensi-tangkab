@@ -59,7 +59,7 @@ class IntervensiController extends Controller
         $file->move('documents/', $photo_name);
       }else{
         $photo_name = "-";
-        
+
       }
 
       $set = new intervensi;
@@ -263,7 +263,7 @@ class IntervensiController extends Controller
       $intervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
                             ->join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
                             ->select('preson_intervensis.*', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.nip_sapk')
-                            ->where('preson_skpd.id', $id)
+                            ->where('preson_skpd.id', '=', $id->id)
                             ->orderBy('tanggal_mulai', 'desc')
                             ->get();
 
