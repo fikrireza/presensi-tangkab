@@ -77,7 +77,8 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input class="form-control pull-right" id="tanggal_mulai" type="text" name="tanggal_mulai"  value="{{ old('tanggal_mulai') }}" placeholder="@if($errors->has('tanggal_mulai')){{ $errors->first('tanggal_mulai')}}@endif Tanggal Mulai">
+                <input class="form-control pull-right" id="tanggal_mulai" type="text" name="tanggal_mulai"  value="{{ old('tanggal_mulai') }}" placeholder="@if($errors->has('tanggal_mulai'))
+                  {{ $errors->first('tanggal_mulai')}}@endif Tanggal Mulai">
               </div>
             </div>
           </div>
@@ -88,20 +89,23 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input class="form-control pull-right" id="tanggal_akhir" type="text" name="tanggal_akhir"  value="{{ old('tanggal_akhir') }}" placeholder="@if($errors->has('tanggal_akhir')){{ $errors->first('tanggal_akhir')}}@endif Tanggal Akhir" onchange="durationDay()">
+                <input class="form-control pull-right" id="tanggal_akhir" type="text" name="tanggal_akhir"  value="{{ old('tanggal_akhir') }}" placeholder="@if($errors->has('tanggal_akhir'))
+                  {{ $errors->first('tanggal_akhir')}}@endif Tanggal Akhir" onchange="durationDay()">
               </div>
             </div>
           </div>
           <div class="form-group {{ $errors->has('jumlah_hari') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Jumlah Hari</label>
             <div class="col-sm-9">
-              <input type="text" name="jumlah_hari" id="jumlah_hari" class="form-control" value="{{ old('jumlah_hari') }}" placeholder="@if($errors->has('jumlah_hari')){{ $errors->first('jumlah_hari')}} @endif Jumlah Hari" required="" readonly="true">
+              <input type="text" name="jumlah_hari" id="jumlah_hari" class="form-control" value="{{ old('jumlah_hari') }}" placeholder="@if($errors->has('jumlah_hari'))
+                {{ $errors->first('jumlah_hari')}} @endif Jumlah Hari" required="" readonly="true">
             </div>
           </div>
           <div class="form-group {{ $errors->has('keterangan') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Keterangan</label>
             <div class="col-sm-9">
-              <input type="text" name="keterangan" class="form-control" value="{{ old('keterangan') }}" placeholder="@if($errors->has('keterangan')){{ $errors->first('keterangan')}} @endif Keterangan" required="">
+              <input type="text" name="keterangan" class="form-control" value="{{ old('keterangan') }}" placeholder="@if($errors->has('keterangan'))
+                {{ $errors->first('keterangan')}} @endif Keterangan" required="">
             </div>
           </div>
           <div class="form-group {{ $errors->has('berkas') ? 'has-error' : ''}}">

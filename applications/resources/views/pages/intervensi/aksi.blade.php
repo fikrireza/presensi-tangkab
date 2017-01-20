@@ -101,7 +101,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">Berkas</label>
             <div class="col-sm-9">
-              @if ($intervensi->berkas == null)
+              @if ($intervensi->berkas == '-')
                 Tidak ada berkas
               @else
                 <a href="{{ url('documents', $intervensi->berkas)}}" download>Download</a>
