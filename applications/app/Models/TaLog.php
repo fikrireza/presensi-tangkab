@@ -8,5 +8,5 @@ class TaLog extends Model
 {
   protected $table = 'ta_log';
 
-  protected $fillable = ['Fid','Tanggal_Log', 'Jam_Log'];
+  protected $fillable = ['Mach_id', 'Fid','Tanggal_Log', 'Jam_Log'];
 }

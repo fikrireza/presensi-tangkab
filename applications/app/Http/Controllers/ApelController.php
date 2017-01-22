@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Apel;
 use App\Models\MesinApel;
 use App\Models\Pegawai;
+use App\Models\Skpd;
+use App\Models\Golongan;
 use App\Models\User;
 
 use Auth;
@@ -115,5 +117,44 @@ class ApelController extends Controller
 
       return redirect()->route('apel.mesin')->with('berhasil', 'Berhasil Menambahkan Nomor Mesin Apel');
 
+    }
+
+    public function pegawaiapel()
+    {
+      $getApel = apel::orderBy('tanggal_apel', 'desc')->get();
+      $getGolongan = golongan::get();
+
+      return view('pages.apel.pegawaiapel', compact('getApel', 'getGolongan'));
+    }
+
+    public function pegawaiapelStore(Request $request)
+    {
+      // dd($request);
+      $getApel = apel::orderBy('tanggal_apel', 'desc')->get();
+      $tanggalApel = apel::select('id', 'tanggal_apel')->where('id', '=', $request->apel_id)->first();
+        $tanggalApelnya = date('d/m/Y', strtotime($tanggalApel->tanggal_apel));
+      $getAbsenApel = DB::select("SELECT a.Mach_id, a.Fid, a.Tanggal_Log, a.Jam_Log, c.skpd_id as skpd, c.nama as pegawai,
+                                        d.id as golongan
+                                  FROM ta_log a, preson_mesinapel b, preson_pegawais c, preson_golongans d
+                                  WHERE a.Mach_id = b.mach_id
+                                  AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalApelnya'
+                                  AND TIME_FORMAT(STR_TO_DATE(a.Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
+                                  AND a.Fid = c.fid
+                                  AND c.golongan_id = d.id
+                                  GROUP BY c.nama");
+// dd($getAbsenApel);
+      $getSkpd = skpd::join('preson_pegawais', 'preson_pegawais.skpd_id', '=', 'preson_skpd.id')
+                      ->select('preson_skpd.*')
+                      ->groupby('preson_skpd.id')
+                      ->get();
+
+      $getGolongan = golongan::orderby('id', 'desc')->get();
+
+      $jumlahPegawaiSKPD = DB::select("select b.nama as skpd, a.skpd_id, count(a.skpd_id) as jumlah_pegawai
+                                      from preson_pegawais a, preson_skpd b
+                                      where a.skpd_id = b.id
+                                      group by skpd_id");
+
+      return view('pages.apel.pegawaiapel', compact('getApel', 'tanggalApel', 'getAbsenApel', 'getSkpd', 'getGolongan', 'jumlahPegawaiSKPD'));
     }
 }

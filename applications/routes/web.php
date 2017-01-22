@@ -87,6 +87,8 @@ Route::get('apel/{id}', 'ApelController@bind');
 Route::post('apel/edit', 'ApelController@edit')->name('apel.edit')->middleware('administrator');
 Route::get('mesinapel', 'ApelController@mesin')->name('apel.mesin')->middleware('administrator');
 Route::post('mesinapel', 'ApelController@mesinPost')->name('mesin.post')->middleware('administrator');
+Route::get('apel-pegawai', 'ApelController@pegawaiapel')->name('apel.pegawai')->middleware('administrator');
+Route::post('apel-pegawai', 'ApelController@pegawaiapelStore')->name('pegawaiapel.store')->middleware('administrator');
 
 
 // Auth::routes();
