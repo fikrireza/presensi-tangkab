@@ -61,7 +61,7 @@
   <div class="col-md-12">
     <div class="box box-primary box-solid">
       <div class="box-header">
-        <h3 class="box-title">Jumlah Apel Pegawai Berdasarkan Golongan</h3>
+        <h3 class="box-title">Jumlah Apel Pegawai Berdasarkan struktural</h3>
       </div>
       <div class="box-body table-responsive">
         @if(isset($getAbsenApel))
@@ -71,14 +71,15 @@
               <th rowspan="2" class="text-center">No</th>
               <th rowspan="2" class="text-center">SKPD</th>
               <th rowspan="2" class="text-center">Jumlah Pegawai</th>
-              <th colspan="4" class="text-center">I</th>
-              <th colspan="4" class="text-center">II</th>
-              <th colspan="4" class="text-center">III</th>
-              <th colspan="4" class="text-center">IV</th>
+              <th colspan="2" class="text-center">5</th>
+              <th colspan="2" class="text-center">4</th>
+              <th colspan="2" class="text-center">3</th>
+              <th colspan="2" class="text-center">2</th>
+              <th colspan="3" class="text-center"></th>
             </tr>
             <tr>
-              @foreach ($getGolongan as $key)
-              <th class="text-center">{{ strtoupper($key->nama) }}</th>
+              @foreach ($getStruktural as $key)
+              <th class="text-center">{{ $key->nama }}</th>
               @endforeach
             </tr>
           </thead>
@@ -98,7 +99,7 @@
               @php
                 $ia = 0;
                 foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 16) && ($apel->skpd == $skpd->id)){
+                  if(($apel->struktural == 1) && ($apel->skpd == $skpd->id)){
                     $ia += 1;
                   }
                 }
@@ -108,7 +109,7 @@
               @php
                 $ib = 0;
                 foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 15) && ($apel->skpd == $skpd->id)){
+                  if(($apel->struktural == 2) && ($apel->skpd == $skpd->id)){
                     $ib += 1;
                   }
                 }
@@ -118,7 +119,7 @@
               @php
                 $ic = 0;
                 foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 14) && ($apel->skpd == $skpd->id)){
+                  if(($apel->struktural == 3) && ($apel->skpd == $skpd->id)){
                     $ic += 1;
                   }
                 }
@@ -128,7 +129,7 @@
               @php
                 $id = 0;
                 foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 13) && ($apel->skpd == $skpd->id)){
+                  if(($apel->struktural == 4) && ($apel->skpd == $skpd->id)){
                     $id += 1;
                   }
                 }
@@ -138,7 +139,7 @@
               @php
                 $iia = 0;
                 foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 12) && ($apel->skpd == $skpd->id)){
+                  if(($apel->struktural == 5) && ($apel->skpd == $skpd->id)){
                     $iia += 1;
                   }
                 }
@@ -148,7 +149,7 @@
               @php
                 $iib = 0;
                 foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 11) && ($apel->skpd == $skpd->id)){
+                  if(($apel->struktural == 6) && ($apel->skpd == $skpd->id)){
                     $iib += 1;
                   }
                 }
@@ -158,7 +159,7 @@
               @php
                 $iic = 0;
                 foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 10) && ($apel->skpd == $skpd->id)){
+                  if(($apel->struktural == 7) && ($apel->skpd == $skpd->id)){
                     $iic += 1;
                   }
                 }
@@ -168,7 +169,7 @@
               @php
                 $iid = 0;
                 foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 9) && ($apel->skpd == $skpd->id)){
+                  if(($apel->struktural == 8) && ($apel->skpd == $skpd->id)){
                     $iid += 1;
                   }
                 }
@@ -178,7 +179,7 @@
               @php
                 $iiia = 0;
                 foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 8) && ($apel->skpd == $skpd->id)){
+                  if(($apel->struktural == 9) && ($apel->skpd == $skpd->id)){
                     $iiia += 1;
                   }
                 }
@@ -188,7 +189,7 @@
               @php
                 $iiib = 0;
                 foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 7) && ($apel->skpd == $skpd->id)){
+                  if(($apel->struktural == 10) && ($apel->skpd == $skpd->id)){
                     $iiib += 1;
                   }
                 }
@@ -198,62 +199,12 @@
               @php
                 $iiic = 0;
                 foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 6) && ($apel->skpd == $skpd->id)){
+                  if(($apel->struktural == 11) && ($apel->skpd == $skpd->id)){
                     $iiic += 1;
                   }
                 }
               @endphp
               <td>@if ($iiic == 0) - @else {{ $iiic }} @endif</td>
-
-              @php
-                $iiid = 0;
-                foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 5) && ($apel->skpd == $skpd->id)){
-                    $iiid += 1;
-                  }
-                }
-              @endphp
-              <td>@if ($iiid == 0) - @else {{ $iiid }} @endif</td>
-
-              @php
-                $iva = 0;
-                foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 4) && ($apel->skpd == $skpd->id)){
-                    $iva += 1;
-                  }
-                }
-              @endphp
-              <td>@if ($iva == 0) - @else {{ $iva }} @endif</td>
-
-              @php
-                $ivb = 0;
-                foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 3) && ($apel->skpd == $skpd->id)){
-                    $ivb += 1;
-                  }
-                }
-              @endphp
-              <td>@if ($ivb == 0) - @else {{ $ivb }} @endif</td>
-
-              @php
-                $ivc = 0;
-                foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 2) && ($apel->skpd == $skpd->id)){
-                    $ivc += 1;
-                  }
-                }
-              @endphp
-              <td>@if ($ivc == 0) - @else {{ $ivc }} @endif</td>
-
-              @php
-                $ivd = 0;
-                foreach ($getAbsenApel as $apel) {
-                  if(($apel->golongan == 1) && ($apel->skpd == $skpd->id)){
-                    $ivd += 1;
-                  }
-                }
-              @endphp
-              <td>@if ($ivd == 0) - @else {{ $ivd }} @endif</td>
             </tr>
             @php
               $no++
@@ -265,10 +216,18 @@
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th class="text-center">No</th>
-              <th class="text-center">SKPD</th>
-              @foreach ($getGolongan as $key)
-                <th class="text-center">{{ strtoupper($key->nama) }}</th>
+              <th rowspan="2" class="text-center">No</th>
+              <th rowspan="2" class="text-center">SKPD</th>
+              <th rowspan="2" class="text-center">Jumlah Pegawai</th>
+              <th colspan="2" class="text-center">5</th>
+              <th colspan="2" class="text-center">4</th>
+              <th colspan="2" class="text-center">3</th>
+              <th colspan="2" class="text-center">2</th>
+              <th colspan="3" class="text-center"></th>
+            </tr>
+            <tr>
+              @foreach ($getStruktural as $key)
+              <th class="text-center">{{ $key->nama }}</th>
               @endforeach
             </tr>
           </thead>
