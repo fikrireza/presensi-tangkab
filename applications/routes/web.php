@@ -122,5 +122,5 @@ Route::get('cetakPegawai', 'LaporanController@cetakPegawai')->name('laporan.ceta
 
 
 // Harus Bisa
-Route::get('harusbisa', 'HarusBisaController@harusbisa')->name('harusbisa');
-Route::post('harusbisa', 'HarusBisaController@harusbisaStore')->name('harusbisa.store');
+Route::get('laporan2', 'Laporan2Controller@laporan2')->name('laporan2');
+Route::post('laporan2', 'Laporan2Controller@laporan2Store')->name('laporan2.store');
