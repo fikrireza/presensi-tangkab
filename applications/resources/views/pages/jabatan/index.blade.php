@@ -149,7 +149,7 @@
 
 <script type="text/javascript">
   $(function(){
-    $('.editJabatan').click(function(){
+    $("#table_jabatan").on("click", "a.editJabatan", function(){
       var a = $(this).data('value');
       $.ajax({
         url: "{{ url('/') }}/jabatan/"+a,

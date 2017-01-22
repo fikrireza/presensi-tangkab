@@ -212,7 +212,7 @@ $('.tanggal_apel_edit').datepicker({
 
 <script type="text/javascript">
   $(function(){
-    $('.editApel').click(function(){
+    $("#table_apel").on("clicl", "a.editApel", function(){
       var a = $(this).data('value');
       $.ajax({
         url: "{{ url('/') }}/apel/"+a,

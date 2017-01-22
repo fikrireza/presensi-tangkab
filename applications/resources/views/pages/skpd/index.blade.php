@@ -170,7 +170,7 @@
 
 <script type="text/javascript">
   $(function(){
-    $('.editSKPD').click(function(){
+    $("#table_skpd").on("click", "a.editSKPD", function(){
       var a = $(this).data('value');
       $.ajax({
         url: "{{ url('/') }}/skpd/"+a,

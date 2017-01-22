@@ -187,7 +187,7 @@ $('.datepicker1').datepicker({
 
 <script type="text/javascript">
   $(function(){
-    $('.editharilibur').click(function(){
+    $("#table_harilibur").on("click", "a.editharilibur", function(){
       var a = $(this).data('value');
       $.ajax({
         url: "{{ url('/') }}/harilibur/"+a,
