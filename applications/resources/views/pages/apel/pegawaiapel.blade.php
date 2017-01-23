@@ -47,8 +47,8 @@
       </div>
       <div class="box-footer">
         <button class="btn btn-block bg-purple">Pilih</button>
-        @if (isset($pegawainya))
-          {{-- <a href="{{ route('laporan.cetakAdministrator', ['download'=>'pdf', 'start_date'=>$start_dateR, 'end_date'=>$end_dateR, 'skpd_id'=>$skpd_id]) }}" class="btn btn-block bg-green">Download PDF</a> --}}
+        @if (isset($tanggalApel))
+          <a href="{{ route('pegawaiapel.cetak', ['download'=>'pdf', 'apel_id'=>$tanggalApel->id]) }}" class="btn btn-block bg-green">Download PDF</a>
         @endif
       </div>
       </form>
@@ -61,7 +61,7 @@
   <div class="col-md-12">
     <div class="box box-primary box-solid">
       <div class="box-header">
-        <h3 class="box-title">Jumlah Apel Pegawai Berdasarkan struktural</h3>
+        <h3 class="box-title">Jumlah Apel Pegawai Berdasarkan Struktural</h3>
       </div>
       <div class="box-body table-responsive">
         @if(isset($getAbsenApel))
@@ -90,7 +90,7 @@
             @foreach ($getSkpd as $skpd)
             <tr>
               <td>{{ $no }}</td>
-              <td>{{ $skpd->nama }}</td>
+              <td><a href="{{ route('pegawaiapel.detail', ['skpd' => $skpd->id, 'tanggal_apel' => $tanggalApel->id])}}">{{ $skpd->nama }}</a></td>
               @foreach ($jumlahPegawaiSKPD as $jmlPeg)
               @if($skpd->id == $jmlPeg->skpd_id)
                 <td align="center">{{ $jmlPeg->jumlah_pegawai }}</td>

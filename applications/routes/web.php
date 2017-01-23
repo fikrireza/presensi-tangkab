@@ -89,7 +89,9 @@ Route::get('mesinapel', 'ApelController@mesin')->name('apel.mesin')->middleware(
 Route::post('mesinapel', 'ApelController@mesinPost')->name('mesin.post')->middleware('administrator');
 Route::get('apel-pegawai', 'ApelController@pegawaiapel')->name('apel.pegawai')->middleware('administrator');
 Route::post('apel-pegawai', 'ApelController@pegawaiapelStore')->name('pegawaiapel.store')->middleware('administrator');
-
+Route::get('apel-pegawai-cetak', 'ApelController@pegawaiapelCetak')->name('pegawaiapel.cetak')->middleware('administrator');
+Route::get('apel-pegawai/detail/{skpd}/{tanggal_apel}', 'ApelController@pegawaiapelDetail')->name('pegawaiapel.detail')->middleware('administrator');
+Route::get('apel-pegawai/detail/cetak', 'ApelController@pegawaiapelDetailCetak')->name('pegawaiapel.detailCetak')->middleware('administrator');
 
 // Auth::routes();
 Route::get('/', 'Auth\LoginController@showLoginForm')->name('index');

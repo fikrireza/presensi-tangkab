@@ -14,6 +14,7 @@ use App\Models\User;
 use Auth;
 use Validator;
 use DB;
+use PDF;
 
 class ApelController extends Controller
 {
@@ -156,5 +157,102 @@ class ApelController extends Controller
                                       group by skpd_id");
 
       return view('pages.apel.pegawaiapel', compact('getApel', 'tanggalApel', 'getAbsenApel', 'getSkpd', 'getStruktural', 'jumlahPegawaiSKPD'));
+    }
+
+    public function pegawaiapelCetak(Request $request)
+    {
+      $getApel = apel::orderBy('tanggal_apel', 'desc')->get();
+      $tanggalApel = apel::select('id', 'tanggal_apel')->where('id', '=', $request->apel_id)->first();
+        $tanggalApelnya = date('d/m/Y', strtotime($tanggalApel->tanggal_apel));
+      $getAbsenApel = DB::select("SELECT a.Mach_id, a.Fid, a.Tanggal_Log, a.Jam_Log, c.skpd_id as skpd, c.nama as pegawai,
+                                        d.id as struktural
+                                  FROM ta_log a, preson_mesinapel b, preson_pegawais c, preson_strukturals d
+                                  WHERE a.Mach_id = b.mach_id
+                                  AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalApelnya'
+                                  AND TIME_FORMAT(STR_TO_DATE(a.Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
+                                  AND a.Fid = c.fid
+                                  AND c.struktural_id = d.id
+                                  GROUP BY c.nama");
+
+      $getSkpd = skpd::join('preson_pegawais', 'preson_pegawais.skpd_id', '=', 'preson_skpd.id')
+                      ->select('preson_skpd.*')
+                      ->groupby('preson_skpd.id')
+                      ->get();
+
+      $getStruktural = struktural::get();
+
+      $jumlahPegawaiSKPD = DB::select("select b.nama as skpd, a.skpd_id, count(a.skpd_id) as jumlah_pegawai
+                                      from preson_pegawais a, preson_skpd b
+                                      where a.skpd_id = b.id
+                                      group by skpd_id");
+
+      view()->share('tanggalApelnya', $tanggalApelnya);
+      view()->share('getAbsenApel', $getAbsenApel);
+      view()->share('getSkpd', $getSkpd);
+      view()->share('getStruktural', $getStruktural);
+      view()->share('jumlahPegawaiSKPD', $jumlahPegawaiSKPD);
+
+      if($request->has('download')){
+        $pdf = PDF::loadView('pages.apel.cetakPegawaiApel')->setPaper('a4', 'landscape');
+        return $pdf->download('Presensi Online Apel Periode '.$tanggalApelnya.'.pdf');
+      }
+
+      return view('pages.apel.cetakPegawaiApel');
+    }
+
+    public function pegawaiapelDetail($skpd, $tanggal_apel)
+    {
+      $tanggalApelnya = apel::select('id', 'tanggal_apel')->where('id', '=', $tanggal_apel)->first();
+      $tanggalApel = date('d/m/Y', strtotime($tanggalApelnya->tanggal_apel));
+
+      $getDetail = DB::select("SELECT a.Mach_id, a.Fid, a.Tanggal_Log, a.Jam_Log, c.skpd_id as skpd, c.nama as pegawai,
+                              			d.nama as struktural, e.nama as nama_skpd, c.nip_sapk
+                              FROM ta_log a, preson_mesinapel b, preson_pegawais c, preson_strukturals d, preson_skpd e
+                              WHERE a.Mach_id = b.mach_id
+                              AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalApel'
+                              AND TIME_FORMAT(STR_TO_DATE(a.Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
+                              AND a.Fid = c.fid
+                              AND c.struktural_id = d.id
+                              AND e.id = c.skpd_id
+                              AND c.skpd_id = $skpd
+                              GROUP BY c.nama");
+
+      if($getDetail == null){
+        return redirect()->back();
+      }else{
+        return view('pages.apel.pegawaiapeldetail', compact('getDetail', 'tanggalApel', 'skpd', 'tanggalApelnya'));
+      }
+
+    }
+
+    public function pegawaiapelDetailCetak(Request $request)
+    {
+      $tanggalApelnya = apel::select('tanggal_apel')->where('id', '=', $request->tanggalApel)->first();
+      $tanggalApel = date('d/m/Y', strtotime($tanggalApelnya->tanggal_apel));
+
+      $getDetail = DB::select("SELECT a.Mach_id, a.Fid, a.Tanggal_Log, a.Jam_Log, c.skpd_id as skpd, c.nama as pegawai,
+                              			d.nama as struktural, e.nama as nama_skpd, c.nip_sapk
+                              FROM ta_log a, preson_mesinapel b, preson_pegawais c, preson_strukturals d, preson_skpd e
+                              WHERE a.Mach_id = b.mach_id
+                              AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalApel'
+                              AND TIME_FORMAT(STR_TO_DATE(a.Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
+                              AND a.Fid = c.fid
+                              AND c.struktural_id = d.id
+                              AND e.id = c.skpd_id
+                              AND c.skpd_id = $request->skpd
+                              GROUP BY c.nama");
+
+      view()->share('tanggalApel', $tanggalApel);
+      view()->share('getDetail', $getDetail);
+      view()->share('tanggalApel', $tanggalApel);
+
+      if($request->has('download')){
+        $pdf = PDF::loadView('pages.apel.cetakPegawaiApelDetail
+        ')->setPaper('a4', 'portrait');
+        return $pdf->download('Presensi Online Apel Periode '.$tanggalApel.'.pdf');
+      }
+
+      return view('pages.apel.cetakPegawaiApelDetail');
+
     }
 }
