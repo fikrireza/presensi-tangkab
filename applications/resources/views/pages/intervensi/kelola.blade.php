@@ -160,7 +160,7 @@
               <td>{{ $key->jenis_intervensi }}</td>
               <td>{{ $key->tanggal_mulai }}</td>
               <td>{{ $key->tanggal_akhir }}</td>
-              <td>@if (($key->flag_status == 0) && ($key->tanggal_akhir >= date('Y-m-d')))
+              <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d')))
                 <small class="label label-info">Belum diSetujui</small>
               @elseif($key->flag_status == 1)
                 <small class="label label-success">Sudah diSetujui</small>
@@ -168,8 +168,10 @@
                 <small class="label label-danger">Tidak diSetujui</small>
               @endif</td>
               <td>@if ($key->flag_status == 0)
-                    @if ($key->tanggal_akhir >= date('Y-m-d'))
+                    @if (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d'))
                     <a href="{{ route('intervensi.kelola.aksi', $key->id) }}"><i class="fa fa-edit"></i> Lihat</a>
+                    @else
+                    -
                     @endif
                   @else
                     -

@@ -64,7 +64,8 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input class="form-control pull-right" id="tanggal_mulai" type="text" name="tanggal_mulai"  value="{{ old('tanggal_mulai') }}" placeholder="@if($errors->has('tanggal_mulai')){{ $errors->first('tanggal_mulai')}}@endif Tanggal Mulai">
+                <input class="form-control pull-right" id="tanggal_mulai" type="text" name="tanggal_mulai"  value="{{ old('tanggal_mulai') }}" placeholder="@if($errors->has('tanggal_mulai'))
+                  {{ $errors->first('tanggal_mulai')}}@endif Tanggal Mulai">
               </div>
             </div>
           </div>
@@ -82,13 +83,15 @@
           <div class="form-group {{ $errors->has('jumlah_hari') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Jumlah Hari</label>
             <div class="col-sm-9">
-              <input type="text" name="jumlah_hari" id="jumlah_hari" class="form-control" value="{{ old('jumlah_hari') }}" placeholder="@if($errors->has('jumlah_hari')){{ $errors->first('jumlah_hari')}} @endif Jumlah Hari" required="" readonly="true">
+              <input type="text" name="jumlah_hari" id="jumlah_hari" class="form-control" value="{{ old('jumlah_hari') }}" placeholder="@if($errors->has('jumlah_hari'))
+                {{ $errors->first('jumlah_hari')}} @endif Jumlah Hari" required="" readonly="true">
             </div>
           </div>
           <div class="form-group {{ $errors->has('keterangan') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Keterangan</label>
             <div class="col-sm-9">
-              <input type="text" name="keterangan" class="form-control" value="{{ old('keterangan') }}" placeholder="@if($errors->has('keterangan')){{ $errors->first('keterangan')}} @endif Keterangan" required="">
+              <input type="text" name="keterangan" class="form-control" value="{{ old('keterangan') }}" placeholder="@if($errors->has('keterangan'))
+                {{ $errors->first('keterangan')}} @endif Keterangan" required="">
             </div>
           </div>
           <div class="form-group {{ $errors->has('berkas') ? 'has-error' : ''}}">
@@ -122,7 +125,8 @@
           <div class="form-group {{ $errors->has('id_edit') ? 'has-error' : '' }}" style="visibility: hidden;">
             <label class="col-sm-3 control-label">id</label>
             <div class="col-sm-9">
-              <input type="text" name="id_edit" class="form-control" id="id_edit" value="{{ old('id_edit') }}" placeholder="@if($errors->has('id_edit')){{ $errors->first('id_edit')}} @endif Jumlah Hari" required="" readonly="true">
+              <input type="text" name="id_edit" class="form-control" id="id_edit" value="{{ old('id_edit') }}" placeholder="@if($errors->has('id_edit'))
+                {{ $errors->first('id_edit')}} @endif Jumlah Hari" required="" readonly="true">
             </div>
           </div>
           <div class="form-group {{ $errors->has('jenis_intervensi_edit') ? 'has-error' : '' }}">
@@ -144,7 +148,8 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input class="form-control pull-right tanggal_mulai_edit" id="tanggal_mulai_edit" type="text" name="tanggal_mulai_edit"  value="{{ old('tanggal_mulai_edit') }}" placeholder="@if($errors->has('tanggal_mulai_edit')){{ $errors->first('tanggal_mulai_edit')}}@endif Tanggal Mulai">
+                <input class="form-control pull-right tanggal_mulai_edit" id="tanggal_mulai_edit" type="text" name="tanggal_mulai_edit"  value="{{ old('tanggal_mulai_edit') }}" placeholder="@if($errors->has('tanggal_mulai_edit'))
+                  {{ $errors->first('tanggal_mulai_edit')}}@endif Tanggal Mulai">
               </div>
             </div>
           </div>
@@ -162,13 +167,15 @@
           <div class="form-group {{ $errors->has('jumlah_hari_edit') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Jumlah Hari</label>
             <div class="col-sm-9">
-              <input type="text" name="jumlah_hari_edit" class="form-control" id="jumlah_hari_edit" value="{{ old('jumlah_hari_edit') }}" placeholder="@if($errors->has('jumlah_hari_edit')){{ $errors->first('jumlah_hari_edit')}} @endif Jumlah Hari" required="" readonly="true">
+              <input type="text" name="jumlah_hari_edit" class="form-control" id="jumlah_hari_edit" value="{{ old('jumlah_hari_edit') }}" placeholder="@if($errors->has('jumlah_hari_edit'))
+                {{ $errors->first('jumlah_hari_edit')}} @endif Jumlah Hari" required="" readonly="true">
             </div>
           </div>
           <div class="form-group {{ $errors->has('keterangan_edit') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Keterangan</label>
             <div class="col-sm-9">
-              <input type="text" name="keterangan_edit" class="form-control" id="keterangan_edit" value="{{ old('keterangan_edit') }}" placeholder="@if($errors->has('keterangan_edit')){{ $errors->first('keterangan_edit')}} @endif Keterangan" required="">
+              <input type="text" name="keterangan_edit" class="form-control" id="keterangan_edit" value="{{ old('keterangan_edit') }}" placeholder="@if($errors->has('keterangan_edit'))
+                {{ $errors->first('keterangan_edit')}} @endif Keterangan" required="">
             </div>
           </div>
           <div class="form-group {{ $errors->has('berkas_edit') ? 'has-error' : ''}}">
@@ -225,7 +232,7 @@
               <td>{{ $key->tanggal_mulai }}</td>
               <td>{{ $key->tanggal_akhir }}</td>
               <td>{{ $key->deskripsi }}</td>
-              <td>@if (($key->flag_status == 0) && ($key->tanggal_akhir >= date('Y-m-d')))
+              <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d')))
                 <small class="label label-info">Belum diSetujui</small>
               @elseif($key->flag_status == 1)
                 <small class="label label-success">Sudah diSetujui</small>
@@ -233,7 +240,7 @@
                 <small class="label label-danger">Tidak diSetujui</small>
               @endif</td>
               <td>@if ($key->flag_status == 0)
-                  @if ($key->tanggal_akhir >= date('Y-m-d'))
+                  @if (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d'))
                     <a href="" data-value="{{ $key->id }}" class="editIntervensi" data-toggle="modal" data-target="#modaleditIntervensi"><i class="fa fa-edit"></i> Ubah</a>
                   @else
                     -
