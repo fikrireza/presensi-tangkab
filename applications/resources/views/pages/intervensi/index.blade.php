@@ -195,6 +195,28 @@
   </div>
 </div>
 
+
+{{-- Modal Batal Intervensi --}}
+<div class="modal fade" id="batalIntervensi" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Batal Intervensi ?</h4>
+      </div>
+      <div class="modal-body">
+        <p>Apakah anda yakin untuk batalkan intervensi ini?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-default pull-left btn-flat" data-dismiss="modal">Tidak</button>
+        <a class="btn btn-danger btn-flat" id="setBatal">Ya, saya yakin</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <div class="row">
   <div class="col-md-12">
     <div class="box box-primary box-solid">
@@ -233,15 +255,18 @@
               <td>{{ $key->tanggal_akhir }}</td>
               <td>{{ $key->deskripsi }}</td>
               <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d')))
-                <small class="label label-info">Belum diSetujui</small>
+                <small class="label label-info">Belum Disetujui</small>
               @elseif($key->flag_status == 1)
-                <small class="label label-success">Sudah diSetujui</small>
+                <small class="label label-success">Sudah Disetujui</small>
+              @elseif($key->flag_status == 3)
+                <small class="label label-warning">Dibatalkan</small>
               @else
-                <small class="label label-danger">Tidak diSetujui</small>
+                <small class="label label-danger">Tidak Disetujui</small>
               @endif</td>
               <td>@if ($key->flag_status == 0)
                   @if (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d'))
                     <a href="" data-value="{{ $key->id }}" class="editIntervensi" data-toggle="modal" data-target="#modaleditIntervensi"><i class="fa fa-edit"></i> Ubah</a>
+                    <a href="" class="batalIntervensi" data-toggle="modal" data-target="#batalIntervensi" data-value="{{ $key->id }}"><i class="fa fa-close"></i> Batal</a>
                   @else
                     -
                   @endif
@@ -347,6 +372,11 @@ $('.tanggal_akhir_edit').datepicker({
         }
       });
     });
+  });
+
+  $('a.batalIntervensi').click(function(){
+    var a = $(this).data('value');
+    $('#setBatal').attr('href', "{{ url('/') }}/intervensi/batal/"+a);
   });
 </script>
 

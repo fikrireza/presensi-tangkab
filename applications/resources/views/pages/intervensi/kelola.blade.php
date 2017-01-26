@@ -161,11 +161,13 @@
               <td>{{ $key->tanggal_mulai }}</td>
               <td>{{ $key->tanggal_akhir }}</td>
               <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d')))
-                <small class="label label-info">Belum diSetujui</small>
+                <small class="label label-info">Belum Disetujui</small>
               @elseif($key->flag_status == 1)
-                <small class="label label-success">Sudah diSetujui</small>
+                <small class="label label-success">Sudah Disetujui</small>
+              @elseif($key->flag_status == 3)
+                <small class="label label-warning">Dibatalkan</small>
               @else
-                <small class="label label-danger">Tidak diSetujui</small>
+                <small class="label label-danger">Tidak Disetujui</small>
               @endif</td>
               <td>@if ($key->flag_status == 0)
                     @if (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d'))

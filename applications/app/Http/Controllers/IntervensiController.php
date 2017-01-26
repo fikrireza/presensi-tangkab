@@ -271,4 +271,14 @@ class IntervensiController extends Controller
 
       return view('pages.intervensi.detailSKPD', compact('intervensi', 'pegawai'));
     }
+
+    public function batal($id)
+    {
+      $approve = intervensi::find($id);
+      $approve->flag_status = 3;
+      $approve->actor = Auth::user()->pegawai_id;
+      $approve->update();
+
+      return redirect()->route('intervensi.index')->with('berhasil', 'Berhasil Batalkan Intervensi');
+    }
 }

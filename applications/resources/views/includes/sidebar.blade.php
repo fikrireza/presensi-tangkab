@@ -91,12 +91,13 @@
             </li>
             @endif
             @if(session('status') == 'pegawai')
-            <li class="{{ Route::currentRouteNamed('absensi.pegawai') ? 'active' : '' }}">
-              <a href="{{ route('absensi.pegawai') }}">
+            <li class="{{ Route::currentRouteNamed('laporanPegawai') ? 'active' : '' }}">
+              <a href="{{ route('laporanPegawai') }}">
                 <i class="fa fa-calendar"></i> <span>Absensi</span>
               </a>
             </li>
             @endif
+            @if(session('status') != 'pegawai')
             <li class="treeview {{ Route::currentRouteNamed('tpp.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pejabatdokumen.index') ? 'active' : '' }}">
               <a href="{{ route('user.index') }}">
                 <i class="fa fa fa-file"></i> <span>Laporan</span>
@@ -117,13 +118,6 @@
                   </a>
                 </li>
                 @endif
-                @if (session('status') == ('pegawai'))
-                <li class="{{ Route::currentRouteNamed('laporanPegawai') ? 'active' : '' }}">
-                  <a href="{{ route('laporanPegawai') }}">
-                    <i class="fa fa-circle-o"></i> <span>Cetak Absensi</span>
-                  </a>
-                </li>
-                @endif
                 @if(session('status') == 'administrator' || session('status') == 'admin')
                 <li class="{{ Route::currentRouteNamed('pejabatdokumen.index') ? 'active' : '' }}">
                   <a href="{{ route('pejabatdokumen.index') }}">
@@ -133,5 +127,6 @@
                 @endif
               </ul>
             </li>
+            @endif
           </ul>
         </section>
