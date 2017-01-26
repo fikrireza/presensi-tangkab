@@ -54,10 +54,17 @@ class HomeController extends Controller
                             ->select('preson_skpd.*', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.fid', 'preson_pegawais.tpp_dibayarkan')
                             ->get();
 
+        $now = date('d');
         $month = date('m');
         $year = date('Y');
 
-        $start_date = "01-".$month."-".$year;
+        if($now >= 21){
+          $month = date('m');
+        }elseif($now <= 20){
+          $month = date("m", strtotime("last month"));
+        }
+
+        $start_date = "21-".$month."-".$year;
         $start_time = strtotime($start_date);
 
         $end_time = strtotime("+1 month", $start_time);
