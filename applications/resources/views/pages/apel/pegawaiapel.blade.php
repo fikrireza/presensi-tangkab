@@ -76,11 +76,13 @@
               <th colspan="2" class="text-center">3</th>
               <th colspan="2" class="text-center">2</th>
               <th colspan="3" class="text-center"></th>
+              <th rowspan="2" class="text-center">Tidak Apel</th>
             </tr>
             <tr>
               @foreach ($getStruktural as $key)
               <th class="text-center">{{ $key->nama }}</th>
               @endforeach
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -94,6 +96,9 @@
               @foreach ($jumlahPegawaiSKPD as $jmlPeg)
               @if($skpd->id == $jmlPeg->skpd_id)
                 <td align="center">{{ $jmlPeg->jumlah_pegawai }}</td>
+                @php
+                  $jumlah_pegawai = $jmlPeg->jumlah_pegawai
+                @endphp
               @endif
               @endforeach
               @php
@@ -205,6 +210,7 @@
                 }
               @endphp
               <td>@if ($iiic == 0) - @else {{ $iiic }} @endif</td>
+              <td align="center" colspan="2">{{ $jumlah_pegawai - ($ia+$ib+$ic+$id+$iia+$iib+$iic+$iid+$iiia+$iiib+$iiic)}}</td>
             </tr>
             @php
               $no++
@@ -224,11 +230,13 @@
               <th colspan="2" class="text-center">3</th>
               <th colspan="2" class="text-center">2</th>
               <th colspan="3" class="text-center"></th>
+              <th rowspan="2" class="text-center">Tidak Apel</th>
             </tr>
             <tr>
               @foreach ($getStruktural as $key)
               <th class="text-center">{{ $key->nama }}</th>
               @endforeach
+              <th></th>
             </tr>
           </thead>
           <tbody>

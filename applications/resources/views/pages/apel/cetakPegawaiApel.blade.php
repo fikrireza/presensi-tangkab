@@ -18,6 +18,7 @@
             <th colspan="2" width="30px" class="text-center" style="border: 1px solid black;border-collapse: collapse;font-size: 20px;">3</th>
             <th colspan="2" width="30px" class="text-center" style="border: 1px solid black;border-collapse: collapse;font-size: 20px;">2</th>
             <th colspan="3" width="30px" class="text-center" style="border: 1px solid black;border-collapse: collapse;font-size: 20px;"></th>
+            <th rowspan="2" width="80px" class="text-center" style="border: 1px solid black;border-collapse: collapse;font-size: 20px;">Tidak Apel</th>
           </tr>
           <tr align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 20px;">
             @foreach ($getStruktural as $key)
@@ -36,6 +37,9 @@
             @foreach ($jumlahPegawaiSKPD as $jmlPeg)
             @if($skpd->id == $jmlPeg->skpd_id)
               <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 20px;">{{ $jmlPeg->jumlah_pegawai }}</td>
+              @php
+                $jumlah_pegawai = $jmlPeg->jumlah_pegawai;
+              @endphp
             @endif
             @endforeach
             @php
@@ -147,6 +151,7 @@
               }
             @endphp
             <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 20px;">@if ($iiic == 0) - @else {{ $iiic }} @endif</td>
+            <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 20px;">{{ $jumlah_pegawai - ($ia+$ib+$ic+$id+$iia+$iib+$iic+$iid+$iiia+$iiib+$iiic)}}</td>
           </tr>
           @php
             $no++
