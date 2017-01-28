@@ -61,7 +61,7 @@
   <div class="col-md-12">
     <div class="box box-primary box-solid">
       <div class="box-header">
-        <h3 class="box-title">Jumlah Apel Pegawai Berdasarkan Struktural</h3>
+        <h3 class="box-title">Jumlah Apel Pegawai Berdasarkan Esselon</h3>
       </div>
       <div class="box-body table-responsive">
         @if(isset($getAbsenApel))

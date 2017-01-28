@@ -28,25 +28,35 @@
           <div class="form-group {{ $errors->has('nama_pegawai') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Nama</label>
             <div class="col-sm-9">
-              <input type="text" name="nama_pegawai" class="form-control" value="{{ old('nama_pegawai') }}" placeholder="@if($errors->has('nama_pegawai')){{ $errors->first('nama_pegawai')}}@endif Nama">
+              <input type="text" name="nama_pegawai" class="form-control" value="{{ old('nama_pegawai') }}" placeholder="@if($errors->has('nama_pegawai'))
+                {{ $errors->first('nama_pegawai')}}@endif Nama">
             </div>
           </div>
           <div class="form-group {{ $errors->has('nip_sapk') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">NIP</label>
             <div class="col-sm-9">
-              <input type="text" name="nip_sapk" class="form-control" value="{{ old('nip_sapk') }}" onkeypress="return isNumber(event)" placeholder="@if($errors->has('nip_sapk')){{ $errors->first('nip_sapk')}}@endif NIP">
+              <input type="text" name="nip_sapk" class="form-control" value="{{ old('nip_sapk') }}" onkeypress="return isNumber(event)" placeholder="@if($errors->has('nip_sapk'))
+                {{ $errors->first('nip_sapk')}}@endif NIP">
+                @if($errors->has('nip_sapk'))
+                  <span class="help-block">
+                    <strong>{{ $errors->first('nip_sapk')}}
+                    </strong>
+                  </span>
+                @endif
             </div>
           </div>
           <div class="form-group {{ $errors->has('nip_lm') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">NIP Lama</label>
             <div class="col-sm-9">
-              <input type="text" name="nip_lm" class="form-control" value="{{ old('nip_lm') }}" placeholder="@if($errors->has('nip_lm')){{ $errors->first('nip_lm')}}@endif NIP Lama">
+              <input type="text" name="nip_lm" class="form-control" value="{{ old('nip_lm') }}" placeholder="@if($errors->has('nip_lm'))
+                {{ $errors->first('nip_lm')}}@endif NIP Lama">
             </div>
           </div>
           <div class="form-group {{ $errors->has('fid') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Finger ID</label>
             <div class="col-sm-9">
-              <input type="text" name="fid" class="form-control" value="{{ old('fid') }}" onkeypress="return isNumber(event)" placeholder="@if($errors->has('fid')){{ $errors->first('fid')}}@endif Finger ID" maxlength="14">
+              <input type="text" name="fid" class="form-control" value="{{ old('fid') }}" onkeypress="return isNumber(event)" placeholder="@if($errors->has('fid'))
+                {{ $errors->first('fid')}}@endif Finger ID" maxlength="14">
               @if($errors->has('fid'))
                 <span class="help-block">
                   <strong>{{ $errors->first('fid')}}
@@ -91,7 +101,8 @@
           <div class="form-group {{ $errors->has('jabatan') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Jabatan</label>
             <div class="col-sm-9">
-              <input type="text" name="jabatan" class="form-control" value="{{ old('jabatan') }}" placeholder="@if($errors->has('jabatan')){{ $errors->first('jabatan')}}@endif Jabatan">
+              <input type="text" name="jabatan" class="form-control" value="{{ old('jabatan') }}" placeholder="@if($errors->has('jabatan'))
+                {{ $errors->first('jabatan')}}@endif Jabatan">
             </div>
           </div>
           <div class="form-group {{ $errors->has('tanggal_lahir') ? 'has-error' : '' }}">
@@ -101,14 +112,16 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input class="form-control pull-right" id="datepicker1" type="text" name="tanggal_lahir"  value="{{ old('tanggal_lahir') }}" placeholder="@if($errors->has('tanggal_lahir')){{ $errors->first('tanggal_lahir')}}@endif Tanggal Lahir">
+                <input class="form-control pull-right" id="datepicker1" type="text" name="tanggal_lahir"  value="{{ old('tanggal_lahir') }}" placeholder="@if($errors->has('tanggal_lahir'))
+                  {{ $errors->first('tanggal_lahir')}}@endif Tanggal Lahir">
               </div>
             </div>
           </div>
           <div class="form-group {{ $errors->has('tempat_lahir') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Tempat Lahir</label>
             <div class="col-sm-9">
-              <input type="text" name="tempat_lahir" class="form-control" value="{{ old('tempat_lahir') }}" placeholder="@if($errors->has('tempat_lahir')){{ $errors->first('tempat_lahir')}}@endif Tempat Lahir">
+              <input type="text" name="tempat_lahir" class="form-control" value="{{ old('tempat_lahir') }}" placeholder="@if($errors->has('tempat_lahir'))
+                {{ $errors->first('tempat_lahir')}}@endif Tempat Lahir">
             </div>
           </div>
           <div class="form-group {{ $errors->has('pendidikan_terakhir') ? 'has-error' : '' }}">
@@ -136,13 +149,15 @@
           <div class="form-group {{ $errors->has('alamat') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Alamat</label>
             <div class="col-sm-9">
-              <input type="text" name="alamat" class="form-control" value="{{ old('alamat') }}" placeholder="@if($errors->has('alamat')){{ $errors->first('alamat')}}@endif Alamat">
+              <input type="text" name="alamat" class="form-control" value="{{ old('alamat') }}" placeholder="@if($errors->has('alamat'))
+                {{ $errors->first('alamat')}}@endif Alamat">
             </div>
           </div>
           <div class="form-group {{ $errors->has('tpp_dibayarkan') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">TPP Dibayarkan</label>
+            <label class="col-sm-3 control-label">TPP <br /><small>(setelah dipotong pajak)</small></label>
             <div class="col-sm-9">
-              <input type="text" name="tpp_dibayarkan" class="form-control" value="{{ old('tpp_dibayarkan') }}" onkeypress="return isNumber(event)" maxlength="8" placeholder="@if($errors->has('tpp_dibayarkan')){{ $errors->first('tpp_dibayarkan')}}@endif TPP Dibayarkan">
+              <input type="text" name="tpp_dibayarkan" class="form-control" value="{{ old('tpp_dibayarkan') }}" onkeypress="return isNumber(event)" maxlength="8" placeholder="@if($errors->has('tpp_dibayarkan'))
+                {{ $errors->first('tpp_dibayarkan')}}@endif TPP Setelah Dipotong Pajak ">
             </div>
           </div>
         </div>

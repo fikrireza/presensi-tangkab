@@ -60,7 +60,7 @@ class AbsensiController extends Controller
 
       // Menghitung Jumlah Hadir dalam Periode dan Mencari Tanggal Intervesi
       $potongIntervensi = DB::select("SELECT pegawai.id, pegawai.nip_sapk, pegawai.nama as nama_pegawai, Tanggal_Mulai, Tanggal_Akhir, Jumlah_Masuk
-                                    	FROM (select nama, id, nip_sapk from preson_pegawais where preson_pegawais.skpd_id = 15) as pegawai
+                                    	FROM (select nama, id, nip_sapk from preson_pegawais where preson_pegawais.skpd_id = '$skpd_id') as pegawai
 
                                     	LEFT OUTER JOIN (select b.id as pegawai_id, a.tanggal_mulai as Tanggal_Mulai, a.tanggal_akhir as Tanggal_Akhir
                                     									  from preson_intervensis a, preson_pegawais b
@@ -73,16 +73,17 @@ class AbsensiController extends Controller
                                     	LEFT OUTER JOIN(SELECT b.id as pegawai_id, b.nip_sapk, count(DISTINCT a.Tanggal_Log) as Jumlah_Masuk
                                     										FROM ta_log a, preson_pegawais b
                                     										WHERE a.Fid = b.fid
-                                    										AND b.skpd_id = 15
+                                    										AND b.skpd_id = '$skpd_id'
                                     										AND str_to_date(a.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'
                                     										group By b.id) as tabel_Jumlah_Masuk
                                     	ON pegawai.id = tabel_Jumlah_Masuk.pegawai_id");
 
       // Menghitung Jumlah Terlambat dan Pulang Cepat
       $rekapAbsenPeriode = DB::select("SELECT pegawai.nip_sapk, pegawai.fid, pegawai.nama as nama_pegawai,
+                                            pegawai.struktural,
                                     				IFNULL(tabel_Jam_Datang_Terlambat.Jumlah_Terlambat, 0) as Jumlah_Terlambat,
                                     				IFNULL(tabel_Jam_Pulang_Cepat.Jumlah_Pulcep,0) as Jumlah_Pulcep
-                                    	FROM (select nip_sapk, nama, fid from preson_pegawais where preson_pegawais.skpd_id = '$skpd_id') as pegawai
+                                    	FROM (select nip_sapk, preson_pegawais.nama, fid, preson_strukturals.nama as struktural from preson_pegawais, preson_strukturals where preson_pegawais.skpd_id = '$skpd_id' and preson_pegawais.struktural_id = preson_strukturals.id) as pegawai
 
                                     	LEFT OUTER JOIN (select b.fid, b.nama, b.skpd_id, count(a.Jam_Log) as Jumlah_Terlambat
                                     										from ta_log a, preson_pegawais b
@@ -99,10 +100,11 @@ class AbsensiController extends Controller
                                     										and b.skpd_id = '$skpd_id'
                                     										and str_to_date(a.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'
                                     										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '16:00:00'
-                                    										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '15:00:00'
+                                    										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
                                     										GROUP BY a.Fid) as tabel_Jam_Pulang_Cepat
                                     	ON pegawai.fid = tabel_Jam_Pulang_Cepat.Fid
-                                    	GROUP BY nama_pegawai ");
+                                    	GROUP BY nama_pegawai
+                                      ORDER BY struktural asc");
 
       return view('pages.absensi.index', compact('getSkpd', 'skpd_id', 'start_dateR', 'end_dateR', 'rekapAbsenPeriode', 'potongIntervensi', 'hariLibur', 'start_date', 'end_date'));
     }
@@ -130,7 +132,7 @@ class AbsensiController extends Controller
                                   and Fid = '$pegawai_id->fid') as Jam_Datang,
                                 (select MIN(Jam_Log) from ta_log
                                   where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
-                                  and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '15:00:00'
+                                  and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
                                   and Fid = '$pegawai_id->fid') as Jam_Pulang
                               FROM ta_log a, preson_pegawais b, preson_skpd c
                               WHERE b.skpd_id = c.id
@@ -176,7 +178,7 @@ class AbsensiController extends Controller
                                   and Fid = '$pegawai_id->fid') as Jam_Datang,
                                 (select MIN(Jam_Log) from ta_log
                                   where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
-                                  and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '15:00:00'
+                                  and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
                                   and Fid = '$pegawai_id->fid') as Jam_Pulang
                               FROM ta_log a, preson_pegawais b, preson_skpd c
                               WHERE b.skpd_id = c.id
@@ -217,10 +219,10 @@ class AbsensiController extends Controller
       $end_date = explode('/', $end_dateR);
       $end_date = $end_date[2].'-'.$end_date[1].'-'.$end_date[0];
 
-      $rekapAbsenPeriode = DB::select("SELECT pegawai.nip_sapk, pegawai.fid, pegawai.nama as nama_pegawai,
+      $rekapAbsenPeriode = DB::select("SELECT pegawai.nip_sapk, pegawai.fid, pegawai.nama as nama_pegawai, pegawai.struktural,
                                     				IFNULL(tabel_Jam_Datang_Terlambat.Jumlah_Terlambat, 0) as Jumlah_Terlambat,
                                     				IFNULL(tabel_Jam_Pulang_Cepat.Jumlah_Pulcep,0) as Jumlah_Pulcep
-                                    	FROM (select nip_sapk, nama, fid from preson_pegawais where preson_pegawais.skpd_id = '$skpd_id') as pegawai
+                                    	FROM (select nip_sapk, preson_pegawais.nama, fid, preson_strukturals.nama as struktural from preson_pegawais, preson_strukturals where preson_pegawais.skpd_id = '$skpd_id' and preson_pegawais.struktural_id = preson_strukturals.id) as pegawai
 
                                     	LEFT OUTER JOIN (select b.fid, b.nama, b.skpd_id, count(a.Jam_Log) as Jumlah_Terlambat
                                     										from ta_log a, preson_pegawais b
@@ -237,10 +239,11 @@ class AbsensiController extends Controller
                                     										and b.skpd_id = '$skpd_id'
                                     										and str_to_date(a.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'
                                     										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '16:00:00'
-                                    										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '15:00:00'
+                                    										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
                                     										GROUP BY a.Fid) as tabel_Jam_Pulang_Cepat
                                     	ON pegawai.fid = tabel_Jam_Pulang_Cepat.Fid
-                                    	GROUP BY nama_pegawai ");
+                                    	GROUP BY nama_pegawai
+                                      ORDER BY struktural asc ");
 
       return view('pages.absensi.absensiSKPD', compact('start_dateR', 'end_dateR', 'rekapAbsenPeriode'));
     }

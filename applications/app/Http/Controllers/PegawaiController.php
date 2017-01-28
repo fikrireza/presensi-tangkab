@@ -70,8 +70,9 @@ class PegawaiController extends Controller
       $message = [
         'nama_pegawai.required' => 'Wajib di isi',
         'nip_sapk.required' => 'Wajib di isi',
+        'nip_sapk.unique' => 'NIP Sudah Dipakai',
         'fid.required' => 'Wajib di isi',
-        'fid.unique'  => 'Finger ID Sudah diPakai',
+        'fid.unique'  => 'Finger ID Sudah Dipakai',
         'skpd_id.required' => 'Wajib di isi',
         'golongan_id.required' => 'Wajib di isi',
         'jabatan.required' => 'Wajib di isi',
@@ -85,7 +86,7 @@ class PegawaiController extends Controller
 
       $validator = Validator::make($request->all(), [
         'nama_pegawai' => 'required',
-        'nip_sapk' => 'required',
+        'nip_sapk' => 'required|unique:preson_pegawais',
         'fid' => 'required|unique:preson_pegawais',
         'skpd_id' => 'required',
         'golongan_id' => 'required',

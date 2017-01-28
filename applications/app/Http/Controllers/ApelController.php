@@ -130,7 +130,6 @@ class ApelController extends Controller
 
     public function pegawaiapelStore(Request $request)
     {
-      // dd($request);
       $getApel = apel::orderBy('tanggal_apel', 'desc')->get();
       $tanggalApel = apel::select('id', 'tanggal_apel')->where('id', '=', $request->apel_id)->first();
         $tanggalApelnya = date('d/m/Y', strtotime($tanggalApel->tanggal_apel));
@@ -215,7 +214,8 @@ class ApelController extends Controller
                               AND c.struktural_id = d.id
                               AND e.id = c.skpd_id
                               AND c.skpd_id = $skpd
-                              GROUP BY c.nama");
+                              GROUP BY c.nama
+                              ORDER BY d.nama asc");
 
       if($getDetail == null){
         return redirect()->back();
