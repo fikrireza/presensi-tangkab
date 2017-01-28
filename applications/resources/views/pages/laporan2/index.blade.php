@@ -222,7 +222,12 @@
                 @if ($pegawai->nip_sapk == $jmlMasuk->nip_sapk)
                   @php
                   $workingDays = [1, 2, 3, 4, 5]; # date format = N (1 = Senin, 2 = Selasa, ...)
+
                   $holidayDays = array_merge($hariLibur, $intervensiHasil, $hariApel);
+
+                  echo "<pre>";
+                  print_r($holidayDays);
+                  echo "</pre>";
 
                   $from = new DateTime($start_date);
                   $to = new DateTime($end_date);
@@ -238,7 +243,8 @@
                     $days++;
                   }
 
-                  $jumlah_masuknya = (int)$jmlMasuk->Jumlah_Masuk - count($intervensiHasil);
+                  $jumlah_masuknya = (int)$jmlMasuk->Jumlah_Masuk - (count($intervensiHasil) + count($hariApel));
+                  // $jumlah_masuknya = (int)$jmlMasuk->Jumlah_Masuk - count($intervensiHasil);
                   $jumlahAbsen = (int)$days - $jumlah_masuknya;
 
                   echo '<td>'.$jumlahAbsen.'</td>';
