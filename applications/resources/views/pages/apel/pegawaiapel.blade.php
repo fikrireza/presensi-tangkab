@@ -75,7 +75,7 @@
               <th colspan="2" class="text-center">4</th>
               <th colspan="2" class="text-center">3</th>
               <th colspan="2" class="text-center">2</th>
-              <th colspan="3" class="text-center"></th>
+              <th colspan="2" class="text-center"></th>
               <th rowspan="2" class="text-center">Tidak Apel</th>
             </tr>
             <tr>
@@ -201,16 +201,7 @@
               @endphp
               <td>@if ($iiib == 0) - @else {{ $iiib }} @endif</td>
 
-              @php
-                $iiic = 0;
-                foreach ($getAbsenApel as $apel) {
-                  if(($apel->struktural == 11) && ($apel->skpd == $skpd->id)){
-                    $iiic += 1;
-                  }
-                }
-              @endphp
-              <td>@if ($iiic == 0) - @else {{ $iiic }} @endif</td>
-              <td align="center" colspan="2">{{ $jumlah_pegawai - ($ia+$ib+$ic+$id+$iia+$iib+$iic+$iid+$iiia+$iiib+$iiic)}}</td>
+              <td align="center" colspan="2">{{ $jumlah_pegawai - ($ia+$ib+$ic+$id+$iia+$iib+$iic+$iid+$iiia+$iiib)}}</td>
             </tr>
             @php
               $no++
@@ -229,7 +220,7 @@
               <th colspan="2" class="text-center">4</th>
               <th colspan="2" class="text-center">3</th>
               <th colspan="2" class="text-center">2</th>
-              <th colspan="3" class="text-center"></th>
+              <th colspan="2" class="text-center"></th>
               <th rowspan="2" class="text-center">Tidak Apel</th>
             </tr>
             <tr>
@@ -241,7 +232,7 @@
           </thead>
           <tbody>
             <tr>
-              <td colspan="18" align="center">Pilih Tanggal Apel</td>
+              <td colspan="17" align="center">Pilih Tanggal Apel</td>
             </tr>
           </tbody>
         </table>

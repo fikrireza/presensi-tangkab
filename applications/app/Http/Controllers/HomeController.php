@@ -172,6 +172,7 @@ class HomeController extends Controller
                                   WHERE b.skpd_id = c.id
                                   AND a.Fid = b.fid
                                   AND a.Fid = '$tpp->fid'
+                                  AND str_to_date(a.Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT libur FROM preson_harilibur)
                                   AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                   LIMIT 1");
           }

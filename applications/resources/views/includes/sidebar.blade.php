@@ -84,10 +84,19 @@
             </li>
             @endif
             @if(session('status') == 'admin')
-            <li class="{{ Route::currentRouteNamed('absensi.skpd') ? 'active' : '' }}">
+            <li class="treeview {{ Route::currentRouteNamed('absensi.skpd') ? 'active' : ''}}{{ Route::currentRouteNamed('apelskpd') ? 'active' : '' }}{{ Route::currentRouteNamed('apelskpd.store') ? 'active' : '' }}">
               <a href="{{ route('absensi.skpd') }}">
                 <i class="fa fa-calendar"></i> <span>Absensi</span>
+                <i class="fa fa-angle-left pull-right"></i>
               </a>
+              <ul class="treeview-menu">
+                <li class="{{ Route::currentRouteNamed('absensi.skpd') ? 'active' : '' }}">
+                  <a href="{{ route('absensi.skpd') }}"><i class="fa fa-circle-o"></i> <span>Rekap Absensi</span></a>
+                </li>
+                <li class="{{ Route::currentRouteNamed('apelskpd') ? 'active' : '' }}{{ Route::currentRouteNamed('apelskpd.store') ? 'active' : '' }}">
+                  <a href="{{ route('apelskpd') }}"><i class="fa fa-circle-o"></i> <span>Daftar Apel Pegawai</span></a>
+                </li>
+              </ul>
             </li>
             @endif
             @if(session('status') == 'pegawai')

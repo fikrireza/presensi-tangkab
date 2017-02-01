@@ -25,7 +25,7 @@
               <td style="border: 1px solid black;border-collapse: collapse;font-size: 25px;">{{ $key->nip_sapk }}</td>
               <td align="left" style="border: 1px solid black;border-collapse: collapse;font-size: 25px;">&nbsp;{{ $key->pegawai }}</td>
               <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 25px;">{{ $key->struktural }}</td>
-              <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 25px;">{{ $key->Jam_Log }}</td>
+              <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 25px;">@if ($key->Jam_Log == null) x @else {{ $key->Jam_Log }} @endif</td>
             </tr>
             @php
               $no++;

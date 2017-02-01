@@ -204,18 +204,24 @@ class ApelController extends Controller
       $tanggalApelnya = apel::select('id', 'tanggal_apel')->where('id', '=', $tanggal_apel)->first();
       $tanggalApel = date('d/m/Y', strtotime($tanggalApelnya->tanggal_apel));
 
-      $getDetail = DB::select("SELECT a.Mach_id, a.Fid, a.Tanggal_Log, a.Jam_Log, c.skpd_id as skpd, c.nama as pegawai,
-                              			d.nama as struktural, e.nama as nama_skpd, c.nip_sapk
-                              FROM ta_log a, preson_mesinapel b, preson_pegawais c, preson_strukturals d, preson_skpd e
-                              WHERE a.Mach_id = b.mach_id
-                              AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalApel'
-                              AND TIME_FORMAT(STR_TO_DATE(a.Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
-                              AND a.Fid = c.fid
-                              AND c.struktural_id = d.id
-                              AND e.id = c.skpd_id
-                              AND c.skpd_id = $skpd
-                              GROUP BY c.nama
-                              ORDER BY d.nama asc");
+      $getDetail = DB::select("SELECT pegawai.fid, pegawai.nama as pegawai, Jam_Log, struktural, skpd, nama_skpd, nip_sapk
+                              	FROM (select a.nama, a.fid, a.nip_sapk, a.skpd_id as skpd, c.nama as nama_skpd, b.nama as struktural
+                              					from preson_pegawais a, preson_strukturals b, preson_skpd c
+                              						where a.skpd_id = '$skpd'
+                              						and c.id = a.skpd_id
+                              						and b.id = a.struktural_id) as pegawai
+
+                              	LEFT OUTER JOIN (select a.Jam_Log as Jam_Log, a.Fid as Fid
+                              										from ta_log a, preson_mesinapel b, preson_pegawais c, preson_strukturals d
+                              										WHERE a.Mach_id = b.mach_id
+                              										AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalApel'
+                              										AND TIME_FORMAT(STR_TO_DATE(a.Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
+                              										AND a.Fid = c.fid
+                              										AND c.struktural_id = d.id
+                              										and c.skpd_id = '$skpd') as tabel_Apel
+                              	ON pegawai.fid = tabel_Apel.Fid
+                              GROUP BY pegawai.nama
+                              ORDER BY pegawai.struktural ASC");
 
       if($getDetail == null){
         return redirect()->back();
@@ -230,17 +236,24 @@ class ApelController extends Controller
       $tanggalApelnya = apel::select('tanggal_apel')->where('id', '=', $request->tanggalApel)->first();
       $tanggalApel = date('d/m/Y', strtotime($tanggalApelnya->tanggal_apel));
 
-      $getDetail = DB::select("SELECT a.Mach_id, a.Fid, a.Tanggal_Log, a.Jam_Log, c.skpd_id as skpd, c.nama as pegawai,
-                              			d.nama as struktural, e.nama as nama_skpd, c.nip_sapk
-                              FROM ta_log a, preson_mesinapel b, preson_pegawais c, preson_strukturals d, preson_skpd e
-                              WHERE a.Mach_id = b.mach_id
-                              AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalApel'
-                              AND TIME_FORMAT(STR_TO_DATE(a.Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
-                              AND a.Fid = c.fid
-                              AND c.struktural_id = d.id
-                              AND e.id = c.skpd_id
-                              AND c.skpd_id = $request->skpd
-                              GROUP BY c.nama");
+      $getDetail = DB::select("SELECT pegawai.fid, pegawai.nama as pegawai, Jam_Log, struktural, skpd, nama_skpd, nip_sapk
+                              	FROM (select a.nama, a.fid, a.nip_sapk, a.skpd_id as skpd, c.nama as nama_skpd, b.nama as struktural
+                              					from preson_pegawais a, preson_strukturals b, preson_skpd c
+                              						where a.skpd_id = '$request->skpd'
+                              						and c.id = a.skpd_id
+                              						and b.id = a.struktural_id) as pegawai
+
+                              	LEFT OUTER JOIN (select a.Jam_Log as Jam_Log, a.Fid as Fid
+                              										from ta_log a, preson_mesinapel b, preson_pegawais c, preson_strukturals d
+                              										WHERE a.Mach_id = b.mach_id
+                              										AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalApel'
+                              										AND TIME_FORMAT(STR_TO_DATE(a.Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
+                              										AND a.Fid = c.fid
+                              										AND c.struktural_id = d.id
+                              										and c.skpd_id = '$request->skpd') as tabel_Apel
+                              	ON pegawai.fid = tabel_Apel.Fid
+                              GROUP BY pegawai.nama
+                              ORDER BY pegawai.struktural ASC");
 
       view()->share('tanggalApel', $tanggalApel);
       view()->share('getDetail', $getDetail);
@@ -253,6 +266,49 @@ class ApelController extends Controller
       }
 
       return view('pages.apel.cetakPegawaiApelDetail');
+
+    }
+
+    public function apelSKPD()
+    {
+      $getApel = apel::orderBy('tanggal_apel', 'desc')->get();
+
+
+      return view('pages.apel.apelskpd', compact('getApel'));
+    }
+
+    public function apelSKPDStore(Request $request)
+    {
+      $skpd = Auth::user()->skpd_id;
+      $getApel = apel::orderBy('tanggal_apel', 'desc')->get();
+      $tanggalApel = apel::select('id', 'tanggal_apel')->where('id', '=', $request->apel_id)->first();
+        $tanggalApelnya = date('d/m/Y', strtotime($tanggalApel->tanggal_apel));
+
+      $getDetail = DB::select("SELECT pegawai.fid, pegawai.nama as pegawai, Jam_Log, struktural, skpd, nama_skpd, nip_sapk
+                              	FROM (select a.nama, a.fid, a.nip_sapk, a.skpd_id as skpd, c.nama as nama_skpd, b.nama as struktural
+                              					from preson_pegawais a, preson_strukturals b, preson_skpd c
+                              						where a.skpd_id = '$skpd'
+                              						and c.id = a.skpd_id
+                              						and b.id = a.struktural_id) as pegawai
+
+                              	LEFT OUTER JOIN (select a.Jam_Log as Jam_Log, a.Fid as Fid
+                              										from ta_log a, preson_mesinapel b, preson_pegawais c, preson_strukturals d
+                              										WHERE a.Mach_id = b.mach_id
+                              										AND DATE_FORMAT(STR_TO_DATE(a.Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalApelnya'
+                              										AND TIME_FORMAT(STR_TO_DATE(a.Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
+                              										AND a.Fid = c.fid
+                              										AND c.struktural_id = d.id
+                              										and c.skpd_id = '$skpd') as tabel_Apel
+                              	ON pegawai.fid = tabel_Apel.Fid
+                              GROUP BY pegawai.nama
+                              ORDER BY pegawai.struktural ASC");
+
+      if($getDetail == null){
+        return redirect()->back();
+      }else{
+        return view('pages.apel.apelskpd', compact('getApel', 'getDetail', 'tanggalApel', 'skpd', 'tanggalApelnya'));
+      }
+
 
     }
 }

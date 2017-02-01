@@ -41,7 +41,7 @@
                 <td>{{ $key->nip_sapk }}</td>
                 <td>{{ $key->pegawai }}</td>
                 <td>{{ $key->struktural }}</td>
-                <td>{{ $key->Jam_Log }}</td>
+                <td>@if ($key->Jam_Log == null) x @else {{ $key->Jam_Log }} @endif</td>
               </tr>
               @php
                 $no++;
