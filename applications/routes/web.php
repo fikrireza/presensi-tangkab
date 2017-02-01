@@ -70,6 +70,12 @@ Route::post('absensi-detail', 'AbsensiController@filterMonth')->name('absensi.fi
 Route::get('absensi-skpd', 'AbsensiController@absenSKPD')->name('absensi.skpd')->middleware('admin');
 Route::post('absensi-skpd', 'AbsensiController@filterAdmin')->name('absensi.filterAdmin')->middleware('admin');
 
+Route::get('absen-skpd', 'AbsensiController@absenHariSKPD')->name('absenhari.skpd')->middleware('admin');
+Route::post('absen-skpd', 'AbsensiController@absenHariSKPDStore')->name('absenhari.skpdStore')->middleware('admin');
+
+Route::get('absen-harian', 'AbsensiController@absenHariAdministrator')->name('absenhari.administrator')->middleware('administrator');
+Route::post('absen-harian', 'AbsensiController@absenHariAdministratorStore')->name('absenhari.administratorstore')->middleware('administrator');
+
 
 // Manajemen User
 Route::get('users', 'UserController@index')->name('user.index');

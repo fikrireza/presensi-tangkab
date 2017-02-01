@@ -372,4 +372,66 @@ class AbsensiController extends Controller
 
       return view('pages.absensi.absensiSKPD', compact('start_dateR', 'end_dateR', 'pegawainya', 'absensi', 'total_telat_dan_pulcep', 'start_date', 'end_date', 'hariLibur', 'hariApel', 'jumlahMasuk', 'intervensi', 'pejabatDokumen'));
     }
+
+    public function absenHariSKPD()
+    {
+      return view('pages.absensi.absenHariSKPD');
+    }
+
+    public function absenHariSKPDStore(Request $request)
+    {
+      $getskpd = Auth::user()->skpd_id;
+      if($getskpd == null){
+        abort(404);
+      }
+
+      $tanggalini = $request->start_date;
+      $pegawainya = pegawai::join('preson_strukturals', 'preson_strukturals.id', '=', 'preson_pegawais.struktural_id')
+                              ->select('preson_pegawais.*')
+                              ->where('skpd_id', $getskpd)
+                              ->orderby('preson_strukturals.nama', 'asc')
+                              ->get();
+
+      $absensi = DB::select("select a.fid, nama, tanggal_log, jam_log
+                              from (select fid, nama from preson_pegawais where skpd_id = '$getskpd') as a
+                              left join ta_log b on a.fid = b.fid
+                              where b.tanggal_log = '$tanggalini'");
+
+      return view('pages.absensi.absenHariSKPD', compact('absensi', 'pegawainya', 'tanggalini'));
+    }
+
+    public function absenHariAdministrator()
+    {
+      $getSkpd = skpd::all();
+
+      return view('pages.absensi.absenHariAdministrator', compact('getSkpd'));
+    }
+
+    public function absenHariAdministratorStore(Request $request)
+    {
+      $getSkpd = skpd::all();
+
+      $skpd_id = skpd::where('id', $request->skpd_id)->first();
+      $skpd_id = $skpd_id->id;
+
+      if($getSkpd == null){
+        abort(404);
+      }
+
+      $tanggalini = $request->start_date;
+      $pegawainya = pegawai::join('preson_strukturals', 'preson_strukturals.id', '=', 'preson_pegawais.struktural_id')
+                              ->select('preson_pegawais.*')
+                              ->where('skpd_id', $skpd_id)
+                              ->orderby('preson_strukturals.nama', 'asc')
+                              ->get();
+
+      $absensi = DB::select("select a.fid, nama, tanggal_log, jam_log
+                              from (select fid, nama from preson_pegawais where skpd_id = '$skpd_id') as a
+                              left join ta_log b on a.fid = b.fid
+                              where b.tanggal_log = '$tanggalini'");
+
+      return view('pages.absensi.absenHariAdministrator', compact('getSkpd', 'absensi', 'tanggalini', 'pegawainya', 'skpd_id'));
+    }
+
+
 }
