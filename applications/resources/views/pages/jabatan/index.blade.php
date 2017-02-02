@@ -36,7 +36,7 @@
 
 {{-- Modal Tambah Golongan--}}
 <div class="modal modal-default fade" id="modaltambahgolongan" role="dialog">
-  <div class="modal-dialog" style="width:600px;">
+  <div class="modal-dialog" style="width:800px;">
     <form class="form-horizontal" action="{{ route('jabatan.post') }}" method="post">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -107,6 +107,13 @@
               <th>Action</th>
             </tr>
           </thead>
+          <tfoot>
+            <tr>
+              <td></td>
+              <th></th>
+              <td></td>
+            </tr>
+          </tfoot>
           <tbody>
             <?php $no = 1; ?>
             @if ($jabatan->isEmpty())
@@ -165,6 +172,31 @@
       });
     });
   });
+</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      // Setup - add a text input to each footer cell
+      $('#table_jabatan tfoot th').each( function () {
+          var title = $(this).text();
+          $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
+      } );
+   
+      // DataTable
+      var table = $('#table_jabatan').DataTable();
+   
+      // Apply the search
+      table.columns().every( function () {
+          var that = this;
+   
+          $( 'input', this.footer() ).on( 'keyup change', function () {
+              if ( that.search() !== this.value ) {
+                  that
+                      .search( this.value )
+                      .draw();
+              }
+          } );
+      } );
+  } );
 </script>
 
 @endsection

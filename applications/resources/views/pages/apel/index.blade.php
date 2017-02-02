@@ -36,7 +36,7 @@
 
 {{-- Modal Tambah Apel--}}
 <div class="modal modal-default fade" id="modaltambahApel" role="dialog">
-  <div class="modal-dialog" style="width:600px;">
+  <div class="modal-dialog" style="width:800px;">
     <form class="form-horizontal" action="{{ route('apel.post') }}" method="post">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -47,7 +47,7 @@
         <div class="modal-body">
           <div class="form-group {{ $errors->has('tanggal_apel') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Tanggal Apel</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <div class="input-group date">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
@@ -58,7 +58,7 @@
           </div>
           <div class="form-group {{ $errors->has('keterangan') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Keterangan</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <input type="text" name="keterangan" class="form-control" value="{{ old('keterangan') }}" placeholder="@if($errors->has('keterangan')){{ $errors->first('keterangan')}} @endif Keterangan" required="">
             </div>
           </div>
@@ -85,7 +85,7 @@
         <div class="modal-body">
           <div class="form-group {{ $errors->has('tanggal_apel_edit') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Hari Apel</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <div class="input-group date">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
@@ -97,7 +97,7 @@
           </div>
           <div class="form-group {{ $errors->has('keterangan_edit') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Keterangan</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <input type="text" name="keterangan_edit" class="form-control" id="keterangan_edit" value="{{ old('keterangan_edit') }}" placeholder="@if($errors->has('keterangan_edit')){{ $errors->first('keterangan_edit')}} @endif Keterangan" required="">
             </div>
           </div>
@@ -129,6 +129,15 @@
               <th>Action</th>
             </tr>
           </thead>
+          <tfoot>
+            <tr>
+              <td></td>
+              <th></th>
+              <th></th>
+              <th></th>
+              <td></td>
+            </tr>
+          </tfoot>
           <tbody>
             <?php $no = 1; ?>
             @if ($getApel->isEmpty())
@@ -230,5 +239,30 @@ $('.tanggal_apel_edit').datepicker({
       });
     });
   });
+</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      // Setup - add a text input to each footer cell
+      $('#table_apel tfoot th').each( function () {
+          var title = $(this).text();
+          $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
+      } );
+   
+      // DataTable
+      var table = $('#table_apel').DataTable();
+   
+      // Apply the search
+      table.columns().every( function () {
+          var that = this;
+   
+          $( 'input', this.footer() ).on( 'keyup change', function () {
+              if ( that.search() !== this.value ) {
+                  that
+                      .search( this.value )
+                      .draw();
+              }
+          } );
+      } );
+  } );
 </script>
 @endsection

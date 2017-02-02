@@ -73,7 +73,7 @@
       </div>
       <div class="box-body table-responsive">
         @if(isset($pegawainya))
-        <table class="table table-bordered">
+        <table id="table_absensi" class="table table-bordered">
           <thead>
             <tr>
               <th>No</th>
@@ -86,6 +86,18 @@
               <th>Tidak Apel</th>
             </tr>
           </thead>
+          <tfoot>
+            <tr>
+              <td></td>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </tfoot>
           <tbody>
             @php
               $no = 1;
@@ -252,7 +264,7 @@
           </tbody>
         </table>
         @else
-        <table class="table table-bordered">
+        <table id="table_absensi" class="table table-bordered">
           <thead>
             <tr>
               <th>No</th>
@@ -265,6 +277,18 @@
               <th>Tidak Apel</th>
             </tr>
           </thead>
+          <tfoot>
+            <tr>
+              <td></td>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </tfoot>
           <tbody>
             <tr>
               <td>-</td>
@@ -304,5 +328,30 @@ $('#end_date').datepicker({
   showButtonPanel: true,
 });
 
+</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      // Setup - add a text input to each footer cell
+      $('#table_absensi tfoot th').each( function () {
+          var title = $(this).text();
+          $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
+      } );
+   
+      // DataTable
+      var table = $('#table_absensi').DataTable();
+   
+      // Apply the search
+      table.columns().every( function () {
+          var that = this;
+   
+          $( 'input', this.footer() ).on( 'keyup change', function () {
+              if ( that.search() !== this.value ) {
+                  that
+                      .search( this.value )
+                      .draw();
+              }
+          } );
+      } );
+  } );
 </script>
 @endsection

@@ -36,7 +36,7 @@
 
 {{-- Modal Tambah mesinapel--}}
 <div class="modal modal-default fade" id="modaltambahmesinapel" role="dialog">
-  <div class="modal-dialog" style="width:600px;">
+  <div class="modal-dialog" style="width:800px;">
     <form class="form-horizontal" action="{{ route('mesin.post') }}" method="post">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -90,6 +90,14 @@
               <th>Status</th>
             </tr>
           </thead>
+          <tfoot>
+            <tr>
+              <td></td>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </tfoot>
           <tbody>
             <?php $no = 1; ?>
             @if ($getMesin->isEmpty())
@@ -134,5 +142,30 @@
 @if (count($errors) > 0)
   $('#table_mesin').modal('show');
 @endif
+</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      // Setup - add a text input to each footer cell
+      $('#table_mesin tfoot th').each( function () {
+          var title = $(this).text();
+          $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
+      } );
+   
+      // DataTable
+      var table = $('#table_mesin').DataTable();
+   
+      // Apply the search
+      table.columns().every( function () {
+          var that = this;
+   
+          $( 'input', this.footer() ).on( 'keyup change', function () {
+              if ( that.search() !== this.value ) {
+                  that
+                      .search( this.value )
+                      .draw();
+              }
+          } );
+      } );
+  } );
 </script>
 @endsection

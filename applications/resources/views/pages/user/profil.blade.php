@@ -33,7 +33,7 @@
 @endif
 
 <div class="row">
-  <div class="col-md-9">
+  <div class="col-md-12">
     <div class="box box-primary box-solid">
       <div class="box-header">
         <h3 class="box-title">Ubah Password</h3>
