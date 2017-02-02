@@ -18,7 +18,7 @@
       <form action="{{ route('absensi.filterAdministrator') }}" method="POST">
       {{ csrf_field() }}
       <div class="box-body">
-        @if(isset($rekapAbsenPeriode))
+        @if(isset($pegawainya))
         <div class="row">
           <div class="col-xs-6">
             <select name="skpd_id" class="form-control select2">
@@ -72,7 +72,7 @@
         <h3 class="box-title">Detil Absensi</h3>
       </div>
       <div class="box-body table-responsive">
-        @if(isset($rekapAbsenPeriode))
+        @if(isset($pegawainya))
         <table class="table table-bordered">
           <thead>
             <tr>
@@ -88,52 +88,113 @@
           </thead>
           <tbody>
             @php
-              $no = 1
+              $no = 1;
+              $pot_absen = 0;
+              $sum_totalPot = 0;
+              $sum_tppDibayarkan = 0;
+              $sum_GrandTotalPot = 0;
+              $sum_GrandTppDibayarkan = 0;
             @endphp
-            @foreach ($rekapAbsenPeriode as $detailAbsen)
+            @foreach ($pegawainya as $pegawai)
             <tr>
               <td>{{ $no }}</td>
-              <td>{{ $detailAbsen->nip_sapk }}</td>
-              <td>{{ $detailAbsen->nama_pegawai }}</td>
-              <td>{{ $detailAbsen->Jumlah_Terlambat }}</td>
-              <td>{{ $detailAbsen->Jumlah_Pulcep }}</td>
-              <td>0</td>
-              @foreach ($potongIntervensi as $intervensi)
-                @if ($detailAbsen->nip_sapk == $intervensi->nip_sapk)
+              <td><a href="{{ route('laporan.cetakPegawai', ['download'=>'pdf', 'start_date'=>$start_dateR, 'end_date'=>$end_dateR, 'nip_sapk'=>$pegawai->nip_sapk]) }}">{{ $pegawai->nip_sapk }}</a></td>
+              <td>{{ $pegawai->nama }}</td>
+
+              {{--  HITUNG TERLAMBAT dan PULANG CEPAT --}}
+              @php
+                $tot_pulcep_telat = 0;
+                foreach ($total_telat_dan_pulcep as $tot) {
+                  $pecah = explode("-", $tot);
+                  if ($pegawai->fid == $pecah[0]) {
+                    $tot_pulcep_telat += 1;
+                  }
+                }
+              @endphp
+
+              {{-- HITUNG DATANG TERLAMBAT --}}
+              @php
+              $date_from = strtotime($start_date); // Convert date to a UNIX timestamp
+              $date_to = strtotime($end_date); // Convert date to a UNIX timestamp
+              $jam_masuk = array();
+              for ($i=$date_from; $i<=$date_to; $i+=86400) {
+                $tanggalini = date('d/m/Y', $i);
+
+                foreach ($absensi as $key) {
+                  if(!in_array(date('Y-m-d', $i), $hariApel)) { /* Ignore Hari Apel */
+                    if($tanggalini == $key->tanggal_log){
+                      if ($pegawai->fid == $key->fid) {
+                        $jammasuk1 = 80000;
+                        $jammasuk2 = 100000;
+                        $jamlog = (int) str_replace(':','',$key->jam_log);
+                        if( ($jamlog > $jammasuk1) && ($jamlog <= $jammasuk2)){
+                          $jam_masuk[] = $key->fid.'-'.$tanggalini;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              $jumlah_telat = array_unique($jam_masuk);
+              $jumlah_telat = count($jumlah_telat);
+              @endphp
+              <td>{{ $jumlah_telat }}</td>
+
+              {{--  HITUNG PULANG CEPAT --}}
+              @php
+              $date_from = strtotime($start_date); // Convert date to a UNIX timestamp
+              $date_to = strtotime($end_date); // Convert date to a UNIX timestamp
+              $jam_pulang = array();
+              for ($i=$date_from; $i<=$date_to; $i+=86400) {
+                $tanggalini = date('d/m/Y', $i);
+
+                foreach ($absensi as $key) {
+                  if($tanggalini == $key->tanggal_log){
+                    if ($pegawai->fid == $key->fid) {
+                      $jampulang1 = 140000;
+                      $jampulang2 = 160000;
+                      $jamlog = (int) str_replace(':','',$key->jam_log);
+                      if(($jamlog >= $jampulang1) && ($jamlog < $jampulang2)){
+                        $jam_pulang[] = $key->fid.'-'.$tanggalini;
+                      }
+                    }
+                  }
+                }
+              }
+              $jumlah_cepat = array_unique($jam_pulang);
+              $jumlah_cepat = count($jumlah_cepat);
+              @endphp
+              <td>{{ $jumlah_cepat }}</td>
+
+              <td>{{ $tot_pulcep_telat }}</td>
+
+              {{-- Menghitung Jumlah Intervensi --}}
+              @php
+                $intervensiHasil = array();
+              @endphp
+              @foreach ($intervensi as $ijin)
                 @php
-                if($intervensi->Tanggal_Mulai == null){
-                  $workingDays = [1, 2, 3, 4, 5]; # date format = N (1 = Senin, ...)
-                  $holidayDays = $hariLibur;
+                if($pegawai->pegawai_id == $ijin->pegawai_id){
+                    $tanggal_mulai = $ijin->tanggal_mulai;
+                    $tanggal_akhir = $ijin->tanggal_akhir;
+                    $mulai = new DateTime($tanggal_mulai);
+                    $akhir   = new DateTime($tanggal_akhir);
 
-                  $from = new DateTime($start_date);
-                  $to = new DateTime($end_date);
-                  $interval = new DateInterval('P1D');
-                  $periods = new DatePeriod($from, $interval, $to);
-
-                  $days1 = 0;
-                  foreach ($periods as $period) {
-                    if (!in_array($period->format('N'), $workingDays)) continue;
-                    if (in_array($period->format('Y-m-d'), $holidayDays)) continue;
-                    if (in_array($period->format('*-m-d'), $holidayDays)) continue;
-                    $days1++;
+                    for($i = $mulai; $mulai <= $akhir; $i->modify('+1 day'))
+                    {
+                      $intervensiHasil[] =  $i->format("Y-m-d");
+                    }
                   }
+                @endphp
+              @endforeach
 
-                  $jumlahAbsen = (int)$days1 - (int)$intervensi->Jumlah_Masuk;
-                  print '<td>'.$jumlahAbsen.'</td>';
-
-                }else{
-                  $tanggal_mulai = $intervensi->Tanggal_Mulai;
-                  $tanggal_akhir = $intervensi->Tanggal_Akhir;
-                  $mulai = new DateTime($tanggal_mulai);
-                  $akhir   = new DateTime($tanggal_akhir);
-
-                  for($i = $mulai; $mulai <= $akhir; $i->modify('+1 day'))
-                  {
-                    $intervensiHasil[] =  $i->format("Y-m-d");
-                  }
+              {{-- Menghitung Jumlah Bolos --}}
+              @foreach ($jumlahMasuk as $jmlMasuk)
+                @if ($pegawai->nip_sapk == $jmlMasuk->nip_sapk)
+                  @php
                   $workingDays = [1, 2, 3, 4, 5]; # date format = N (1 = Senin, ...)
-                  $holidayDays = array_merge($hariLibur, $intervensiHasil);
-// print_r($holidayDays);exit();
+                  $holidayDays = array_merge($hariLibur, $intervensiHasil, $hariApel);
+
                   $from = new DateTime($start_date);
                   $to = new DateTime($end_date);
                   $to->modify('+1 day');
@@ -148,15 +209,41 @@
                     $days++;
                   }
 
-                  $jumlahAbsen = (int)$days - (int)$intervensi->Jumlah_Masuk;
-                  // print_r($holidayDays);print_r($days);print_r(" ".$intervensi->Jumlah_Masuk);print_r(" ".$jumlahAbsen);exit();
-                  echo '<td>'.$jumlahAbsen.'</td>';
+                  // $intervensi = count($intervensiHasil);
+                  $jumlah_masuknya = (int)$jmlMasuk->Jumlah_Masuk - (count($intervensiHasil) + count($hariApel));
+                  $jumlahAbsen = (int)$days - $jumlah_masuknya;
 
-                }
-                @endphp
+                  echo '<td>'.$jumlahAbsen.'</td>';
+                  @endphp
                 @endif
               @endforeach
-              <td>0</td>
+
+              {{--  MENGHITUNG TIDAK APEL --}}
+              @php
+              $date_from = strtotime($start_date); // Convert date to a UNIX timestamp
+              $date_to = strtotime($end_date); // Convert date to a UNIX timestamp
+              $tidak_apel = 0;
+              for ($i=$date_from; $i<=$date_to; $i+=86400) {
+                $tanggalini = date('d/m/Y', $i);
+
+                foreach ($absensi as $key) {
+                  if(in_array(date('Y-m-d', $i), $hariApel)) { /* Hanya Hari Apel */
+                    if($tanggalini == $key->tanggal_log){
+                      if ($pegawai->fid == $key->fid) {
+                        $jamapel1 = 80000;
+                        $jamapel2 = 100000;
+                        $jamlog = (int) str_replace(':','',$key->jam_log);
+                        if( ($jamlog > $jamapel1) && ($jamlog <= $jamapel2)){
+                          $tidak_apel += 1;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              @endphp
+
+              <td>{{ $tidak_apel }}</td>
             </tr>
             @php
               $no++
