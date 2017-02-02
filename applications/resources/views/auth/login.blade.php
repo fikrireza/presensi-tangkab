@@ -13,6 +13,13 @@
     <link rel="stylesheet" href="{{asset('bootstrap/css/9tins.css')}}">
     <link rel="stylesheet" href="{{asset('plugins/iCheck/square/blue.css')}}">
 </head>
+<style type="text/css">
+  .borderPurple {
+   border-style: solid;
+   border-color: #605CA8;
+   border-width: 4px;
+}
+</style>
 <body>
 
 <div class="container">
@@ -45,7 +52,7 @@
       </div>
 	</div>
 	<div class="right">
-    <div class="login-box-body border">
+    <div class="login-box-body borderPurple">
       <p class="login-box-msg">Silahkan Login</p>
       <form action="{{ url('login') }}" method="post">
         {{ csrf_field() }}
@@ -59,7 +66,7 @@
         </div>
         <div class="row">
           <div class="col-xs-12">
-            <button type="submit" class="btn btn-success btn-block btn-flat">Log In</button>
+            <button type="submit" class="btn btn-primary btn-block btn-flat">Log In</button>
           </div>
         </div>
       </form>
