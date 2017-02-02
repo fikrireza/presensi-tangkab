@@ -36,7 +36,7 @@
 
 {{-- Modal Tambah Skpd--}}
 <div class="modal modal-default fade" id="modaltambahskpd" role="dialog">
-  <div class="modal-dialog" style="width:600px;">
+  <div class="modal-dialog" style="width:800px;">
     <form class="form-horizontal" action="{{ route('skpd.post') }}" method="post">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -126,6 +126,14 @@
               <th>Action</th>
             </tr>
           </thead>
+          <tfoot>
+            <tr>
+              <td></td>
+              <th></th>
+              <th></th>
+              <td></td>
+            </tr>
+          </tfoot>
           <tbody>
             <?php $no = 1; ?>
             @if ($skpd->isEmpty())
@@ -166,6 +174,31 @@
 @if (count($errors) > 0)
   $('#modaltambahskpd').modal('show');
 @endif
+</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      // Setup - add a text input to each footer cell
+      $('#table_skpd tfoot th').each( function () {
+          var title = $(this).text();
+          $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
+      } );
+   
+      // DataTable
+      var table = $('#table_skpd').DataTable();
+   
+      // Apply the search
+      table.columns().every( function () {
+          var that = this;
+   
+          $( 'input', this.footer() ).on( 'keyup change', function () {
+              if ( that.search() !== this.value ) {
+                  that
+                      .search( this.value )
+                      .draw();
+              }
+          } );
+      } );
+  } );
 </script>
 
 <script type="text/javascript">
