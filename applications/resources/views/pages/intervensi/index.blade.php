@@ -440,7 +440,9 @@ $('.tanggal_akhir_edit').datepicker({
             }
         });
     });
-
+  }
+</script>
+<script type="text/javascript">
     $(document).ready(function(){
           $("#tanggal_mulai").datepicker({
               todayBtn:  1,
@@ -459,8 +461,6 @@ $('.tanggal_akhir_edit').datepicker({
               //    $('.tgl_faktur_awal').datepicker('setEndDate', minDate);
               });
       });
-
-  }
 </script>
 <script type="text/javascript">
   $(document).ready(function() {

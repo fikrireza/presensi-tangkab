@@ -302,7 +302,9 @@
             }
         });
     });
-
+  }
+</script>
+<script type="text/javascript">
     $(document).ready(function(){
           $("#tanggal_mulai").datepicker({
               todayBtn:  1,
@@ -321,8 +323,6 @@
               //    $('.tgl_faktur_awal').datepicker('setEndDate', minDate);
               });
       });
-
-  }
 </script>
 <script type="text/javascript">
   $(document).ready(function() {
