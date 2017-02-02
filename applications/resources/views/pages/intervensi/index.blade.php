@@ -47,7 +47,7 @@
         <div class="modal-body">
           <div class="form-group {{ $errors->has('jenis_intervensi') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Jenis Intervensi</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <select class="form-control select2" name="jenis_intervensi">
                 <option value="">-- PILIH --</option>
                 <option value="Ijin" {{ old('jenis_interrvensi') == 'Ijin' ? 'selected' : ''}}>Ijin</option>
@@ -59,7 +59,7 @@
           </div>
           <div class="form-group {{ $errors->has('tanggal_mulai') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Tanggal Mulai</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <div class="input-group date">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
@@ -71,7 +71,7 @@
           </div>
           <div class="form-group {{ $errors->has('tanggal_akhir') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Tanggal Akhir</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <div class="input-group date">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
@@ -82,21 +82,21 @@
           </div>
           <div class="form-group {{ $errors->has('jumlah_hari') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Jumlah Hari</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <input type="text" name="jumlah_hari" id="jumlah_hari" class="form-control" value="{{ old('jumlah_hari') }}" placeholder="@if($errors->has('jumlah_hari'))
                 {{ $errors->first('jumlah_hari')}} @endif Jumlah Hari" required="" readonly="true">
             </div>
           </div>
           <div class="form-group {{ $errors->has('keterangan') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Keterangan</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <input type="text" name="keterangan" class="form-control" value="{{ old('keterangan') }}" placeholder="@if($errors->has('keterangan'))
                 {{ $errors->first('keterangan')}} @endif Keterangan" required="">
             </div>
           </div>
           <div class="form-group {{ $errors->has('berkas') ? 'has-error' : ''}}">
             <label class="col-sm-3 control-label">Berkas</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <input type="file" name="berkas" class="form-control" accept=".png, .jpg, .pdf" value="{{ old('berkas') }}">
               <span style="color:red;">Hanya .jpg, .png, .pdf</span>
             </div>
@@ -124,14 +124,14 @@
         <div class="modal-body">
           <div class="form-group {{ $errors->has('id_edit') ? 'has-error' : '' }}" style="visibility: hidden;">
             <label class="col-sm-3 control-label">id</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <input type="text" name="id_edit" class="form-control" id="id_edit" value="{{ old('id_edit') }}" placeholder="@if($errors->has('id_edit'))
                 {{ $errors->first('id_edit')}} @endif Jumlah Hari" required="" readonly="true">
             </div>
           </div>
           <div class="form-group {{ $errors->has('jenis_intervensi_edit') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Jenis Intervensi</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <select class="form-control select2" name="jenis_intervensi_edit">
                 <option value="">-- PILIH --</option>
                 <option value="Ijin" id="Ijin">Ijin</option>
@@ -143,7 +143,7 @@
           </div>
           <div class="form-group {{ $errors->has('tanggal_mulai_edit') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Tanggal Mulai</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <div class="input-group date">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
@@ -155,7 +155,7 @@
           </div>
           <div class="form-group {{ $errors->has('tanggal_akhir_edit') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Tanggal Akhir</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <div class="input-group date">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
@@ -166,21 +166,21 @@
           </div>
           <div class="form-group {{ $errors->has('jumlah_hari_edit') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Jumlah Hari</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <input type="text" name="jumlah_hari_edit" class="form-control" id="jumlah_hari_edit" value="{{ old('jumlah_hari_edit') }}" placeholder="@if($errors->has('jumlah_hari_edit'))
                 {{ $errors->first('jumlah_hari_edit')}} @endif Jumlah Hari" required="" readonly="true">
             </div>
           </div>
           <div class="form-group {{ $errors->has('keterangan_edit') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Keterangan</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <input type="text" name="keterangan_edit" class="form-control" id="keterangan_edit" value="{{ old('keterangan_edit') }}" placeholder="@if($errors->has('keterangan_edit'))
                 {{ $errors->first('keterangan_edit')}} @endif Keterangan" required="">
             </div>
           </div>
           <div class="form-group {{ $errors->has('berkas_edit') ? 'has-error' : ''}}">
             <label class="col-sm-3 control-label">Berkas</label>
-            <div class="col-sm-9">
+            <div class="col-sm-6">
               <input type="file" name="berkas_edit" class="form-control" accept=".png, .jpg, .pdf" value="{{ old('berkas_edit') }}">
               <span style="color:red;">Hanya .jpg, .png, .pdf</br>*Kosongkan Jika Tidak Ingin Mengganti Berkas</span>
             </div>
