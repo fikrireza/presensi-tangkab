@@ -21,6 +21,11 @@ Route::post('pegawai', 'PegawaiController@store')->name('pegawai.post');
 Route::get('pegawai/edit/{id}', 'PegawaiController@edit')->name('pegawai.edit');
 Route::post('pegawai/edit', 'PegawaiController@editStore')->name('pegawai.editStore');
 
+// Mutasi
+Route::get('mutasi', 'MutasiController@index')->name('mutasi.index');
+Route::get('mutasi/create/{id}', 'MutasiController@create')->name('mutasi.create');
+Route::post('mutasi/create', 'MutasiController@createStore')->name('mutasi.createStore');
+
 // SKPD
 Route::get('skpd', 'SkpdController@index')->name('skpd.index')->middleware('administrator');
 Route::post('skpd', 'SkpdController@store')->name('skpd.post')->middleware('administrator');

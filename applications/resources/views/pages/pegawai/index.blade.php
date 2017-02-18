@@ -52,7 +52,7 @@
               <th>Jabatan</th>
               <th>Struktural</th>
               <th>Finger ID</th>
-              <th>Aksi</th>
+              <th style="width: 10%">Aksi</th>
             </tr>
           </thead>
           <tfoot>
@@ -93,7 +93,11 @@
               <td>{{ $key->jabatan }}</td>
               <td>{{ $key->nama_struktural }}</td>
               <td>{{ $key->fid }}</td>
-              <td><a href="{{ url('pegawai/edit', $key->id) }}"><i class="fa fa-edit"></i> Ubah</a></td>
+              <td>
+                <a href="{{ url('pegawai/edit', $key->id) }}"><i class="fa fa-edit"></i> Ubah</a>
+                <br>
+                <a href="{{ url('mutasi/create', $key->id) }}"><i class="fa fa-code-fork"></i> Mutasi</a>
+              </td>
             </tr>
             <?php $no++; ?>
             @endforeach
