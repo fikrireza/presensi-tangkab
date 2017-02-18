@@ -28,7 +28,7 @@
                 <li class="{{ Route::currentRouteNamed('golongan.index') ? 'active' : ''}}"><a href="{{ route('golongan.index') }}"><i class="fa fa-circle-o"></i> Golongan</a></li>
                 <li class="{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}"><a href="{{ route('jabatan.index') }}"><i class="fa fa-circle-o"></i> Jabatan</a></li>
                 <li class="{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}"><a href="{{ route('struktural.index') }}"><i class="fa fa-circle-o"></i> Struktural/Eselon</a></li>
-                <li class=""><a href=""><i class="fa fa-circle-o"></i> Mutasi</a></li>
+                <li class=""><a href="{{ route('mutasi.index') }}"><i class="fa fa-circle-o"></i> Mutasi</a></li>
                 <li class="{{ Route::currentRouteNamed('harilibur.index') ? 'active' : '' }}"><a href="{{ route('harilibur.index') }}"><i class="fa fa-circle-o"></i> Hari Libur & Cuti Bersama</a></li>
               </ul>
             </li>

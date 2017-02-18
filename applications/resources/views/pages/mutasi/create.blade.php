@@ -25,17 +25,60 @@
       <form class="form-horizontal" role="form" action="{{ route('mutasi.createStore') }}" method="post">
         {{ csrf_field() }}
         <div class="box-body">
-          <div class="form-group {{ $errors->has('nama_pegawai') ? 'has-error' : '' }}">
+          <div class="form-group">
             <label class="col-sm-3 control-label">Nama</label>
             <div class="col-sm-9">
-              <input type="text" name="nama_pegawai" class="form-control" value="{{ old('nama_pegawai') }}" placeholder="@if($errors->has('nama_pegawai'))
-                {{ $errors->first('nama_pegawai')}}@endif Nama">
+              <input type="text" name="nama_pegawai" class="form-control" value="{{$getpegskpd->pegawai_nama}}" readonly="true">
+              <input type="hidden" name="pegawai_id" value="{{$getpegskpd->pegawai_id}}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">SKPD Lama</label>
+            <div class="col-sm-9">
+              <input type="text" name="nama_skpd" class="form-control" value="{{$getpegskpd->skpd_nama}}" readonly="true">
+              <input type="hidden" name="skpd_id_old" value="{{$getpegskpd->skpd_id}}">
+            </div>
+          </div>
+          <div class="form-group {{ $errors->has('skpd_id_new') ? 'has-error' : '' }}">
+            <label class="col-sm-3 control-label">SKPD Mutasi</label>
+            <div class="col-sm-9">
+              <select name="skpd_id_new" class="form-control select2">
+                <option value="">-- Pilih --</option>
+                @foreach ($getskpd as $key)
+                <option value="{{$key->id}}">{{ $key->nama}}</option>
+                @endforeach
+              </select>
+                @if($errors->has('skpd_id_new'))
+                  <span class="help-block">
+                    <strong>{{ $errors->first('skpd_id_new')}}
+                    </strong>
+                  </span>
+                @endif
+            </div>
+          </div>
+          <div class="form-group {{ $errors->has('tanggal_mutasi') ? 'has-error' : '' }}">
+            <label class="col-sm-3 control-label">Tanggal Mutasi</label>
+            <div class="col-sm-9">
+              <div class="input-group date">
+                <div class="input-group-addon">
+                  <i class="fa fa-calendar"></i>
+                </div>
+                <input class="form-control pull-right" value="{{ old('tanggal_mutasi') }}" id="tanggal_mutasi" type="text" name="tanggal_mutasi" placeholder="@if($errors->has('tanggal_mutasi'))
+                  {{ $errors->first('tanggal_mutasi')}}@endif Tanggal Mutasi">
+              </div>
+            </div>
+          </div>
+          <div class="form-group {{ $errors->has('keterangan') ? 'has-error' : '' }}">
+            <label class="col-sm-3 control-label">Keterangan</label>
+            <div class="col-sm-9">
+              <textarea name="keterangan" class="form-control" rows="5" cols="40" placeholder="@if($errors->has('keterangan'))
+                {{ $errors->first('keterangan')}}@endif Keterangan ">{{ old('keterangan') }}</textarea>
             </div>
           </div>
           <div class="form-group {{ $errors->has('tpp_dibayarkan') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">TPP <br /><small>(setelah dipotong pajak)</small></label>
             <div class="col-sm-9">
-              <input type="text" name="tpp_dibayarkan" class="form-control" value="{{ old('tpp_dibayarkan') }}" onkeypress="return isNumber(event)" maxlength="8" placeholder="@if($errors->has('tpp_dibayarkan'))
+              <input type="text" name="tpp_dibayarkan" class="form-control pull-right" value="{{ old('tpp_dibayarkan') }}"  onkeypress="return isNumber(event)" maxlength="8" placeholder="@if($errors->has('tpp_dibayarkan')) 
                 {{ $errors->first('tpp_dibayarkan')}}@endif TPP Setelah Dipotong Pajak ">
             </div>
           </div>
@@ -54,10 +97,10 @@
 <script src="{{ asset('plugins/select2/select2.full.min.js')}}"></script>
 <script>
 $(".select2").select2();
-$('#datepicker1').datepicker({
+var date = new Date();
+$('#tanggal_mutasi').datepicker({
   autoclose: true,
   format: 'yyyy-mm-dd',
-  todayHighlight: true,
 });
 
 function isNumber(evt) {

@@ -29,21 +29,74 @@ class MutasiController extends Controller
 
     public function index()
     {
-      
-      return view('pages.pegawai.index');
+      $getmutasi = Mutasi::Select('preson_mutasi.id','preson_mutasi.pegawai_id', DB::raw('count(preson_mutasi.pegawai_id) as jumlahmutasi'))
+                  ->groupBy('preson_mutasi.pegawai_id')
+                  ->orderby('jumlahmutasi', 'desc')
+                  ->get();
+      // dd($getmutasi);
+      return view('pages.mutasi.index', compact('getmutasi'));
     }
 
     public function create($id)
     {
       
       // dd($id);
-      return view('mutasi/create');
+
+      $getpegskpd = Pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
+                ->Select('preson_pegawais.id as pegawai_id', 'preson_pegawais.nama as pegawai_nama', 'preson_skpd.id as skpd_id', 'preson_skpd.nama as skpd_nama')->Where('preson_pegawais.id','=',$id)->first();
+
+   
+      $getskpd = Skpd::whereNotIn('id', [$getpegskpd->skpd_id])->get();
+
+      return view('pages.mutasi.create', compact('getskpd', 'getpegskpd'));
     }
 
 
     public function createStore(Request $request)
     {
-      
-      return redirect()->route('pages.pegawai.index');
+      // dd($request);
+      $message = [
+        'skpd_id_new.required' => 'Wajib di isi',
+        'keterangan.required' => 'Wajib di isi',
+        'tanggal_mutasi.required' => 'Wajib di isi',
+        'tpp_dibayarkan.required' => 'Wajib di isi',
+      ];
+
+      $validator = Validator::make($request->all(), [
+        'skpd_id_new' => 'required',
+        'keterangan' => 'required',
+        'tanggal_mutasi' => 'required',
+        'tpp_dibayarkan' => 'required',
+      ], $message);
+
+      if($validator->fails())
+      {
+        return redirect()->route('mutasi.create', ['id' => $request->pegawai_id])->withErrors($validator)->withInput();
+      }
+
+      $new = new Mutasi;
+      $new->pegawai_id = $request->pegawai_id;
+      $new->skpd_id_old = $request->skpd_id_old;
+      $new->skpd_id_new = $request->skpd_id_new;
+      $new->tanggal_mutasi = $request->tanggal_mutasi;
+      $new->keterangan = $request->keterangan;
+      $new->tpp_dibayarkan = $request->tpp_dibayarkan;
+      $new->actor = Auth::user()->id;
+      $new->save();
+
+      $set = pegawai::find($request->pegawai_id);
+      $set->skpd_id = $request->skpd_id_new;
+      $set->flag_mutasi = 1;
+      $set->update();
+
+      return redirect()->route('pegawai.index')->with('berhasil', 'Pegawai berhasil dimutasi ke SKPD lain');
+    }
+
+
+    public function view($id)
+    {
+      $getmutasi = Mutasi::Where('pegawai_id', $id)->orderBy('created_at','desc')->paginate(5);
+      // dd($getmutasi);
+      return view('pages.mutasi.view', compact('getmutasi'));
     }
 }
