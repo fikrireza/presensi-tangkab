@@ -37,7 +37,7 @@
   <div class="col-md-12">
     <div class="box box-primary box-solid">
       <div class="box-header">
-        <h3 class="box-title">Struktural</h3>
+        <h3 class="box-title">Mutasi</h3>
       </div>
       <div class="box-body">
         <table id="table_mutasi" class="table table-bordered table-striped">
