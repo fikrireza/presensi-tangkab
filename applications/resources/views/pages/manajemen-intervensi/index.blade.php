@@ -1,14 +1,14 @@
 @extends('layout.master')
 
 @section('title')
-  <title>Master Golongan</title>
+  <title>Master Intervensi</title>
 @endsection
 
 @section('breadcrumb')
-  <h1>Master Golongan</h1>
+  <h1>Master Intervensi</h1>
   <ol class="breadcrumb">
     <li><a href=""><i class="fa fa-dashboard"></i>Dashboard</a></li>
-    <li class="active">Golongan</li>
+    <li class="active">Master Intervensi</li>
   </ol>
 @endsection
 
@@ -37,12 +37,12 @@
 {{-- Modal Tambah Golongan--}}
 <div class="modal modal-default fade" id="modaltambahgolongan" role="dialog">
   <div class="modal-dialog" style="width:800px;">
-    <form class="form-horizontal" action="{{ route('golongan.post') }}" method="post">
+    <form class="form-horizontal" action="#" method="post">
       {{ csrf_field() }}
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Tambah Golongan</h4>
+          <h4 class="modal-title">Tambah Master Intervensi</h4>
         </div>
         <div class="modal-body">
           <div class="form-group {{ $errors->has('nama') ? 'has-error' : '' }}">
@@ -66,7 +66,7 @@
   <div class="col-md-12">
     <div class="box box-primary box-solid">
       <div class="box-header">
-        <h3 class="box-title">Golongan</h3>
+        <h3 class="box-title">Master Intervensi</h3>
         <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahgolongan">Tambah Golongan</a>
       </div>
       <div class="box-body">
@@ -85,16 +85,16 @@
           </tfoot>
           <tbody>
             <?php $no = 1; ?>
-            @if ($golongan->isEmpty())
+            @if ($getintervensi->isEmpty())
             <tr>
               <td>-</td>
               <td>-</td>
             </tr>
             @else
-            @foreach ($golongan as $key)
+            @foreach ($getintervensi as $key)
             <tr>
               <td>{{ $no }}</td>
-              <td>{{ $key->nama }}</td>
+              <td>{{ $key->nama_intervensi }}</td>
             </tr>
             <?php $no++; ?>
             @endforeach

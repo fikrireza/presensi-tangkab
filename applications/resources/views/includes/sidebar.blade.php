@@ -1,4 +1,4 @@
-        <section class="sidebar">
+          <section class="sidebar">
           <div class="user-panel">
             <div class="pull-left image">
               <img src="{{ asset('images/userdefault.png') }}" class="img-circle" alt="User Image">
@@ -67,6 +67,13 @@
                 @endif
               </ul>
             </li>
+            @endif
+            @if (session('status') == 'administrator')
+              <li class="{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}">
+                <a href="{{ route('manajemenintervensi.index') }}">
+                  <i class="fa fa-envelope"></i> <span>Manajemen Intervensi</span>
+                </a>
+              </li>
             @endif
             @if(session('status') == 'administrator' || session('status') == 'admin' || session('status') == 'pegawai')
             <li class="{{ Route::currentRouteNamed('intervensi.index') ? 'active' : '' }}">

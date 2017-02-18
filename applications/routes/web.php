@@ -60,6 +60,9 @@ Route::get('intervensi/kelola/approve/{id}', 'IntervensiController@kelolaApprove
 Route::get('intervensi/kelola/decline/{id}', 'IntervensiController@kelolaDecline');
 Route::get('intervensi/skpd/{id}', 'IntervensiController@skpd')->name('intervensi.skpd');
 
+// Manajemen Intervensi
+Route::get('manajemen-intervensi', 'ManajemenIntervensiController@index')->name('manajemenintervensi.index');
+
 // Absensi Administrator
 Route::get('absensi', 'AbsensiController@index')->name('absensi.index')->middleware('administrator');
 Route::post('absensi', 'AbsensiController@filterAdministrator')->name('absensi.filterAdministrator')->middleware('administrator');
