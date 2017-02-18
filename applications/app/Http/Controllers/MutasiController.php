@@ -31,7 +31,7 @@ class MutasiController extends Controller
     {
       // dd(Auth::user()->skpd_id);
       $getmutasi = Mutasi::Select('preson_mutasi.id','preson_mutasi.pegawai_id', 'preson_mutasi.skpd_id_new', DB::raw('count(preson_mutasi.pegawai_id) as jumlahmutasi'))
-                  // ->where('preson_mutasi.skpd_id_new', Auth::user()->skpd_id)
+                  ->where('preson_mutasi.skpd_id_new', Auth::user()->skpd_id)
                   ->groupBy('preson_mutasi.pegawai_id')
                   ->orderby('jumlahmutasi', 'desc')
                   ->get();
