@@ -21,7 +21,6 @@
   }, 2000);
 </script>
 
-
 <div class="row">
   <div class="col-md-12">
     <!-- Box Comment -->
