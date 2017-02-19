@@ -24,6 +24,7 @@
 <div class="row">
   <div class="col-md-12">
     <!-- Box Comment -->
+    @if($empty == "Tidak Kosong")
     <div class="box box-widget">
       <div class="box-header with-border">
         <div class="user-block">
@@ -58,6 +59,13 @@
     <div class="pull-justify">
       {{ $getmutasi->links() }}
     </div>
+    @else
+      <div class="callout callout-info">
+      <h4>Pemberitahuan!</h4>
+
+      <p>Anda belum pernah dimutasikan ke SKPD lain.</p>
+    </div>
+    @endif
     <!-- /.box -->
   </div>
 </div>

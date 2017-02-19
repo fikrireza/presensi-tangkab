@@ -29,14 +29,17 @@ class MutasiController extends Controller
 
     public function index()
     {
+      $mutasi = Mutasi::get();
+
       // dd(Auth::user()->skpd_id);
       $getmutasi = Mutasi::Select('preson_mutasi.id','preson_mutasi.pegawai_id', 'preson_mutasi.skpd_id_new', DB::raw('count(preson_mutasi.pegawai_id) as jumlahmutasi'))
                   ->where('preson_mutasi.skpd_id_new', Auth::user()->skpd_id)
+                  ->whereNotIn('preson_mutasi.pegawai_id', [Auth::user()->id])
                   ->groupBy('preson_mutasi.pegawai_id')
                   ->orderby('jumlahmutasi', 'desc')
                   ->get();
       
-      return view('pages.mutasi.index', compact('getmutasi'));
+      return view('pages.mutasi.index', compact('getmutasi','mutasi'));
     }
 
     public function create($id)
@@ -97,8 +100,29 @@ class MutasiController extends Controller
 
     public function view($id)
     {
+
       $getmutasi = Mutasi::Where('pegawai_id', $id)->orderBy('created_at','desc')->paginate(5);
+      $empty = "";
+      if ($getmutasi[0] != null) {
+        $empty = "Tidak Kosong";
+      } else {
+        $empty = "Kosong";
+      }
       // dd($getmutasi);
-      return view('pages.mutasi.view', compact('getmutasi'));
+      return view('pages.mutasi.view', compact('getmutasi','empty'));
+    }
+
+    public function viewPegawai()
+    {
+      // dd(Auth::user()->pegawai_id);
+      $getmutasi = Mutasi::Where('pegawai_id', Auth::user()->pegawai_id)->orderBy('created_at','desc')->paginate(5);
+      $empty = "";
+      if ($getmutasi[0] != null) {
+        $empty = "Tidak Kosong";
+      } else {
+        $empty = "Kosong";
+      }
+      // dd($empty);
+      return view('pages.mutasi.view', compact('getmutasi','empty'));
     }
 }

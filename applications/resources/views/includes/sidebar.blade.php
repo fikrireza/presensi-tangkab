@@ -28,7 +28,7 @@
                 <li class="{{ Route::currentRouteNamed('golongan.index') ? 'active' : ''}}"><a href="{{ route('golongan.index') }}"><i class="fa fa-circle-o"></i> Golongan</a></li>
                 <li class="{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}"><a href="{{ route('jabatan.index') }}"><i class="fa fa-circle-o"></i> Jabatan</a></li>
                 <li class="{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}"><a href="{{ route('struktural.index') }}"><i class="fa fa-circle-o"></i> Struktural/Eselon</a></li>
-                <li class=""><a href="{{ route('mutasi.index') }}"><i class="fa fa-circle-o"></i> Mutasi</a></li>
+                <li class="{{ Route::currentRouteNamed('mutasi.index') ? 'active' : '' }}"><a href="{{ route('mutasi.index') }}"><i class="fa fa-circle-o"></i> Mutasi</a></li>
                 <li class="{{ Route::currentRouteNamed('harilibur.index') ? 'active' : '' }}"><a href="{{ route('harilibur.index') }}"><i class="fa fa-circle-o"></i> Hari Libur & Cuti Bersama</a></li>
               </ul>
             </li>
@@ -125,6 +125,11 @@
               </a>
             </li>
             @endif
+            <li class="{{ Route::currentRouteNamed('mutasi.view.pegawai') ? 'active' : '' }}">
+              <a href="{{ route('mutasi.view.pegawai') }}">
+                <i class="fa fa-code-fork"></i> <span>History Mutasi</span>
+              </a>
+            </li>
             @if(session('status') != 'pegawai')
             <li class="treeview {{ Route::currentRouteNamed('tpp.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pejabatdokumen.index') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdministrator') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdmin') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdmin.store') ? 'active' : '' }}">
               <a href="">
