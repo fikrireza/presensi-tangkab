@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\ManajemenIntervensi;
 use App\Models\Intervensi;
 use App\Models\Pegawai;
 use App\Models\Users;
@@ -21,8 +22,9 @@ class IntervensiController extends Controller
     {
 
       $intervensi = intervensi::where('pegawai_id', Auth::user()->pegawai_id)->get();
+      $getmasterintervensi = ManajemenIntervensi::where('flag_old', 0)->get();
 
-      return view('pages.intervensi.index', compact('intervensi'));
+      return view('pages.intervensi.index', compact('intervensi', 'getmasterintervensi'));
     }
 
     public function store(Request $request)
@@ -62,9 +64,12 @@ class IntervensiController extends Controller
 
       }
 
+      $getnamaintervensi = ManajemenIntervensi::find($request->jenis_intervensi);
+
       $set = new intervensi;
       $set->pegawai_id = Auth::user()->pegawai_id;
-      $set->jenis_intervensi = $request->jenis_intervensi;
+      $set->jenis_intervensi = $getnamaintervensi->nama_intervensi;
+      $set->id_intervensi = $request->jenis_intervensi;
       $set->tanggal_mulai = $request->tanggal_mulai;
       $set->tanggal_akhir = $request->tanggal_akhir;
       $set->jumlah_hari = $request->jumlah_hari;
@@ -117,9 +122,12 @@ class IntervensiController extends Controller
         $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_mulai.'-'.$request->jenis_intervensi.'.' . $file->getClientOriginalExtension();
         $file->move('documents/', $photo_name);
 
+        $getnamaintervensi = ManajemenIntervensi::find($request->jenis_intervensi_edit);
+
         $set = intervensi::find($request->id_edit);
         $set->pegawai_id = Auth::user()->pegawai_id;
-        $set->jenis_intervensi = $request->jenis_intervensi_edit;
+        $set->jenis_intervensi = $getnamaintervensi->nama_intervensi;
+        $set->id_intervensi = $request->jenis_intervensi_edit;
         $set->tanggal_mulai = $request->tanggal_mulai_edit;
         $set->tanggal_akhir = $request->tanggal_akhir_edit;
         $set->jumlah_hari = $request->jumlah_hari_edit;
@@ -129,9 +137,12 @@ class IntervensiController extends Controller
         $set->actor = Auth::user()->pegawai_id;
         $set->save();
       }else{
-         $set = intervensi::find($request->id_edit);
+        $getnamaintervensi = ManajemenIntervensi::find($request->jenis_intervensi_edit);
+
+        $set = intervensi::find($request->id_edit);
         $set->pegawai_id = Auth::user()->pegawai_id;
-        $set->jenis_intervensi = $request->jenis_intervensi_edit;
+        $set->jenis_intervensi = $getnamaintervensi->nama_intervensi;
+        $set->id_intervensi = $request->jenis_intervensi_edit;
         $set->tanggal_mulai = $request->tanggal_mulai_edit;
         $set->tanggal_akhir = $request->tanggal_akhir_edit;
         $set->jumlah_hari = $request->jumlah_hari_edit;
@@ -162,9 +173,11 @@ class IntervensiController extends Controller
         $getSKPD = skpd::get();
 
         $pegawai = pegawai::select('id', 'nama')->get();
+
+        $getmasterintervensi = ManajemenIntervensi::where('flag_old', 0)->get();
       }
 
-      return view('pages.intervensi.kelola', compact('getSKPD', 'pegawai', 'intervensi'));
+      return view('pages.intervensi.kelola', compact('getSKPD', 'pegawai', 'intervensi', 'getmasterintervensi'));
     }
 
     public function kelolaAksi($id)
@@ -237,9 +250,12 @@ class IntervensiController extends Controller
         $photo_name = '';
       }
 
+      $getnamaintervensi = ManajemenIntervensi::find($request->jenis_intervensi);
+
       $set = new intervensi;
       $set->pegawai_id = $request->pegawai_id;
-      $set->jenis_intervensi = $request->jenis_intervensi;
+      $set->jenis_intervensi = $getnamaintervensi->nama_intervensi;
+      $set->id_intervensi = $request->jenis_intervensi;
       $set->tanggal_mulai = $request->tanggal_mulai;
       $set->tanggal_akhir = $request->tanggal_akhir;
       $set->jumlah_hari = $request->jumlah_hari;
@@ -269,7 +285,9 @@ class IntervensiController extends Controller
 
       $pegawai = pegawai::select('id', 'nama')->where('skpd_id', Auth::user()->skpd_id)->get();
 
-      return view('pages.intervensi.detailSKPD', compact('intervensi', 'pegawai'));
+      $getmasterintervensi = ManajemenIntervensi::where('flag_old', 0)->get();
+
+      return view('pages.intervensi.detailSKPD', compact('intervensi', 'pegawai', 'getmasterintervensi'));
     }
 
     public function batal($id)

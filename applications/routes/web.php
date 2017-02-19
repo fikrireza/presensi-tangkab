@@ -62,6 +62,7 @@ Route::get('intervensi/skpd/{id}', 'IntervensiController@skpd')->name('intervens
 
 // Manajemen Intervensi
 Route::get('manajemen-intervensi', 'ManajemenIntervensiController@index')->name('manajemenintervensi.index');
+Route::post('manajemen-intervensi', 'ManajemenIntervensiController@store')->name('manajemenintervensi.store');
 
 // Absensi Administrator
 Route::get('absensi', 'AbsensiController@index')->name('absensi.index')->middleware('administrator');
