@@ -44,7 +44,7 @@
           <p><b>Nomor SK</b> : {{$key->nomor_sk}}</p>
           <p><b>Tanggal SK</b> : {{ \Carbon\Carbon::parse($key->tanggal_sk)->format('d-M-y')}}</p>
           <!-- Attachment -->
-          <a href="{{ asset('\..\documents').'/'.$key->upload_sk}}" download="{{$key->upload_sk}}" class="link-black text-sm">
+          <a target="_blank" href="{{ asset('\..\documents').'/'.$key->upload_sk}}" download="{{$key->upload_sk}}" class="link-black text-sm">
               @if (strpos($key->upload_sk, '.pdf'))
                 <img width="5%" src="{{ asset('dist\img\pdf.png') }}" alt="..." class="margin">
               @elseif(strpos($key->upload_sk, '.png'))
