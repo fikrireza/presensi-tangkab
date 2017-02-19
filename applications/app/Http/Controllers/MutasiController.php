@@ -33,12 +33,12 @@ class MutasiController extends Controller
 
       // dd(Auth::user()->skpd_id);
       $getmutasi = Mutasi::Select('preson_mutasi.id','preson_mutasi.pegawai_id', 'preson_mutasi.skpd_id_new', DB::raw('count(preson_mutasi.pegawai_id) as jumlahmutasi'))
-                  ->where('preson_mutasi.skpd_id_new', Auth::user()->skpd_id)
+                  // ->where('preson_mutasi.skpd_id_new', Auth::user()->skpd_id)
                   ->whereNotIn('preson_mutasi.pegawai_id', [Auth::user()->id])
                   ->groupBy('preson_mutasi.pegawai_id')
                   ->orderby('jumlahmutasi', 'desc')
                   ->get();
-      
+      // dd($getmutasi);
       return view('pages.mutasi.index', compact('getmutasi','mutasi'));
     }
 
@@ -65,6 +65,9 @@ class MutasiController extends Controller
         'keterangan.required' => 'Wajib di isi',
         'tanggal_mutasi.required' => 'Wajib di isi',
         'tpp_dibayarkan.required' => 'Wajib di isi',
+        'nomor_sk.required' => 'Wajib di isi',
+        'tanggal_sk.required' => 'Wajib di isi',
+        'upload_sk.required' => 'Wajib di isi',
       ];
 
       $validator = Validator::make($request->all(), [
@@ -72,11 +75,24 @@ class MutasiController extends Controller
         'keterangan' => 'required',
         'tanggal_mutasi' => 'required',
         'tpp_dibayarkan' => 'required',
+        'nomor_sk' => 'required',
+        'tanggal_sk' => 'required',
+        'upload_sk' => 'mimes:jpeg,png,pdf,jpg',
       ], $message);
 
       if($validator->fails())
       {
         return redirect()->route('mutasi.create', ['id' => $request->pegawai_id])->withErrors($validator)->withInput();
+      }
+
+      $file = $request->file('upload_sk');
+      if($file != null)
+      {
+        $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_sk.'-'.$request->nomor_sk.'.' . $file->getClientOriginalExtension();
+        $file->move('documents/', $photo_name);
+      }else{
+        $photo_name = "-";
+
       }
 
       $new = new Mutasi;
@@ -86,6 +102,9 @@ class MutasiController extends Controller
       $new->tanggal_mutasi = $request->tanggal_mutasi;
       $new->keterangan = $request->keterangan;
       $new->tpp_dibayarkan = $request->tpp_dibayarkan;
+      $new->nomor_sk = $request->nomor_sk;
+      $new->tanggal_sk = $request->tanggal_sk;
+      $new->upload_sk = $photo_name;
       $new->actor = Auth::user()->id;
       $new->save();
 

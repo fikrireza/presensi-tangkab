@@ -22,7 +22,7 @@
         <h3 class="box-title" style="line-height:30px;">Tambah Data Mutasi</h3>
         <a href="{{ route('pegawai.index') }}" class="btn bg-blue pull-right">Kembali</a>
       </div>
-      <form class="form-horizontal" role="form" action="{{ route('mutasi.createStore') }}" method="post">
+      <form class="form-horizontal" role="form" action="{{ route('mutasi.createStore') }}" method="post"  enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="box-body">
           <div class="form-group">
@@ -82,6 +82,32 @@
                 {{ $errors->first('tpp_dibayarkan')}}@endif TPP Setelah Dipotong Pajak ">
             </div>
           </div>
+          <div class="form-group {{ $errors->has('nomor_sk') ? 'has-error' : '' }}">
+            <label class="col-sm-3 control-label">Nomor SK</label>
+            <div class="col-sm-9">
+              <input type="text" name="nomor_sk" class="form-control pull-right" value="{{ old('nomor_sk') }}" placeholder="@if($errors->has('nomor_sk')) 
+                {{ $errors->first('nomor_sk')}}@endif Nomor SK ">
+            </div>
+          </div>
+          <div class="form-group {{ $errors->has('tanggal_sk') ? 'has-error' : '' }}">
+            <label class="col-sm-3 control-label">Tanggal SK</label>
+            <div class="col-sm-9">
+              <div class="input-group date">
+                <div class="input-group-addon">
+                  <i class="fa fa-calendar"></i>
+                </div>
+                <input class="form-control pull-right" value="{{ old('tanggal_sk') }}" id="tanggal_sk" type="text" name="tanggal_sk" placeholder="@if($errors->has('tanggal_sk'))
+                  {{ $errors->first('tanggal_sk')}}@endif Tanggal SK">
+              </div>
+            </div>
+          </div>
+           <div class="form-group {{ $errors->has('upload_sk') ? 'has-error' : ''}}">
+            <label class="col-sm-3 control-label">Upload SK</label>
+            <div class="col-sm-6">
+              <input type="file" name="upload_sk" class="form-control" accept=".png, .jpg, .pdf" value="{{ old('upload_sk') }}">
+              <span style="color:red;">Hanya .jpg, .png, .pdf</span>
+            </div>
+          </div>
         </div>
         <div class="box-footer">
           <button type="submit" class="btn bg-purple pull-right">Submit</button>
@@ -99,6 +125,10 @@
 $(".select2").select2();
 var date = new Date();
 $('#tanggal_mutasi').datepicker({
+  autoclose: true,
+  format: 'yyyy-mm-dd',
+});
+$('#tanggal_sk').datepicker({
   autoclose: true,
   format: 'yyyy-mm-dd',
 });

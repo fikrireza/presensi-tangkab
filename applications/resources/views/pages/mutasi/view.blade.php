@@ -41,8 +41,24 @@
           <p><b>SKPD Baru</b> : {{$key->skpd_new->nama}}</p>
           <p><b>Tanggal Mutasi</b> : {{ \Carbon\Carbon::parse($key->tanggal_mutasi)->format('d-M-y')}}</p>
           <p><b>TPP Yang Dibayarkan</b> : Rp. {{ number_format($key->tpp_dibayarkan,0,',','.') }},-</p>
+          <p><b>Nomor SK</b> : {{$key->nomor_sk}}</p>
+          <p><b>Tanggal SK</b> : {{ \Carbon\Carbon::parse($key->tanggal_sk)->format('d-M-y')}}</p>
           <!-- Attachment -->
+          <a href="{{ asset('\..\documents').'/'.$key->upload_sk}}" download="{{$key->upload_sk}}" class="link-black text-sm">
+              @if (strpos($key->upload_sk, '.pdf'))
+                <img width="5%" src="{{ asset('dist\img\pdf.png') }}" alt="..." class="margin">
+              @elseif(strpos($key->upload_sk, '.png'))
+                <img width="5%" src="{{ asset('dist\img\png.png') }}" alt="..." class="margin">
+              @elseif(strpos($key->upload_sk, '.jpg'))
+                <img width="5%" src="{{ asset('dist\img\jpg.png') }}" alt="..." class="margin">
+              @elseif(strpos($key->upload_sk, '.docx'))
+                <img width="5%" src="{{ asset('dist\img\doc.png') }}" alt="..." class="margin">
+              @elseif(strpos($key->upload_sk, '.xlsx'))
+                <img width="5%" src="{{ asset('dist\img\doc.png') }}" alt="..." class="margin">
+              @endif
+            </a>
           <div class="attachment-block" style="border:1px solid #00a65a;margin-top:5px;">
+             
             <h4 class="attachment-heading"><b>Keterangan</b></h4>
               <div class="attachment-text">
                 {{$key->keterangan}}
