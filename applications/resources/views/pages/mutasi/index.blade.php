@@ -1,14 +1,14 @@
 @extends('layout.master')
 
 @section('title')
-  <title>Master Pegawai</title>
+  <title>Master Mutasi</title>
 @endsection
 
 @section('breadcrumb')
-  <h1>Master Pegawai</h1>
+  <h1>Master Mutasi</h1>
   <ol class="breadcrumb">
     <li><a href=""><i class="fa fa-dashboard"></i>Dashboard</a></li>
-    <li class="active">Pegawai</li>
+    <li class="active">Mutasi</li>
   </ol>
 @endsection
 
@@ -37,21 +37,16 @@
   <div class="col-md-12">
     <div class="box box-primary box-solid">
       <div class="box-header">
-        <h3 class="box-title">Struktural</h3>
-        <a href="{{ route('pegawai.create') }}" class="btn bg-blue pull-right">Tambah Pegawai</a>
+        <h3 class="box-title">Mutasi</h3>
       </div>
       <div class="box-body">
-        <table id="table_pegawai" class="table table-bordered table-striped">
+        <table id="table_mutasi" class="table table-bordered table-striped">
           <thead>
             <tr>
               <th>No</th>
               <th>NIP</th>
               <th>Nama</th>
-              <th>SKPD</th>
-              <th>Golongan</th>
-              <th>Jabatan</th>
-              <th>Struktural</th>
-              <th>Finger ID</th>
+              <th>Jumlah Mutasi</th>
               <th style="width: 10%">Aksi</th>
             </tr>
           </thead>
@@ -61,21 +56,13 @@
               <th></th>
               <th></th>
               <th></th>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th></th>
               <td></td>
             </tr>
           </tfoot>
           <tbody>
             <?php $no = 1; ?>
-            @if ($pegawai->isEmpty())
+            @if ($getmutasi->isEmpty())
             <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
               <td>-</td>
               <td>-</td>
               <td>-</td>
@@ -83,20 +70,14 @@
               <td>-</td>
             </tr>
             @else
-            @foreach ($pegawai as $key)
+            @foreach ($getmutasi as $key)
             <tr>
               <td>{{ $no }}</td>
-              <td>{{ $key->nip_sapk }}</td>
-              <td>{{ $key->nama_pegawai }}</td>
-              <td>{{ $key->nama_skpd }}</td>
-              <td>{{ $key->nama_golongan }}</td>
-              <td>{{ $key->jabatan }}</td>
-              <td>{{ $key->nama_struktural }}</td>
-              <td>{{ $key->fid }}</td>
+              <td>{{ $key->pegawai->nip_sapk }}</td>
+              <td>{{ $key->pegawai->nama }}</td>
+              <td style="text-align: center">{{ $key->jumlahmutasi }}</td>
               <td>
-                <a href="{{ url('pegawai/edit', $key->id) }}"><i class="fa fa-edit"></i> Ubah</a>
-                <br>
-                <a href="{{ url('mutasi/create', $key->id) }}"><i class="fa fa-code-fork"></i> Mutasi</a>
+                <a href="{{ url('mutasi/view', $key->pegawai_id) }}"><i class="fa fa-eye"></i> Lihat</a>
               </td>
             </tr>
             <?php $no++; ?>
@@ -112,21 +93,19 @@
 @endsection
 
 @section('script')
-<script>
-  $(function () {
-    $("#table_pegawai").DataTable();
-  });
+<script type="text/javascript">
+  $("#table_mutasi").DataTable();
 </script>
 <script type="text/javascript">
   $(document).ready(function() {
       // Setup - add a text input to each footer cell
-      $('#table_pegawai tfoot th').each( function () {
+      $('#table_mutasi tfoot th').each( function () {
           var title = $(this).text();
           $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
       } );
    
       // DataTable
-      var table = $('#table_pegawai').DataTable();
+      var table = $('#table_mutasi').DataTable();
    
       // Apply the search
       table.columns().every( function () {
