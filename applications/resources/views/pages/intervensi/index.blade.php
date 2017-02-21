@@ -36,7 +36,7 @@
 
 {{-- Modal Tambah Intervensi--}}
 <div class="modal modal-default fade" id="modaltambahIntervensi" role="dialog">
-  <div class="modal-dialog" style="width:800px;">
+  <div class="modal-dialog">
     <form class="form-horizontal" action="{{ route('intervensi.post') }}" method="post" enctype="multipart/form-data">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -116,7 +116,7 @@
 
 {{-- Modal Edit Intervensi --}}
 <div class="modal modal-default fade" id="modaleditIntervensi" role="dialog">
-  <div class="modal-dialog" style="width:800px;">
+  <div class="modal-dialog">
     <form class="form-horizontal" action="{{ route('intervensi.edit') }}" method="post" enctype="multipart/form-data">
       {{ csrf_field() }}
       <div class="modal-content">

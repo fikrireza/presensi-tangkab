@@ -669,7 +669,7 @@ class LaporanController extends Controller
                                   and Fid = '$fid->fid'
                                   and str_to_date(Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT tanggal_mulai FROM preson_intervensis where pegawai_id = b.id and flag_status = 1)
                                   and str_to_date(Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT libur FROM preson_harilibur)) as Jam_Datang,
-                                (select MIN(Jam_Log) from ta_log
+                                (select MAX(Jam_Log) from ta_log
                                   where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                   and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '12:01:00'
                                   and Fid = '$fid->fid'
@@ -724,7 +724,7 @@ class LaporanController extends Controller
                                   and Fid = '$fid->fid'
                                   and str_to_date(Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT tanggal_mulai FROM preson_intervensis where pegawai_id = b.id and flag_status = 1)
                                   and str_to_date(Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT libur FROM preson_harilibur)) as Jam_Datang,
-                                (select MIN(Jam_Log) from ta_log
+                                (select MAX(Jam_Log) from ta_log
                                   where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                   and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '12:01:00'
                                   and Fid = '$fid->fid'
