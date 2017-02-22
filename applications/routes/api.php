@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 
 
+Route::get('/log', ['uses' => 'ApiLogController@Log']);
 Route::post('/log', ['uses' => 'ApiLogController@postLog']);
 
 // Route::get('/createKey', ['uses' => 'ApiLogController@createKey']);
