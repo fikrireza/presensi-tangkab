@@ -46,7 +46,7 @@
             </li>
             @endif
             @if(session('status') != 'pegawai')
-            <li class="treeview {{ Route::currentRouteNamed('user.index') ? 'active' : ''}}">
+            <li class="treeview {{ Route::currentRouteNamed('user.index') ? 'active' : ''}}{{ Route::currentRouteNamed('user.reset') ? 'active' : ''}}">
               <a href="{{ route('user.index') }}">
                 <i class="fa fa-users"></i> <span>Manajemen User</span>
                 <i class="fa fa-angle-left pull-right"></i>
