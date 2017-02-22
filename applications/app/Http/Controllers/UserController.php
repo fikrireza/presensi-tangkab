@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function index()
     {
-      if(session('status') == 'administrator')
+      if(session('status') == 'administrator' || session('status') == 'superuser')
       {
         $getpegawai = pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
                           ->join('preson_users', 'preson_users.pegawai_id', '=', 'preson_pegawais.id')
@@ -46,7 +46,7 @@ class UserController extends Controller
                           ->get();
       }
 
-      if(session('status') == 'administrator')
+      if(session('status') == 'administrator' || session('status') == 'superuser')
       {
         $getuser    = user::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_users.pegawai_id')
                           ->join('preson_roles', 'preson_roles.id', '=', 'preson_users.role_id')
@@ -110,7 +110,7 @@ class UserController extends Controller
 
     public function reset()
     {
-      if(session('status') == 'administrator')
+      if(session('status') == 'administrator' || session('status') == 'superuser')
       {
         $getuser  = user::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_users.pegawai_id')
                           ->join('preson_roles', 'preson_roles.id', '=', 'preson_users.role_id')
