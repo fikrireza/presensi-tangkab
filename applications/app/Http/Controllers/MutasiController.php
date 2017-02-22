@@ -31,26 +31,23 @@ class MutasiController extends Controller
     {
       $mutasi = Mutasi::get();
 
-      // dd(Auth::user()->skpd_id);
       $getmutasi = Mutasi::Select('preson_mutasi.id','preson_mutasi.pegawai_id', 'preson_mutasi.skpd_id_new', DB::raw('count(preson_mutasi.pegawai_id) as jumlahmutasi'))
                   ->where('preson_mutasi.skpd_id_new', Auth::user()->skpd_id)
                   ->whereNotIn('preson_mutasi.pegawai_id', [Auth::user()->id])
                   ->groupBy('preson_mutasi.pegawai_id')
                   ->orderby('jumlahmutasi', 'desc')
                   ->get();
-      // dd($getmutasi);
+
       return view('pages.mutasi.index', compact('getmutasi','mutasi'));
     }
 
     public function create($id)
     {
-      
-      // dd($id);
 
       $getpegskpd = Pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
                 ->Select('preson_pegawais.id as pegawai_id', 'preson_pegawais.nama as pegawai_nama', 'preson_skpd.id as skpd_id', 'preson_skpd.nama as skpd_nama')->Where('preson_pegawais.id','=',$id)->first();
 
-   
+
       $getskpd = Skpd::whereNotIn('id', [$getpegskpd->skpd_id])->get();
 
       return view('pages.mutasi.create', compact('getskpd', 'getpegskpd'));
@@ -59,7 +56,6 @@ class MutasiController extends Controller
 
     public function createStore(Request $request)
     {
-      // dd($request);
       $message = [
         'skpd_id_new.required' => 'Wajib di isi',
         'keterangan.required' => 'Wajib di isi',
@@ -88,11 +84,10 @@ class MutasiController extends Controller
       $file = $request->file('upload_sk');
       if($file != null)
       {
-        $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_sk.'-'.$request->nomor_sk.'.' . $file->getClientOriginalExtension();
+        $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_sk.'.'. $file->getClientOriginalExtension();
         $file->move('documents/', $photo_name);
       }else{
         $photo_name = "-";
-
       }
 
       $new = new Mutasi;
@@ -113,7 +108,7 @@ class MutasiController extends Controller
       $set->flag_mutasi = 1;
       $set->update();
 
-      return redirect()->route('pegawai.index')->with('berhasil', 'Pegawai berhasil dimutasi ke SKPD lain');
+      return redirect()->route('pegawai.index')->with('berhasil', 'Pegawai Berhasil Dimutasi');
     }
 
 
@@ -133,7 +128,6 @@ class MutasiController extends Controller
 
     public function viewPegawai()
     {
-      // dd(Auth::user()->pegawai_id);
       $getmutasi = Mutasi::Where('pegawai_id', Auth::user()->pegawai_id)->orderBy('created_at','desc')->paginate(5);
       $empty = "";
       if ($getmutasi[0] != null) {
@@ -141,7 +135,7 @@ class MutasiController extends Controller
       } else {
         $empty = "Kosong";
       }
-      // dd($empty);
+
       return view('pages.mutasi.view', compact('getmutasi','empty'));
     }
 }

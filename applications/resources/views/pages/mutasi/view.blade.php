@@ -29,7 +29,7 @@
       <div class="box-header with-border">
         <div class="user-block">
           <img class="img-circle" src="{{ asset('images/userdefault.png') }}" alt="User Image">
-          <span class="username"><a href="#">{{$getmutasi[0]->pegawai->nama}}</a></span>
+          <span class="username">{{$getmutasi[0]->pegawai->nip_sapk}} - {{$getmutasi[0]->pegawai->nama}}</span>
           <span class="description"> {{ \Carbon\Carbon::parse($getmutasi[0]->pegawai->created_at)->format('d-M-y')}}</span>
         </div>
       </div>
@@ -37,12 +37,38 @@
       @foreach($getmutasi as $key)
         <div class="box-body">
           <!-- post text -->
-          <p><b>SKPD Lama</b> : {{$key->skpd_old->nama}}</p>
-          <p><b>SKPD Baru</b> : {{$key->skpd_new->nama}}</p>
-          <p><b>Tanggal Mutasi</b> : {{ \Carbon\Carbon::parse($key->tanggal_mutasi)->format('d-M-y')}}</p>
-          <p><b>TPP Yang Dibayarkan</b> : Rp. {{ number_format($key->tpp_dibayarkan,0,',','.') }},-</p>
-          <p><b>Nomor SK</b> : {{$key->nomor_sk}}</p>
-          <p><b>Tanggal SK</b> : {{ \Carbon\Carbon::parse($key->tanggal_sk)->format('d-M-y')}}</p>
+          <table class="table">
+            <tr>
+              <td><b>SKPD Lama</b></td>
+              <td>:</td>
+              <td>{{$key->skpd_old->nama}}</td>
+            </tr>
+            <tr>
+              <td><b>SKPD Baru</b></td>
+              <td>:</td>
+              <td>{{$key->skpd_new->nama}}</td>
+            </tr>
+            <tr>
+              <td><b>Tanggal Mutasi</b></td>
+              <td>:</td>
+              <td>{{ \Carbon\Carbon::parse($key->tanggal_mutasi)->format('d-M-Y')}}</td>
+            </tr>
+            <tr>
+              <td><b>TPP Yang Dibayarkan</b></td>
+              <td>:</td>
+              <td>Rp. {{ number_format($key->tpp_dibayarkan,0,',','.') }},-</td>
+            </tr>
+            <tr>
+              <td><b>Nomor SK</b></td>
+              <td>:</td>
+              <td>{{$key->nomor_sk}}</td>
+            </tr>
+            <tr>
+              <td><b>Tanggal SK</b></td>
+              <td>:</td>
+              <td>{{ \Carbon\Carbon::parse($key->tanggal_sk)->format('d-M-Y')}}</td>
+            </tr>
+          </table>
           <!-- Attachment -->
           <a target="_blank" href="{{ asset('\..\documents').'/'.$key->upload_sk}}" download="{{$key->upload_sk}}" class="link-black text-sm">
               @if (strpos($key->upload_sk, '.pdf'))
@@ -58,7 +84,7 @@
               @endif
             </a>
           <div class="attachment-block" style="border:1px solid #00a65a;margin-top:5px;">
-             
+
             <h4 class="attachment-heading"><b>Keterangan</b></h4>
               <div class="attachment-text">
                 {{$key->keterangan}}
@@ -87,5 +113,3 @@
 </div>
 
 @endsection
-
-
