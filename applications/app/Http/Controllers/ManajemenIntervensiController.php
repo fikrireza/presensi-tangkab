@@ -9,7 +9,17 @@ class ManajemenIntervensiController extends Controller
 {
     public function index()
     {
-      $get = ManajemenIntervensi::all();
+      $get = ManajemenIntervensi::where('flag_old', 0)->get();
       return view('pages/manajemen-intervensi/index')->with('getintervensi', $get);
+    }
+
+    public function store(Request $request)
+    {
+      $set = new ManajemenIntervensi;
+      $set->nama_intervensi = $request->nama;
+      $set->flag_old = 0;
+      $set->save();
+
+      return redirect()->route('manajemenintervensi.index')->with('berhasil', 'Berhasil Menambahkan Intervensi');
     }
 }

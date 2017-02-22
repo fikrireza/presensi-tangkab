@@ -36,7 +36,7 @@
 
 {{-- Modal Tambah Intervensi--}}
 <div class="modal modal-default fade" id="modaltambahIntervensi" role="dialog">
-  <div class="modal-dialog" style="width:800px;">
+  <div class="modal-dialog">
     <form class="form-horizontal" action="{{ route('intervensi.post') }}" method="post" enctype="multipart/form-data">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -50,10 +50,13 @@
             <div class="col-sm-6">
               <select class="form-control select2" name="jenis_intervensi">
                 <option value="">-- PILIH --</option>
-                <option value="Ijin" {{ old('jenis_interrvensi') == 'Ijin' ? 'selected' : ''}}>Ijin</option>
+                @foreach ($getmasterintervensi as $key)
+                  <option value="{{$key->id}}">{{$key->nama_intervensi}}</option>
+                @endforeach
+                {{-- <option value="Ijin" {{ old('jenis_interrvensi') == 'Ijin' ? 'selected' : ''}}>Ijin</option>
                 <option value="Sakit" {{ old('jenis_intervensi') == 'Sakit' ? 'selected' : ''}}>Sakit</option>
                 <option value="Cuti" {{ old('jenis_intervensi') == 'Cuti' ? 'selected' : ''}}>Cuti</option>
-                <option value="DinasLuar" {{ old('jenis_intervensi') == 'DinasLuar' ? 'selected' : ''}}>Dinas Luar</option>
+                <option value="DinasLuar" {{ old('jenis_intervensi') == 'DinasLuar' ? 'selected' : ''}}>Dinas Luar</option> --}}
               </select>
             </div>
           </div>
@@ -113,7 +116,7 @@
 
 {{-- Modal Edit Intervensi --}}
 <div class="modal modal-default fade" id="modaleditIntervensi" role="dialog">
-  <div class="modal-dialog" style="width:800px;">
+  <div class="modal-dialog">
     <form class="form-horizontal" action="{{ route('intervensi.edit') }}" method="post" enctype="multipart/form-data">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -134,10 +137,13 @@
             <div class="col-sm-6">
               <select class="form-control select2" name="jenis_intervensi_edit">
                 <option value="">-- PILIH --</option>
-                <option value="Ijin" id="Ijin">Ijin</option>
+                @foreach ($getmasterintervensi as $key)
+                  <option value="{{$key->id}}" id="mi_{{$key->id}}">{{$key->nama_intervensi}}</option>
+                @endforeach
+                {{-- <option value="Ijin" id="Ijin">Ijin</option>
                 <option value="Sakit" id="Sakit">Sakit</option>
                 <option value="Cuti" id="Cuti">Cuti</option>
-                <option value="DinasLuar" id="DinasLuar">Dinas Luar</option>
+                <option value="DinasLuar" id="DinasLuar">Dinas Luar</option> --}}
               </select>
             </div>
           </div>
@@ -355,6 +361,7 @@ $('.tanggal_akhir_edit').datepicker({
           var tanggal_akhir_edit = data.tanggal_akhir;
           var jumlah_hari_edit = data.jumlah_hari;
           var keterangan_edit = data.deskripsi;
+          var id_intervensi = data.id_intervensi;
 
           // set
           $('#id_edit').attr('value', id_edit);
@@ -364,22 +371,24 @@ $('.tanggal_akhir_edit').datepicker({
           $('#jumlah_hari_edit').attr('value', jumlah_hari_edit);
           $('#keterangan_edit').attr('value', keterangan_edit);
 
-          if(jenis_intervensi_edit=="Ijin")
-          {
-            $('#Ijin').attr('selected', 'true');
-          }
-          else if(jenis_intervensi_edit=="Sakit")
-          {
-            $('#Sakit').attr('selected', 'true');
-          }
-          else if(jenis_intervensi_edit=="Cuti")
-          {
-            $('#Cuti').attr('selected', 'true');
-          }
-          else if(jenis_intervensi_edit=="DinasLuar")
-          {
-            $('#DinasLuar').attr('selected', 'true');
-          }
+          $('#mi_'+id_intervensi).attr('selected', 'true');
+
+          // if(jenis_intervensi_edit=="Ijin")
+          // {
+          //   $('#Ijin').attr('selected', 'true');
+          // }
+          // else if(jenis_intervensi_edit=="Sakit")
+          // {
+          //   $('#Sakit').attr('selected', 'true');
+          // }
+          // else if(jenis_intervensi_edit=="Cuti")
+          // {
+          //   $('#Cuti').attr('selected', 'true');
+          // }
+          // else if(jenis_intervensi_edit=="DinasLuar")
+          // {
+          //   $('#DinasLuar').attr('selected', 'true');
+          // }
         }
       });
     });
@@ -506,14 +515,14 @@ $('.tanggal_akhir_edit').datepicker({
           var title = $(this).text();
           $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
       } );
-   
+
       // DataTable
       var table = $('#table_intervensi').DataTable();
-   
+
       // Apply the search
       table.columns().every( function () {
           var that = this;
-   
+
           $( 'input', this.footer() ).on( 'keyup change', function () {
               if ( that.search() !== this.value ) {
                   that

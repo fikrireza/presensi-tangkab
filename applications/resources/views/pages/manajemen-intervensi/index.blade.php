@@ -37,7 +37,7 @@
 {{-- Modal Tambah Golongan--}}
 <div class="modal modal-default fade" id="modaltambahgolongan" role="dialog">
   <div class="modal-dialog" style="width:800px;">
-    <form class="form-horizontal" action="#" method="post">
+    <form class="form-horizontal" action="{{route('manajemenintervensi.store')}}" method="post">
       {{ csrf_field() }}
       <div class="modal-content">
         <div class="modal-header">
@@ -45,11 +45,11 @@
           <h4 class="modal-title">Tambah Master Intervensi</h4>
         </div>
         <div class="modal-body">
-          <div class="form-group {{ $errors->has('nama') ? 'has-error' : '' }}">
+          <div class="form-group {{ $errors->has('nama_intervensi') ? 'has-error' : '' }}">
             <div class="col-sm-1"></div>
             <label class="col-sm-3">Nama</label>
             <div class="col-sm-6">
-              <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" placeholder="@if($errors->has('nama')){{ $errors->first('nama')}} @endif Nama" required="">
+              <input type="text" name="nama" class="form-control" value="{{ old('nama_intervensi') }}" placeholder="@if($errors->has('nama_intervensi')){{ $errors->first('nama_intervensi')}} @endif Nama" required="">
             </div>
           </div>
         </div>
@@ -67,7 +67,7 @@
     <div class="box box-primary box-solid">
       <div class="box-header">
         <h3 class="box-title">Master Intervensi</h3>
-        <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahgolongan">Tambah Golongan</a>
+        <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahgolongan">Tambah Master Intervensi</a>
       </div>
       <div class="box-body">
         <table id="table_golongan" class="table table-bordered table-striped">

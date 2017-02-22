@@ -24,7 +24,7 @@ Route::post('pegawai/edit', 'PegawaiController@editStore')->name('pegawai.editSt
 // Mutasi
 Route::get('mutasi', 'MutasiController@index')->name('mutasi.index');
 Route::get('mutasi/create/{id}', 'MutasiController@create')->name('mutasi.create');
-Route::post('mutasi/create', 'MutasiController@createStore')->name('mutasi.createStore');
+Route::post('mutasi/create', 'MutasiController@createStore')->name('mutasi.createStore')->middleware('pegawai');
 Route::get('mutasi/view/{id}', 'MutasiController@view')->name('mutasi.view');
 Route::get('mutasi/view', 'MutasiController@viewPegawai')->name('mutasi.view.pegawai');
 
@@ -69,6 +69,7 @@ Route::get('intervensi/skpd/{id}', 'IntervensiController@skpd')->name('intervens
 
 // Manajemen Intervensi
 Route::get('manajemen-intervensi', 'ManajemenIntervensiController@index')->name('manajemenintervensi.index');
+Route::post('manajemen-intervensi', 'ManajemenIntervensiController@store')->name('manajemenintervensi.store');
 
 // Absensi Administrator
 Route::get('absensi', 'AbsensiController@index')->name('absensi.index')->middleware('administrator');

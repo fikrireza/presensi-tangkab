@@ -164,7 +164,7 @@ class HomeController extends Controller
                                   		where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                   		and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
                                   		and Fid = '$tpp->fid') as Jam_Datang,
-                                  	(select MIN(Jam_Log) from ta_log
+                                  	(select MAX(Jam_Log) from ta_log
                                   		where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
                                   		and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
                                   		and Fid = '$tpp->fid') as Jam_Pulang
