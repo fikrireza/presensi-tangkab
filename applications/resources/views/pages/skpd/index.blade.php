@@ -36,7 +36,7 @@
 
 {{-- Modal Tambah Skpd--}}
 <div class="modal modal-default fade" id="modaltambahskpd" role="dialog">
-  <div class="modal-dialog" style="width:800px;">
+  <div class="modal-dialog">
     <form class="form-horizontal" action="{{ route('skpd.post') }}" method="post">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -73,7 +73,7 @@
 
 {{-- Modal Edit SKPD --}}
 <div class="modal modal-default fade" id="modaleditSKPD" role="dialog">
-  <div class="modal-dialog" style="width:800px;">
+  <div class="modal-dialog">
     <form class="form-horizontal" action="{{ route('skpd.edit') }}" method="post">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -106,6 +106,42 @@
         </div>
       </div>
     </form>
+  </div>
+</div>
+
+<div class="modal fade" id="myModalNonAktif" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Non Aktif SKPD?</h4>
+      </div>
+      <div class="modal-body">
+        <p>Apakah anda yakin untuk me-non Aktifkan SKPD akun ini?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-default pull-left btn-flat" data-dismiss="modal">Tidak</button>
+        <a class="btn btn-danger btn-flat" id="setnonaktif">Ya, saya yakin</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModalAktif" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Aktifkan SKPD?</h4>
+      </div>
+      <div class="modal-body">
+        <p>Apakah anda yakin untuk Aktifkan SKPD akun ini?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-default pull-left btn-flat" data-dismiss="modal">Tidak</button>
+        <a class="btn btn-danger btn-flat" id="setaktif">Ya, saya yakin</a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -149,7 +185,24 @@
               <td>{{ $no }}</td>
               <td>{{ $key->nama }}</td>
               <td>@if($key->singkatan == null) - @else {{ $key->singkatan }} @endif</td>
-              <td><a href="" data-value="{{ $key->id }}" class="editSKPD" data-toggle="modal" data-target="#modaleditSKPD"><i class="fa fa-edit"></i> Ubah</a></td>
+              <td>
+              @if ($key->status == 1)
+              <span data-toggle="tooltip" title="Ubah SKPD">
+                <a href="" data-value="{{ $key->id }}" class="btn btn-info btn-flat btn-xs editSKPD" data-toggle="modal" data-target="#modaleditSKPD"><i class="fa fa-edit"></i> Ubah</a>
+              </span>
+              @if (session('status') == 'superuser')
+              <span data-toggle="tooltip" title="NonAktif SKPD">
+                <a href="" class="btn btn-danger btn-flat btn-xs nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
+              </span>
+              @endif
+              @else
+              @if (session('status') == 'superuser')
+              <span data-toggle="tooltip" title="Aktif SKPD">
+                <a href="" class="btn btn-primary btn-flat btn-xs aktif" data-toggle="modal" data-target="#myModalAktif" data-value="{{ $key->id }}">Aktifkan</a>
+              </span>
+              @endif
+              @endif
+              </td>
             </tr>
             <?php $no++; ?>
             @endforeach
@@ -174,6 +227,14 @@
 @if (count($errors) > 0)
   $('#modaltambahskpd').modal('show');
 @endif
+$('a.nonaktif').click(function(){
+  var a = $(this).data('value');
+  $('#setnonaktif').attr('href', "{{ url('/') }}/skpd/non/"+a);
+});
+$('a.aktif').click(function(){
+  var a = $(this).data('value');
+  $('#setaktif').attr('href', "{{ url('/') }}/skpd/aktif/"+a);
+});
 </script>
 <script type="text/javascript">
   $(document).ready(function() {
@@ -182,14 +243,14 @@
           var title = $(this).text();
           $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
       } );
-   
+
       // DataTable
       var table = $('#table_skpd').DataTable();
-   
+
       // Apply the search
       table.columns().every( function () {
           var that = this;
-   
+
           $( 'input', this.footer() ).on( 'keyup change', function () {
               if ( that.search() !== this.value ) {
                   that

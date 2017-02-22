@@ -30,7 +30,7 @@ class PegawaiController extends Controller
 
     public function index()
     {
-      if(session('status') == 'administrator'){
+      if(session('status') == 'administrator' || session('status') == 'superuser'){
         $pegawai = pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
                           ->join('preson_golongans', 'preson_golongans.id', '=', 'preson_pegawais.golongan_id')
                           ->join('preson_strukturals', 'preson_strukturals.id', '=', 'preson_pegawais.struktural_id')

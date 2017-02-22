@@ -37,7 +37,7 @@ class HomeController extends Controller
         $pegawai_id = Auth::user()->pegawai_id;
         $skpd_id   = Auth::user()->skpd_id;
 
-        if(session('status') == 'administrator')
+        if(session('status') == 'administrator' || session('status') == 'superuser')
         {
           $jumlahPegawai = pegawai::count();
           $jumlahTPP = DB::select("select sum(preson_pegawais.tpp_dibayarkan) as jumlah_tpp from preson_pegawais");
@@ -71,7 +71,7 @@ class HomeController extends Controller
         $pegawai = pegawai::select('preson_skpd.nama as nama_skpd')->join('preson_skpd', 'preson_pegawais.skpd_id', '=', 'preson_skpd.id')->get();
 
 
-        if(session('status') == 'administrator')
+        if(session('status') == 'administrator' || session('status') == 'superuser')
         {
           $tanggalini = date('d/m/Y');
           $tanggalinter = date('Y-m-d');

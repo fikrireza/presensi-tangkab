@@ -62,7 +62,10 @@
           <label class="control-label">Level Akses</label>
           <select class="form-control select2" name="role_id" id="role_id" required="">
             <option value="-- Pilih --">-- Pilih --</option>
-            @if(session('status') == 'administrator')
+            @if(session('status') == 'superuser')
+            <option value="1" {{ old('role_id')=="1" ? 'selected' : '' }} >Administrator BKPPD</option>
+            <option value="2" {{ old('role_id')=="2" ? 'selected' : '' }} >Admin SKPD</option>
+            @elseif(session('status') == 'administrator')
             <option value="1" {{ old('role_id')=="1" ? 'selected' : '' }} >Administrator BKPPD</option>
             <option value="2" {{ old('role_id')=="2" ? 'selected' : '' }} >Admin SKPD</option>
             @elseif(session('status') == 'admin')
@@ -137,9 +140,6 @@
             <td>{{ $key->nama_pegawai }}</td>
             <td>{{ $key->nama_skpd }}</td>
             <td>
-              {{-- <span data-toggle="tooltip" title="Ubah Akun">
-                <a href="" class="btn btn-warning btn-flat btn-xs edit" data-toggle="modal" data-target="#myModalEdit" data-value="{{ $key->id }}"><i class="fa fa-edit"></i></a>
-              </span> --}}
               @if (Auth::user()->pegawai_id != $key->pegawai_id)
                 <span data-toggle="tooltip" title="Delete Akun">
                   <a href="" class="btn btn-danger btn-flat btn-xs hapus" data-toggle="modal" data-target="#myModalHapus" data-value="{{ $key->pegawai_id }}"><i class="fa fa-remove"></i></a>
@@ -178,14 +178,14 @@
           var title = $(this).text();
           $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
       } );
-   
+
       // DataTable
       var table = $('#table_user').DataTable();
-   
+
       // Apply the search
       table.columns().every( function () {
           var that = this;
-   
+
           $( 'input', this.footer() ).on( 'keyup change', function () {
               if ( that.search() !== this.value ) {
                   that

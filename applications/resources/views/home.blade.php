@@ -17,7 +17,7 @@
 
 <div class="row">
   <div class="col-md-12">
-    @if (session('status') === 'administrator' || session('status') === 'admin')
+    @if (session('status') === 'administrator' || session('status') === 'admin'  || session('status') == 'superuser')
     <div class="col-lg-3 col-md-3 col-xs-12">
       <div class="small-box bg-teal">
         <div class="inner">
@@ -133,7 +133,7 @@
             @endforeach
           </tbody>
         </table>
-        @elseif(session('status') == 'administrator')
+        @elseif(session('status') == 'administrator'  || session('status') == 'superuser')
         <table id="table_absen" class="table table-bordered">
           <thead>
             <tr>
@@ -449,14 +449,14 @@
           var title = $(this).text();
           $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
       } );
-   
+
       // DataTable
       var table = $('#table_absen').DataTable();
-   
+
       // Apply the search
       table.columns().every( function () {
           var that = this;
-   
+
           $( 'input', this.footer() ).on( 'keyup change', function () {
               if ( that.search() !== this.value ) {
                   that

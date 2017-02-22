@@ -33,6 +33,8 @@ Route::get('skpd', 'SkpdController@index')->name('skpd.index')->middleware('admi
 Route::post('skpd', 'SkpdController@store')->name('skpd.post')->middleware('administrator');
 Route::get('skpd/{id}', 'SkpdController@bind');
 Route::post('skpd/edit', 'SkpdController@edit')->name('skpd.edit')->middleware('administrator');
+Route::get('skpd/non/{id}', 'SkpdController@nonAktif')->name('skpd.nonaktif');
+Route::get('skpd/aktif/{id}', 'SkpdController@aktif')->name('skpd.aktif');
 
 // Golongan
 Route::get('golongan', 'GolonganController@index')->name('golongan.index')->middleware('administrator');
