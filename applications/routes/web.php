@@ -39,6 +39,8 @@ Route::get('skpd/aktif/{id}', 'SkpdController@aktif')->name('skpd.aktif');
 // Golongan
 Route::get('golongan', 'GolonganController@index')->name('golongan.index')->middleware('administrator');
 Route::post('golongan', 'GolonganController@store')->name('golongan.post')->middleware('administrator');
+Route::get('golongan/non/{id}', 'GolonganController@nonAktif')->name('golongan.nonaktif')->middleware('administrator');
+Route::get('golongan/aktif/{id}', 'GolonganController@aktif')->name('golongan.aktif')->middleware('administrator');
 
 // Jabatan
 Route::get('jabatan', 'JabatanController@index')->name('jabatan.index')->middleware('administrator');
@@ -49,6 +51,8 @@ Route::post('jabatan/edit', 'JabatanController@edit')->name('jabatan.edit')->mid
 // Struktural
 Route::get('struktural', 'StrukturalController@index')->name('struktural.index')->middleware('administrator');
 Route::post('struktural', 'StrukturalController@store')->name('struktural.post')->middleware('administrator');
+Route::get('struktural/non/{id}', 'StrukturalController@nonAktif')->name('struktural.nonaktif')->middleware('administrator');
+Route::get('struktural/aktif/{id}', 'StrukturalController@aktif')->name('struktural.aktif')->middleware('administrator');
 
 // Hari Libur
 Route::get('harilibur', 'HariLiburController@index')->name('harilibur.index')->middleware('administrator');

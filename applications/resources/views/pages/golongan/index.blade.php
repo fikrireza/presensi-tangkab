@@ -49,7 +49,8 @@
             <div class="col-sm-1"></div>
             <label class="col-sm-3">Nama</label>
             <div class="col-sm-6">
-              <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" placeholder="@if($errors->has('nama')){{ $errors->first('nama')}} @endif Nama" required="">
+              <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" placeholder="@if($errors->has('nama'))
+                {{ $errors->first('nama')}} @endif Nama" required="">
             </div>
           </div>
         </div>
@@ -59,6 +60,44 @@
         </div>
       </div>
     </form>
+  </div>
+</div>
+
+{{-- Modal NonAktif Golongan --}}
+<div class="modal fade" id="myModalNonAktif" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Non Aktif Golongan?</h4>
+      </div>
+      <div class="modal-body">
+        <p>Apakah anda yakin untuk me-non Aktifkan Golongan ini?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-default pull-left btn-flat" data-dismiss="modal">Tidak</button>
+        <a class="btn btn-danger btn-flat" id="setnonaktif">Ya, saya yakin</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{-- Modal Aktif Golongan --}}
+<div class="modal fade" id="myModalAktif" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Aktifkan Golongan?</h4>
+      </div>
+      <div class="modal-body">
+        <p>Apakah anda yakin untuk Aktifkan Golongan ini?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-default pull-left btn-flat" data-dismiss="modal">Tidak</button>
+        <a class="btn btn-danger btn-flat" id="setaktif">Ya, saya yakin</a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -75,12 +114,18 @@
             <tr>
               <th style="width: 10%">No</th>
               <th>Nama</th>
+              @if (session('status') == 'superuser')
+              <th>Aksi</th>
+              @endif
             </tr>
           </thead>
           <tfoot>
             <tr>
               <td></td>
               <th></th>
+              @if (session('status') == 'superuser')
+              <th></th>
+              @endif
             </tr>
           </tfoot>
           <tbody>
@@ -89,12 +134,27 @@
             <tr>
               <td>-</td>
               <td>-</td>
+              <td>-</td>
             </tr>
             @else
             @foreach ($golongan as $key)
             <tr>
               <td>{{ $no }}</td>
               <td>{{ $key->nama }}</td>
+              @if(session('status') == 'superuser')
+              <td>
+                @if ($key->status == 1)
+                <span data-toggle="tooltip" title="NonAktif Golongan">
+                  <a href="" class="btn btn-danger btn-flat btn-xs nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
+                </span>
+                @else
+                <span data-toggle="tooltip" title="Aktif Golongan">
+                  <a href="" class="btn btn-primary btn-flat btn-xs aktif" data-toggle="modal" data-target="#myModalAktif" data-value="{{ $key->id }}">Aktifkan</a>
+                </span>
+                @endif
+              </td>
+              @endif
+
             </tr>
             <?php $no++; ?>
             @endforeach
@@ -112,6 +172,14 @@
 <script>
   $(function () {
     $("#table_golongan").DataTable();
+  });
+  $('a.nonaktif').click(function(){
+    var a = $(this).data('value');
+    $('#setnonaktif').attr('href', "{{ url('/') }}/golongan/non/"+a);
+  });
+  $('a.aktif').click(function(){
+    var a = $(this).data('value');
+    $('#setaktif').attr('href', "{{ url('/') }}/golongan/aktif/"+a);
   });
 </script>
 

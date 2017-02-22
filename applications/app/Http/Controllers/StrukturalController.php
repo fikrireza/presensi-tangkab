@@ -44,4 +44,24 @@ class StrukturalController extends Controller
       return redirect()->route('struktural.index')->with('berhasil', 'Berhasil Menambahkan Data Struktural');
     }
 
+    public function nonAktif($id)
+    {
+      $set = struktural::find($id);
+
+      $set->status = 0;
+      $set->update();
+
+      return redirect()->route('struktural.index')->with('berhasil', 'Berhasil NonAktif Struktural');
+    }
+
+    public function aktif($id)
+    {
+      $set = struktural::find($id);
+
+      $set->status = 1;
+      $set->update();
+
+      return redirect()->route('struktural.index')->with('berhasil', 'Berhasil Aktifkan Struktural');
+    }
+
 }

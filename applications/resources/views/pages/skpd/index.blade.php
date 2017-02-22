@@ -109,6 +109,7 @@
   </div>
 </div>
 
+{{-- Modal NonAktif SKPD --}}
 <div class="modal fade" id="myModalNonAktif" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -117,7 +118,7 @@
         <h4 class="modal-title">Non Aktif SKPD?</h4>
       </div>
       <div class="modal-body">
-        <p>Apakah anda yakin untuk me-non Aktifkan SKPD akun ini?</p>
+        <p>Apakah anda yakin untuk me-non Aktifkan SKPD ini?</p>
       </div>
       <div class="modal-footer">
         <button type="reset" class="btn btn-default pull-left btn-flat" data-dismiss="modal">Tidak</button>
@@ -127,6 +128,7 @@
   </div>
 </div>
 
+{{-- Modal Aktif SKPD --}}
 <div class="modal fade" id="myModalAktif" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -135,7 +137,7 @@
         <h4 class="modal-title">Aktifkan SKPD?</h4>
       </div>
       <div class="modal-body">
-        <p>Apakah anda yakin untuk Aktifkan SKPD akun ini?</p>
+        <p>Apakah anda yakin untuk Aktifkan SKPD ini?</p>
       </div>
       <div class="modal-footer">
         <button type="reset" class="btn btn-default pull-left btn-flat" data-dismiss="modal">Tidak</button>

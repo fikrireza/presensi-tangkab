@@ -42,4 +42,22 @@ class GolonganController extends Controller
 
       return redirect()->route('golongan.index')->with('berhasil', 'Berhasil Menambahkan Data Golongan');
     }
+
+    public function nonAktif($id)
+    {
+      $set = golongan::find($id);
+      $set->status = 0;
+      $set->update();
+
+      return redirect()->route('golongan.index')->with('berhasil', 'Berhasil Non-Aktifkan Golongan');
+    }
+
+    public function aktif($id)
+    {
+      $set = golongan::find($id);
+      $set->status = 1;
+      $set->update();
+
+      return redirect()->route('golongan.index')->with('berhasil', 'Berhasil Aktifkan Golongan');
+    }
 }

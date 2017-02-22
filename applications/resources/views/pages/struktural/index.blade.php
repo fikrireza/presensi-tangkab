@@ -49,7 +49,8 @@
             <div class="col-sm-1"></div>
             <label class="col-sm-3">Nama</label>
             <div class="col-sm-6">
-              <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" placeholder="@if($errors->has('nama')){{ $errors->first('nama')}} @endif Nama" required="">
+              <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" placeholder="@if($errors->has('nama'))
+                {{ $errors->first('nama')}} @endif Nama" required="">
             </div>
           </div>
         </div>
@@ -61,6 +62,45 @@
     </form>
   </div>
 </div>
+
+{{-- Modal NonAktif Struktural --}}
+<div class="modal fade" id="myModalNonAktif" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Non Aktif Struktural?</h4>
+      </div>
+      <div class="modal-body">
+        <p>Apakah anda yakin untuk me-non Aktifkan Struktural ini?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-default pull-left btn-flat" data-dismiss="modal">Tidak</button>
+        <a class="btn btn-danger btn-flat" id="setnonaktif">Ya, saya yakin</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{-- Modal Aktif Struktural --}}
+<div class="modal fade" id="myModalAktif" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Aktifkan Struktural?</h4>
+      </div>
+      <div class="modal-body">
+        <p>Apakah anda yakin untuk Aktifkan Struktural ini?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-default pull-left btn-flat" data-dismiss="modal">Tidak</button>
+        <a class="btn btn-danger btn-flat" id="setaktif">Ya, saya yakin</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <div class="row">
   <div class="col-md-12">
@@ -75,12 +115,18 @@
             <tr>
               <th style="width: 10%">No</th>
               <th>Nama</th>
+              @if(session('status') == 'superuser')
+              <th>Aksi</th>
+              @endif
             </tr>
           </thead>
           <tfoot>
             <tr>
-              <td></td>
               <th></th>
+              <th></th>
+              @if(session('status') == 'superuser')
+              <th></th>
+              @endif
             </tr>
           </tfoot>
           <tbody>
@@ -89,12 +135,28 @@
             <tr>
               <td>-</td>
               <td>-</td>
+              @if(session('status') == 'superuser')
+              <td></td>
+              @endif
             </tr>
             @else
             @foreach ($struktural as $key)
             <tr>
               <td>{{ $no }}</td>
               <td>{{ $key->nama }}</td>
+              @if(session('status') == 'superuser')
+              <td>
+              @if ($key->status == 1)
+              <span data-toggle="tooltip" title="NonAktif Struktural">
+                <a href="" class="btn btn-danger btn-flat btn-xs nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
+              </span>
+              @else
+              <span data-toggle="tooltip" title="Aktif Struktural">
+                <a href="" class="btn btn-primary btn-flat btn-xs aktif" data-toggle="modal" data-target="#myModalAktif" data-value="{{ $key->id }}">Aktifkan</a>
+              </span>
+              @endif
+              </td>
+              @endif
             </tr>
             <?php $no++; ?>
             @endforeach
@@ -113,6 +175,14 @@
   $(function () {
     $("#table_struktural").DataTable();
   });
+  $('a.nonaktif').click(function(){
+    var a = $(this).data('value');
+    $('#setnonaktif').attr('href', "{{ url('/') }}/struktural/non/"+a);
+  });
+  $('a.aktif').click(function(){
+    var a = $(this).data('value');
+    $('#setaktif').attr('href', "{{ url('/') }}/struktural/aktif/"+a);
+  });
 </script>
 
 <script type="text/javascript">
@@ -127,14 +197,14 @@
           var title = $(this).text();
           $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
       } );
-   
+
       // DataTable
       var table = $('#table_struktural').DataTable();
-   
+
       // Apply the search
       table.columns().every( function () {
           var that = this;
-   
+
           $( 'input', this.footer() ).on( 'keyup change', function () {
               if ( that.search() !== this.value ) {
                   that
