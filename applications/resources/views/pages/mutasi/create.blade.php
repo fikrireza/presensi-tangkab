@@ -101,11 +101,29 @@
               </div>
             </div>
           </div>
-           <div class="form-group {{ $errors->has('upload_sk') ? 'has-error' : ''}}">
-            <label class="col-sm-3 control-label">Upload SK</label>
-            <div class="col-sm-6">
-              <input type="file" name="upload_sk" class="form-control" accept=".png, .jpg, .pdf" value="{{ old('upload_sk') }}">
-              <span style="color:red;">Hanya .jpg, .png, .pdf</span>
+          <div class="form-group {{ $errors->has('upload_sk[1]') ? 'has-error' : '' }}">
+            <label class="col-sm-3 control-label">Upload Document</label>
+            <div class="tab-content col-sm-9">
+              <div class="tab-pane active" id="tab_Dokumen">
+                <div class="box-body">
+                  <table class="table" id="duploaddocument">
+                    <tbody>
+                      <tr>
+                        <td><input type="checkbox" name="chk"/></td>
+                        <td>
+                          <input type="file" name="upload_sk[1]" class="form-control {{ $errors->has('upload_sk[1]') ? 'has-error' : '' }}" required accept=".png, .jpg, .pdf" value="{{ old('upload_sk[1]') }}">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <span style="color:red;">Hanya .jpg, .png, .pdf</span>
+                </div>
+                <div class="box-footer clearfix">
+                  <div class="col-md-9">
+                    <label class="btn btn-sm bg-green" onclick="adduploaddocument('duploaddocument')">Tambah Dokumen</label>&nbsp;<label class="btn btn-sm bg-red" onclick="deluploaddocument('duploaddocument')">Hapus Dokumen</label>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -142,4 +160,37 @@ function isNumber(evt) {
   return true;
 }
 </script>
+<script language="javascript">
+    var numA=1;
+    function adduploaddocument(tableID) {
+      numA++;
+      var table = document.getElementById(tableID);
+      var rowCount = table.rows.length;
+      var row = table.insertRow(rowCount);
+      var cell1 = row.insertCell(0);
+      cell1.innerHTML = '<input type="checkbox" name="chk[]"/>';
+      var cell2 = row.insertCell(1);
+      cell2.innerHTML = '<input type="file" name="upload_sk['+numA+']" class="form-control" value="" />';
+    }
+
+    function deluploaddocument(tableID) {
+        try {
+        var table = document.getElementById(tableID);
+        var rowCount = table.rows.length;
+
+        for(var i=0; i<rowCount; i++) {
+            var row = table.rows[i];
+            var chkbox = row.cells[0].childNodes[0];
+            if(null != chkbox && true == chkbox.checked) {
+                table.deleteRow(i);
+                rowCount--;
+                i--;
+                numA--;
+            }
+        }
+        }catch(e) {
+            alert(e);
+        }
+    }
+  </script>
 @endsection

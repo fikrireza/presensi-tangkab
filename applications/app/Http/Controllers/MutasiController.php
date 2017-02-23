@@ -56,6 +56,7 @@ class MutasiController extends Controller
 
     public function createStore(Request $request)
     {
+      // dd($request);
       $message = [
         'skpd_id_new.required' => 'Wajib di isi',
         'keterangan.required' => 'Wajib di isi',
@@ -63,7 +64,7 @@ class MutasiController extends Controller
         'tpp_dibayarkan.required' => 'Wajib di isi',
         'nomor_sk.required' => 'Wajib di isi',
         'tanggal_sk.required' => 'Wajib di isi',
-        'upload_sk.required' => 'Wajib di isi',
+        'upload_sk.*.required' => 'Wajib di isi',
       ];
 
       $validator = Validator::make($request->all(), [
@@ -73,7 +74,7 @@ class MutasiController extends Controller
         'tpp_dibayarkan' => 'required',
         'nomor_sk' => 'required',
         'tanggal_sk' => 'required',
-        'upload_sk' => 'mimes:jpeg,png,pdf,jpg',
+        'upload_sk.*' => 'required|mimes:jpeg,png,pdf,jpg',
       ], $message);
 
       if($validator->fails())
@@ -81,15 +82,17 @@ class MutasiController extends Controller
         return redirect()->route('mutasi.create', ['id' => $request->pegawai_id])->withErrors($validator)->withInput();
       }
 
-      $file = $request->file('upload_sk');
-      if($file != null)
-      {
-        $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_sk.'.'. $file->getClientOriginalExtension();
-        $file->move('documents/', $photo_name);
-      }else{
-        $photo_name = "-";
-      }
-
+       $i = 1;
+       $doc_name = '';
+        foreach ($request->file('upload_sk') as $key) {
+          $file = $request->upload_sk[$i];
+          $file_name = $request->nama_pegawai.'-'.$request->nomor_sk.'-'.$request->tanggal_sk.'-'.$i.'.'. $file->getClientOriginalExtension();
+          $doc_name .= $file_name.'//'; 
+          
+          $file->move('documents/', $file_name);
+          $i++;
+        }
+        
       $new = new Mutasi;
       $new->pegawai_id = $request->pegawai_id;
       $new->skpd_id_old = $request->skpd_id_old;
@@ -99,7 +102,7 @@ class MutasiController extends Controller
       $new->tpp_dibayarkan = $request->tpp_dibayarkan;
       $new->nomor_sk = $request->nomor_sk;
       $new->tanggal_sk = $request->tanggal_sk;
-      $new->upload_sk = $photo_name;
+      $new->upload_sk = $doc_name;
       $new->actor = Auth::user()->id;
       $new->save();
 
