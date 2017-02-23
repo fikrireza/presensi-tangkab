@@ -75,7 +75,21 @@
               @if($info != null)
                  <a target="_blank" href="{{ asset('\..\documents').'/'.$info}}" download="{{$info}}" class="link-black text-sm">
                   @if (strpos($info, '.pdf'))
-                    <img width="5%" src="{{ asset('dist\img\pdf.png') }}" alt="..." class="margin">
+                    <div class="row">
+                      <div class="col-md-12">
+                          <div class="panel panel-primary">
+                              <div class="panel-heading">
+                                <div class="pull-left">{{$info}}</div>
+                                <br>
+                                </div>
+                                <div class="panel-body">
+                                    <div>
+                                        <embed src="{{ asset('\..\documents').'/'.$info}}" type="application/pdf" width="100%" height="700px"/>
+                                    </div>
+                                </div>
+                          </div>
+                      </div>
+                  </div>
                   @elseif(strpos($info, '.png'))
                     <img width="5%" src="{{ asset('dist\img\png.png') }}" alt="..." class="margin">
                   @elseif(strpos($info, '.jpg'))
@@ -86,6 +100,21 @@
                     <img width="5%" src="{{ asset('dist\img\doc.png') }}" alt="..." class="margin">
                   @endif
                 </a>
+                <!-- <div class="row">
+                  <div class="col-md-12">
+                      <div class="panel panel-primary">
+                          <div class="panel-heading">
+                              <div class="pull-left">Undang-Undang Dasar Negara Republik Indonesia 1945</div>
+                              <br>
+                              </div>
+                              <div class="panel-body">
+                                  <div>
+                                      <embed src="{{ asset('\..\documents').'/'.$info}}" type="application/pdf" width="100%" height="700px"/>
+                                  </div>
+                              </div>
+                      </div>
+                  </div>
+              </div> -->
               @endif
             @endforeach
           @endif
