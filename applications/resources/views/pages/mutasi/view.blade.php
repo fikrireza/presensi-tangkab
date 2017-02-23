@@ -70,21 +70,26 @@
             </tr>
           </table>
           <!-- Attachment -->
-          <a target="_blank" href="{{ asset('\..\documents').'/'.$key->upload_sk}}" download="{{$key->upload_sk}}" class="link-black text-sm">
-              @if (strpos($key->upload_sk, '.pdf'))
-                <img width="5%" src="{{ asset('dist\img\pdf.png') }}" alt="..." class="margin">
-              @elseif(strpos($key->upload_sk, '.png'))
-                <img width="5%" src="{{ asset('dist\img\png.png') }}" alt="..." class="margin">
-              @elseif(strpos($key->upload_sk, '.jpg'))
-                <img width="5%" src="{{ asset('dist\img\jpg.png') }}" alt="..." class="margin">
-              @elseif(strpos($key->upload_sk, '.docx'))
-                <img width="5%" src="{{ asset('dist\img\doc.png') }}" alt="..." class="margin">
-              @elseif(strpos($key->upload_sk, '.xlsx'))
-                <img width="5%" src="{{ asset('dist\img\doc.png') }}" alt="..." class="margin">
+          @if ($key->upload_sk != "")
+            @foreach(explode('//', $key->upload_sk) as $info) 
+              @if($info != null)
+                 <a target="_blank" href="{{ asset('\..\documents').'/'.$info}}" download="{{$info}}" class="link-black text-sm">
+                  @if (strpos($info, '.pdf'))
+                    <img width="5%" src="{{ asset('dist\img\pdf.png') }}" alt="..." class="margin">
+                  @elseif(strpos($info, '.png'))
+                    <img width="5%" src="{{ asset('dist\img\png.png') }}" alt="..." class="margin">
+                  @elseif(strpos($info, '.jpg'))
+                    <img width="5%" src="{{ asset('dist\img\jpg.png') }}" alt="..." class="margin">
+                  @elseif(strpos($info, '.docx'))
+                    <img width="5%" src="{{ asset('dist\img\doc.png') }}" alt="..." class="margin">
+                  @elseif(strpos($info, '.xlsx'))
+                    <img width="5%" src="{{ asset('dist\img\doc.png') }}" alt="..." class="margin">
+                  @endif
+                </a>
               @endif
-            </a>
+            @endforeach
+          @endif
           <div class="attachment-block" style="border:1px solid #00a65a;margin-top:5px;">
-
             <h4 class="attachment-heading"><b>Keterangan</b></h4>
               <div class="attachment-text">
                 {{$key->keterangan}}
