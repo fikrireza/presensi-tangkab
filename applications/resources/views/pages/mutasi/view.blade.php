@@ -8,7 +8,7 @@
   <h1>History Mutasi</h1>
   <ol class="breadcrumb">
     <li><a href=""><i class="fa fa-dashboard"></i>Dashboard</a></li>
-    <li class="active">Mutasi</li>
+    <li class="active">History Mutasi</li>
   </ol>
 @endsection
 
@@ -69,11 +69,34 @@
               <td>{{ \Carbon\Carbon::parse($key->tanggal_sk)->format('d-M-Y')}}</td>
             </tr>
           </table>
+          <div class="attachment-block" style="border:1px solid #00a65a;margin-top:5px;">
+            <h4 class="attachment-heading"><b>Keterangan</b></h4>
+              <div class="attachment-text">
+                {{$key->keterangan}}
+              </div>
+          </div>
           <!-- Attachment -->
           @if ($key->upload_sk != "")
             @foreach(explode('//', $key->upload_sk) as $info) 
               @if($info != null)
                  <a target="_blank" href="{{ asset('\..\documents').'/'.$info}}" download="{{$info}}" class="link-black text-sm">
+                  @if(strpos($info, '.png'))
+                    <img width="5%" src="{{ asset('dist\img\png.png') }}" alt="..." class="margin">
+                  @elseif(strpos($info, '.jpg'))
+                    <img width="5%" src="{{ asset('dist\img\jpg.png') }}" alt="..." class="margin">
+                  @elseif(strpos($info, '.docx'))
+                    <img width="5%" src="{{ asset('dist\img\doc.png') }}" alt="..." class="margin">
+                  @elseif(strpos($info, '.xlsx'))
+                    <img width="5%" src="{{ asset('dist\img\doc.png') }}" alt="..." class="margin">
+                  @endif
+                </a>
+              @endif
+            @endforeach
+          @endif
+          @if ($key->upload_sk != "")
+            @foreach(explode('//', $key->upload_sk) as $info) 
+              @if($info != null)
+                 <a target="_blank" class="link-black text-sm">
                   @if (strpos($info, '.pdf'))
                     <div class="row">
                       <div class="col-md-12">
@@ -90,42 +113,11 @@
                           </div>
                       </div>
                   </div>
-                  @elseif(strpos($info, '.png'))
-                    <img width="5%" src="{{ asset('dist\img\png.png') }}" alt="..." class="margin">
-                  @elseif(strpos($info, '.jpg'))
-                    <img width="5%" src="{{ asset('dist\img\jpg.png') }}" alt="..." class="margin">
-                  @elseif(strpos($info, '.docx'))
-                    <img width="5%" src="{{ asset('dist\img\doc.png') }}" alt="..." class="margin">
-                  @elseif(strpos($info, '.xlsx'))
-                    <img width="5%" src="{{ asset('dist\img\doc.png') }}" alt="..." class="margin">
                   @endif
                 </a>
-                <!-- <div class="row">
-                  <div class="col-md-12">
-                      <div class="panel panel-primary">
-                          <div class="panel-heading">
-                              <div class="pull-left">Undang-Undang Dasar Negara Republik Indonesia 1945</div>
-                              <br>
-                              </div>
-                              <div class="panel-body">
-                                  <div>
-                                      <embed src="{{ asset('\..\documents').'/'.$info}}" type="application/pdf" width="100%" height="700px"/>
-                                  </div>
-                              </div>
-                      </div>
-                  </div>
-              </div> -->
               @endif
             @endforeach
           @endif
-          <div class="attachment-block" style="border:1px solid #00a65a;margin-top:5px;">
-            <h4 class="attachment-heading"><b>Keterangan</b></h4>
-              <div class="attachment-text">
-                {{$key->keterangan}}
-              </div>
-              <!-- /.attachment-text -->
-            <!-- /.attachment-pushed -->
-          </div>
           <!-- /.attachment-block -->
         </div>
         <hr/>

@@ -48,6 +48,12 @@ Route::post('jabatan', 'JabatanController@store')->name('jabatan.post')->middlew
 Route::get('jabatan/{id}', 'JabatanController@bind');
 Route::post('jabatan/edit', 'JabatanController@edit')->name('jabatan.edit')->middleware('administrator');
 
+// Pengecualian TPP
+Route::get('pengecualian', 'PengecualianController@index')->name('pengecualian.index')->middleware('administrator');
+Route::post('pengecualian', 'PengecualianController@store')->name('pengecualian.post')->middleware('administrator');
+Route::get('pengecualian/{id}', 'PengecualianController@bind');
+Route::post('pengecualian/edit', 'PengecualianController@edit')->name('pengecualian.edit')->middleware('administrator');
+
 // Struktural
 Route::get('struktural', 'StrukturalController@index')->name('struktural.index')->middleware('administrator');
 Route::post('struktural', 'StrukturalController@store')->name('struktural.post')->middleware('administrator');
