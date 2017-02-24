@@ -121,7 +121,7 @@
               <select class="form-control select2" name="nip_sapk_edit" id="nip_sapk_edit" style="width:100%;">
                 <option value="">-- PILIH --</option>
                 @foreach ($pegawai as $key)
-                <option value="{{ $key->nip_sapk }}">{{ $key->nama }}</option>
+                    <option value="{{$key->nip_sapk}}"> - {{$key->nama}}</option>
                 @endforeach
               </select>
               <input type="hidden" name="id" id="id">
@@ -225,7 +225,7 @@
         success: function(data){
           var id = data.id;
           
-          var nip_sapk_edit = data.nip_sapk;
+          var nip_sapk_edit = data.nip_sapk_pegawai;
           var catatan_edit = data.catatan;
           // alert(nip_sapk_edit);
           // set
