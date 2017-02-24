@@ -36,7 +36,7 @@
 
 {{-- Modal Tambah Golongan--}}
 <div class="modal modal-default fade" id="modaltambahgolongan" role="dialog">
-  <div class="modal-dialog" style="width:800px;">
+  <div class="modal-dialog">
     <form class="form-horizontal" action="{{route('manajemenintervensi.store')}}" method="post">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -46,9 +46,8 @@
         </div>
         <div class="modal-body">
           <div class="form-group {{ $errors->has('nama_intervensi') ? 'has-error' : '' }}">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Nama</label>
-            <div class="col-sm-6">
+            <div class="col-sm-9">
               <input type="text" name="nama" class="form-control" value="{{ old('nama_intervensi') }}" placeholder="@if($errors->has('nama_intervensi')){{ $errors->first('nama_intervensi')}} @endif Nama" required="">
             </div>
           </div>

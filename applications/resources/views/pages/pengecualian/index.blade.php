@@ -115,7 +115,9 @@
         <div class="modal-body">
           <div class="form-group">
             <label class="col-md-3">Pegawai</label>
+             
             <div class="col-md-9">
+              
               <select class="form-control select2" name="nip_sapk_edit" id="nip_sapk_edit" style="width:100%;">
                 <option value="">-- PILIH --</option>
                 <?php
