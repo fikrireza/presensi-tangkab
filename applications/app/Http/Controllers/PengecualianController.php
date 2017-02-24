@@ -82,7 +82,7 @@ class PengecualianController extends Controller
 
     public function edit(Request $request)
     {
-
+      // dd($request);
       $set = Pengecualian::find($request->id);
       $set->nip_sapk = $request->nip_sapk_edit;
       $set->catatan = $request->catatan_edit;
