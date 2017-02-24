@@ -71,6 +71,11 @@ class PengecualianController extends Controller
     public function bind($id)
     {
       $get = Pengecualian::find($id);
+         // $get = DB::table('preson_pengecualian_tpp')->select('preson_pengecualian_tpp.*',
+         //              'preson_pegawais.id as pegawai_id','preson_pegawais.nip_sapk as nip_sapk_pegawai','preson_pegawais.nama')
+         //          ->leftJoin('preson_pegawais', 'preson_pengecualian_tpp.nip_sapk', '=', 'preson_pegawais.nip_sapk')
+         //          ->where('preson_pengecualian_tpp.id', $id)
+         //          ->first();
 
       return $get;
     }

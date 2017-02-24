@@ -226,10 +226,10 @@
         dataType: 'json',
         success: function(data){
           var id = data.id;
-          // alert(id);
+          
           var nip_sapk_edit = data.nip_sapk;
           var catatan_edit = data.catatan;
-          // alert(nip_sapk_edit);
+          alert(nip_sapk_edit);
           // set
           $('#nip_sapk_edit').attr('value', nip_sapk_edit);
           $('#catatan_edit').val(catatan_edit);

@@ -36,7 +36,7 @@
 
 {{-- Modal Tambah mesinapel--}}
 <div class="modal modal-default fade" id="modaltambahmesinapel" role="dialog">
-  <div class="modal-dialog" style="width:800px;">
+  <div class="modal-dialog">
     <form class="form-horizontal" action="{{ route('mesin.post') }}" method="post">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -46,19 +46,15 @@
         </div>
         <div class="modal-body">
           <div class="form-group {{ $errors->has('mach_id') ? 'has-error' : '' }}">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Mesin ID</label>
-            <div class="col-sm-6">
+            <div class="col-sm-9">
               <input type="text" name="mach_id" class="form-control" value="{{ old('mach_id') }}" placeholder="@if($errors->has('mach_id'))
                 {{ $errors->first('mach_id')}} @endif Nomor Mesin" required="">
             </div>
           </div>
-        </div>
-        <div class="modal-body">
           <div class="form-group {{ $errors->has('catatan') ? 'has-error' : '' }}">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Catatan</label>
-            <div class="col-sm-6">
+            <div class="col-sm-9">
               <input type="text" name="catatan" class="form-control" value="{{ old('catatan') }}" placeholder="@if($errors->has('catatan'))
                 {{ $errors->first('catatan')}} @endif Catatan" required="">
             </div>
