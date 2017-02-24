@@ -159,6 +159,8 @@ class IntervensiController extends Controller
     {
       if(session('status') === 'admin')
       {
+        $getmasterintervensi = ManajemenIntervensi::where('flag_old', 0)->get();
+
         $intervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
                               ->join('preson_users', 'preson_users.skpd_id', '=', 'preson_pegawais.skpd_id')
                               ->where('preson_users.pegawai_id', Auth::user()->pegawai_id)
