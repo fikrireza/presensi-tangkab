@@ -46,17 +46,15 @@
         </div>
         <div class="modal-body">
           <div class="form-group {{ $errors->has('nama') ? 'has-error' : '' }}">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Nama</label>
-            <div class="col-sm-6">
+            <div class="col-sm-9">
               <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" placeholder="@if($errors->has('nama'))
                 {{ $errors->first('nama')}} @endif Nama" required="">
             </div>
           </div>
           <div class="form-group {{ $errors->has('singkatan') ? 'has-error' : '' }}">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Singkatan</label>
-            <div class="col-sm-6">
+            <div class="col-sm-9">
               <input type="text" name="singkatan" class="form-control" value="{{ old('singkatan') }}" placeholder="@if($errors->has('singkatan'))
                 {{ $errors->first('singkatan')}} @endif Singkatan">
             </div>
@@ -83,18 +81,16 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Nama</label>
-            <div class="col-sm-6">
+            <div class="col-sm-9">
               <input type="text" name="nama_skpd" class="form-control" id="nama_skpd" required>
               <input type="hidden" name="id_skpd" class="form-control" id="id" required>
               <input type="hidden" name="user_id" class="form-control" value="1" required>
             </div>
           </div>
           <div class="form-group {{ $errors->has('singkatan_skpd') ? 'has-error' : '' }}">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Singkatan</label>
-            <div class="col-sm-6">
+            <div class="col-sm-9">
               <input type="text" name="singkatan_skpd" class="form-control" id="singkatan_skpd" value="{{ old('singkatan_skpd') }}" placeholder="@if($errors->has('singkatan_skpd'))
                 {{ $errors->first('singkatan_skpd')}} @endif Singkatan">
             </div>
@@ -189,19 +185,13 @@
               <td>@if($key->singkatan == null) - @else {{ $key->singkatan }} @endif</td>
               <td>
               @if ($key->status == 1)
-              <span data-toggle="tooltip" title="Ubah SKPD">
-                <a href="" data-value="{{ $key->id }}" class="btn btn-info btn-flat btn-xs editSKPD" data-toggle="modal" data-target="#modaleditSKPD"><i class="fa fa-edit"></i> Ubah</a>
-              </span>
+                <a href="" data-value="{{ $key->id }}" class="editSKPD" data-toggle="modal" data-target="#modaleditSKPD"><i class="fa fa-edit"></i> Ubah</a>
               @if (session('status') == 'superuser')
-              <span data-toggle="tooltip" title="NonAktif SKPD">
-                <a href="" class="btn btn-danger btn-flat btn-xs nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
-              </span>
+                <a href="" class="nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
               @endif
               @else
               @if (session('status') == 'superuser')
-              <span data-toggle="tooltip" title="Aktif SKPD">
-                <a href="" class="btn btn-primary btn-flat btn-xs aktif" data-toggle="modal" data-target="#myModalAktif" data-value="{{ $key->id }}">Aktifkan</a>
-              </span>
+                <a href="" class="aktif" data-toggle="modal" data-target="#myModalAktif" data-value="{{ $key->id }}">Aktifkan</a>
               @endif
               @endif
               </td>

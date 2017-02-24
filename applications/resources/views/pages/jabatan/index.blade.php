@@ -36,7 +36,7 @@
 
 {{-- Modal Tambah Golongan--}}
 <div class="modal modal-default fade" id="modaltambahgolongan" role="dialog">
-  <div class="modal-dialog" style="width:800px;">
+  <div class="modal-dialog">
     <form class="form-horizontal" action="{{ route('jabatan.post') }}" method="post">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -46,9 +46,8 @@
         </div>
         <div class="modal-body">
           <div class="form-group {{ $errors->has('nama') ? 'has-error' : '' }}">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Nama</label>
-            <div class="col-sm-6">
+            <div class="col-sm-9">
               <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" placeholder="@if($errors->has('nama')){{ $errors->first('nama')}} @endif Nama" required="">
             </div>
           </div>
@@ -64,7 +63,7 @@
 
 {{-- Modal Edit SKPD --}}
 <div class="modal modal-default fade" id="modaleditJabatan" role="dialog">
-  <div class="modal-dialog" style="width:800px;">
+  <div class="modal-dialog">
     <form class="form-horizontal" action="{{ route('jabatan.edit') }}" method="post">
       {{ csrf_field() }}
       <div class="modal-content">
@@ -74,9 +73,8 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Nama</label>
-            <div class="col-sm-6">
+            <div class="col-sm-9">
               <input type="text" name="nama_jabatan" class="form-control" id="nama_jabatan" required>
               <input type="hidden" name="id_jabatan" class="form-control" id="id_jabatan" required>
             </div>

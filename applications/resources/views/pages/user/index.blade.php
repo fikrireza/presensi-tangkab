@@ -41,8 +41,8 @@
           <p>Apakah anda yakin untuk menghapus akses akun ini?</p>
         </div>
         <div class="modal-footer">
-          <button type="reset" class="btn btn-default pull-left btn-flat" data-dismiss="modal">Tidak</button>
-          <a class="btn btn-danger btn-flat" id="sethapus">Ya, saya yakin</a>
+          <button type="reset" class="btn btn-default pull-left" data-dismiss="modal">Tidak</button>
+          <a class="btn btn-danger" id="sethapus">Ya, saya yakin</a>
         </div>
       </div>
     </div>
@@ -94,7 +94,7 @@
         </div>
       </div>
       <div class="box-footer">
-        <button type="submit" class="btn btn-success pull-right btn-sm btn-flat">Simpan</button>
+         <button type="submit" class="btn bg-purple pull-right btn-sm">Simpan</button>
       </div>
     </form>
     </div>
@@ -141,9 +141,7 @@
             <td>{{ $key->nama_skpd }}</td>
             <td>
               @if (Auth::user()->pegawai_id != $key->pegawai_id)
-                <span data-toggle="tooltip" title="Delete Akun">
-                  <a href="" class="btn btn-danger btn-flat btn-xs hapus" data-toggle="modal" data-target="#myModalHapus" data-value="{{ $key->pegawai_id }}"><i class="fa fa-remove"></i></a>
-                </span>
+                  <a href="" class="hapus" data-toggle="modal" data-target="#myModalHapus" data-value="{{ $key->pegawai_id }}"><i class="fa fa-remove"></i> Hapus</a>
               @endif
             </td>
           </tr>

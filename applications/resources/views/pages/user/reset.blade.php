@@ -45,8 +45,8 @@
         <p>Apakah anda yakin untuk reset password akun ini?</p>
       </div>
       <div class="modal-footer">
-        <button type="reset" class="btn btn-default pull-left btn-flat" data-dismiss="modal">Tidak</button>
-        <a class="btn btn-danger btn-flat" id="setreset">Ya, saya yakin</a>
+        <button type="reset" class="btn btn-default pull-left" data-dismiss="modal">Tidak</button>
+        <a class="btn btn-danger" id="setreset">Ya, saya yakin</a>
       </div>
     </div>
   </div>
@@ -98,9 +98,9 @@
               <td>{{ $key->nama_pegawai }}</td>
               <td>{{ $key->nama_skpd }}</td>
               <td>{{ $key->title }}</td>
-              <td><span data-toggle="tooltip" title="Reset Password">
-                <a href="" class="btn btn-danger btn-flat btn-xs reset" data-toggle="modal" data-target="#myModalReset" data-value="{{ $key->pegawai_id }}"><i class="fa fa-refresh"></i></a>
-              </span></td>
+              <td>
+                <a href="" class="reset" data-toggle="modal" data-target="#myModalReset" data-value="{{ $key->pegawai_id }}"><i class="fa fa-refresh"></i> Reset Password</a>
+              </td>
             </tr>
             <?php $no++; ?>
             @endforeach
