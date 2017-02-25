@@ -116,7 +116,6 @@ class MutasiController extends Controller
       $set->update();
 
       $akses = User::where('pegawai_id', $request->pegawai_id)->get();
-      // dd($akses);
       $akses->role_id = 3;
       $akses->update();
 
