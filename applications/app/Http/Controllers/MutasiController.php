@@ -115,9 +115,9 @@ class MutasiController extends Controller
       $set->flag_mutasi = 1;
       $set->update();
 
-      // $akses = User::where('pegawai_id', $request->pegawai_id)->get();
-      // $akses->role_id = 3;
-      // $akses->update();
+      $akses = User::where('pegawai_id', $request->pegawai_id)->get();
+      $akses->role_id = 3;
+      $akses->update();
 
       return redirect()->route('pegawai.index')->with('berhasil', 'Pegawai Berhasil Dimutasi');
     }
