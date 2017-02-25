@@ -108,6 +108,7 @@ class MutasiController extends Controller
       $new->tanggal_sk = $request->tanggal_sk;
       $new->upload_sk = $doc_name;
       $new->actor = Auth::user()->id;
+      $new->flag_mutasi = 1;
       $new->save();
 
       $set = pegawai::find($request->pegawai_id);

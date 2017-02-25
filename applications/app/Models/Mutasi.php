@@ -8,7 +8,7 @@ class Mutasi extends Model
 {
     protected $table = 'preson_mutasi';
 
-    protected $fillable = ['pegawai_id','skpd_id_old','skpd_id_new','tanggal_mutasi','keterangan','tpp_dibayarkan','nomor_sk','tanggal_sk','upload_sk','actor'];
+    protected $fillable = ['pegawai_id','skpd_id_old','skpd_id_new','tanggal_mutasi','keterangan','tpp_dibayarkan','nomor_sk','tanggal_sk','upload_sk','actor','flag_mutasi'];
 
     public function pegawai()
 	{
