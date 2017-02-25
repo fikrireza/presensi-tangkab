@@ -57,7 +57,7 @@
             </div>
           </div>
           <div class="form-group {{ $errors->has('tanggal_mutasi') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Tanggal Mutasi</label>
+            <label class="col-sm-3 control-label">TMT</label>
             <div class="col-sm-9">
               <div class="input-group date">
                 <div class="input-group-addon">
@@ -111,7 +111,7 @@
                       <tr>
                         <td><input type="checkbox" name="chk"/></td>
                         <td>
-                          <input type="file" name="upload_sk[1]" class="form-control {{ $errors->has('upload_sk[1]') ? 'has-error' : '' }}" required accept=".png, .jpg, .pdf" value="{{ old('upload_sk[1]') }}">
+                          <input type="file" name="upload_sk[1]" class="form-control {{ $errors->has('upload_sk[1]') ? 'has-error' : '' }}" accept=".png, .jpg, .pdf" value="{{ old('upload_sk[1]') }}">
                         </td>
                       </tr>
                     </tbody>
