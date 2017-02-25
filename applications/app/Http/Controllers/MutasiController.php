@@ -56,7 +56,7 @@ class MutasiController extends Controller
 
     public function createStore(Request $request)
     {
-      // dd($request);
+      // dd($request->file('upload_sk'));
       $message = [
         'skpd_id_new.required' => 'Wajib di isi',
         'keterangan.required' => 'Wajib di isi',
@@ -81,17 +81,21 @@ class MutasiController extends Controller
       {
         return redirect()->route('mutasi.create', ['id' => $request->pegawai_id])->withErrors($validator)->withInput();
       }
-
-       $i = 1;
-       $doc_name = '';
-        foreach ($request->file('upload_sk') as $key) {
-          $file = $request->upload_sk[$i];
-          $file_name = $request->nama_pegawai.'-'.$request->nomor_sk.'-'.$request->tanggal_sk.'-'.$i.'.'. $file->getClientOriginalExtension();
-          $doc_name .= $file_name.'//'; 
-          
-          $file->move('documents/', $file_name);
-          $i++;
-        }
+      $fileTemp = $request->file('upload_sk') ;
+      if ($fileTemp != null) {
+        $i = 1;
+         $doc_name = '';
+          foreach ($request->file('upload_sk') as $key) {
+            $file = $request->upload_sk[$i];
+            $file_name = $request->nama_pegawai.'-'.$request->nomor_sk.'-'.$request->tanggal_sk.'-'.$i.'.'. $file->getClientOriginalExtension();
+            $doc_name .= $file_name.'//'; 
+            
+            $file->move('documents/', $file_name);
+            $i++;
+          }
+      } else {
+        $doc_name = '-';
+      }
         
       $new = new Mutasi;
       $new->pegawai_id = $request->pegawai_id;
@@ -111,7 +115,8 @@ class MutasiController extends Controller
       $set->flag_mutasi = 1;
       $set->update();
 
-      $akses = User::where('pegawai_id', $request->pegawai_id)->first();
+      $akses = User::where('pegawai_id', $request->pegawai_id)->get();
+      // dd($akses);
       $akses->role_id = 3;
       $akses->update();
 
