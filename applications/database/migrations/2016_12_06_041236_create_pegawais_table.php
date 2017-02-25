@@ -29,6 +29,10 @@ class CreatePegawaisTable extends Migration
           $table->string('pendidikan_terakhir', 50);
           $table->text('alamat');
           $table->double('tpp_dibayarkan');
+          // 1 aktif
+          // 2 non aktif
+          // 3 pensiun
+          // 4 meninggal
           $table->string('status')->default('1');
           $table->string('actor');
           $table->timestamps();

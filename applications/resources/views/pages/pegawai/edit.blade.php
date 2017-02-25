@@ -22,7 +22,7 @@
         <h3 class="box-title" style="line-height:30px;">Ubah Data Pegawai</h3>
         <a href="{{ route('pegawai.index') }}" class="btn bg-blue pull-right">Kembali</a>
       </div>
-      <form class="form-horizontal" role="form" action="{{ route('pegawai.editStore') }}" method="post">
+      <form class="form-horizontal" role="form" action="{{ route('pegawai.editStore') }}" method="post" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="box-body">
           <div class="form-group {{ $errors->has('nama_pegawai') ? 'has-error' : '' }}">
@@ -167,6 +167,31 @@
                 {{ $errors->first('tpp_dibayarkan')}}@endif TPP Setelah Dipotong Pajak">
             </div>
           </div>
+          <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
+            <label class="col-sm-3 control-label">Status</label>
+            <div class="col-sm-9">
+              <select name="status" id="status" class="form-control select2">
+                <option value="">-- PILIH --</option>
+                <option value="1" {{ $pegawai->status == '1' ? 'selected' : '' }}>Aktif</option>
+                <option value="2" {{ $pegawai->status == '2' ? 'selected' : '' }}>Non Aktif</option>
+                <option value="3" {{ $pegawai->status == '3' ? 'selected' : '' }}>Pensiun</option>
+                <option value="4" {{ $pegawai->status == '4' ? 'selected' : '' }}>Meninggal</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" id="upload_dokumen_edit">
+            <label class="col-sm-3 control-label">File Dokumen</label>
+            <div class="col-sm-9">
+              <input type="file" name="upload_dokumen" class="form-control" accept=".png, .jpg, .pdf">
+              <span style="color:red;">Hanya .jpg, .png, .pdf</br>*Kosongkan Jika Tidak Ingin Mengganti Berkas</span>
+               @if($errors->has('upload_dokumen'))
+                  <span class="help-block">
+                    <strong>{{ $errors->first('upload_dokumen')}}
+                    </strong>
+                  </span>
+                @endif
+            </div>
+          </div>
         </div>
         <div class="box-footer">
           <button type="submit" class="btn bg-purple pull-right">Ubah Data</button>
@@ -182,6 +207,22 @@
 <script src="{{ asset('plugins/select2/select2.full.min.js')}}"></script>
 <script>
 $(".select2").select2();
+ var level = $('#status').val();
+  if (level==1) {
+    $('#upload_dokumen_edit').hide();
+  } else {
+    $('#upload_dokumen_edit').show();
+  }
+
+$('#status').change(function(){
+  var a = $(this).val();
+  if (a==1) {
+    $('#upload_dokumen_edit').hide();
+  } else {
+    $('#upload_dokumen_edit').show();
+  }
+});
+
 $('#datepicker1').datepicker({
   autoclose: true,
   format: 'yyyy-mm-dd',

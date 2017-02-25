@@ -120,6 +120,7 @@ class PegawaiController extends Controller
       $set->tpp_dibayarkan  = $request->tpp_dibayarkan;
       $set->actor = Auth::user()->id;
       $set->status = 1;
+      $set->upload_dokumen = "-";
       $set->save();
 
       $pegawai_id = pegawai::select('id')->where('nip_sapk', $request->nip_sapk)->first();
@@ -163,6 +164,7 @@ class PegawaiController extends Controller
 
     public function editStore(Request $request)
     {
+      // dd($request);
       $message = [
         'nama_pegawai.required' => 'Wajib di isi',
         'nip_sapk.required' => 'Wajib di isi',
@@ -177,6 +179,7 @@ class PegawaiController extends Controller
         'pendidikan_terakhir.required' => 'Wajib di isi',
         'alamat.required' => 'Wajib di isi',
         'tpp_dibayarkan.required' => 'Wajib di isi',
+        'status.required' => 'Wajib di isi',
       ];
 
       $validator = Validator::make($request->all(), [
@@ -192,11 +195,22 @@ class PegawaiController extends Controller
         'pendidikan_terakhir' => 'required',
         'alamat' => 'required',
         'tpp_dibayarkan' => 'required',
+        'status' => 'required',
       ], $message);
 
       if($validator->fails())
       {
         return redirect()->route('pegawai.edit', ['id' => $request->pegawai_id])->withErrors($validator)->withInput();
+      }
+
+      $file = $request->file('upload_dokumen');
+      if($file != null)
+      {
+        $photo_name = $request->nip_sapk.'-'.date('Y-m-d').'-'.$request->nama_pegawai.'.' . $file->getClientOriginalExtension();
+        $file->move('documents/', $photo_name);
+      }else{
+        $photo_name = "-";
+
       }
 
       $set = pegawai::find($request->pegawai_id);
@@ -214,7 +228,8 @@ class PegawaiController extends Controller
       $set->alamat  = $request->alamat;
       $set->tpp_dibayarkan  = $request->tpp_dibayarkan;
       $set->actor = Auth::user()->id;
-      $set->status = 1;
+      $set->status = $request->status;
+      $set->upload_dokumen = $photo_name;
       $set->update();
 
       $update = user::where('pegawai_id', '=', $request->pegawai_id)->first();
