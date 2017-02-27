@@ -114,17 +114,16 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="col-md-3">Pegawai</label>
-
+            <label class="col-md-3">NIP</label>
             <div class="col-md-9">
-
-              <select class="form-control select2" name="nip_sapk_edit" id="nip_sapk_edit" style="width:100%;">
-                <option value="">-- PILIH --</option>
-                @foreach ($pegawai as $key)
-                    <option value="{{$key->nip_sapk}}"> - {{$key->nama}}</option>
-                @endforeach
-              </select>
+              <input name="nip_sapk_edit" id="nip_sapk_edit" class="form-control" readonly="true">
               <input type="hidden" name="id" id="id">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3">Nama</label>
+            <div class="col-md-9">
+              <input name="nama" id="nama_edit" class="form-control" readonly="true">
             </div>
           </div>
           <div class="form-group">
@@ -226,11 +225,12 @@
           var id = data.id;
 
           var nip_sapk_edit = data.nip_sapk_pegawai;
+          var nama_edit = data.nama;
           var catatan_edit = data.catatan;
-          // alert(nip_sapk_edit);
-          // set
+
           $('#id').attr('value', id);
           $('#nip_sapk_edit').attr('value', nip_sapk_edit);
+          $('#nama_edit').attr('value', nama_edit);
           $('#catatan_edit').val(catatan_edit);
         }
       });
