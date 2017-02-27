@@ -38,11 +38,12 @@ class PegawaiController extends Controller
     public function getPegawai(Request $request)
     {
       if($request->ajax()){
+        DB::statement(DB::raw('set @rownum=0'));
         if(session('status') == 'administrator' || session('status') == 'superuser'){
           $pegawai = pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
                             ->join('preson_golongans', 'preson_golongans.id', '=', 'preson_pegawais.golongan_id')
                             ->join('preson_strukturals', 'preson_strukturals.id', '=', 'preson_pegawais.struktural_id')
-                            ->select('preson_pegawais.id', 'preson_pegawais.nip_sapk', 'preson_pegawais.fid', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.jabatan', 'preson_skpd.nama as nama_skpd', 'preson_golongans.nama as nama_golongan', 'preson_strukturals.nama as nama_struktural')
+                            ->select(DB::raw('@rownum  := @rownum  + 1 AS no'), 'preson_pegawais.id', 'preson_pegawais.nip_sapk', 'preson_pegawais.fid', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.jabatan', 'preson_skpd.nama as nama_skpd', 'preson_golongans.nama as nama_golongan', 'preson_strukturals.nama as nama_struktural')
                             ->get();
 
           return Datatables::of($pegawai)
@@ -55,7 +56,7 @@ class PegawaiController extends Controller
           $pegawai = pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
                             ->join('preson_golongans', 'preson_golongans.id', '=', 'preson_pegawais.golongan_id')
                             ->join('preson_strukturals', 'preson_strukturals.id', '=', 'preson_pegawais.struktural_id')
-                            ->select('preson_pegawais.id', 'preson_pegawais.nip_sapk', 'preson_pegawais.fid', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.jabatan', 'preson_skpd.nama as nama_skpd', 'preson_golongans.nama as nama_golongan', 'preson_strukturals.nama as nama_struktural')
+                            ->select(DB::raw('@rownum  := @rownum  + 1 AS no'), 'preson_pegawais.id', 'preson_pegawais.nip_sapk', 'preson_pegawais.fid', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.jabatan', 'preson_skpd.nama as nama_skpd', 'preson_golongans.nama as nama_golongan', 'preson_strukturals.nama as nama_struktural')
                             ->where('preson_skpd.id', Auth::user()->skpd_id)
                             ->get();
 

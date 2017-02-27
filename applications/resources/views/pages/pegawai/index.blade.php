@@ -72,7 +72,7 @@ $(function() {
         "responsive": true,
         ajax: "{{ url('getPegawai') }}",
         columns: [
-          { data: 'id' },
+          { data: 'no' },
           { data: 'nip_sapk' },
           { data: 'fid' },
           { data: 'nama_pegawai' },
