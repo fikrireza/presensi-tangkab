@@ -150,7 +150,7 @@
         <h3 class="box-title">SKPD</h3>
         <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahskpd">Tambah SKPD</a>
       </div>
-      <div class="box-body">
+      <div class="box-body table-responsive">
         <table id="table_skpd" class="table table-bordered table-striped">
           <thead>
             <tr>

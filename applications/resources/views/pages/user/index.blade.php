@@ -106,7 +106,7 @@
       <div class="box-header">
         <h3 class="box-title">Seluruh Akun</h3>
       </div>
-      <div class="box-body">
+      <div class="box-body table-responsive">
         <table id="table_user" class="table table-bordered table-striped">
           <thead>
             <tr>

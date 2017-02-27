@@ -115,9 +115,9 @@
         <div class="modal-body">
           <div class="form-group">
             <label class="col-md-3">Pegawai</label>
-             
+
             <div class="col-md-9">
-              
+
               <select class="form-control select2" name="nip_sapk_edit" id="nip_sapk_edit" style="width:100%;">
                 <option value="">-- PILIH --</option>
                 @foreach ($pegawai as $key)
@@ -150,7 +150,7 @@
         <h3 class="box-title">Pengecualian</h3>
         <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambah">Tambah Pengecualian</a>
       </div>
-      <div class="box-body">
+      <div class="box-body table-responsive">
         <table id="table_penegcualian" class="table table-bordered table-striped">
           <thead>
             <tr>
@@ -224,7 +224,7 @@
         dataType: 'json',
         success: function(data){
           var id = data.id;
-          
+
           var nip_sapk_edit = data.nip_sapk_pegawai;
           var catatan_edit = data.catatan;
           // alert(nip_sapk_edit);
@@ -244,14 +244,14 @@
           var title = $(this).text();
           $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
       } );
-   
+
       // DataTable
       var table = $('#table_penegcualian').DataTable();
-   
+
       // Apply the search
       table.columns().every( function () {
           var that = this;
-   
+
           $( 'input', this.footer() ).on( 'keyup change', function () {
               if ( that.search() !== this.value ) {
                   that

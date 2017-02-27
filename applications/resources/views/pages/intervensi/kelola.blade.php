@@ -129,7 +129,7 @@
         <h3 class="box-title">Kelola Intervensi</h3>
         <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahIntervensi">Tambah Intervensi Pegawai</a>
       </div>
-      <div class="box-body">
+      <div class="box-body table-responsive">
         @if(session('status') == 'admin')
         <table id="table_intervensi" class="table table-bordered table-striped">
           <thead>

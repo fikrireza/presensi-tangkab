@@ -40,7 +40,7 @@
         <h3 class="box-title">Struktural</h3>
         <a href="{{ route('pegawai.create') }}" class="btn bg-blue pull-right">Tambah Pegawai</a>
       </div>
-      <div class="box-body">
+      <div class="box-body table-responsive">
         <table id="table_pegawai" class="table table-bordered table-striped">
       		<thead>
       			<tr>
@@ -69,6 +69,7 @@ $(function() {
     var table = $("#table_pegawai").DataTable({
         processing: true,
         serverSide: true,
+        "responsive": true,
         ajax: "{{ url('getPegawai') }}",
         columns: [
           { data: 'id' },

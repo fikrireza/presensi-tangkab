@@ -58,7 +58,7 @@
       <div class="box-header">
         <h3 class="box-title">Semua Karyawan</h3>
       </div>
-      <div class="box-body">
+      <div class="box-body table-responsive">
         <table id="table_user" class="table table-bordered table-striped">
           <thead>
             <tr>
@@ -131,14 +131,14 @@
           var title = $(this).text();
           $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
       } );
-   
+
       // DataTable
       var table = $('#table_user').DataTable();
-   
+
       // Apply the search
       table.columns().every( function () {
           var that = this;
-   
+
           $( 'input', this.footer() ).on( 'keyup change', function () {
               if ( that.search() !== this.value ) {
                   that

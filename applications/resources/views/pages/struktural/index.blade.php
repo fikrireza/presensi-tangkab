@@ -108,7 +108,7 @@
         <h3 class="box-title">Struktural</h3>
         <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahstruktural">Tambah Struktural</a>
       </div>
-      <div class="box-body">
+      <div class="box-body table-responsive">
         <table id="table_struktural" class="table table-bordered table-striped">
           <thead>
             <tr>

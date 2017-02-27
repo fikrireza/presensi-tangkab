@@ -21,7 +21,7 @@
         <h3 class="box-title">Detail Absensi {{$getskpd->nama}}</h3>
         <a href="{{ route('home') }}" class="btn bg-blue pull-right">Kembali</a>
       </div>
-      <div class="box-body">
+      <div class="box-body table-responsive">
         <table id="table_user" class="table table-bordered table-striped">
           <thead>
             <tr>

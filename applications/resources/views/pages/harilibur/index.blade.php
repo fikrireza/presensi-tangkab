@@ -118,7 +118,7 @@
         <h3 class="box-title">Hari Libur & Cuti Bersama</h3>
         <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahharilibur">Tambah Hari Libur & Cuti Bersama</a>
       </div>
-      <div class="box-body">
+      <div class="box-body table-responsive">
         <table id="table_harilibur" class="table table-bordered table-striped">
           <thead>
             <tr>
@@ -221,14 +221,14 @@ $('.datepicker1').datepicker({
           var title = $(this).text();
           $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
       } );
-   
+
       // DataTable
       var table = $('#table_harilibur').DataTable();
-   
+
       // Apply the search
       table.columns().every( function () {
           var that = this;
-   
+
           $( 'input', this.footer() ).on( 'keyup change', function () {
               if ( that.search() !== this.value ) {
                   that

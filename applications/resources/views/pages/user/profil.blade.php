@@ -41,7 +41,7 @@
 
       <form class="form-horizontal" action="{{ route('firstLogin.post') }}" method="post">
         {{ csrf_field() }}
-        <div class="box-body">
+        <div class="box-body table-responsive">
           <div class="form-group {{ $errors->has('oldpass') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Password Lama</label>
             <div class="col-sm-9">
