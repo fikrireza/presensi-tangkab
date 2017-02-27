@@ -16,6 +16,7 @@ Route::get('/home/detail-absensi/{id}', 'HomeController@detailabsensi')->name('d
 
 // Pegawai
 Route::get('pegawai', 'PegawaiController@index')->name('pegawai.index');
+Route::get('getPegawai', 'PegawaiController@getPegawai');
 Route::get('pegawai/create', 'PegawaiController@create')->name('pegawai.create');
 Route::post('pegawai', 'PegawaiController@store')->name('pegawai.post');
 Route::get('pegawai/edit/{id}', 'PegawaiController@edit')->name('pegawai.edit');

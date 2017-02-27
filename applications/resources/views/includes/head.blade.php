@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="{{ asset('plugins/jvectormap/jquery-jvectormap-1.2.2.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datepicker/datepicker3.css') }}">
 
-<link rel="stylesheet" href="{{ asset('plugins/datatables/dataTables.bootstrap.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/datatables/dataTables.bootstrap.min.css') }}">
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>

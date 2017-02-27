@@ -42,8 +42,8 @@
       </div>
       <div class="box-body">
         <table id="table_pegawai" class="table table-bordered table-striped">
-          <thead>
-            <tr>
+      		<thead>
+      			<tr>
               <th>No</th>
               <th>NIP</th>
               <th>Nama</th>
@@ -53,57 +53,9 @@
               <th>Struktural</th>
               <th>Finger ID</th>
               <th style="width: 10%">Aksi</th>
-            </tr>
-          </thead>
-          <tfoot>
-            <tr>
-              <td></td>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th></th>
-              <td></td>
-            </tr>
-          </tfoot>
-          <tbody>
-            <?php $no = 1; ?>
-            @if ($pegawai->isEmpty())
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            @else
-            @foreach ($pegawai as $key)
-            <tr>
-              <td>{{ $no }}</td>
-              <td>{{ $key->nip_sapk }}</td>
-              <td>{{ $key->nama_pegawai }}</td>
-              <td>{{ $key->nama_skpd }}</td>
-              <td>{{ $key->nama_golongan }}</td>
-              <td>{{ $key->jabatan }}</td>
-              <td>{{ $key->nama_struktural }}</td>
-              <td>{{ $key->fid }}</td>
-              <td>
-                <a href="{{ url('pegawai/edit', $key->id) }}"><i class="fa fa-edit"></i> Ubah</a>
-                <br>
-                <a href="{{ url('mutasi/create', $key->id) }}"><i class="fa fa-code-fork"></i> Mutasi</a>
-              </td>
-            </tr>
-            <?php $no++; ?>
-            @endforeach
-            @endif
-          </tbody>
-        </table>
+      			</tr>
+      		</thead>
+      	</table>
       </div>
     </div>
   </div>
@@ -112,35 +64,24 @@
 @endsection
 
 @section('script')
-<script>
-  $(function () {
-    $("#table_pegawai").DataTable();
-  });
-</script>
 <script type="text/javascript">
-  $(document).ready(function() {
-      // Setup - add a text input to each footer cell
-      $('#table_pegawai tfoot th').each( function () {
-          var title = $(this).text();
-          $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
-      } );
-   
-      // DataTable
-      var table = $('#table_pegawai').DataTable();
-   
-      // Apply the search
-      table.columns().every( function () {
-          var that = this;
-   
-          $( 'input', this.footer() ).on( 'keyup change', function () {
-              if ( that.search() !== this.value ) {
-                  that
-                      .search( this.value )
-                      .draw();
-              }
-          } );
-      } );
-  } );
+$(function() {
+    var table = $("#table_pegawai").DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ url('getPegawai') }}",
+        columns: [
+          { data: 'id' },
+          { data: 'nip_sapk' },
+          { data: 'fid' },
+          { data: 'nama_pegawai' },
+          { data: 'jabatan' },
+          { data: 'nama_skpd' },
+          { data: 'nama_golongan' },
+          { data: 'nama_struktural' },
+          { data: 'action', 'searchable': false, 'orderable':false }
+       ]
+    });
+});
 </script>
-
 @endsection

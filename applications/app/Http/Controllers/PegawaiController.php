@@ -14,6 +14,7 @@ use Validator;
 use Auth;
 use DB;
 use Hash;
+use Datatables;
 
 class PegawaiController extends Controller
 {
@@ -30,24 +31,42 @@ class PegawaiController extends Controller
 
     public function index()
     {
-      if(session('status') == 'administrator' || session('status') == 'superuser'){
-        $pegawai = pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
-                          ->join('preson_golongans', 'preson_golongans.id', '=', 'preson_pegawais.golongan_id')
-                          ->join('preson_strukturals', 'preson_strukturals.id', '=', 'preson_pegawais.struktural_id')
-                          ->select('preson_pegawais.id', 'preson_pegawais.nip_sapk', 'preson_pegawais.fid', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.jabatan', 'preson_skpd.nama as nama_skpd', 'preson_golongans.nama as nama_golongan', 'preson_strukturals.nama as nama_struktural')
-                          ->get();
 
-      }elseif(session('status') == 'admin'){
-        $pegawai = pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
-                          ->join('preson_golongans', 'preson_golongans.id', '=', 'preson_pegawais.golongan_id')
-                          ->join('preson_strukturals', 'preson_strukturals.id', '=', 'preson_pegawais.struktural_id')
-                          ->select('preson_pegawais.id', 'preson_pegawais.nip_sapk', 'preson_pegawais.fid', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.jabatan', 'preson_skpd.nama as nama_skpd', 'preson_golongans.nama as nama_golongan', 'preson_strukturals.nama as nama_struktural')
-                          ->where('preson_skpd.id', Auth::user()->skpd_id)
-                          ->get();
+      return view('pages.pegawai.index');
+    }
 
+    public function getPegawai(Request $request)
+    {
+      if($request->ajax()){
+        if(session('status') == 'administrator' || session('status') == 'superuser'){
+          $pegawai = pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
+                            ->join('preson_golongans', 'preson_golongans.id', '=', 'preson_pegawais.golongan_id')
+                            ->join('preson_strukturals', 'preson_strukturals.id', '=', 'preson_pegawais.struktural_id')
+                            ->select('preson_pegawais.id', 'preson_pegawais.nip_sapk', 'preson_pegawais.fid', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.jabatan', 'preson_skpd.nama as nama_skpd', 'preson_golongans.nama as nama_golongan', 'preson_strukturals.nama as nama_struktural')
+                            ->get();
+
+          return Datatables::of($pegawai)
+                            ->addColumn('action', function($pegawai){
+                              return '<a href="pegawai/edit/'.$pegawai->id.'"><i class="fa fa-edit"></i> Ubah</a></br><a href="mutasi/create/'.$pegawai->id.'"><i class="fa fa-code-fork"></i> Mutasi</a>';
+                            })
+                          ->make(true);
+
+        }elseif(session('status') == 'admin'){
+          $pegawai = pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
+                            ->join('preson_golongans', 'preson_golongans.id', '=', 'preson_pegawais.golongan_id')
+                            ->join('preson_strukturals', 'preson_strukturals.id', '=', 'preson_pegawais.struktural_id')
+                            ->select('preson_pegawais.id', 'preson_pegawais.nip_sapk', 'preson_pegawais.fid', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.jabatan', 'preson_skpd.nama as nama_skpd', 'preson_golongans.nama as nama_golongan', 'preson_strukturals.nama as nama_struktural')
+                            ->where('preson_skpd.id', Auth::user()->skpd_id)
+                            ->get();
+
+          return Datatables::of($pegawai)->make(true);
+
+        }
+      } else {
+         abort('403');
       }
 
-      return view('pages.pegawai.index', compact('pegawai'));
+
     }
 
     public function create()

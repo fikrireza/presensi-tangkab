@@ -177,7 +177,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-		// Tag HTML providers
+    		// Tag HTML providers
         Collective\Html\HtmlServiceProvider::class,
         // Manipulate Images
         Intervention\Image\ImageServiceProvider::class,
@@ -185,6 +185,8 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         // DOM PDF
         Barryvdh\DomPDF\ServiceProvider::class,
+        // Yajra Datatables
+        Yajra\Datatables\DatatablesServiceProvider::class
 
     ],
 
