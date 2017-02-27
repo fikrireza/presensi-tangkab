@@ -7,7 +7,7 @@
 @section('breadcrumb')
   <h1>Detail Absensi</h1>
   <ol class="breadcrumb">
-    <li><a href=""><i class="fa fa-dashboard"></i>Dashboard</a></li>
+    <li><a href="{{ url('/') }}"><i class="fa fa-dashboard"></i>Dashboard</a></li>
     <li class="active">Detail Absensi</li>
   </ol>
 @endsection
@@ -19,6 +19,7 @@
     <div class="box box-primary box-solid">
       <div class="box-header">
         <h3 class="box-title">Detail Absensi {{$getskpd->nama}}</h3>
+        <a href="{{ route('home') }}" class="btn bg-blue pull-right">Kembali</a>
       </div>
       <div class="box-body">
         <table id="table_user" class="table table-bordered table-striped">
@@ -132,14 +133,14 @@
           var title = $(this).text();
           $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
       } );
-   
+
       // DataTable
       var table = $('#table_user').DataTable();
-   
+
       // Apply the search
       table.columns().every( function () {
           var that = this;
-   
+
           $( 'input', this.footer() ).on( 'keyup change', function () {
               if ( that.search() !== this.value ) {
                   that
