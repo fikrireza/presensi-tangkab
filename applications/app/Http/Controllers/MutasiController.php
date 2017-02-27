@@ -31,12 +31,23 @@ class MutasiController extends Controller
     {
       $mutasi = Mutasi::get();
 
+      if(session('status') == 'administrator')
+      {
+
       $getmutasi = Mutasi::Select('preson_mutasi.id','preson_mutasi.pegawai_id', 'preson_mutasi.skpd_id_new', DB::raw('count(preson_mutasi.pegawai_id) as jumlahmutasi'))
+                  ->whereNotIn('preson_mutasi.pegawai_id', [Auth::user()->id])
+                  ->groupBy('preson_mutasi.pegawai_id')
+                  ->orderby('jumlahmutasi', 'desc')
+                  ->get();
+      }else if (session('status') == 'admin'){
+
+        $getmutasi = Mutasi::Select('preson_mutasi.id','preson_mutasi.pegawai_id', 'preson_mutasi.skpd_id_new', DB::raw('count(preson_mutasi.pegawai_id) as jumlahmutasi'))
                   ->where('preson_mutasi.skpd_id_new', Auth::user()->skpd_id)
                   ->whereNotIn('preson_mutasi.pegawai_id', [Auth::user()->id])
                   ->groupBy('preson_mutasi.pegawai_id')
                   ->orderby('jumlahmutasi', 'desc')
                   ->get();
+      }
 
       return view('pages.mutasi.index', compact('getmutasi','mutasi'));
     }
@@ -56,7 +67,6 @@ class MutasiController extends Controller
 
     public function createStore(Request $request)
     {
-      // dd($request->file('upload_sk'));
       $message = [
         'skpd_id_new.required' => 'Wajib di isi',
         'keterangan.required' => 'Wajib di isi',
@@ -116,8 +126,9 @@ class MutasiController extends Controller
       $set->flag_mutasi = 1;
       $set->update();
 
-      $akses = User::where('pegawai_id', $request->pegawai_id)->get();
+      $akses = User::where('pegawai_id', $request->pegawai_id)->first();
       $akses->role_id = 3;
+      $akses->skpd_id = $request->skpd_id_new;
       $akses->update();
 
       return redirect()->route('pegawai.index')->with('berhasil', 'Pegawai Berhasil Dimutasi');

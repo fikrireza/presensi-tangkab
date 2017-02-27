@@ -28,7 +28,9 @@
                 <li class="{{ Route::currentRouteNamed('golongan.index') ? 'active' : ''}}"><a href="{{ route('golongan.index') }}"><i class="fa fa-circle-o"></i> Golongan</a></li>
                 <li class="{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}"><a href="{{ route('jabatan.index') }}"><i class="fa fa-circle-o"></i> Jabatan</a></li>
                 <li class="{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}"><a href="{{ route('struktural.index') }}"><i class="fa fa-circle-o"></i> Struktural/Eselon</a></li>
+                @if(session('status') == 'administrator' || session('status') == 'admin')
                 <li class="{{ Route::currentRouteNamed('mutasi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.view') ? 'active' : '' }}"><a href="{{ route('mutasi.index') }}"><i class="fa fa-circle-o"></i> Mutasi</a></li>
+                @endif
                 <li class="{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}"><a href="{{ route('manajemenintervensi.index') }}"><i class="fa fa-circle-o"></i> Intervensi</a></li>
                 <li class="{{ Route::currentRouteNamed('harilibur.index') ? 'active' : '' }}"><a href="{{ route('harilibur.index') }}"><i class="fa fa-circle-o"></i> Hari Libur & Cuti Bersama</a></li>
                 @if(session('status') == 'administrator' || session('status') == 'admin')
