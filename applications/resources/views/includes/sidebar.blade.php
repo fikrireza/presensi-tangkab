@@ -17,7 +17,7 @@
               </a>
             </li>
             @if(session('status') == 'administrator' || session('status') == 'superuser')
-            <li class="treeview {{ Route::currentRouteNamed('skpd.index') ? 'active' : '' }}{{ Route::currentRouteNamed('golongan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawai.index') ? 'active' : ''}}{{ Route::currentRouteNamed('harilibur.index') ? 'active' : ''}}{{ Route::currentRouteNamed('mutasi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.view') ? 'active' : '' }}{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}">
+            <li class="treeview {{ Route::currentRouteNamed('skpd.index') ? 'active' : '' }}{{ Route::currentRouteNamed('golongan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawai.index') ? 'active' : ''}}{{ Route::currentRouteNamed('harilibur.index') ? 'active' : ''}}{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}">
               <a href="#">
                 <i class="fa fa-gear"></i> <span>Master & Setup</span>
                 <i class="fa fa-angle-left pull-right"></i>
@@ -28,9 +28,6 @@
                 <li class="{{ Route::currentRouteNamed('golongan.index') ? 'active' : ''}}"><a href="{{ route('golongan.index') }}"><i class="fa fa-circle-o"></i> Golongan</a></li>
                 <li class="{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}"><a href="{{ route('jabatan.index') }}"><i class="fa fa-circle-o"></i> Jabatan</a></li>
                 <li class="{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}"><a href="{{ route('struktural.index') }}"><i class="fa fa-circle-o"></i> Struktural/Eselon</a></li>
-                @if(session('status') == 'administrator' || session('status') == 'admin')
-                <li class="{{ Route::currentRouteNamed('mutasi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.view') ? 'active' : '' }}"><a href="{{ route('mutasi.index') }}"><i class="fa fa-circle-o"></i> Mutasi</a></li>
-                @endif
                 <li class="{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}"><a href="{{ route('manajemenintervensi.index') }}"><i class="fa fa-circle-o"></i> Intervensi</a></li>
                 <li class="{{ Route::currentRouteNamed('harilibur.index') ? 'active' : '' }}"><a href="{{ route('harilibur.index') }}"><i class="fa fa-circle-o"></i> Hari Libur & Cuti Bersama</a></li>
                 @if(session('status') == 'administrator' || session('status') == 'admin')
@@ -74,6 +71,22 @@
               </ul>
             </li>
             @endif
+            <li class="treeview {{ Route::currentRouteNamed('mutasi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.view') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.view.pegawai') ? 'active' : '' }}">
+              <a href="#">
+                <i class="fa fa-code-fork"></i> <span>Manajemen Mutasi</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                @if(session('status') == 'administrator' || session('status') == 'admin' || session('superuser'))
+                <li class="{{ Route::currentRouteNamed('mutasi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.view') ? 'active' : '' }}"><a href="{{ route('mutasi.index') }}"><i class="fa fa-circle-o"></i> Mutasi</a></li>
+                @endif
+                <li class="{{ Route::currentRouteNamed('mutasi.view.pegawai') ? 'active' : '' }}">
+                  <a href="{{ route('mutasi.view.pegawai') }}">
+                    <i class="fa fa-circle-o"></i> <span>Histori Mutasi Anda</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
             @if(session('status') == 'administrator' || session('status') == 'admin' || session('status') == 'pegawai' || session('status') == 'superuser')
             <li class="{{ Route::currentRouteNamed('intervensi.index') ? 'active' : '' }}">
               <a href="{{ route('intervensi.index') }}">
@@ -124,11 +137,6 @@
               </a>
             </li>
             @endif
-            <li class="{{ Route::currentRouteNamed('mutasi.view.pegawai') ? 'active' : '' }}">
-              <a href="{{ route('mutasi.view.pegawai') }}">
-                <i class="fa fa-code-fork"></i> <span>Histori Mutasi</span>
-              </a>
-            </li>
             @if(session('status') != 'pegawai')
             <li class="treeview {{ Route::currentRouteNamed('tpp.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pejabatdokumen.index') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdministrator') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdmin') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdmin.store') ? 'active' : '' }}">
               <a href="">
