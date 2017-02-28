@@ -229,7 +229,7 @@
       <div class="box-header">
         <h3 class="box-title">Intervensi</h3>
         <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahIntervensi">Tambah Intervensi</a>
-        @if(session('status') != 'pegawai')
+        @if(session('status') != 'pegawai' && session('status') != 'sekretaris')
         <a href="{{ route('intervensi.kelola') }}" class="btn bg-green pull-right">Lihat Intervensi</a>
         @endif
       </div>

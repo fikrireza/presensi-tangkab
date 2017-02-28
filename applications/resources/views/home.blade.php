@@ -17,7 +17,7 @@
 
 <div class="row">
   <div class="col-md-12">
-    @if (session('status') === 'administrator' || session('status') === 'admin'  || session('status') == 'superuser')
+    @if (session('status') === 'administrator' || session('status') === 'admin'  || session('status') == 'superuser' || session('status') == 'sekretaris')
     <div class="col-lg-3 col-md-3 col-xs-12">
       <div class="small-box bg-teal">
         <div class="inner">
@@ -133,7 +133,7 @@
             @endforeach
           </tbody>
         </table>
-        @elseif(session('status') == 'administrator'  || session('status') == 'superuser')
+        @elseif(session('status') == 'administrator'  || session('status') == 'superuser' || session('status') == 'sekretaris')
         <table id="table_absen" class="table table-bordered">
           <thead>
             <tr>

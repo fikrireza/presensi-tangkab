@@ -22,6 +22,7 @@
                     <p>
                       {{ Auth::user()->nama }}
                       <small>{{ session('skpd') }}</small>
+                      <small>Login as {{ Auth::user()->role->title }}</small>
                     </p>
                   </li>
 
