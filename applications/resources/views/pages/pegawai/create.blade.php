@@ -26,15 +26,15 @@
         {{ csrf_field() }}
         <div class="box-body">
           <div class="form-group {{ $errors->has('nama_pegawai') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Nama</label>
-            <div class="col-sm-9">
+            <label class="col-sm-2 control-label">Nama</label>
+            <div class="col-sm-10">
               <input type="text" name="nama_pegawai" class="form-control" value="{{ old('nama_pegawai') }}" placeholder="@if($errors->has('nama_pegawai'))
                 {{ $errors->first('nama_pegawai')}}@endif Nama">
             </div>
           </div>
           <div class="form-group {{ $errors->has('nip_sapk') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">NIP</label>
-            <div class="col-sm-9">
+            <label class="col-sm-2 control-label">NIP</label>
+            <div class="col-sm-10">
               <input type="text" name="nip_sapk" class="form-control" value="{{ old('nip_sapk') }}" onkeypress="return isNumber(event)" placeholder="@if($errors->has('nip_sapk'))
                 {{ $errors->first('nip_sapk')}}@endif NIP">
                 @if($errors->has('nip_sapk'))
@@ -46,15 +46,15 @@
             </div>
           </div>
           <div class="form-group {{ $errors->has('nip_lm') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">NIP Lama</label>
-            <div class="col-sm-9">
+            <label class="col-sm-2 control-label">NIP Lama</label>
+            <div class="col-sm-10">
               <input type="text" name="nip_lm" class="form-control" value="{{ old('nip_lm') }}" placeholder="@if($errors->has('nip_lm'))
                 {{ $errors->first('nip_lm')}}@endif NIP Lama">
             </div>
           </div>
           <div class="form-group {{ $errors->has('fid') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Finger ID</label>
-            <div class="col-sm-9">
+            <label class="col-sm-2 control-label">Finger ID</label>
+            <div class="col-sm-10">
               <input type="text" name="fid" class="form-control" value="{{ old('fid') }}" onkeypress="return isNumber(event)" placeholder="@if($errors->has('fid'))
                 {{ $errors->first('fid')}}@endif Finger ID" maxlength="14">
               @if($errors->has('fid'))
@@ -66,8 +66,8 @@
             </div>
           </div>
           <div class="form-group {{ $errors->has('skpd_id') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">SKPD</label>
-            <div class="col-sm-9">
+            <label class="col-sm-2 control-label">SKPD</label>
+            <div class="col-sm-10">
               <select name="skpd_id" class="form-control select2">
                 <option value="">-- Pilih --</option>
                 @foreach ($skpd as $key)
@@ -77,8 +77,8 @@
             </div>
           </div>
           <div class="form-group {{ $errors->has('golongan_id') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Golongan</label>
-            <div class="col-sm-9">
+            <label class="col-sm-2 control-label">Golongan</label>
+            <div class="col-sm-10">
               <select name="golongan_id" class="form-control select2">
                 <option value="">-- Pilih --</option>
                 @foreach ($golongan as $key)
@@ -88,8 +88,8 @@
             </div>
           </div>
           <div class="form-group {{ $errors->has('struktural_id') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Struktural/Eselon</label>
-            <div class="col-sm-9">
+            <label class="col-sm-2 control-label">Struktural/Eselon</label>
+            <div class="col-sm-10">
               <select name="struktural_id" class="form-control select2">
                 <option value="">-- Pilih --</option>
                 @foreach ($struktural as $key)
@@ -99,15 +99,15 @@
             </div>
           </div>
           <div class="form-group {{ $errors->has('jabatan') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Jabatan</label>
-            <div class="col-sm-9">
+            <label class="col-sm-2 control-label">Jabatan</label>
+            <div class="col-sm-10">
               <input type="text" name="jabatan" class="form-control" value="{{ old('jabatan') }}" placeholder="@if($errors->has('jabatan'))
                 {{ $errors->first('jabatan')}}@endif Jabatan">
             </div>
           </div>
           <div class="form-group {{ $errors->has('tanggal_lahir') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Tanggal Lahir</label>
-            <div class="col-sm-9">
+            <label class="col-sm-2 control-label">Tanggal Lahir</label>
+            <div class="col-sm-10">
               <div class="input-group date">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
@@ -118,15 +118,15 @@
             </div>
           </div>
           <div class="form-group {{ $errors->has('tempat_lahir') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Tempat Lahir</label>
-            <div class="col-sm-9">
+            <label class="col-sm-2 control-label">Tempat Lahir</label>
+            <div class="col-sm-10">
               <input type="text" name="tempat_lahir" class="form-control" value="{{ old('tempat_lahir') }}" placeholder="@if($errors->has('tempat_lahir'))
                 {{ $errors->first('tempat_lahir')}}@endif Tempat Lahir">
             </div>
           </div>
           <div class="form-group {{ $errors->has('pendidikan_terakhir') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Pendidikan Terakhir</label>
-            <div class="col-sm-9">
+            <label class="col-sm-2">Pendidikan Terakhir</label>
+            <div class="col-sm-10">
               <select name="pendidikan_terakhir" class="form-control select2">
                 <option value="">-- PILIH --</option>
                 <option value="D.II / PGSD" {{ old('pendidikan_terakhir') == 'D.II / PGSD' ? 'selected' : '' }}>D.II / PGSD</option>
@@ -147,15 +147,15 @@
             </div>
           </div>
           <div class="form-group {{ $errors->has('alamat') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Alamat</label>
-            <div class="col-sm-9">
+            <label class="col-sm-2 control-label">Alamat</label>
+            <div class="col-sm-10">
               <input type="text" name="alamat" class="form-control" value="{{ old('alamat') }}" placeholder="@if($errors->has('alamat'))
                 {{ $errors->first('alamat')}}@endif Alamat">
             </div>
           </div>
           <div class="form-group {{ $errors->has('tpp_dibayarkan') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">TPP <br /><small>(setelah dipotong pajak)</small></label>
-            <div class="col-sm-9">
+            <label class="col-sm-2 control-label">TPP <br /><small>(setelah dipotong pajak)</small></label>
+            <div class="col-sm-10">
               <input type="text" name="tpp_dibayarkan" class="form-control" value="{{ old('tpp_dibayarkan') }}" onkeypress="return isNumber(event)" maxlength="8" placeholder="@if($errors->has('tpp_dibayarkan'))
                 {{ $errors->first('tpp_dibayarkan')}}@endif TPP Setelah Dipotong Pajak ">
             </div>
