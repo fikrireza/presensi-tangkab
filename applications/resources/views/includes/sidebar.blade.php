@@ -17,7 +17,7 @@
               </a>
             </li>
             @if(session('status') == 'administrator' || session('status') == 'superuser')
-            <li class="treeview {{ Route::currentRouteNamed('skpd.index') ? 'active' : '' }}{{ Route::currentRouteNamed('golongan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawai.index') ? 'active' : ''}}{{ Route::currentRouteNamed('harilibur.index') ? 'active' : ''}}{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}">
+            <li class="treeview {{ Route::currentRouteNamed('skpd.index') ? 'active' : '' }}{{ Route::currentRouteNamed('golongan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawai.index') ? 'active' : ''}}{{ Route::currentRouteNamed('harilibur.index') ? 'active' : ''}}{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('pengecualian.index') ? 'active' : ''}}">
               <a href="#">
                 <i class="fa fa-gear"></i> <span>Master & Setup</span>
                 <i class="fa fa-angle-left pull-right"></i>
@@ -71,15 +71,14 @@
               </ul>
             </li>
             @endif
+            @if(session('status') == 'administrator' || session('status') == 'admin' || session('superuser'))
             <li class="treeview {{ Route::currentRouteNamed('mutasi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.view') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.view.pegawai') ? 'active' : '' }}">
               <a href="#">
                 <i class="fa fa-code-fork"></i> <span>Manajemen Mutasi</span>
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                @if(session('status') == 'administrator' || session('status') == 'admin' || session('superuser'))
                 <li class="{{ Route::currentRouteNamed('mutasi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.view') ? 'active' : '' }}"><a href="{{ route('mutasi.index') }}"><i class="fa fa-circle-o"></i> Mutasi</a></li>
-                @endif
                 <li class="{{ Route::currentRouteNamed('mutasi.view.pegawai') ? 'active' : '' }}">
                   <a href="{{ route('mutasi.view.pegawai') }}">
                     <i class="fa fa-circle-o"></i> <span>Histori Mutasi Anda</span>
@@ -87,15 +86,23 @@
                 </li>
               </ul>
             </li>
+            @endif
+            @if (session('status') == 'pegawai')
+            <li class="{{ Route::currentRouteNamed('mutasi.view.pegawai') ? 'active' : '' }}">
+              <a href="{{ route('mutasi.view.pegawai') }}">
+                <i class="fa fa-code-fork"></i> <span>Histori Mutasi</span>
+              </a>
+            </li>
+            @endif
             @if(session('status') == 'administrator' || session('status') == 'admin' || session('status') == 'pegawai' || session('status') == 'superuser')
-            <li class="{{ Route::currentRouteNamed('intervensi.index') ? 'active' : '' }}">
+            <li class="{{ Route::currentRouteNamed('intervensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('intervensi.kelola') ? 'active' : '' }}{{ Route::currentRouteNamed('intervensi.kelola.aksi') ? 'active' : '' }}">
               <a href="{{ route('intervensi.index') }}">
                 <i class="fa fa-envelope"></i> <span>Intervensi</span>
               </a>
             </li>
             @endif
             @if(session('status') == 'administrator' || session('status') == 'superuser')
-            <li class="treeview {{ Route::currentRouteNamed('absensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('absensi.filterAdministrator') ? 'active' : '' }}{{ Route::currentRouteNamed('pegawaiapel.detail') ? 'active' : ''}}{{ Route::currentRouteNamed('apel.pegawai') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawaiapel.store') ? 'active' : ''}}{{ Route::currentRouteNamed('absenhari.administrator') ? 'active' : ''}}{{ Route::currentRouteNamed('absenhari.administratorstore') ? 'active' : ''}}">
+            <li class="treeview {{ Route::currentRouteNamed('absensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('absensi.filterAdministrator') ? 'active' : '' }}{{ Route::currentRouteNamed('pegawaiapel.detail') ? 'active' : ''}}{{ Route::currentRouteNamed('apel.pegawai') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawaiapel.store') ? 'active' : ''}}{{ Route::currentRouteNamed('absenhari.administrator') ? 'active' : ''}}{{ Route::currentRouteNamed('absenhari.administratorstore') ? 'active' : ''}}{{ Route::currentRouteNamed('laporanPegawai') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanPegawai.store') ? 'active' : '' }}">
               <a href="">
                 <i class="fa fa-calendar"></i> <span>Absensi</span>
                 <i class="fa fa-angle-left pull-right"></i>
@@ -108,6 +115,9 @@
                   <a href="{{ route('absensi.index') }}"><i class="fa fa-circle-o"></i> <span>Rekap Absensi</span></a>
                 </li>
                 <li class="{{ Route::currentRouteNamed('apel.pegawai') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawaiapel.detail') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawaiapel.store') ? 'active' : ''}}"><a href="{{ route('apel.pegawai')}}"><i class="fa fa-circle-o"></i> Absen Apel Pegawai</a></li>
+                <li class="{{ Route::currentRouteNamed('laporanPegawai') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanPegawai.store') ? 'active' : '' }}">
+                  <a href="{{ route('laporanPegawai') }}"><i class="fa fa-circle-o"></i> <span>Absensi Anda</span></a>
+                </li>
               </ul>
             </li>
             @endif
@@ -127,11 +137,14 @@
                 <li class="{{ Route::currentRouteNamed('apelskpd') ? 'active' : '' }}{{ Route::currentRouteNamed('apelskpd.store') ? 'active' : '' }}">
                   <a href="{{ route('apelskpd') }}"><i class="fa fa-circle-o"></i> <span>Absen Apel Pegawai</span></a>
                 </li>
+                <li class="{{ Route::currentRouteNamed('laporanPegawai') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanPegawai.store') ? 'active' : '' }}">
+                  <a href="{{ route('laporanPegawai') }}"><i class="fa fa-circle-o"></i> <span>Absensi Anda</span></a>
+                </li>
               </ul>
             </li>
             @endif
             @if(session('status') == 'pegawai')
-            <li class="{{ Route::currentRouteNamed('laporanPegawai') ? 'active' : '' }}">
+            <li class="{{ Route::currentRouteNamed('laporanPegawai') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanPegawai.store') ? 'active' : '' }}">
               <a href="{{ route('laporanPegawai') }}">
                 <i class="fa fa-calendar"></i> <span>Absensi</span>
               </a>

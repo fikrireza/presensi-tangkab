@@ -167,6 +167,7 @@
                 {{ $errors->first('tpp_dibayarkan')}}@endif TPP Setelah Dipotong Pajak">
             </div>
           </div>
+          @if (session('status') == 'administrator' || session('status') == 'superuser')
           <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
             <label class="col-sm-3 control-label">Status</label>
             <div class="col-sm-9">
@@ -192,6 +193,7 @@
                 @endif
             </div>
           </div>
+          @endif
         </div>
         <div class="box-footer">
           <button type="submit" class="btn bg-purple pull-right">Ubah Data</button>
