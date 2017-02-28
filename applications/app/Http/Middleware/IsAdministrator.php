@@ -14,7 +14,7 @@ class IsAdministrator {
 	 */
 	public function handle($request, Closure $next)
 	{
-		if (session('status') === 'administrator' || session('status') === 'superuser')
+		if (session('status') === 'administrator' || session('status') === 'superuser' || session('status') == 'sekretaris')
 		{
 			return $next($request);
 		}

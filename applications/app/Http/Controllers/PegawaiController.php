@@ -37,7 +37,7 @@ class PegawaiController extends Controller
 
     public function getPegawai(Request $request)
     {
-      // if($request->ajax()){
+      if($request->ajax()){
         DB::statement(DB::raw('set @rownum=0'));
         if(session('status') == 'administrator' || session('status') == 'superuser'){
           $pegawai = pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
@@ -67,9 +67,9 @@ class PegawaiController extends Controller
                           ->make(true);
 
         }
-      // } else {
-      //    abort('403');
-      // }
+      } else {
+         abort('403');
+      }
 
 
     }
