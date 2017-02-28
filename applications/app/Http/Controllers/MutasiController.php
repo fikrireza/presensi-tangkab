@@ -31,25 +31,38 @@ class MutasiController extends Controller
     {
       $mutasi = Mutasi::get();
 
+      $pegawai_id = Auth::user()->pegawai_id;
+      $skpd_id = Auth::user()->skpd_id;
+
       if(session('status') == 'administrator')
       {
+      $list = [];
+      $getmutasi = collect($list);
+      $getskpd = Skpd::select('*')->where('status', '1')->get();
 
-      $getmutasi = Mutasi::Select('preson_mutasi.id','preson_mutasi.pegawai_id', 'preson_mutasi.skpd_id_new', DB::raw('count(preson_mutasi.pegawai_id) as jumlahmutasi'))
-                  ->whereNotIn('preson_mutasi.pegawai_id', [Auth::user()->id])
-                  ->groupBy('preson_mutasi.pegawai_id')
-                  ->orderby('jumlahmutasi', 'desc')
-                  ->get();
       }else if (session('status') == 'admin'){
 
-        $getmutasi = Mutasi::Select('preson_mutasi.id','preson_mutasi.pegawai_id', 'preson_mutasi.skpd_id_new', DB::raw('count(preson_mutasi.pegawai_id) as jumlahmutasi'))
-                  ->where('preson_mutasi.skpd_id_new', Auth::user()->skpd_id)
-                  ->whereNotIn('preson_mutasi.pegawai_id', [Auth::user()->id])
-                  ->groupBy('preson_mutasi.pegawai_id')
-                  ->orderby('jumlahmutasi', 'desc')
-                  ->get();
+        // $getmutasi = Mutasi::Select('preson_mutasi.id','preson_mutasi.pegawai_id', 'preson_mutasi.skpd_id_new', 'preson_mutasi.skpd_id_old', DB::raw('count(preson_mutasi.pegawai_id) as jumlahmutasi'))
+        //           ->where('preson_mutasi.skpd_id_new', Auth::user()->skpd_id)
+        //           ->whereNotIn('preson_mutasi.pegawai_id', [Auth::user()->id])
+        //           ->groupBy('preson_mutasi.pegawai_id')
+        //           ->orderby('preson_mutasi.skpd_id_old', 'desc')
+        //           ->get();
+
+        $list = DB::select("select a.id, a.pegawai_id,c.nip_sapk, c.nama as nama_pegawai, a.skpd_id_new,
+                          (select b.skpd_id_old from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as skpd_last, d.nama as nama_skpd, count(a.pegawai_id) as jumlahmutasi 
+                            from preson_mutasi a left join preson_pegawais c on a.pegawai_id=c.id 
+                            left join preson_skpd d on 
+                              (select b.skpd_id_old from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) = d.id
+                            where a.pegawai_id not in ('$pegawai_id') and a.skpd_id_new =  ('$skpd_id')
+                          group by a.pegawai_id order by a.skpd_id_old desc");
+
+        $getmutasi = collect($list);
+
+        $getskpd = [];
       }
 
-      return view('pages.mutasi.index', compact('getmutasi','mutasi'));
+      return view('pages.mutasi.index', compact('getmutasi','mutasi', 'getskpd'));
     }
 
     public function create($id)
