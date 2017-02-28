@@ -18,13 +18,19 @@
               </a>
             </li>
             @if(session('status') == 'administrator' || session('status') == 'superuser')
-            <li class="treeview {{ Route::currentRouteNamed('skpd.index') ? 'active' : '' }}{{ Route::currentRouteNamed('golongan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawai.index') ? 'active' : ''}}{{ Route::currentRouteNamed('harilibur.index') ? 'active' : ''}}{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('pengecualian.index') ? 'active' : ''}}">
+            <li class="treeview {{ Route::currentRouteNamed('skpd.index') ? 'active' : '' }}{{ Route::currentRouteNamed('golongan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawai.index') ? 'active' : ''}}{{ Route::currentRouteNamed('harilibur.index') ? 'active' : ''}}{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('pengecualian.index') ? 'active' : ''}}
+            {{ Route::currentRouteNamed('pegawai.create') ? 'active' : '' }}
+            {{ Route::currentRouteNamed('pegawai.edit') ? 'active' : '' }}
+            {{ Route::currentRouteNamed('mutasi.create') ? 'active' : '' }}">
               <a href="#">
                 <i class="fa fa-gear"></i> <span>Master & Setup</span>
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li class="{{ Route::currentRouteNamed('pegawai.index') ? 'active' : '' }}"><a href="{{ route('pegawai.index') }}"><i class="fa fa-circle-o"></i> Pegawai</a></li>
+                <li class="{{ Route::currentRouteNamed('pegawai.index') ? 'active' : '' }}
+                {{ Route::currentRouteNamed('pegawai.create') ? 'active' : '' }}
+                {{ Route::currentRouteNamed('pegawai.edit') ? 'active' : '' }}
+                {{ Route::currentRouteNamed('mutasi.create') ? 'active' : '' }}"><a href="{{ route('pegawai.index') }}"><i class="fa fa-circle-o"></i> Pegawai</a></li>
                 <li class="{{ Route::currentRouteNamed('skpd.index') ? 'active' : '' }}"><a href="{{ route('skpd.index') }}"><i class="fa fa-circle-o"></i> Skpd</a></li>
                 <li class="{{ Route::currentRouteNamed('golongan.index') ? 'active' : ''}}"><a href="{{ route('golongan.index') }}"><i class="fa fa-circle-o"></i> Golongan</a></li>
                 <li class="{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}"><a href="{{ route('jabatan.index') }}"><i class="fa fa-circle-o"></i> Jabatan</a></li>
@@ -50,7 +56,10 @@
             </li>
             @endif
             @if(session('status') != 'pegawai' && session('status') != 'sekretaris')
-            <li class="treeview {{ Route::currentRouteNamed('user.index') ? 'active' : ''}}{{ Route::currentRouteNamed('user.reset') ? 'active' : ''}}">
+            <li class="treeview {{ Route::currentRouteNamed('user.index') ? 'active' : ''}}{{ Route::currentRouteNamed('user.reset') ? 'active' : ''}}
+            {{ Route::currentRouteNamed('pegawai.index') ? 'active' : '' }}
+            {{ Route::currentRouteNamed('pegawai.create') ? 'active' : '' }}
+            {{ Route::currentRouteNamed('pegawai.edit') ? 'active' : '' }}">
               <a href="{{ route('user.index') }}">
                 <i class="fa fa-users"></i> <span>Manajemen User</span>
                 <i class="fa fa-angle-left pull-right"></i>
@@ -60,7 +69,9 @@
                 <li class="{{ Route::currentRouteNamed('user.index') ? 'active' : ''}}"><a href="{{ route('user.index')}}"><i class="fa fa-circle-o"></i> Tambah Akun</a></li>
                 @endif
                 @if(session('status') == 'admin')
-                <li class="{{ Route::currentRouteNamed('pegawai.index') ? 'active' : '' }}">
+                <li class="{{ Route::currentRouteNamed('pegawai.index') ? 'active' : '' }}
+                 {{ Route::currentRouteNamed('pegawai.create') ? 'active' : '' }}
+                 {{ Route::currentRouteNamed('pegawai.edit') ? 'active' : '' }}">
                   <a href="{{ route('pegawai.index') }}">
                     <i class="fa fa-circle-o"></i> <span>Pegawai</span>
                   </a>
@@ -73,13 +84,13 @@
             </li>
             @endif
             @if(session('status') == 'administrator' || session('status') == 'admin' || session('superuser'))
-            <li class="treeview {{ Route::currentRouteNamed('mutasi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.view') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.view.pegawai') ? 'active' : '' }}">
+            <li class="treeview {{ Route::currentRouteNamed('mutasi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.view') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.view.pegawai') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.viewall') ? 'active' : '' }}">
               <a href="#">
                 <i class="fa fa-code-fork"></i> <span>Manajemen Mutasi</span>
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li class="{{ Route::currentRouteNamed('mutasi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.view') ? 'active' : '' }}"><a href="{{ route('mutasi.index') }}"><i class="fa fa-circle-o"></i> Mutasi</a></li>
+                <li class="{{ Route::currentRouteNamed('mutasi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.view') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.viewall') ? 'active' : '' }}"><a href="{{ route('mutasi.index') }}"><i class="fa fa-circle-o"></i> Mutasi</a></li>
                 <li class="{{ Route::currentRouteNamed('mutasi.view.pegawai') ? 'active' : '' }}">
                   <a href="{{ route('mutasi.view.pegawai') }}">
                     <i class="fa fa-circle-o"></i> <span>Histori Mutasi Anda</span>

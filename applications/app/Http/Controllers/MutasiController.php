@@ -175,7 +175,6 @@ class MutasiController extends Controller
                           group by a.pegawai_id order by a.skpd_id_old desc");
 
       $getmutasi = collect($list);
-      // dd($getmutasi);
       return view('pages.mutasi.viewall', compact('getmutasi'));
     }
 
