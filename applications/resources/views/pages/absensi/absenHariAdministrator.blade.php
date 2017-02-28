@@ -211,7 +211,7 @@
 @endsection
 
 @section('script')
-<script src="http://localhost/presensi-tangkab/plugins/select2/select2.full.min.js"></script>
+<script src="{{ asset('plugins/select2/select2.full.min.js')}}"></script>
 <script>
 $(".select2").select2();
 $('#start_date').datepicker({
