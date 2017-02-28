@@ -134,7 +134,7 @@
             </li>
             @endif
             @if(session('status') == 'admin')
-            <li class="treeview {{ Route::currentRouteNamed('absensi.skpd') ? 'active' : ''}}{{ Route::currentRouteNamed('apelskpd') ? 'active' : '' }}{{ Route::currentRouteNamed('apelskpd.store') ? 'active' : '' }}{{ Route::currentRouteNamed('absenhari.skpd') ? 'active' : '' }}{{ Route::currentRouteNamed('absenhari.skpdStore') ? 'active' : '' }}">
+            <li class="treeview {{ Route::currentRouteNamed('absensi.skpd') ? 'active' : ''}}{{ Route::currentRouteNamed('apelskpd') ? 'active' : '' }}{{ Route::currentRouteNamed('apelskpd.store') ? 'active' : '' }}{{ Route::currentRouteNamed('absenhari.skpd') ? 'active' : '' }}{{ Route::currentRouteNamed('absenhari.skpdStore') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanPegawai') ? 'active' : '' }}">
               <a href="">
                 <i class="fa fa-calendar"></i> <span>Absensi</span>
                 <i class="fa fa-angle-left pull-right"></i>

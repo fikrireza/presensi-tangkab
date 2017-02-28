@@ -2,6 +2,7 @@
 
 @section('title')
   <title>Pejabat Dokumen</title>
+  <link rel="stylesheet" href="{{ asset('plugins/select2/select2.min.css') }}">
 @endsection
 
 @section('breadcrumb')
@@ -63,10 +64,9 @@
         </div>
         <div class="modal-body">
           <div class="form-group {{ $errors->has('pegawai_id') ? 'has-error' : '' }}">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Nama</label>
-            <div class="col-sm-6">
-              <select name="pegawai_id" class="form-control select2" required="">
+            <div class="col-sm-9">
+              <select name="pegawai_id" class="form-control select2" required="" style="width:100%;">
                 <option value="">--Pilih--</option>
                 @foreach ($pegawai as $key)
                   <option value="{{$key->id}}" {{ old($key->id) == $key->id ? 'selected' : ''}}>{{$key->nip_sapk}} - {{$key->nama}}</option>
@@ -75,23 +75,20 @@
             </div>
           </div>
           <div class="form-group {{ $errors->has('pangkat') ? 'has-error' : '' }}">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Pangkat</label>
-            <div class="col-sm-6">
+            <div class="col-sm-9">
               <input type="text" name="pangkat" class="form-control" value="{{ old('pangkat')}}" placeholder="@if($errors->has('pangkat')){{ $errors->first('pangkat')}} @endif Pangkat" required="">
             </div>
           </div>
           <div class="form-group {{ $errors->has('jabatan') ? 'has-error' : '' }}">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Jabatan</label>
-            <div class="col-sm-6">
+            <div class="col-sm-9">
               <input type="text" name="jabatan" class="form-control" value="{{ old('jabatan')}}" placeholder="@if($errors->has('jabatan')){{ $errors->first('jabatan')}} @endif Jabatan" required="">
             </div>
           </div>
           <div class="form-group {{ $errors->has('posisi_ttd') ? 'has-error' : '' }}">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Posisi TTD</label>
-            <div class="col-sm-6">
+            <div class="col-sm-9">
               <select name="posisi_ttd" class="form-control" required="">
                 <option value="">--Pilih--</option>
                 <option value="1" {{ old('posisi_ttd') == '1' ? 'selected' : ''}}>Kanan</option>
@@ -121,10 +118,9 @@
         </div>
         <div class="modal-body">
           <div class="form-group {{ $errors->has('pegawai_id') ? 'has-error' : '' }}">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Nama</label>
-            <div class="col-sm-6">
-              <select name="pegawai_id" class="form-control select2" required="">
+            <div class="col-sm-9">
+              <select name="pegawai_id" class="form-control select2" required="" style="width:100%;">
                 @foreach ($pegawai as $key)
                   <option value="{{$key->id}}" id="pegawai_id{{$key->id}}" {{ old($key->id) == $key->id ? 'selected' : ''}}>{{$key->nip_sapk}} - {{$key->nama}}</option>
                 @endforeach
@@ -132,23 +128,20 @@
             </div>
           </div>
           <div class="form-group  {{ $errors->has('jabatan') ? 'has-error' : '' }}">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Jabatan</label>
-            <div class="col-sm-6">
+            <div class="col-sm-9">
               <input type="text" name="jabatan" class="form-control" id="jabatan" value="{{ old('jabatan') }}" placeholder="@if($errors->has('jabatan')){{ $errors->first('jabatan')}} @endif Singkatan" required="">
             </div>
           </div>
           <div class="form-group {{ $errors->has('pangkat') ? 'has-error' : '' }}">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Pangkat</label>
-            <div class="col-sm-6">
+            <div class="col-sm-9">
               <input type="text" name="pangkat" class="form-control" id="pangkat" value="{{ old('pangkat') }}" placeholder="@if($errors->has('pangkat')){{ $errors->first('pangkat')}} @endif Pangkat" required="">
             </div>
           </div>
           <div class="form-group {{ $errors->has('posisi_ttd') ? 'has-error' : '' }}">
-            <div class="col-sm-1"></div>
             <label class="col-sm-3">Posisi TTD</label>
-            <div class="col-sm-6">
+            <div class="col-sm-9">
               <select class="form-control" name="posisi_ttd">
                 <option value="1" id="posisi_ttd1">Kanan</option>
                 <option value="2" id="posisi_ttd2">Kiri</option>
@@ -244,7 +237,9 @@
 @endsection
 
 @section('script')
+<script src="{{ asset('plugins/select2/select2.full.min.js')}}"></script>
 <script type="text/javascript">
+ $(".select2").select2();
 @if (count($errors) > 0)
   $('#modaltambahpejabat').modal('show');
 @endif

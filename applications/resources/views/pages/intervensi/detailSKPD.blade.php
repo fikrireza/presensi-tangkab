@@ -48,8 +48,8 @@
         </div>
         <div class="modal-body">
           <div class="form-group {{ $errors->has('pegawai_id') ? 'has-error' : '' }}">
-            <label class="col-md-3 control-label">Pegawai</label>
-            <div class="col-md-6">
+            <label class="col-md-3">Pegawai</label>
+            <div class="col-md-9">
               <select class="form-control select2" name="pegawai_id" style="width:100%;">
                 <option value="">-- PILIH --</option>
                 @foreach ($pegawai as $key)
@@ -59,8 +59,8 @@
             </div>
           </div>
           <div class="form-group {{ $errors->has('jenis_intervensi') ? 'has-error' : '' }}" >
-            <label class="col-sm-3 control-label">Jenis Intervensi</label>
-            <div class="col-sm-6">
+            <label class="col-sm-3">Jenis Intervensi</label>
+            <div class="col-sm-9">
               <select class="form-control select2" name="jenis_intervensi" style="width:100%;">
                 <option value="">-- PILIH --</option>
                 @foreach ($getmasterintervensi as $key)
@@ -74,8 +74,8 @@
             </div>
           </div>
           <div class="form-group {{ $errors->has('tanggal_mulai') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Tanggal Mulai</label>
-            <div class="col-sm-6">
+            <label class="col-sm-3">Tanggal Mulai</label>
+            <div class="col-sm-9">
               <div class="input-group date">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
@@ -86,8 +86,8 @@
             </div>
           </div>
           <div class="form-group {{ $errors->has('tanggal_akhir') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Tanggal Akhir</label>
-            <div class="col-sm-6">
+            <label class="col-sm-3">Tanggal Akhir</label>
+            <div class="col-sm-9">
               <div class="input-group date">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
@@ -98,22 +98,22 @@
             </div>
           </div>
           <div class="form-group {{ $errors->has('jumlah_hari') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Jumlah Hari</label>
-            <div class="col-sm-6">
+            <label class="col-sm-3">Jumlah Hari</label>
+            <div class="col-sm-9">
               <input type="text" name="jumlah_hari" id="jumlah_hari" class="form-control" value="{{ old('jumlah_hari') }}" placeholder="@if($errors->has('jumlah_hari'))
                 {{ $errors->first('jumlah_hari')}} @endif Jumlah Hari" required="" readonly="true">
             </div>
           </div>
           <div class="form-group {{ $errors->has('keterangan') ? 'has-error' : '' }}">
-            <label class="col-sm-3 control-label">Keterangan</label>
-            <div class="col-sm-6">
+            <label class="col-sm-3">Keterangan</label>
+            <div class="col-sm-9">
               <input type="text" name="keterangan" class="form-control" value="{{ old('keterangan') }}" placeholder="@if($errors->has('keterangan'))
                 {{ $errors->first('keterangan')}} @endif Keterangan" required="">
             </div>
           </div>
           <div class="form-group {{ $errors->has('berkas') ? 'has-error' : ''}}">
-            <label class="col-sm-3 control-label">Berkas</label>
-            <div class="col-sm-6">
+            <label class="col-sm-3">Berkas</label>
+            <div class="col-sm-9">
               <input type="file" name="berkas" class="form-control" accept=".png, .jpg, .pdf" value="{{ old('berkas') }}">
               <span style="color:red;">Hanya .jpg, .png, .pdf</br>*Kosongkan Jika Tidak Ingin Mengganti Berkas</span>
             </div>
