@@ -69,7 +69,7 @@
             @foreach ($getskpd as $key)
             <tr>
               <td>{{ $no }}</td>
-              <td>{{ $key->nama_skpd }}</td>
+              <td>{{ $key->skpd_nama_last }}</td>
               <td>
                 <a href="{{ url('mutasi/viewall', $key->skpd_new_last) }}"><i class="fa fa-eye"></i> Lihat</a>
               </td>

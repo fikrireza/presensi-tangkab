@@ -39,12 +39,11 @@ class MutasiController extends Controller
       $list = [];
       $getmutasi = collect($list);
 
-      $listskpd = DB::select("select (select b.skpd_id_new from preson_mutasi b where b.pegawai_id = a.pegawai_id order by 
-                            b.created_at desc limit 1) as skpd_new_last, d.nama as nama_skpd
-                            from preson_mutasi a left join preson_pegawais c on a.pegawai_id=c.id 
-                            left join preson_skpd d on 
-                            (select b.skpd_id_old from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) = d.id
-                            group by a.pegawai_id order by a.skpd_id_old desc");
+      $listskpd = DB::select("select a.id, a.pegawai_id, (select b.skpd_id_new from preson_mutasi b where 
+                            b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as skpd_new_last,
+                            (select d.nama from preson_mutasi b left join preson_skpd d on 
+                            b.skpd_id_new = d.id where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as  skpd_nama_last from preson_mutasi a left join preson_pegawais c on a.pegawai_id=c.id
+                            group by skpd_new_last order by skpd_new_last asc");
 
         $getskpd = collect($listskpd);
 
