@@ -38,6 +38,7 @@
     <div class="box box-primary box-solid">
       <div class="box-header">
         <h3 class="box-title">Mutasi</h3>
+        <a href="{{ URL::previous() }}" class="btn bg-blue pull-right">Kembali</a>
       </div>
       <div class="box-body table-responsive">
         <table id="table_mutasi" class="table table-bordered table-striped">
