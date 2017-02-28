@@ -33,57 +33,6 @@
 </div>
 @endif
 
-
-@if(session('status') == 'administrator')
-<div class="row">
-  <div class="col-md-12">
-    <div class="box box-primary box-solid">
-      <div class="box-header">
-        <h3 class="box-title">SKPD</h3>
-      </div>
-      <div class="box-body table-responsive">
-        <table id="table_mutasi" class="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>SKPD</th>
-              <th style="width: 10%">Aksi</th>
-            </tr>
-          </thead>
-          <tfoot>
-            <tr>
-              <td></td>
-              <th></th>
-              <td></td>
-            </tr>
-          </tfoot>
-          <tbody>
-            <?php $no = 1; ?>
-            @if ($getskpd->isEmpty())
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            @else
-            @foreach ($getskpd as $key)
-            <tr>
-              <td>{{ $no }}</td>
-              <td>{{ $key->nama_skpd }}</td>
-              <td>
-                <a href="{{ url('mutasi/viewall', $key->skpd_new_last) }}"><i class="fa fa-eye"></i> Lihat</a>
-              </td>
-            </tr>
-            <?php $no++; ?>
-            @endforeach
-            @endif
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-@elseif(session('status') == 'admin')
 <div class="row">
   <div class="col-md-12">
     <div class="box box-primary box-solid">
@@ -144,7 +93,7 @@
     </div>
   </div>
 </div>
-@endif
+
 @endsection
 
 @section('script')

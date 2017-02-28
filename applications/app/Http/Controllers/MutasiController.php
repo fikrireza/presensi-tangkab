@@ -38,7 +38,15 @@ class MutasiController extends Controller
       {
       $list = [];
       $getmutasi = collect($list);
-      $getskpd = Skpd::select('*')->where('status', '1')->get();
+
+      $listskpd = DB::select("select (select b.skpd_id_new from preson_mutasi b where b.pegawai_id = a.pegawai_id order by 
+                            b.created_at desc limit 1) as skpd_new_last, d.nama as nama_skpd
+                            from preson_mutasi a left join preson_pegawais c on a.pegawai_id=c.id 
+                            left join preson_skpd d on 
+                            (select b.skpd_id_old from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) = d.id
+                            group by a.pegawai_id order by a.skpd_id_old desc");
+
+        $getskpd = collect($listskpd);
 
       }else if (session('status') == 'admin'){
 
@@ -49,12 +57,15 @@ class MutasiController extends Controller
         //           ->orderby('preson_mutasi.skpd_id_old', 'desc')
         //           ->get();
 
-        $list = DB::select("select a.id, a.pegawai_id,c.nip_sapk, c.nama as nama_pegawai, a.skpd_id_new,
-                          (select b.skpd_id_old from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as skpd_last, d.nama as nama_skpd, count(a.pegawai_id) as jumlahmutasi 
+        $list = DB::select("select a.id, a.pegawai_id,c.nip_sapk, c.nama as nama_pegawai,
+                          (select b.skpd_id_old from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as skpd_old_last,
+                          (select b.skpd_id_new from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as skpd_new_last, 
+                           d.nama as nama_skpd, 
+                          (select count(1) from preson_mutasi e where e.pegawai_id = a.pegawai_id) as jumlahmutasi 
                             from preson_mutasi a left join preson_pegawais c on a.pegawai_id=c.id 
                             left join preson_skpd d on 
-                              (select b.skpd_id_old from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) = d.id
-                            where a.pegawai_id not in ('$pegawai_id') and a.skpd_id_new =  ('$skpd_id')
+                          (select b.skpd_id_old from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) = d.id
+                            where (select b.skpd_id_new from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) =  ('$skpd_id')
                           group by a.pegawai_id order by a.skpd_id_old desc");
 
         $getmutasi = collect($list);
@@ -145,6 +156,28 @@ class MutasiController extends Controller
       $akses->update();
 
       return redirect()->route('pegawai.index')->with('berhasil', 'Pegawai Berhasil Dimutasi');
+    }
+
+    public function viewAll($id)
+    {
+      $mutasi = Mutasi::get();
+
+      $pegawai_id = Auth::user()->pegawai_id;
+
+      $list = DB::select("select a.id, a.pegawai_id,c.nip_sapk, c.nama as nama_pegawai,
+                          (select b.skpd_id_old from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as skpd_old_last,
+                          (select b.skpd_id_new from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as skpd_new_last, 
+                           d.nama as nama_skpd, 
+                          (select count(1) from preson_mutasi e where e.pegawai_id = a.pegawai_id) as jumlahmutasi 
+                            from preson_mutasi a left join preson_pegawais c on a.pegawai_id=c.id 
+                            left join preson_skpd d on 
+                          (select b.skpd_id_old from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) = d.id
+                            where (select b.skpd_id_new from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) =  ('$id')
+                          group by a.pegawai_id order by a.skpd_id_old desc");
+
+      $getmutasi = collect($list);
+      // dd($getmutasi);
+      return view('pages.mutasi.viewall', compact('getmutasi'));
     }
 
 

@@ -27,6 +27,7 @@ Route::get('mutasi', 'MutasiController@index')->name('mutasi.index');
 Route::get('mutasi/create/{id}', 'MutasiController@create')->name('mutasi.create');
 Route::post('mutasi/create', 'MutasiController@createStore')->name('mutasi.createStore');
 Route::get('mutasi/view/{id}', 'MutasiController@view')->name('mutasi.view');
+Route::get('mutasi/viewall/{id}', 'MutasiController@viewAll')->name('mutasi.viewall');
 Route::get('mutasi/view', 'MutasiController@viewPegawai')->name('mutasi.view.pegawai');
 
 // SKPD
