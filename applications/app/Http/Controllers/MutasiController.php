@@ -79,7 +79,7 @@ class MutasiController extends Controller
     {
 
       $getpegskpd = Pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
-                ->Select('preson_pegawais.id as pegawai_id', 'preson_pegawais.nama as pegawai_nama', 'preson_skpd.id as skpd_id', 'preson_skpd.nama as skpd_nama')->Where('preson_pegawais.id','=',$id)->first();
+                ->Select('preson_pegawais.id as pegawai_id','preson_pegawais.nip_sapk as pegawai_nip_sapk', 'preson_pegawais.nama as pegawai_nama', 'preson_skpd.id as skpd_id', 'preson_skpd.nama as skpd_nama')->Where('preson_pegawais.id','=',$id)->first();
 
 
       $getskpd = Skpd::whereNotIn('id', [$getpegskpd->skpd_id])->get();
@@ -90,14 +90,15 @@ class MutasiController extends Controller
 
     public function createStore(Request $request)
     {
+
+      // dd($request);
       $message = [
         'skpd_id_new.required' => 'Wajib di isi',
         'keterangan.required' => 'Wajib di isi',
         'tanggal_mutasi.required' => 'Wajib di isi',
         // 'tpp_dibayarkan.required' => 'Wajib di isi',
         'nomor_sk.required' => 'Wajib di isi',
-        'tanggal_sk.required' => 'Wajib di isi',
-        'upload_sk.*.required' => 'Wajib di isi',
+        'tanggal_sk.required' => 'Wajib di isi'
       ];
 
       $validator = Validator::make($request->all(), [
@@ -106,8 +107,7 @@ class MutasiController extends Controller
         'tanggal_mutasi' => 'required',
         // 'tpp_dibayarkan' => 'required',
         'nomor_sk' => 'required',
-        'tanggal_sk' => 'required',
-        'upload_sk.*' => 'required|mimes:jpeg,png,pdf,jpg',
+        'tanggal_sk' => 'required'
       ], $message);
 
       if($validator->fails())
@@ -120,7 +120,7 @@ class MutasiController extends Controller
          $doc_name = '';
           foreach ($request->file('upload_sk') as $key) {
             $file = $request->upload_sk[$i];
-            $file_name = $request->nama_pegawai.'-'.$request->nomor_sk.'-'.$request->tanggal_sk.'-'.$i.'.'. $file->getClientOriginalExtension();
+            $file_name = $request->pegawai_nip_sapk.'-'.$request->nama_pegawai.'-'.$request->tanggal_mutasi.'-'.$request->tanggal_sk.'-'.$i.'.'. $file->getClientOriginalExtension();
             $doc_name .= $file_name.'//'; 
             
             $file->move('documents/', $file_name);

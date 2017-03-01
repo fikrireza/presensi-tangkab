@@ -30,6 +30,7 @@
             <div class="col-sm-10">
               <input type="text" name="nama_pegawai" class="form-control" value="{{$getpegskpd->pegawai_nama}}" readonly="true">
               <input type="hidden" name="pegawai_id" value="{{$getpegskpd->pegawai_id}}">
+              <input type="hidden" name="pegawai_nip_sapk" value="{{$getpegskpd->pegawai_nip_sapk}}">
             </div>
           </div>
           <div class="form-group">
@@ -45,7 +46,7 @@
               <select name="skpd_id_new" class="form-control select2">
                 <option value="">-- Pilih --</option>
                 @foreach ($getskpd as $key)
-                <option value="{{$key->id}}">{{ $key->nama}}</option>
+                <option value="{{ $key->id }}" {{ old('skpd_id_new') == $key->id ? 'selected' : ''}}>{{ $key->nama }}</option>
                 @endforeach
               </select>
                 @if($errors->has('skpd_id_new'))
@@ -111,12 +112,18 @@
                       <tr>
                         <td><input type="checkbox" name="chk"/></td>
                         <td>
-                          <input type="file" name="upload_sk[1]" class="form-control {{ $errors->has('upload_sk[1]') ? 'has-error' : '' }}" accept=".png, .jpg, .pdf" value="{{ old('upload_sk[1]') }}">
+                          <input type="file" name="upload_sk[1]" class="form-control {{ $errors->has('upload_sk[1]') ? 'has-error' : '' }}" accept=".png, .jpg, .pdf" required>
                         </td>
                       </tr>
                     </tbody>
                   </table>
                   <span style="color:red;">Hanya .jpg, .png, .pdf</span>
+                   @if($errors->has('upload_sk[1]'))
+                  <span class="help-block">
+                    <strong>{{ $errors->first('upload_sk[1]')}}
+                    </strong>
+                  </span>
+                @endif
                 </div>
                 <div class="box-footer clearfix">
                   <div class="col-md-9">
@@ -170,7 +177,7 @@ function isNumber(evt) {
       var cell1 = row.insertCell(0);
       cell1.innerHTML = '<input type="checkbox" name="chk[]"/>';
       var cell2 = row.insertCell(1);
-      cell2.innerHTML = '<input type="file" name="upload_sk['+numA+']" class="form-control" value="" />';
+      cell2.innerHTML = '<input type="file" name="upload_sk['+numA+']" class="form-control" value="" accept=".png, .jpg, .pdf" required/>';
     }
 
     function deluploaddocument(tableID) {
