@@ -197,7 +197,7 @@
           </tbody>
         </table>
 
-        @elseif(session('status') == 'administrator')
+        @elseif(session('status') == 'administrator' || session('status') == 'superuser')
         <table id="table_skpd" class="table table-bordered table-striped">
           <thead>
             <tr>
