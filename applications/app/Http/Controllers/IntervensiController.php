@@ -170,7 +170,7 @@ class IntervensiController extends Controller
 
         $pegawai = pegawai::select('id', 'nama')->where('skpd_id', Auth::user()->skpd_id)->get();
       }
-      elseif(session('status') === 'administrator')
+      elseif(session('status') === 'administrator' || session('status') == 'superuser')
       {
         $getSKPD = skpd::get();
 
