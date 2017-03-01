@@ -193,6 +193,8 @@
                 @endif
             </div>
           </div>
+          @else
+            <input type="hidden" name="status" value="{{ $pegawai->status }}" />
           @endif
         </div>
         <div class="box-footer">
