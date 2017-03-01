@@ -116,20 +116,27 @@
           <div class="form-group">
             <label class="col-md-3">NIP</label>
             <div class="col-md-9">
-              <input name="nip_sapk_edit" id="nip_sapk_edit" class="form-control" readonly="true">
-              <input type="hidden" name="id" id="id">
+              <input name="nip_sapk_edit" id="nip_sapk_edit" class="form-control" readonly="true" value="{{ old('nip_sapk_edit') }}" >
+              <input type="hidden" name="id" id="id" value="{{ old('id') }}">
             </div>
           </div>
           <div class="form-group">
             <label class="col-md-3">Nama</label>
             <div class="col-md-9">
-              <input name="nama" id="nama_edit" class="form-control" readonly="true">
+              <input name="nama_edit" id="nama_edit" class="form-control" readonly="true" value="{{ old('nama_edit') }}">
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group {{ $errors->has('catatan_edit') ? 'has-error' : '' }}">
             <label class="col-sm-3">Catatan</label>
             <div class="col-sm-9">
-              <textarea name="catatan_edit" id="catatan_edit" class="form-control" rows="5" cols="40" placeholder="Catatan "></textarea>
+              <textarea name="catatan_edit" id="catatan_edit" class="form-control" rows="5" cols="40" placeholder="@if($errors->has('catatan_edit'))
+                {{ $errors->first('catatan_edit')}}@endif Catatan ">{{ old('catatan_edit') }}</textarea>
+               @if($errors->has('catatan_edit'))
+                  <span class="help-block">
+                    <strong>{{ $errors->first('catatan_edit')}}
+                    </strong>
+                  </span>
+                @endif
             </div>
           </div>
         </div>
@@ -209,8 +216,11 @@
 </script>
 
 <script type="text/javascript">
-@if (count($errors) > 0)
+@if ($errors->has('nip_sapk') || $errors->has('catatan'))
   $('#modaltambah').modal('show');
+@endif
+@if ($errors->has('catatan_edit'))
+  $('#modaledit').modal('show');
 @endif
 </script>
 
