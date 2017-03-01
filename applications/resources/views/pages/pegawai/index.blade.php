@@ -37,7 +37,7 @@
   <div class="col-md-12">
     <div class="box box-primary box-solid">
       <div class="box-header">
-        <h3 class="box-title">Struktural</h3>
+        <h3 class="box-title">Pegawai</h3>
         <a href="{{ route('pegawai.create') }}" class="btn bg-blue pull-right">Tambah Pegawai</a>
       </div>
       <div class="box-body table-responsive">
