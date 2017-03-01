@@ -86,6 +86,14 @@
 @elseif(session('status') == 'admin')
 <div class="row">
   <div class="col-md-12">
+    <div class="callout callout-success">
+      <p><b>Nama SKPD</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{$getskpdterkait->nama}}</p>
+      @if($getskpdterkait->singkatan == "")
+        <p><b>Singkatan</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: -</p>
+      @else
+        <p><b>Singkatan</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{$getskpdterkait->singkatan}}</p>
+      @endif
+    </div> 
     <div class="box box-primary box-solid">
       <div class="box-header">
         <h3 class="box-title">Mutasi</h3>

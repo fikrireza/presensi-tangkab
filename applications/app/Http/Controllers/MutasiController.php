@@ -45,7 +45,9 @@ class MutasiController extends Controller
                             b.skpd_id_new = d.id where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as  skpd_nama_last from preson_mutasi a left join preson_pegawais c on a.pegawai_id=c.id
                             group by skpd_new_last order by skpd_new_last asc");
 
-        $getskpd = collect($listskpd);
+      $getskpd = collect($listskpd);
+
+      $getskpdterkait = [];
 
       }else if (session('status') == 'admin'){
 
@@ -70,9 +72,11 @@ class MutasiController extends Controller
         $getmutasi = collect($list);
 
         $getskpd = [];
+
+        $getskpdterkait = Skpd::where('id', $skpd_id)->first();
       }
 
-      return view('pages.mutasi.index', compact('getmutasi','mutasi', 'getskpd'));
+      return view('pages.mutasi.index', compact('getmutasi','mutasi', 'getskpd', 'getskpdterkait'));
     }
 
     public function create($id)
@@ -175,7 +179,11 @@ class MutasiController extends Controller
                           group by a.pegawai_id order by a.skpd_id_old desc");
 
       $getmutasi = collect($list);
-      return view('pages.mutasi.viewall', compact('getmutasi'));
+
+      $getskpdterkait = Skpd::where('id', $id)->first();
+
+      // dd($getskpdterkait);
+      return view('pages.mutasi.viewall', compact('getmutasi', 'getskpdterkait'));
     }
 
 
