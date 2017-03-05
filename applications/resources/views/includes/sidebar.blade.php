@@ -18,10 +18,7 @@
               </a>
             </li>
             @if(session('status') == 'administrator' || session('status') == 'superuser')
-            <li class="treeview {{ Route::currentRouteNamed('skpd.index') ? 'active' : '' }}{{ Route::currentRouteNamed('golongan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawai.index') ? 'active' : ''}}{{ Route::currentRouteNamed('harilibur.index') ? 'active' : ''}}{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('pengecualian.index') ? 'active' : ''}}
-            {{ Route::currentRouteNamed('pegawai.create') ? 'active' : '' }}
-            {{ Route::currentRouteNamed('pegawai.edit') ? 'active' : '' }}
-            {{ Route::currentRouteNamed('mutasi.create') ? 'active' : '' }}">
+            <li class="treeview {{ Route::currentRouteNamed('skpd.index') ? 'active' : '' }}{{ Route::currentRouteNamed('golongan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawai.index') ? 'active' : ''}}{{ Route::currentRouteNamed('harilibur.index') ? 'active' : ''}}{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('pengecualian.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawai.create') ? 'active' : '' }}{{ Route::currentRouteNamed('pegawai.edit') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.create') ? 'active' : '' }}">
               <a href="#">
                 <i class="fa fa-gear"></i> <span>Master & Setup</span>
                 <i class="fa fa-angle-left pull-right"></i>
@@ -36,10 +33,32 @@
                 <li class="{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}"><a href="{{ route('jabatan.index') }}"><i class="fa fa-circle-o"></i> Jabatan</a></li>
                 <li class="{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}"><a href="{{ route('struktural.index') }}"><i class="fa fa-circle-o"></i> Struktural/Eselon</a></li>
                 <li class="{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}"><a href="{{ route('manajemenintervensi.index') }}"><i class="fa fa-circle-o"></i> Intervensi</a></li>
+                <li class="{{ Route::currentRouteNamed('shift.index') ? 'active' : '' }}"><a href="{{ route('shift.index') }}"><i class="fa fa-circle-o"></i> Shift</a></li>
                 <li class="{{ Route::currentRouteNamed('harilibur.index') ? 'active' : '' }}"><a href="{{ route('harilibur.index') }}"><i class="fa fa-circle-o"></i> Hari Libur & Cuti Bersama</a></li>
                 @if(session('status') == 'administrator' || session('status') == 'admin')
                 <li class="{{ Route::currentRouteNamed('pengecualian.index') ? 'active' : ''}}"><a href="{{ route('pengecualian.index') }}"><i class="fa fa-circle-o"></i> Pegecualian TPP</a></li>
                 @endif
+              </ul>
+            </li>
+            @endif
+            @if (session('status') == 'administrator' || session('status') == 'superuser')
+            <li class="treeview {{ Route::currentRouteNamed('shift.index') ? 'active' : ''}}">
+              <a href="#">
+                <i class="fa fa-calendar-plus-o"></i> <span>Manajemen Shift</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li class="{{ Route::currentRouteNamed('shift.index') ? 'active' : ''}}"><a href="{{ route('shift.index')}}"><i class="fa fa-circle-o"></i> Daftar SKPD</a></li>
+              </ul>
+            </li>
+            @elseif(session('status') == 'admin' && (Auth::user()->skpd->flag_shift == 1))
+            <li class="treeview {{ Route::currentRouteNamed('shift.index') ? 'active' : ''}}">
+              <a href="#">
+                <i class="fa fa-calendar-plus-o"></i> <span>Manajemen Shift</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li class="#"><a href="#"><i class="fa fa-circle-o"></i> Coba</a></li>
               </ul>
             </li>
             @endif
@@ -50,7 +69,7 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li class="{{ Route::currentRouteNamed('apel.index') ? 'active' : ''}}"><a href="{{ route('apel.index') }}"><i class="fa fa-circle-o"></i> Jadwal Apel</a></a></li>
+                <li class="{{ Route::currentRouteNamed('apel.index') ? 'active' : ''}}"><a href="{{ route('apel.index') }}"><i class="fa fa-circle-o"></i> Jadwal Apel</a></li>
                 <li class="{{ Route::currentRouteNamed('apel.mesin') ? 'active' : ''}}"><a href="{{ route('apel.mesin')}}"><i class="fa fa-circle-o"></i> Daftar Mesin Apel</a></li>
               </ul>
             </li>
@@ -106,7 +125,18 @@
               </a>
             </li>
             @endif
-            @if(session('status') == 'administrator' || session('status') == 'admin' || session('status') == 'pegawai' || session('status') == 'superuser' || session('status') == 'sekretaris')
+            @if(session('status') == 'administrator' || session('status') == 'superuser')
+            <li class="treeview {{ Route::currentRouteNamed('intervensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('intervensi.kelola') ? 'active' : '' }}{{ Route::currentRouteNamed('intervensi.kelola.aksi') ? 'active' : '' }}">
+              <a href="">
+                <i class="fa fa-envelope"></i> <span>Manajemen Intervensi</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li class="{{ Route::currentRouteNamed('intervensi.index') ? 'active' : ''}}"><a href="{{ route('intervensi.index') }}"><i class="fa fa-circle-o"></i> <span>Intervensi</span></a></li>
+                <li class=""><a href="#"><i class="fa fa-circle-o"></i> <span>Revisi Intervensi</span></a></li>
+              </ul>
+            </li>
+            @elseif(session('status') == 'pegawai' || session('status') == 'admin' || session('status') == 'sekretaris')
             <li class="{{ Route::currentRouteNamed('intervensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('intervensi.kelola') ? 'active' : '' }}{{ Route::currentRouteNamed('intervensi.kelola.aksi') ? 'active' : '' }}">
               <a href="{{ route('intervensi.index') }}">
                 <i class="fa fa-envelope"></i> <span>Intervensi</span>

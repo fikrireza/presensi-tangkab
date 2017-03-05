@@ -159,6 +159,10 @@ Route::post('laporan-pegawai', 'LaporanController@laporanPegawaiStore')->name('l
 Route::get('cetakPegawai', 'LaporanController@cetakPegawai')->name('laporan.cetakPegawai');
 
 
-// Harus Bisa
-Route::get('laporan2', 'Laporan2Controller@laporan2')->name('laporan2');
-Route::post('laporan2', 'Laporan2Controller@laporan2Store')->name('laporan2.store');
+// Shift
+Route::get('shift', 'ShiftController@index')->name('shift.index');
+Route::post('shift', 'ShiftController@skpdShift')->name('shift.skpd');
+
+
+// CronJob for Convert TaLog to Preson_Log
+Route::get('convert', 'ConvertController@log_to_preson_log')->name('convert.index');
