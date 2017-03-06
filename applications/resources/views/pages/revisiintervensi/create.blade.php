@@ -22,7 +22,7 @@
         <h3 class="box-title" style="line-height:30px;">Tambah Data Revisi Intervensi</h3>
         <a href="{{ route('revisiintervensi.index') }}" class="btn bg-blue pull-right">Kembali</a>
       </div>
-      <form class="form-horizontal" role="form" action="{{ route('revisiintervensi.createStore') }}" method="post"  enctype="multipart/form-data">
+      <form action="{{ route('revisiintervensi.caripegawai') }}" method="post" class="form-horizontal" role="form">
         {{ csrf_field() }}
         <div class="box-body">
           <div class="form-group {{ $errors->has('skpd') ? 'has-error' : '' }}">
@@ -32,7 +32,6 @@
                 <option value="">-- Pilih --</option>
                 @foreach ($getskpd as $key)
                 <option value="{{ $key->id }}" {{ old('skpd') == $key->id ? 'selected' : ''}}>{{ $key->nama }}</option>
-                <a class="btn btn-sm bg-green" href="{{ url('revisi-intervensi/caripegawai', 1) }}">Cari Pegawai</a>
                 @endforeach
               </select>
                 @if($errors->has('skpd'))
@@ -42,8 +41,13 @@
                   </span>
                 @endif
             </div>
-            <a class="btn btn-sm bg-green" href="{{ url('revisi-intervensi/caripegawai', 15) }}">Cari Pegawai</a>
+            <button type="submit" class="btn bg-green pull-left">Cari Pegawai</button>
           </div>
+        </div>
+     </form>
+    <form class="form-horizontal" role="form" action="{{ route('revisiintervensi.createStore') }}" method="post" enctype="multipart/form-data">
+        {{ csrf_field() }}
+        <div class="box-body">
           <div class="form-group">
             <label class="col-sm-2 control-label"></label>
             <div class="col-md-10">
@@ -56,10 +60,10 @@
                         <th>NIP</th>
                         <th>Nama Pegawai</th>
                       </tr>
-                      @if(!$getcaripegawai->isEmpty())
+                      @if($getcaripegawai != null)
                         @foreach($getcaripegawai as $key)
                           <tr>
-                            <td><input type="checkbox" name="chk"/></td>
+                            <td><input type="checkbox" class="minimal" name="idpegawai[]" value="{{$key->id}}"></td>
                             <td>{{$key->nip_sapk}}</td>
                             <td>{{$key->nama}}</td>
                           </tr>
@@ -70,15 +74,17 @@
                           Data pegawai tidak tersedia.
                         </td>
                       </tr>
-                    @endif
+                      @endif
                     </tbody>
                   </table>
                 </div>
+                @if($getcaripegawai != null)
                 <div class="box-footer">
                   <ul class="pagination pagination-sm no-margin pull-right">
                     {{ $getcaripegawai->links() }}
                   </ul>
                 </div>
+                @endif
               </div>
             </div>
           </div>
@@ -104,7 +110,7 @@
           <div class="form-group {{ $errors->has('upload_revisi') ? 'has-error' : '' }}">
             <label class="col-sm-2 control-label">Upload Document</label>
             <div class="col-sm-10">
-              <input type="file" name="upload_revisi" class="form-control {{ $errors->has('upload_revisi') ? 'has-error' : '' }}" accept=".png, .jpg, .pdf" required>
+              <input type="file" name="upload_revisi" class="form-control {{ $errors->has('upload_revisi') ? 'has-error' : '' }}" accept=".png, .jpg, .pdf">
               <span style="color:red;">Hanya .jpg, .png, .pdf</span>
                @if($errors->has('upload_revisi'))
               <span class="help-block">

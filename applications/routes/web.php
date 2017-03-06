@@ -88,7 +88,7 @@ Route::post('manajemen-intervensi', 'ManajemenIntervensiController@store')->name
 // Revisi Intervensi
 Route::get('revisi-intervensi', 'RevisiIntervensiController@index')->name('revisiintervensi.index');
 Route::get('revisi-intervensi/create', 'RevisiIntervensiController@create')->name('revisiintervensi.create');
-Route::get('revisi-intervensi/caripegawai/{id}', 'RevisiIntervensiController@caripegawai')->name('revisiintervensi.caripegawai');
+Route::post('revisi-intervensi/caripegawai', 'RevisiIntervensiController@caripegawai')->name('revisiintervensi.caripegawai');
 Route::post('revisi-intervensi/createStore', 'RevisiIntervensiController@createStore')->name('revisiintervensi.createStore');
 
 
