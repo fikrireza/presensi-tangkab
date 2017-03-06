@@ -18,6 +18,10 @@
     $(".alert-success").fadeTo(500, 0).slideUp(500, function(){
         $(this).remove();
     });
+
+    $(".alert-danger").fadeTo(500, 0).slideUp(500, function(){
+        $(this).remove();
+    });
   }, 2000);
 </script>
 
@@ -28,6 +32,18 @@
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
       <h4><i class="icon fa fa-check"></i> Berhasil!</h4>
       <p>{{ Session::get('berhasil') }}</p>
+    </div>
+  </div>
+</div>
+@endif
+
+@if(Session::has('gagal'))
+<div class="row">
+  <div class="col-md-12">
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4><i class="icon fa fa-check"></i> Terjadi Kesalahan!</h4>
+      <p>{{ Session::get('gagal') }}</p>
     </div>
   </div>
 </div>
@@ -48,7 +64,7 @@
           <div class="form-group {{ $errors->has('jenis_intervensi') ? 'has-error' : '' }}">
             <label class="col-sm-3">Jenis Intervensi</label>
             <div class="col-sm-9">
-              <select class="form-control select2" name="jenis_intervensi">
+              <select class="form-control select2" name="jenis_intervensi" id="id_intervensi">
                 <option value="">-- PILIH --</option>
                 @foreach ($getmasterintervensi as $key)
                   <option value="{{$key->id}}">{{$key->nama_intervensi}}</option>
@@ -97,13 +113,47 @@
                 {{ $errors->first('keterangan')}} @endif Keterangan" required="">
             </div>
           </div>
-          <div class="form-group {{ $errors->has('berkas') ? 'has-error' : ''}}">
+
+          <div id="keterangantambahan"></div>
+
+          <div class="form-group {{ $errors->has('berkas[]') ? 'has-error' : '' }}">
+            <label class="col-sm-2 control-label">Upload Document</label>
+            <div class="tab-content col-sm-10">
+              <div class="tab-pane active" id="tab_Dokumen">
+                <div class="box-body">
+                  <table class="table" id="duploaddocument">
+                    <tbody>
+                      <tr>
+                        <td><input type="checkbox" name="chk"/></td>
+                        <td>
+                          <input type="file" name="berkas[]" class="form-control {{ $errors->has('berkas[]') ? 'has-error' : '' }}" accept=".png, .jpg, .pdf" required>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <span style="color:red;">Hanya .jpg, .png, .pdf</span>
+                   @if($errors->has('berkas[]'))
+                  <span class="help-block">
+                    <strong>{{ $errors->first('berkas[]')}}
+                    </strong>
+                  </span>
+                @endif
+                </div>
+                <div class="box-footer clearfix">
+                  <div class="col-md-9">
+                    <label class="btn btn-sm bg-green" onclick="adduploaddocument('duploaddocument')">Tambah Dokumen</label>&nbsp;<label class="btn btn-sm bg-red" onclick="deluploaddocument('duploaddocument')">Hapus Dokumen</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {{-- <div class="form-group {{ $errors->has('berkas') ? 'has-error' : ''}}">
             <label class="col-sm-3">Berkas</label>
             <div class="col-sm-9">
               <input type="file" name="berkas" class="form-control" accept=".png, .jpg, .pdf" value="{{ old('berkas') }}">
               <span style="color:red;">Hanya .jpg, .png, .pdf</span>
             </div>
-          </div>
+          </div> --}}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tidak</button>
@@ -184,13 +234,44 @@
                 {{ $errors->first('keterangan_edit')}} @endif Keterangan" required="">
             </div>
           </div>
-          <div class="form-group {{ $errors->has('berkas_edit') ? 'has-error' : ''}}">
+          <div class="form-group {{ $errors->has('berkas_edit[]') ? 'has-error' : '' }}">
+            <label class="col-sm-2 control-label">Upload Document</label>
+            <div class="tab-content col-sm-10">
+              <div class="tab-pane active" id="tab_Dokumen">
+                <div class="box-body">
+                  <table class="table" id="duploaddocumentedit">
+                    <tbody>
+                      <tr>
+                        <td><input type="checkbox" name="chk"/></td>
+                        <td>
+                          <input type="file" name="berkas_edit[]" class="form-control {{ $errors->has('berkas_edit[]') ? 'has-error' : '' }}" accept=".png, .jpg, .pdf" required>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <span style="color:red;">Hanya .jpg, .png, .pdf</span>
+                   @if($errors->has('berkas_edit[]'))
+                  <span class="help-block">
+                    <strong>{{ $errors->first('berkas_edit[]')}}
+                    </strong>
+                  </span>
+                @endif
+                </div>
+                <div class="box-footer clearfix">
+                  <div class="col-md-9">
+                    <label class="btn btn-sm bg-green" onclick="adduploaddocument('duploaddocumentedit')">Tambah Dokumen</label>&nbsp;<label class="btn btn-sm bg-red" onclick="deluploaddocument('duploaddocumentedit')">Hapus Dokumen</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {{-- <div class="form-group {{ $errors->has('berkas_edit') ? 'has-error' : ''}}">
             <label class="col-sm-3">Berkas</label>
             <div class="col-sm-9">
               <input type="file" name="berkas_edit" class="form-control" accept=".png, .jpg, .pdf" value="{{ old('berkas_edit') }}">
               <span style="color:red;">Hanya .jpg, .png, .pdf</br>*Kosongkan Jika Tidak Ingin Mengganti Berkas</span>
             </div>
-          </div>
+          </div> --}}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tidak</button>
@@ -242,6 +323,7 @@
               <th>Tanggal Mulai</th>
               <th>Tanggal Akhir</th>
               <th>Keterangan</th>
+              <th>Download Berkas</th>
               <th>Status Intervensi</th>
               <th>Action</th>
             </tr>
@@ -249,6 +331,7 @@
           <tfoot>
             <tr>
               <td></td>
+              <th></th>
               <th></th>
               <th></th>
               <th></th>
@@ -271,6 +354,28 @@
               <td>{{ $key->tanggal_mulai }}</td>
               <td>{{ $key->tanggal_akhir }}</td>
               <td>{{ $key->deskripsi }}</td>
+              <td>
+                @php
+                  $fileberkas = explode("//", $key->berkas);
+                @endphp
+                @if (count($fileberkas)>1)
+                  @for ($i=0; $i < count($fileberkas); $i++)
+                    @if ($fileberkas[$i]!="")
+                      <a href="{{url('/documents')}}/{{$fileberkas[$i]}}" download title="Klik untuk download file.">
+                        <i class="fa fa-file-o"></i>
+                      </a>&nbsp;
+                    @endif
+                  @endfor
+                @elseif (count($fileberkas)==1)
+                  @if ($fileberkas[0]!="" && $fileberkas[0]!="-")
+                    <a href="{{url('/documents')}}/{{$fileberkas[0]}}" download title="Klik untuk download file.">
+                      <i class="fa fa-file-o"></i>
+                    </a>&nbsp;
+                    @else
+                      -
+                  @endif
+                @endif
+              </td>
               <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d')))
                 <small class="label label-info">Belum Disetujui</small>
               @elseif($key->flag_status == 1)
@@ -533,4 +638,61 @@ $('.tanggal_akhir_edit').datepicker({
       } );
   } );
 </script>
+
+<script language="javascript">
+    var numA=1;
+    function adduploaddocument(tableID) {
+      numA++;
+      var table = document.getElementById(tableID);
+      var rowCount = table.rows.length;
+      var row = table.insertRow(rowCount);
+      var cell1 = row.insertCell(0);
+      cell1.innerHTML = '<input type="checkbox" name="chk[]"/>';
+      var cell2 = row.insertCell(1);
+      if (tableID=="duploaddocumentedit") {
+        cell2.innerHTML = '<input type="file" name="berkas_edit[]" class="form-control" value="" accept=".png, .jpg, .pdf"/>';
+      } else{
+        cell2.innerHTML = '<input type="file" name="berkas[]" class="form-control" value="" accept=".png, .jpg, .pdf"/>';
+      }
+    }
+
+    function deluploaddocument(tableID) {
+        try {
+        var table = document.getElementById(tableID);
+        var rowCount = table.rows.length;
+
+        for(var i=0; i<rowCount; i++) {
+            var row = table.rows[i];
+            var chkbox = row.cells[0].childNodes[0];
+            if(null != chkbox && true == chkbox.checked) {
+                table.deleteRow(i);
+                rowCount--;
+                i--;
+                numA--;
+            }
+        }
+        }catch(e) {
+            alert(e);
+        }
+    }
+  </script>
+
+  <script>
+    $(function(){
+      $('select#id_intervensi').on('change', function(){
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        if (valueSelected==5 || valueSelected==6 || valueSelected==12) {
+          $('#keterangantambahan').html("<div class='form-group'>"+
+                                        "<label class='col-sm-3'>Nama Atasan</label>"+
+                                        "<div class='col-sm-9'>"+
+                                        "<input type='text' name='atasan' class='form-control'>"+
+                                        "</div>"+
+                                        "</div>");
+        } else {
+          $('#keterangantambahan').html("");
+        }
+      });
+    });
+  </script>
 @endsection

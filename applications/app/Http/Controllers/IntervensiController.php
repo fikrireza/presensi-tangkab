@@ -12,6 +12,7 @@ use App\Models\Skpd;
 
 use Validator;
 use Auth;
+use DB;
 use Image;
 
 class IntervensiController extends Controller
@@ -29,14 +30,13 @@ class IntervensiController extends Controller
 
     public function store(Request $request)
     {
-
       $message = [
         'jenis_intervensi.required' => 'Wajib di isi',
         'tanggal_mulai.required' => 'Wajib di isi',
         'tanggal_akhir.required' => 'Wajib di isi',
         'jumlah_hari.required' => 'Wajib di isi',
         'keterangan.required' => 'Wajib di isi',
-        'berkas'  => 'Hanya .jpg, .png, .pdf'
+        // 'berkas'  => 'Hanya .jpg, .png, .pdf'
       ];
 
       $validator = Validator::make($request->all(), [
@@ -45,7 +45,7 @@ class IntervensiController extends Controller
         'tanggal_akhir' => 'required',
         'jumlah_hari' => 'required',
         'keterangan' => 'required',
-        'berkas'  => 'mimes:jpeg,png,pdf,jpg'
+        // 'berkas'  => 'mimes:jpeg,png,pdf,jpg'
       ], $message);
 
       if($validator->fails())
@@ -53,19 +53,61 @@ class IntervensiController extends Controller
         return redirect()->route('intervensi.index')->withErrors($validator)->withInput();
       }
 
+      //validasi izin tidak masuk kerja 2x sebulan
+      if ($request->jenis_intervensi==12) {
+        if ($request->jumlah_hari>2) {
+          return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin tidak masuk kerja melebihi batas maksimal.');
+        }
+
+        $datenow = date('m-Y');
+        $pegawaiid = Auth::user()->pegawai_id;
+        $countsum = DB::select("select sum(jumlah_hari) as 'total' from preson_intervensis
+                                        where DATE_FORMAT(tanggal_mulai,'%m-%Y') = '$datenow'
+                                        and pegawai_id = $pegawaiid and id_intervensi = 12");
+
+        $result = $countsum[0]->total;
+        if ($result>=2) {
+          return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin tidak masuk kerja melebihi batas maksimal.');
+        }
+      }
+
+      //validasi izin datang telat/pulang cepat 2x sebulan
+      if ($request->jenis_intervensi==5 || $request->jenis_intervensi==6) {
+        if ($request->jumlah_hari>2) {
+          return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin datang telat atau pulang cepat melebihi batas maksimal.');
+        }
+
+        $datenow = date('m-Y');
+        $pegawaiid = Auth::user()->pegawai_id;
+        $countsum = DB::select("select sum(jumlah_hari) as 'total' from preson_intervensis
+                                where DATE_FORMAT(tanggal_mulai,'%m-%Y') = '$datenow'
+                                and pegawai_id = $pegawaiid and id_intervensi = 5 or id_intervensi = 6");
+
+        $result = $countsum[0]->total;
+        if ($result>=2) {
+          return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin datang telat atau pulang cepat melebihi batas maksimal.');
+        }
+      }
+
       $file = $request->file('berkas');
 
+      $doc_name = '';
       if($file != null)
       {
-        $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_mulai.'-'.$request->jenis_intervensi.'.' . $file->getClientOriginalExtension();
-        $file->move('documents/', $photo_name);
-      }else{
-        $photo_name = "-";
-
+        $i = 1;
+        foreach ($file as $key) {
+          $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_mulai.'-'.$request->jenis_intervensi.'-'.$i.'.'. $key->getClientOriginalExtension();
+          $key->move('documents/', $photo_name);
+          $doc_name .= $photo_name.'//';
+          $i++;
+        }
+      }
+      else
+      {
+        $doc_name = "-";
       }
 
       $getnamaintervensi = ManajemenIntervensi::find($request->jenis_intervensi);
-
       $set = new intervensi;
       $set->pegawai_id = Auth::user()->pegawai_id;
       $set->jenis_intervensi = $getnamaintervensi->nama_intervensi;
@@ -74,7 +116,12 @@ class IntervensiController extends Controller
       $set->tanggal_akhir = $request->tanggal_akhir;
       $set->jumlah_hari = $request->jumlah_hari;
       $set->deskripsi = $request->keterangan;
-      $set->berkas = $photo_name;
+
+      if (isset($request->atasan)) {
+        $set->nama_atasan = $request->atasan;
+      }
+
+      $set->berkas = $doc_name;
       $set->flag_status = 0;
       $set->actor = Auth::user()->pegawai_id;
       $set->save();

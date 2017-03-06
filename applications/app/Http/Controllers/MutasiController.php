@@ -39,9 +39,9 @@ class MutasiController extends Controller
       $list = [];
       $getmutasi = collect($list);
 
-      $listskpd = DB::select("select a.id, a.pegawai_id, (select b.skpd_id_new from preson_mutasi b where 
+      $listskpd = DB::select("select a.id, a.pegawai_id, (select b.skpd_id_new from preson_mutasi b where
                             b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as skpd_new_last,
-                            (select d.nama from preson_mutasi b left join preson_skpd d on 
+                            (select d.nama from preson_mutasi b left join preson_skpd d on
                             b.skpd_id_new = d.id where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as  skpd_nama_last from preson_mutasi a left join preson_pegawais c on a.pegawai_id=c.id
                             group by skpd_new_last order by skpd_new_last asc");
 
@@ -60,11 +60,11 @@ class MutasiController extends Controller
 
         $list = DB::select("select a.id, a.pegawai_id,c.nip_sapk, c.nama as nama_pegawai,
                           (select b.skpd_id_old from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as skpd_old_last,
-                          (select b.skpd_id_new from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as skpd_new_last, 
-                           d.nama as nama_skpd, 
-                          (select count(1) from preson_mutasi e where e.pegawai_id = a.pegawai_id) as jumlahmutasi 
-                            from preson_mutasi a left join preson_pegawais c on a.pegawai_id=c.id 
-                            left join preson_skpd d on 
+                          (select b.skpd_id_new from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as skpd_new_last,
+                           d.nama as nama_skpd,
+                          (select count(1) from preson_mutasi e where e.pegawai_id = a.pegawai_id) as jumlahmutasi
+                            from preson_mutasi a left join preson_pegawais c on a.pegawai_id=c.id
+                            left join preson_skpd d on
                           (select b.skpd_id_old from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) = d.id
                             where (select b.skpd_id_new from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) =  ('$skpd_id')
                           group by a.pegawai_id order by a.skpd_id_old desc");
@@ -125,15 +125,15 @@ class MutasiController extends Controller
           foreach ($request->file('upload_sk') as $key) {
             $file = $request->upload_sk[$i];
             $file_name = $request->pegawai_nip_sapk.'-'.$request->nama_pegawai.'-'.$request->tanggal_mutasi.'-'.$request->tanggal_sk.'-'.$i.'.'. $file->getClientOriginalExtension();
-            $doc_name .= $file_name.'//'; 
-            
+            $doc_name .= $file_name.'//';
+
             $file->move('documents/', $file_name);
             $i++;
           }
       } else {
         $doc_name = '-';
       }
-        
+
       $new = new Mutasi;
       $new->pegawai_id = $request->pegawai_id;
       $new->skpd_id_old = $request->skpd_id_old;
@@ -169,11 +169,11 @@ class MutasiController extends Controller
 
       $list = DB::select("select a.id, a.pegawai_id,c.nip_sapk, c.nama as nama_pegawai,
                           (select b.skpd_id_old from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as skpd_old_last,
-                          (select b.skpd_id_new from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as skpd_new_last, 
-                           d.nama as nama_skpd, 
-                          (select count(1) from preson_mutasi e where e.pegawai_id = a.pegawai_id) as jumlahmutasi 
-                            from preson_mutasi a left join preson_pegawais c on a.pegawai_id=c.id 
-                            left join preson_skpd d on 
+                          (select b.skpd_id_new from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) as skpd_new_last,
+                           d.nama as nama_skpd,
+                          (select count(1) from preson_mutasi e where e.pegawai_id = a.pegawai_id) as jumlahmutasi
+                            from preson_mutasi a left join preson_pegawais c on a.pegawai_id=c.id
+                            left join preson_skpd d on
                           (select b.skpd_id_old from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) = d.id
                             where (select b.skpd_id_new from preson_mutasi b where b.pegawai_id = a.pegawai_id order by b.created_at desc limit 1) =  ('$id')
                           group by a.pegawai_id order by a.skpd_id_old desc");
