@@ -342,7 +342,7 @@
               <th>Tanggal Mulai</th>
               <th>Tanggal Akhir</th>
               <th>Keterangan</th>
-              <th>Download Berkas</th>
+              <th>Preview Berkas</th>
               <th>Status Intervensi</th>
               <th>Action</th>
             </tr>
@@ -375,14 +375,14 @@
                 @if (count($fileberkas)>1)
                   @for ($i=0; $i < count($fileberkas); $i++)
                     @if ($fileberkas[$i]!="")
-                      <a href="#" data-value="{{url('/documents')}}/{{$fileberkas[$i]}}" class="viewdocument" data-toggle="modal" data-target="#modalviewdocument" title="Klik untuk download file.">
+                      <a href="#" data-value="{{url('/documents')}}/{{$fileberkas[$i]}}" class="viewdocument" data-toggle="modal" data-target="#modalviewdocument" title="Klik untuk lihat file.">
                         <i class="fa fa-file-o"></i>
                       </a>&nbsp;
                     @endif
                   @endfor
                 @elseif (count($fileberkas)==1)
                   @if ($fileberkas[0]!="" && $fileberkas[0]!="-")
-                    <a href="#" data-value="{{url('/documents')}}/{{$fileberkas[0]}}" class="viewdocument" data-toggle="modal" data-target="#modalviewdocument" title="Klik untuk download file.">
+                    <a href="#" data-value="{{url('/documents')}}/{{$fileberkas[0]}}" class="viewdocument" data-toggle="modal" data-target="#modalviewdocument" title="Klik untuk lihat file.">
                       <i class="fa fa-file-o"></i>
                     </a>&nbsp;
                     @else
@@ -393,7 +393,12 @@
               <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d')))
                 <small class="label label-info">Belum Disetujui</small>
               @elseif($key->flag_status == 1)
-                <small class="label label-success">Sudah Disetujui</small>
+                <small class="label label-success">Sudah Disetujui</small>&nbsp;
+                @if ($key->id_intervensi==5 || $key->id_intervensi==6 || $key->id_intervensi==12)
+                  <a href="{{route('intervensi.suratijin', $key->id)}}" title="Download Surat Ijin">
+                    <i class="fa fa-file-o"></i>
+                  </a>
+                @endif
               @elseif($key->flag_status == 3)
                 <small class="label label-warning">Dibatalkan</small>
               @else
@@ -730,7 +735,7 @@ $('.tanggal_akhir_edit').datepicker({
 
       // preview document in modal
       $(".viewdocument").on('click', function(){
-        var a = $(this).data('value');ma
+        var a = $(this).data('value');
         var ext = a.split('.');
         if (ext[1]=="png" || ext[1]=="jpg" || ext[1]=="jpeg") {
           $("#previewdocument").html("<img src='"+a+"'>");
