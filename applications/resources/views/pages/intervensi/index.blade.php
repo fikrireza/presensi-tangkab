@@ -185,7 +185,7 @@
           <div class="form-group {{ $errors->has('jenis_intervensi_edit') ? 'has-error' : '' }}">
             <label class="col-sm-3">Jenis Intervensi</label>
             <div class="col-sm-9">
-              <select class="form-control select2" name="jenis_intervensi_edit">
+              <select class="form-control select2" name="jenis_intervensi_edit" id="jenis_intervensi_edit">
                 <option value="">-- PILIH --</option>
                 @foreach ($getmasterintervensi as $key)
                   <option value="{{$key->id}}" id="mi_{{$key->id}}">{{$key->nama_intervensi}}</option>
@@ -234,6 +234,7 @@
                 {{ $errors->first('keterangan_edit')}} @endif Keterangan" required="">
             </div>
           </div>
+          <div id="keterangantambahanedit"></div>
           <div class="form-group {{ $errors->has('berkas_edit[]') ? 'has-error' : '' }}">
             <label class="col-sm-2 control-label">Upload Document</label>
             <div class="tab-content col-sm-10">
@@ -302,6 +303,24 @@
   </div>
 </div>
 
+{{-- Modal View Documents --}}
+<div class="modal fade" id="modalviewdocument" role="dialog">
+  <div class="modal-dialog" style="width:850px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Preview Berkas</h4>
+      </div>
+      <div class="modal-body">
+        <div id="previewdocument"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-default pull-right btn-flat" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 <div class="row">
@@ -342,11 +361,6 @@
           </tfoot>
           <tbody>
             <?php $no = 1; ?>
-            @if ($intervensi->isEmpty())
-            <tr>
-              <td colspan="7" align="center">Dinas Anda Belum Pernah Melakukan Intervensi </td>
-            </tr>
-            @else
             @foreach ($intervensi as $key)
             <tr>
               <td>{{ $no }}</td>
@@ -361,14 +375,14 @@
                 @if (count($fileberkas)>1)
                   @for ($i=0; $i < count($fileberkas); $i++)
                     @if ($fileberkas[$i]!="")
-                      <a href="{{url('/documents')}}/{{$fileberkas[$i]}}" download title="Klik untuk download file.">
+                      <a href="#" data-value="{{url('/documents')}}/{{$fileberkas[$i]}}" class="viewdocument" data-toggle="modal" data-target="#modalviewdocument" title="Klik untuk download file.">
                         <i class="fa fa-file-o"></i>
                       </a>&nbsp;
                     @endif
                   @endfor
                 @elseif (count($fileberkas)==1)
                   @if ($fileberkas[0]!="" && $fileberkas[0]!="-")
-                    <a href="{{url('/documents')}}/{{$fileberkas[0]}}" download title="Klik untuk download file.">
+                    <a href="#" data-value="{{url('/documents')}}/{{$fileberkas[0]}}" class="viewdocument" data-toggle="modal" data-target="#modalviewdocument" title="Klik untuk download file.">
                       <i class="fa fa-file-o"></i>
                     </a>&nbsp;
                     @else
@@ -399,7 +413,6 @@
             </tr>
             <?php $no++; ?>
             @endforeach
-            @endif
           </tbody>
         </table>
       </div>
@@ -679,7 +692,9 @@ $('.tanggal_akhir_edit').datepicker({
 
   <script>
     $(function(){
+      // add nama_atasan column to specific intervention type
       $('select#id_intervensi').on('change', function(){
+
         var optionSelected = $("option:selected", this);
         var valueSelected = this.value;
         if (valueSelected==5 || valueSelected==6 || valueSelected==12) {
@@ -691,6 +706,38 @@ $('.tanggal_akhir_edit').datepicker({
                                         "</div>");
         } else {
           $('#keterangantambahan').html("");
+        }
+      });
+
+
+      // add nama_atasan column to specific intervention type in edit modal
+      $('select#jenis_intervensi_edit').on('change', function(){
+
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        if (valueSelected==5 || valueSelected==6 || valueSelected==12) {
+          $('#keterangantambahanedit').html("<div class='form-group'>"+
+                                        "<label class='col-sm-3'>Nama Atasan</label>"+
+                                        "<div class='col-sm-9'>"+
+                                        "<input type='text' name='atasan_edit' class='form-control'>"+
+                                        "</div>"+
+                                        "</div>");
+        } else {
+          $('#keterangantambahanedit').html("");
+        }
+      });
+
+
+      // preview document in modal
+      $(".viewdocument").on('click', function(){
+        var a = $(this).data('value');ma
+        var ext = a.split('.');
+        if (ext[1]=="png" || ext[1]=="jpg" || ext[1]=="jpeg") {
+          $("#previewdocument").html("<img src='"+a+"'>");
+        } else if (ext[1]=="pdf") {
+          $("#previewdocument").html("<embed src='"+a+"' width='820px' height='700px' />");
+        } else {
+          $("#previewdocument").html("Ekstensi file tidak support!");
         }
       });
     });
