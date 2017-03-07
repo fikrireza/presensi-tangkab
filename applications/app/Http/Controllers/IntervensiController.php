@@ -358,6 +358,12 @@ class IntervensiController extends Controller
                               ->orderBy('tanggal_mulai', 'desc')
                               ->get();
 
+        $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                           ->where('preson_intervensis.flag_view', 0)
+                                           ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                           ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                           ->count();
+
         $pegawai = pegawai::select('id', 'nama')->where('skpd_id', Auth::user()->skpd_id)->get();
       }
       elseif(session('status') === 'administrator' || session('status') == 'superuser')
@@ -369,7 +375,7 @@ class IntervensiController extends Controller
         $getmasterintervensi = ManajemenIntervensi::where('flag_old', 0)->get();
       }
 
-      return view('pages.intervensi.kelola', compact('getSKPD', 'pegawai', 'intervensi', 'getmasterintervensi'));
+      return view('pages.intervensi.kelola', compact('getSKPD', 'pegawai', 'intervensi', 'getmasterintervensi', 'getunreadintervensi'));
     }
 
     public function kelolaAksi($id)
@@ -381,6 +387,10 @@ class IntervensiController extends Controller
       if($intervensi == null){
         abort(404);
       }
+
+      $set = Intervensi::find($id);
+      $set->flag_view = 0;
+      $set->save();
 
       return view('pages.intervensi.aksi', compact('intervensi'));
     }

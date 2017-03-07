@@ -692,6 +692,7 @@ $('.tanggal_akhir_edit').datepicker({
 
   <script>
     $(function(){
+      // add nama_atasan column to specific intervention type
       $('select#id_intervensi').on('change', function(){
 
         var optionSelected = $("option:selected", this);
@@ -708,6 +709,8 @@ $('.tanggal_akhir_edit').datepicker({
         }
       });
 
+
+      // add nama_atasan column to specific intervention type in edit modal
       $('select#jenis_intervensi_edit').on('change', function(){
 
         var optionSelected = $("option:selected", this);
@@ -724,15 +727,17 @@ $('.tanggal_akhir_edit').datepicker({
         }
       });
 
+
+      // preview document in modal
       $(".viewdocument").on('click', function(){
-        var a = $(this).data('value');
+        var a = $(this).data('value');ma
         var ext = a.split('.');
         if (ext[1]=="png" || ext[1]=="jpg" || ext[1]=="jpeg") {
           $("#previewdocument").html("<img src='"+a+"'>");
         } else if (ext[1]=="pdf") {
           $("#previewdocument").html("<embed src='"+a+"' width='820px' height='700px' />");
         } else {
-
+          $("#previewdocument").html("Ekstensi file tidak support!");
         }
       });
     });

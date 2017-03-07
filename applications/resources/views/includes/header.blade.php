@@ -9,6 +9,32 @@
           </a>
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
+
+              @if (isset($getunreadintervensi))
+                @if ($getunreadintervensi!=0)
+                  <li class="dropdown notifications-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                      <i class="fa fa-bell-o"></i>
+                      <span class="label label-warning">10</span>
+                    </a>
+                    <ul class="dropdown-menu" style="height:100px;">
+                      <li class="header"><strong>Notifikasi Persetujuan Intervensi</strong></li>
+                      <li>
+                        <!-- inner menu: contains the actual data -->
+                        <ul class="menu">
+                          <li>
+                            <a href="#">
+                              <i class="fa fa-envelope text-aqua"></i> Anda memiliki {{$getunreadintervensi}} intervensi baru
+                            </a>
+                          </li>
+                        </ul>
+                      </li>
+                      {{-- <li class="footer"><a href="#">View all</a></li> --}}
+                    </ul>
+                  </li>
+                @endif
+              @endif
+
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <img src="{{ asset('images/userdefault.png') }}" class="user-image" alt="User Image">
