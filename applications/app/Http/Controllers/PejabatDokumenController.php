@@ -8,6 +8,7 @@ use App\Models\PejabatDokumen;
 use App\Models\Users;
 use App\Models\Pegawai;
 use App\Models\Skpd;
+use App\Models\Intervensi;
 
 use Auth;
 use Validator;
@@ -25,10 +26,15 @@ class PejabatDokumenController extends Controller
                                 ->limit(2)
                                 ->get();
       $limit = count($pejabat);
+      $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                         ->where('preson_intervensis.flag_view', 0)
+                                         ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                         ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                         ->count();
 
       $pegawai = pegawai::select('id', 'nip_sapk', 'nama')->where('skpd_id', Auth::user()->skpd_id)->get();
 
-      return view('pages.pejabatdokumen.index', compact('pejabat', 'pegawai', 'limit'));
+      return view('pages.pejabatdokumen.index', compact('pejabat', 'pegawai', 'limit', 'getunreadintervensi'));
     }
 
     public function store(Request $request)

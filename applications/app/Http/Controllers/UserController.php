@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Pegawai;
 use App\Models\Skpd;
 use App\Models\Role;
+use App\Models\Intervensi;
 
 use Auth;
 use Validator;
@@ -68,7 +69,7 @@ class UserController extends Controller
                           ->orderby('preson_roles.id')
                           ->get();
       }
-      return view('pages.user.index', compact('getpegawai', 'getuser'));
+      return view('pages.user.index', compact('getpegawai', 'getuser', 'getunreadintervensi'));
     }
 
     public function store(Request $request)
@@ -122,6 +123,12 @@ class UserController extends Controller
       }
       else if(session('status') == 'admin')
       {
+        $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                           ->where('preson_intervensis.flag_view', 0)
+                                           ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                           ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                           ->count();
+
         $getuser  = user::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_users.pegawai_id')
                           ->join('preson_roles', 'preson_roles.id', '=', 'preson_users.role_id')
                           ->join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
@@ -132,7 +139,7 @@ class UserController extends Controller
                           ->get();
       }
 
-      return view('pages.user.reset', compact('getuser'));
+      return view('pages.user.reset', compact('getuser', 'getunreadintervensi'));
     }
 
     public function resetPassword($id)
@@ -184,6 +191,11 @@ class UserController extends Controller
 
     public function profil()
     {
-      return view('pages.user.profil');
+      $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                         ->where('preson_intervensis.flag_view', 0)
+                                         ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                         ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                         ->count();
+      return view('pages.user.profil')->with('getunreadintervensi', $getunreadintervensi);
     }
 }

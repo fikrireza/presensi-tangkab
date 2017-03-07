@@ -21,8 +21,13 @@ class IntervensiController extends Controller
     {
       $intervensi = intervensi::where('pegawai_id', Auth::user()->pegawai_id)->get();
       $getmasterintervensi = ManajemenIntervensi::where('flag_old', 0)->get();
+      $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                         ->where('preson_intervensis.flag_view', 0)
+                                         ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                         ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                         ->count();
 
-      return view('pages.intervensi.index', compact('intervensi', 'getmasterintervensi'));
+      return view('pages.intervensi.index', compact('intervensi', 'getmasterintervensi','getunreadintervensi'));
     }
 
     public function store(Request $request)
@@ -388,11 +393,17 @@ class IntervensiController extends Controller
         abort(404);
       }
 
-      $set = Intervensi::find($id);
-      $set->flag_view = 0;
+      $set = intervensi::find($id);
+      $set->flag_view = 1;
       $set->save();
 
-      return view('pages.intervensi.aksi', compact('intervensi'));
+      $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                         ->where('preson_intervensis.flag_view', 0)
+                                         ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                         ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                         ->count();
+
+      return view('pages.intervensi.aksi', compact('intervensi', 'getunreadintervensi'));
     }
 
     public function kelolaApprove($id)
@@ -500,5 +511,14 @@ class IntervensiController extends Controller
       $approve->update();
 
       return redirect()->route('intervensi.index')->with('berhasil', 'Berhasil Batalkan Intervensi');
+    }
+
+    public function resetStatus($id)
+    {
+      $set = Intervensi::find($id);
+      $set->flag_status = 0;
+      $set->save();
+
+      return redirect()->route('intervensi.kelola')->with('berhasil', 'Berhasil reset status intervensi');
     }
 }

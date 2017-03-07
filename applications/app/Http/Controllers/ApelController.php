@@ -10,6 +10,7 @@ use App\Models\Pegawai;
 use App\Models\Skpd;
 use App\Models\Struktural;
 use App\Models\User;
+use App\Models\Intervensi;
 
 use Auth;
 use Validator;
@@ -272,9 +273,13 @@ class ApelController extends Controller
     public function apelSKPD()
     {
       $getApel = apel::orderBy('tanggal_apel', 'desc')->get();
+      $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                         ->where('preson_intervensis.flag_view', 0)
+                                         ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                         ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                         ->count();
 
-
-      return view('pages.apel.apelskpd', compact('getApel'));
+      return view('pages.apel.apelskpd', compact('getApel', 'getunreadintervensi'));
     }
 
     public function apelSKPDStore(Request $request)

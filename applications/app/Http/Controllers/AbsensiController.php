@@ -251,9 +251,13 @@ class AbsensiController extends Controller
 
     public function absenSKPD()
     {
+      $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                         ->where('preson_intervensis.flag_view', 0)
+                                         ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                         ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                         ->count();
 
-
-      return view('pages.absensi.absensiSKPD');
+      return view('pages.absensi.absensiSKPD')->with('getunreadintervensi', $getunreadintervensi);
     }
 
     public function filterAdmin(Request $request)
@@ -375,7 +379,13 @@ class AbsensiController extends Controller
 
     public function absenHariSKPD()
     {
-      return view('pages.absensi.absenHariSKPD');
+      $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                         ->where('preson_intervensis.flag_view', 0)
+                                         ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                         ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                         ->count();
+
+      return view('pages.absensi.absenHariSKPD')->with('getunreadintervensi', $getunreadintervensi);
     }
 
     public function absenHariSKPDStore(Request $request)
