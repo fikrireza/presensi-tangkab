@@ -8,7 +8,7 @@ use App\Models\Pegawai;
 use App\Models\Skpd;
 use App\Models\User;
 use App\Models\ManajemenIntervensi;
-use App\Models\intervensi;
+use App\Models\Intervensi;
 
 use Validator;
 use Auth;
@@ -109,24 +109,28 @@ class RevisiIntervensiController extends Controller
           $photo_name = "-";
 
         }
-      
-      foreach ($request->idpegawai as $key) {
-          $set = new intervensi;
-          $set->pegawai_id = $key;
-          $set->id_intervensi = 9999;
-          $getnamaintervensi = ManajemenIntervensi::find(9999);
-          $set->jenis_intervensi = $getnamaintervensi->nama_intervensi;
-          $set->jumlah_hari = $request->jumlah_hari;
-          $set->tanggal_mulai = $request->tanggal_awal;
-          $set->tanggal_akhir = $request->tanggal_akhir;
-          $set->deskripsi = $request->keterangan;
-          $set->berkas = $photo_name;
-          $set->flag_status = 0;
-          $set->actor = Auth::user()->pegawai_id;
-          $set->save(); 
-      }
+      // dd($request->idpegawai);
+      if ($request->idpegawai != null) {
+        foreach ($request->idpegawai as $key) {
+            $set = new Intervensi;
+            $set->pegawai_id = $key;
+            $set->id_intervensi = 9999;
+            $getnamaintervensi = ManajemenIntervensi::find(9999);
+            $set->jenis_intervensi = $getnamaintervensi->nama_intervensi;
+            $set->jumlah_hari = $request->jumlah_hari;
+            $set->tanggal_mulai = $request->tanggal_awal;
+            $set->tanggal_akhir = $request->tanggal_akhir;
+            $set->deskripsi = $request->keterangan;
+            $set->berkas = $photo_name;
+            $set->flag_status = 0;
+            $set->actor = Auth::user()->pegawai_id;
+            $set->save(); 
+        }
+        return redirect()->route('revisiintervensi.index')->with('berhasil', 'Pegawai Berhasil Dimutasi');
+        
+      }else{
 
-      return redirect()->route('revisiintervensi.index')->with('berhasil', 'Pegawai Berhasil Dimutasi');
+      }
     }
 
     
