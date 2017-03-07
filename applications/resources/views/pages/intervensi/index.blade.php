@@ -425,32 +425,32 @@
 @section('script')
 <script>
 var date = new Date();
-date.setDate(date.getDate()-3);
+// date.setDate(date.getDate()-3);
 $('#tanggal_mulai').datepicker({
   autoclose: true,
   format: 'yyyy-mm-dd',
-  startDate: date,
+  // startDate: date,
   todayHighlight: true,
   daysOfWeekDisabled: [0,6]
 });
 $('#tanggal_akhir').datepicker({
   autoclose: true,
   format: 'yyyy-mm-dd',
-  startDate: date,
+  // startDate: date,
   todayHighlight: true,
   daysOfWeekDisabled: [0,6]
 });
 $('.tanggal_mulai_edit').datepicker({
   autoclose: true,
   format: 'yyyy-mm-dd',
-  startDate: date,
+  // startDate: date,
   todayHighlight: true,
   daysOfWeekDisabled: [0,6]
 });
 $('.tanggal_akhir_edit').datepicker({
   autoclose: true,
   format: 'yyyy-mm-dd',
-  startDate: date,
+  // startDate: date,
   todayHighlight: true,
   daysOfWeekDisabled: [0,6]
 });

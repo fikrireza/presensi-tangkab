@@ -45,8 +45,8 @@
           <thead>
             <tr>
               <th>No</th>
+              <th>NIP</th>
               <th>Nama Pegawai</th>
-              <th>SKPD</th>
               <th>Keterangan</th>
               <th style="width: 10%">Aksi</th>
             </tr>
@@ -61,6 +61,8 @@
             </tr>
           </tfoot>
           <tbody>
+            <?php $no = 1; ?>
+            @if ($getrevisiintervensi->isEmpty())
             <tr>
               <td>-</td>
               <td>-</td>
@@ -68,6 +70,18 @@
               <td>-</td>
               <td>-</td>
             </tr>
+            @else
+              @foreach ($getrevisiintervensi as $key)
+              <tr>
+                <td>{{ $no }}</td>
+                <td>{{ $key->nip_sapk_pegawai }}</td>
+                <td>{{ $key->nama }}</td>
+                <td>{{ $key->deskripsi }}</td>
+                <td><a href="" data-value="{{ $key->id }}" class="edit" data-toggle="modal" data-target="#modaledit"><i class="fa fa-edit"></i> Ubah</a></td>
+              </tr>
+              <?php $no++; ?>
+              @endforeach
+            @endif
           </tbody>
         </table>
       </div>
