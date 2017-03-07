@@ -206,7 +206,11 @@
                     -
                     @endif
                   @else
-                    <a href="#" class="resetstatus" data-value="{{$key->id}}" data-toggle="modal" data-target="#modalresetstatus"><i class="fa fa-close"></i> Reset Status</a>
+                    @if ((date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d')))
+                      <a href="#" class="resetstatus" data-value="{{$key->id}}" data-toggle="modal" data-target="#modalresetstatus"><i class="fa fa-close"></i> Reset Status</a>
+                    @else
+                      -
+                    @endif
                   @endif
               </td>
             </tr>
