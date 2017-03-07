@@ -351,9 +351,13 @@ class LaporanController extends Controller
 
     public function laporanAdmin()
     {
+      $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                         ->where('preson_intervensis.flag_view', 0)
+                                         ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                         ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                         ->count();
 
-
-      return view('pages.laporan.laporanAdmin');
+      return view('pages.laporan.laporanAdmin')->with('getunreadintervensi', $getunreadintervensi);
     }
 
     public function laporanAdminStore(Request $request)
@@ -631,7 +635,13 @@ class LaporanController extends Controller
 
     public function laporanPegawai()
     {
-      return view('pages.laporan.laporanPegawai');
+      $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                         ->where('preson_intervensis.flag_view', 0)
+                                         ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                         ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                         ->count();
+
+      return view('pages.laporan.laporanPegawai')->with('getunreadintervensi', $getunreadintervensi);
     }
 
     public function laporanPegawaiStore(Request $request)

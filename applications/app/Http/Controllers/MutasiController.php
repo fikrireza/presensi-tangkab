@@ -8,6 +8,7 @@ use App\Models\Pegawai;
 use App\Models\Skpd;
 use App\Models\User;
 use App\Models\Mutasi;
+use App\Models\Intervensi;
 
 use Validator;
 use Auth;
@@ -74,9 +75,15 @@ class MutasiController extends Controller
         $getskpd = [];
 
         $getskpdterkait = Skpd::where('id', $skpd_id)->first();
+
+        $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                           ->where('preson_intervensis.flag_view', 0)
+                                           ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                           ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                           ->count();
       }
 
-      return view('pages.mutasi.index', compact('getmutasi','mutasi', 'getskpd', 'getskpdterkait'));
+      return view('pages.mutasi.index', compact('getunreadintervensi', 'getmutasi','mutasi', 'getskpd', 'getskpdterkait'));
     }
 
     public function create($id)
@@ -211,6 +218,12 @@ class MutasiController extends Controller
         $empty = "Kosong";
       }
 
-      return view('pages.mutasi.view', compact('getmutasi','empty'));
+      $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                         ->where('preson_intervensis.flag_view', 0)
+                                         ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                         ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                         ->count();
+
+      return view('pages.mutasi.view', compact('getmutasi','empty', 'getunreadintervensi'));
     }
 }

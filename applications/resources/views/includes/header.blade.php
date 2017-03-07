@@ -15,7 +15,7 @@
                   <li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                       <i class="fa fa-bell-o"></i>
-                      <span class="label label-warning">10</span>
+                      <span class="label label-warning">{{$getunreadintervensi}}</span>
                     </a>
                     <ul class="dropdown-menu" style="height:100px;">
                       <li class="header"><strong>Notifikasi Persetujuan Intervensi</strong></li>
@@ -23,7 +23,7 @@
                         <!-- inner menu: contains the actual data -->
                         <ul class="menu">
                           <li>
-                            <a href="#">
+                            <a href="{{route('intervensi.kelola')}}">
                               <i class="fa fa-envelope text-aqua"></i> Anda memiliki {{$getunreadintervensi}} intervensi baru
                             </a>
                           </li>

@@ -9,6 +9,7 @@ use App\Models\Skpd;
 use App\Models\Golongan;
 use App\Models\Struktural;
 use App\Models\User;
+use App\Models\Intervensi;
 
 use Validator;
 use Auth;
@@ -31,8 +32,13 @@ class PegawaiController extends Controller
 
     public function index()
     {
+      $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                         ->where('preson_intervensis.flag_view', 0)
+                                         ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                         ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                         ->count();
 
-      return view('pages.pegawai.index');
+      return view('pages.pegawai.index')->with('getunreadintervensi', $getunreadintervensi);
     }
 
     public function getPegawai(Request $request)
@@ -70,8 +76,6 @@ class PegawaiController extends Controller
       } else {
          abort('403');
       }
-
-
     }
 
     public function create()
@@ -85,8 +89,13 @@ class PegawaiController extends Controller
       }
       $golongan = golongan::select('id', 'nama')->get();
       $struktural = struktural::select('id', 'nama')->get();
+      $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                         ->where('preson_intervensis.flag_view', 0)
+                                         ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                         ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                         ->count();
 
-      return view('pages.pegawai.create', compact('skpd', 'golongan', 'struktural'));
+      return view('pages.pegawai.create', compact('skpd', 'golongan', 'struktural', 'getunreadintervensi'));
     }
 
     public function store(Request $request)

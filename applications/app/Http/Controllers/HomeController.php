@@ -152,8 +152,13 @@ class HomeController extends Controller
                                     and b.skpd_id = $skpd_id
                                     group by c.nama, a.fid) as ab");
           $totalHadir = $totalHadir[0]->jumlah_hadir;
+          $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                                             ->where('preson_intervensis.flag_view', 0)
+                                             ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                                             ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
+                                             ->count();
 
-          return view('home', compact('absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'totalHadir'));
+          return view('home', compact('getunreadintervensi', 'absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'totalHadir'));
         }else{
           for($i=$start_time; $i<$end_time; $i+=86400)
           {
