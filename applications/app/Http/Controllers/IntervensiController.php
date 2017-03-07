@@ -512,4 +512,13 @@ class IntervensiController extends Controller
 
       return redirect()->route('intervensi.index')->with('berhasil', 'Berhasil Batalkan Intervensi');
     }
+
+    public function resetStatus($id)
+    {
+      $set = Intervensi::find($id);
+      $set->flag_status = 0;
+      $set->save();
+
+      return redirect()->route('intervensi.kelola')->with('berhasil', 'Berhasil reset status intervensi');
+    }
 }

@@ -122,6 +122,25 @@
   </div>
 </div>
 
+<div class="modal modal-default fade" id="modalresetstatus" role="dialog">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Reset Status</h4>
+        </div>
+        <div class="modal-body">
+          Apakah anda yakin untuk me-reset status ini?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tidak</button>
+          <a href="#" class="btn btn-danger" id="btnresetstatus">Ya, saya yakin.</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-md-12">
     <div class="box box-primary box-solid">
@@ -187,7 +206,7 @@
                     -
                     @endif
                   @else
-                    -
+                    <a href="#" class="resetstatus" data-value="{{$key->id}}" data-toggle="modal" data-target="#modalresetstatus"><i class="fa fa-close"></i> Reset Status</a>
                   @endif
               </td>
             </tr>
@@ -347,5 +366,13 @@
           } );
       } );
   } );
+</script>
+<script>
+  $(function(){
+    $(".resetstatus").on('click', function(){
+      var a = $(this).data('value');
+      $("#btnresetstatus").attr('href', "{{url('/')}}/intervensi/reset-status/"+a);
+    });
+  })
 </script>
 @endsection
