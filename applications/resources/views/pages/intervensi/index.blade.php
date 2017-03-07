@@ -185,7 +185,7 @@
           <div class="form-group {{ $errors->has('jenis_intervensi_edit') ? 'has-error' : '' }}">
             <label class="col-sm-3">Jenis Intervensi</label>
             <div class="col-sm-9">
-              <select class="form-control select2" name="jenis_intervensi_edit">
+              <select class="form-control select2" name="jenis_intervensi_edit" id="jenis_intervensi_edit">
                 <option value="">-- PILIH --</option>
                 @foreach ($getmasterintervensi as $key)
                   <option value="{{$key->id}}" id="mi_{{$key->id}}">{{$key->nama_intervensi}}</option>
@@ -234,6 +234,7 @@
                 {{ $errors->first('keterangan_edit')}} @endif Keterangan" required="">
             </div>
           </div>
+          <div id="keterangantambahanedit"></div>
           <div class="form-group {{ $errors->has('berkas_edit[]') ? 'has-error' : '' }}">
             <label class="col-sm-2 control-label">Upload Document</label>
             <div class="tab-content col-sm-10">
@@ -344,7 +345,7 @@
             <?php $no = 1; ?>
             @if ($intervensi->isEmpty())
             <tr>
-              <td colspan="7" align="center">Dinas Anda Belum Pernah Melakukan Intervensi </td>
+              <td colspan="8" align="center">Dinas Anda Belum Pernah Melakukan Intervensi </td>
             </tr>
             @else
             @foreach ($intervensi as $key)
@@ -680,6 +681,7 @@ $('.tanggal_akhir_edit').datepicker({
   <script>
     $(function(){
       $('select#id_intervensi').on('change', function(){
+
         var optionSelected = $("option:selected", this);
         var valueSelected = this.value;
         if (valueSelected==5 || valueSelected==6 || valueSelected==12) {
@@ -691,6 +693,22 @@ $('.tanggal_akhir_edit').datepicker({
                                         "</div>");
         } else {
           $('#keterangantambahan').html("");
+        }
+      });
+
+      $('select#jenis_intervensi_edit').on('change', function(){
+
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        if (valueSelected==5 || valueSelected==6 || valueSelected==12) {
+          $('#keterangantambahanedit').html("<div class='form-group'>"+
+                                        "<label class='col-sm-3'>Nama Atasan</label>"+
+                                        "<div class='col-sm-9'>"+
+                                        "<input type='text' name='atasan_edit' class='form-control'>"+
+                                        "</div>"+
+                                        "</div>");
+        } else {
+          $('#keterangantambahanedit').html("");
         }
       });
     });

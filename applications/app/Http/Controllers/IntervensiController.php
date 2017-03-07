@@ -17,11 +17,8 @@ use Image;
 
 class IntervensiController extends Controller
 {
-
-
     public function index()
     {
-
       $intervensi = intervensi::where('pegawai_id', Auth::user()->pegawai_id)->get();
       $getmasterintervensi = ManajemenIntervensi::where('flag_old', 0)->get();
 
@@ -30,6 +27,7 @@ class IntervensiController extends Controller
 
     public function store(Request $request)
     {
+      // --- validasi form input
       $message = [
         'jenis_intervensi.required' => 'Wajib di isi',
         'tanggal_mulai.required' => 'Wajib di isi',
@@ -52,8 +50,11 @@ class IntervensiController extends Controller
       {
         return redirect()->route('intervensi.index')->withErrors($validator)->withInput();
       }
+      // --- end of validasi form input
 
-      //validasi izin tidak masuk kerja 2x sebulan
+
+
+      // --- validasi izin tidak masuk kerja 2x sebulan
       if ($request->jenis_intervensi==12) {
         if ($request->jumlah_hari>2) {
           return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin tidak masuk kerja melebihi batas maksimal.');
@@ -70,8 +71,10 @@ class IntervensiController extends Controller
           return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin tidak masuk kerja melebihi batas maksimal.');
         }
       }
+      // --- end of validasi izin tidak masuk kerja 2x sebulan
 
-      //validasi izin datang telat/pulang cepat 2x sebulan
+
+      // --- validasi izin datang telat/pulang cepat 2x sebulan
       if ($request->jenis_intervensi==5 || $request->jenis_intervensi==6) {
         if ($request->jumlah_hari>2) {
           return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin datang telat atau pulang cepat melebihi batas maksimal.');
@@ -88,7 +91,53 @@ class IntervensiController extends Controller
           return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin datang telat atau pulang cepat melebihi batas maksimal.');
         }
       }
+      // --- end of validasi izin datang telat/pulang cepat 2x sebulan
 
+
+      // --- validasi ketersediaan tanggal intervensi
+      $gettanggalintervensi = Intervensi::select('tanggal_mulai', 'tanggal_akhir')
+                                          ->where('pegawai_id', Auth::user()->pegawai_id)
+                                          ->get();
+
+      $tanggalmulai = $request->tanggal_mulai;
+      $tanggalakhir = $request->tanggal_akhir;
+
+      $dateRange=array();
+      $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2),     substr($tanggalmulai,8,2),substr($tanggalmulai,0,4));
+      $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2),     substr($tanggalakhir,8,2),substr($tanggalakhir,0,4));
+
+      if ($iDateTo>=$iDateFrom)
+      {
+          array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
+          while ($iDateFrom<$iDateTo)
+          {
+              $iDateFrom+=86400; // add 24 hours
+              array_push($dateRange,date('Y-m-d',$iDateFrom));
+          }
+      }
+
+      $flagtanggal = 0;
+      foreach ($dateRange as $key) {
+        foreach ($gettanggalintervensi as $keys) {
+          $start_ts = strtotime($keys->tanggal_mulai);
+          $end_ts = strtotime($keys->tanggal_akhir);
+          $user_ts = strtotime($key);
+
+          if (($user_ts >= $start_ts) && ($user_ts <= $end_ts)) {
+            $flagtanggal=1;
+            break;
+          }
+        }
+        if ($flagtanggal==1) break;
+      }
+
+      if ($flagtanggal==1) {
+        return redirect()->route('intervensi.index')->with('gagal', 'Tanggal intervensi yang anda pilih telah tercatat pada database.');
+      }
+      // --- end of validasi ketersediaan tanggal intervensi
+
+
+      // --- proses penyimpanan data ke database
       $file = $request->file('berkas');
 
       $doc_name = '';
@@ -127,6 +176,8 @@ class IntervensiController extends Controller
       $set->save();
 
       return redirect()->route('intervensi.index')->with('berhasil', 'Berhasil Menambahkan Intervensi');
+      // --- end of proses penyimpanan data ke database
+
     }
 
     public function bind($id)
@@ -162,12 +213,104 @@ class IntervensiController extends Controller
         return redirect()->route('intervensi.index')->withErrors($validator)->withInput();
       }
 
+      // --- validasi izin tidak masuk kerja 2x sebulan
+      if ($request->jenis_intervensi_edit==12) {
+        if ($request->jumlah_hari_edit>2) {
+          return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin tidak masuk kerja melebihi batas maksimal.');
+        }
+
+        $datenow = date('m-Y');
+        $pegawaiid = Auth::user()->pegawai_id;
+        $countsum = DB::select("select sum(jumlah_hari) as 'total' from preson_intervensis
+                                        where DATE_FORMAT(tanggal_mulai,'%m-%Y') = '$datenow'
+                                        and pegawai_id = $pegawaiid and id_intervensi = 12");
+
+        $result = $countsum[0]->total;
+        if ($result>=2) {
+          return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin tidak masuk kerja melebihi batas maksimal.');
+        }
+      }
+      // --- end of validasi izin tidak masuk kerja 2x sebulan
+
+
+      // --- validasi izin datang telat/pulang cepat 2x sebulan
+      if ($request->jenis_intervensi_edit==5 || $request->jenis_intervensi_edit==6) {
+        if ($request->jumlah_hari_edit>2) {
+          return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin datang telat atau pulang cepat melebihi batas maksimal.');
+        }
+
+        $datenow = date('m-Y');
+        $pegawaiid = Auth::user()->pegawai_id;
+        $countsum = DB::select("select sum(jumlah_hari) as 'total' from preson_intervensis
+                                where DATE_FORMAT(tanggal_mulai,'%m-%Y') = '$datenow'
+                                and pegawai_id = $pegawaiid and id_intervensi = 5 or id_intervensi = 6");
+
+        $result = $countsum[0]->total;
+        if ($result>=2) {
+          return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin datang telat atau pulang cepat melebihi batas maksimal.');
+        }
+      }
+      // --- end of validasi izin datang telat/pulang cepat 2x sebulan
+
+
+      // --- validasi ketersediaan tanggal intervensi
+      $cek = intervensi::find($request->id_edit);
+      if ($request->tanggal_mulai_edit!=$cek->tanggal_mulai || $request->tanggal_akhir_edit!=$cek->tanggal_akhir) {
+        $gettanggalintervensi = Intervensi::select('tanggal_mulai', 'tanggal_akhir')
+                                            ->where('pegawai_id', Auth::user()->pegawai_id)
+                                            ->where('id', '!=', $request->id_edit)
+                                            ->get();
+
+        $tanggalmulai = $request->tanggal_mulai_edit;
+        $tanggalakhir = $request->tanggal_akhir_edit;
+
+        $dateRange=array();
+        $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2),     substr($tanggalmulai,8,2),substr($tanggalmulai,0,4));
+        $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2),     substr($tanggalakhir,8,2),substr($tanggalakhir,0,4));
+
+        if ($iDateTo>=$iDateFrom)
+        {
+            array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
+            while ($iDateFrom<$iDateTo)
+            {
+                $iDateFrom+=86400; // add 24 hours
+                array_push($dateRange,date('Y-m-d',$iDateFrom));
+            }
+        }
+
+        $flagtanggal = 0;
+        foreach ($dateRange as $key) {
+          foreach ($gettanggalintervensi as $keys) {
+            $start_ts = strtotime($keys->tanggal_mulai);
+            $end_ts = strtotime($keys->tanggal_akhir);
+            $user_ts = strtotime($key);
+
+            if (($user_ts >= $start_ts) && ($user_ts <= $end_ts)) {
+              $flagtanggal=1;
+              break;
+            }
+          }
+          if ($flagtanggal==1) break;
+        }
+
+        if ($flagtanggal==1) {
+          return redirect()->route('intervensi.index')->with('gagal', 'Tanggal intervensi yang anda pilih telah tercatat pada database.');
+        }
+      }
+      // --- end of validasi ketersediaan tanggal intervensi
+
       $file = $request->file('berkas_edit');
 
       if($file != null)
       {
-        $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_mulai.'-'.$request->jenis_intervensi.'.' . $file->getClientOriginalExtension();
-        $file->move('documents/', $photo_name);
+        $doc_name="";
+        $i = 1;
+        foreach ($file as $key) {
+          $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_mulai_edit.'-'.$request->jenis_intervensi_edit.'-'.$i.'.'. $key->getClientOriginalExtension();
+          $key->move('documents/', $photo_name);
+          $doc_name .= $photo_name.'//';
+          $i++;
+        }
 
         $getnamaintervensi = ManajemenIntervensi::find($request->jenis_intervensi_edit);
 
@@ -179,7 +322,7 @@ class IntervensiController extends Controller
         $set->tanggal_akhir = $request->tanggal_akhir_edit;
         $set->jumlah_hari = $request->jumlah_hari_edit;
         $set->deskripsi = $request->keterangan_edit;
-        $set->berkas = $photo_name;
+        $set->berkas = $doc_name;
         $set->flag_status = 0;
         $set->actor = Auth::user()->pegawai_id;
         $set->save();
