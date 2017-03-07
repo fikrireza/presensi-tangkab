@@ -156,7 +156,7 @@
 <script src="{{ asset('plugins/select2/select2.full.min.js')}}"></script>
 <script>
 var date = new Date();
-// date.setDate(date.getDate()-2);
+date.setDate(date.getDate()-3);
   $(".select2").select2();
   $(function () {
     $("#table_revisi").DataTable();
@@ -164,7 +164,7 @@ var date = new Date();
   $('#tanggal_awal').datepicker({
   autoclose: true,
   format: 'yyyy-mm-dd',
-  // startDate: date,
+  startDate: date,
   todayHighlight: true,
   daysOfWeekDisabled: [0,6]
 });

@@ -159,8 +159,8 @@ class IntervensiController extends Controller
       $getnamaintervensi = ManajemenIntervensi::find($request->jenis_intervensi);
       $set = new intervensi;
       $set->pegawai_id = Auth::user()->pegawai_id;
-      $set->id_intervensi = 9999;
-      $set->jenis_intervensi = "Intervensi Khusus";
+      $set->id_intervensi = $request->id_intervensi;
+      $set->jenis_intervensi = $getnamaintervensi->nama_intervensi;
       $set->tanggal_mulai = $request->tanggal_mulai;
       $set->tanggal_akhir = $request->tanggal_akhir;
       $set->jumlah_hari = $request->jumlah_hari;
