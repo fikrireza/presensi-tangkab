@@ -303,6 +303,24 @@
   </div>
 </div>
 
+{{-- Modal View Documents --}}
+<div class="modal fade" id="modalviewdocument" role="dialog">
+  <div class="modal-dialog" style="width:850px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Preview Berkas</h4>
+      </div>
+      <div class="modal-body">
+        <div id="previewdocument"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-default pull-right btn-flat" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 <div class="row">
@@ -357,14 +375,14 @@
                 @if (count($fileberkas)>1)
                   @for ($i=0; $i < count($fileberkas); $i++)
                     @if ($fileberkas[$i]!="")
-                      <a href="{{url('/documents')}}/{{$fileberkas[$i]}}" download title="Klik untuk download file.">
+                      <a href="#" data-value="{{url('/documents')}}/{{$fileberkas[$i]}}" class="viewdocument" data-toggle="modal" data-target="#modalviewdocument" title="Klik untuk download file.">
                         <i class="fa fa-file-o"></i>
                       </a>&nbsp;
                     @endif
                   @endfor
                 @elseif (count($fileberkas)==1)
                   @if ($fileberkas[0]!="" && $fileberkas[0]!="-")
-                    <a href="{{url('/documents')}}/{{$fileberkas[0]}}" download title="Klik untuk download file.">
+                    <a href="#" data-value="{{url('/documents')}}/{{$fileberkas[0]}}" class="viewdocument" data-toggle="modal" data-target="#modalviewdocument" title="Klik untuk download file.">
                       <i class="fa fa-file-o"></i>
                     </a>&nbsp;
                     @else
@@ -703,6 +721,18 @@ $('.tanggal_akhir_edit').datepicker({
                                         "</div>");
         } else {
           $('#keterangantambahanedit').html("");
+        }
+      });
+
+      $(".viewdocument").on('click', function(){
+        var a = $(this).data('value');
+        var ext = a.split('.');
+        if (ext[1]=="png" || ext[1]=="jpg" || ext[1]=="jpeg") {
+          $("#previewdocument").html("<img src='"+a+"'>");
+        } else if (ext[1]=="pdf") {
+          $("#previewdocument").html("<embed src='"+a+"' width='820px' height='700px' />");
+        } else {
+
         }
       });
     });
