@@ -85,6 +85,13 @@ Route::get('intervensi/skpd/{id}', 'IntervensiController@skpd')->name('intervens
 Route::get('manajemen-intervensi', 'ManajemenIntervensiController@index')->name('manajemenintervensi.index');
 Route::post('manajemen-intervensi', 'ManajemenIntervensiController@store')->name('manajemenintervensi.store');
 
+// Revisi Intervensi
+Route::get('revisi-intervensi', 'RevisiIntervensiController@index')->name('revisiintervensi.index');
+Route::get('revisi-intervensi/create', 'RevisiIntervensiController@create')->name('revisiintervensi.create');
+Route::post('revisi-intervensi/caripegawai', 'RevisiIntervensiController@caripegawai')->name('revisiintervensi.caripegawai');
+Route::post('revisi-intervensi/createStore', 'RevisiIntervensiController@createStore')->name('revisiintervensi.createStore');
+
+
 // Absensi Administrator
 Route::get('absensi', 'AbsensiController@index')->name('absensi.index')->middleware('administrator');
 Route::post('absensi', 'AbsensiController@filterAdministrator')->name('absensi.filterAdministrator')->middleware('administrator');
