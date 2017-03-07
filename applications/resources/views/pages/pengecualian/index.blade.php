@@ -157,7 +157,7 @@
         <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambah">Tambah Pengecualian</a>
       </div>
       <div class="box-body table-responsive">
-        <table id="table_penegcualian" class="table table-bordered table-striped">
+        <table id="table_pengecualian" class="table table-bordered table-striped">
           <thead>
             <tr>
               <th>No</th>
@@ -211,7 +211,7 @@
 <script>
   $(".select2").select2();
   $(function () {
-    $("#table_jabatan").DataTable();
+    $("#table_pengecualian").DataTable();
   });
 </script>
 
@@ -250,13 +250,13 @@
 <script type="text/javascript">
   $(document).ready(function() {
       // Setup - add a text input to each footer cell
-      $('#table_penegcualian tfoot th').each( function () {
+      $('#table_pengecualian tfoot th').each( function () {
           var title = $(this).text();
           $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
       } );
 
       // DataTable
-      var table = $('#table_penegcualian').DataTable();
+      var table = $('#table_pengecualian').DataTable();
 
       // Apply the search
       table.columns().every( function () {
