@@ -343,11 +343,6 @@
           </tfoot>
           <tbody>
             <?php $no = 1; ?>
-            @if ($intervensi->isEmpty())
-            <tr>
-              <td colspan="8" align="center">Dinas Anda Belum Pernah Melakukan Intervensi </td>
-            </tr>
-            @else
             @foreach ($intervensi as $key)
             <tr>
               <td>{{ $no }}</td>
@@ -400,7 +395,6 @@
             </tr>
             <?php $no++; ?>
             @endforeach
-            @endif
           </tbody>
         </table>
       </div>
