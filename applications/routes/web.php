@@ -81,6 +81,8 @@ Route::get('intervensi/kelola/approve/{id}', 'IntervensiController@kelolaApprove
 Route::get('intervensi/kelola/decline/{id}', 'IntervensiController@kelolaDecline');
 Route::get('intervensi/skpd/{id}', 'IntervensiController@skpd')->name('intervensi.skpd');
 Route::get('intervensi/reset-status/{id}', 'IntervensiController@resetStatus')->name('intervensi.resetstatus');
+Route::get('intervensi/download-surat-ijin/{id}', 'IntervensiController@suratIjin')->name('intervensi.suratijin');
+Route::get('intervensi/preview-surat-ijin', 'IntervensiController@previewSuratIjin')->name('intervensi.previewsuratijin');
 
 // Manajemen Intervensi
 Route::get('manajemen-intervensi', 'ManajemenIntervensiController@index')->name('manajemenintervensi.index');

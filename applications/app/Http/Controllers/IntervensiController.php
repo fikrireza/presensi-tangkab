@@ -14,6 +14,7 @@ use Validator;
 use Auth;
 use DB;
 use Image;
+use PDF;
 
 class IntervensiController extends Controller
 {
@@ -520,5 +521,18 @@ class IntervensiController extends Controller
       $set->save();
 
       return redirect()->route('intervensi.kelola')->with('berhasil', 'Berhasil reset status intervensi');
+    }
+
+    public function suratIjin($id)
+    {
+      $data = intervensi::find($id);
+      $pdf = PDF::loadView('pdf.suratijin', $data);
+      return $pdf->download('suratijin.pdf');
+    }
+
+    public function previewSuratIjin()
+    {
+      // $data = intervensi::find($id);
+      return view('pdf.suratijin');
     }
 }
