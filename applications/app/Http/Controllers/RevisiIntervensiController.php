@@ -101,17 +101,61 @@ class RevisiIntervensiController extends Controller
       // dd($request);
       $file = $request->file('upload_revisi');
           
-        if($file != null)
-        {
-          $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_awal.'-'.$request->tanggal_akhir.'.' . $file->getClientOriginalExtension();
-          $file->move('documents/', $photo_name);
-        }else{
-          $photo_name = "-";
-
-        }
-      // dd($request->idpegawai);
+            // dd($request->idpegawai);
       if ($request->idpegawai != null) {
         foreach ($request->idpegawai as $key) {
+
+            // --- validasi ketersediaan tanggal intervensi
+            $gettanggalintervensi = Intervensi::select('tanggal_mulai', 'tanggal_akhir')
+                                                ->where('pegawai_id', $key)
+                                                ->get();
+
+            $tanggalmulai = $request->tanggal_mulai;
+            $tanggalakhir = $request->tanggal_akhir;
+
+            $dateRange=array();
+            $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2),     substr($tanggalmulai,8,2),substr($tanggalmulai,0,4));
+            $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2),     substr($tanggalakhir,8,2),substr($tanggalakhir,0,4));
+
+            if ($iDateTo>=$iDateFrom)
+            {
+                array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
+                while ($iDateFrom<$iDateTo)
+                {
+                    $iDateFrom+=86400; // add 24 hours
+                    array_push($dateRange,date('Y-m-d',$iDateFrom));
+                }
+            }
+
+            $flagtanggal = 0;
+            foreach ($dateRange as $key) {
+              foreach ($gettanggalintervensi as $keys) {
+                $start_ts = strtotime($keys->tanggal_mulai);
+                $end_ts = strtotime($keys->tanggal_akhir);
+                $user_ts = strtotime($key);
+
+                if (($user_ts >= $start_ts) && ($user_ts <= $end_ts)) {
+                  $flagtanggal=1;
+                  break;
+                }
+              }
+              if ($flagtanggal==1) break;
+            }
+
+            if ($flagtanggal==1) {
+              return redirect()->route('revisiintervensi.create')->with('gagal', 'Tanggal yang anda pilih telah tercatat pada database.');
+            }
+            // --- end of validasi ketersediaan tanggal intervensi
+
+
+            if($file != null)
+            {
+                $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_awal.'-'.$request->tanggal_akhir.'.' . $file->getClientOriginalExtension();
+                $file->move('documents/', $photo_name);
+              }else{
+                $photo_name = "-";
+            }
+
             $set = new Intervensi;
             $set->pegawai_id = $key;
             $set->id_intervensi = 9999;
@@ -127,9 +171,8 @@ class RevisiIntervensiController extends Controller
             $set->save(); 
         }
         return redirect()->route('revisiintervensi.index')->with('berhasil', 'Pegawai Berhasil Dimutasi');
-        
       }else{
-
+        return redirect()->route('revisiintervensi.create')->with('gagal', 'Pilih data pegawai tersebuh dahulu.');
       }
     }
 
