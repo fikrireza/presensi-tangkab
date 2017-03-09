@@ -15,26 +15,6 @@
 @endsection
 
 @section('content')
-<script>
-  window.setTimeout(function() {
-    $(".alert-danger").fadeTo(500, 0).slideUp(500, function(){
-        $(this).remove();
-    });
-  }, 2000);
-</script>
-
-@if(Session::has('gagal'))
-<div class="row">
-  <div class="col-md-12">
-    <div class="alert alert-danger">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <h4><i class="icon fa fa-check"></i> Perhatian!</h4>
-      <p>{{ Session::get('gagal') }}</p>
-    </div>
-  </div>
-</div>
-@endif
-
 <div class="row">
   <div class="col-md-12">
     <div class="box box-primary box-solid">
@@ -106,18 +86,25 @@
                   </tbody>
                 </table>
               </div>
+                @if(Session::has('gagal'))
+                  <div class="row">
+                    <div class="col-md-12">
+                      <span style="color:red;">{{ Session::get('gagal') }}</span>
+                    </div>
+                  </div>
+                @endif
             </div>
           </div>
-          <div class="form-group {{ $errors->has('tanggal_awal') ? 'has-error' : '' }}">
-            <label class="col-sm-2 control-label">Tanggal Awal</label>
+          <div class="form-group {{ $errors->has('tanggal_mulai') ? 'has-error' : '' }}">
+            <label class="col-sm-2 control-label">Tanggal Mulai</label>
             <div class="col-sm-10">
               <div class="input-group date">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input class="form-control pull-right" id="tanggal_awal" type="text" name="tanggal_awal" 
-                 value="{{ old('tanggal_awal') }}" placeholder="@if($errors->has('tanggal_awal'))
-                  {{ $errors->first('tanggal_awal')}}@endif Tanggal Awal">
+                <input class="form-control pull-right" id="tanggal_mulai" type="text" name="tanggal_mulai" 
+                 value="{{ old('tanggal_mulai') }}" placeholder="@if($errors->has('tanggal_mulai'))
+                  {{ $errors->first('tanggal_mulai')}}@endif Tanggal Awal">
               </div>
             </div>
           </div>
@@ -181,7 +168,7 @@ date.setDate(date.getDate()-3);
   $(function () {
     $("#table_revisi").DataTable();
   });
-  $('#tanggal_awal').datepicker({
+  $('#tanggal_mulai').datepicker({
   autoclose: true,
   format: 'yyyy-mm-dd',
   startDate: date,
@@ -199,9 +186,9 @@ date.setDate(date.getDate()-3);
 <script type="text/javascript">
   function durationDay(){
     $(document).ready(function() {
-      $('#tanggal_awal, #tanggal_akhir').on('change textInput input', function () {
-            if ( ($("#tanggal_awal").val() != "") && ($("#tanggal_akhir").val() != "")) {
-                var dDate1 = new Date($("#tanggal_awal").val());
+      $('#tanggal_mulai, #tanggal_akhir').on('change textInput input', function () {
+            if ( ($("#tanggal_mulai").val() != "") && ($("#tanggal_akhir").val() != "")) {
+                var dDate1 = new Date($("#tanggal_mulai").val());
                 var dDate2 = new Date($("#tanggal_akhir").val());
                 var iWeeks, iDateDiff, iAdjust = 0;
                 if (dDate2 < dDate1) return -1; // error code if dates transposed
@@ -232,7 +219,7 @@ date.setDate(date.getDate()-3);
 </script>
 <script type="text/javascript">
     $(document).ready(function(){
-          $("#tanggal_awal").datepicker({
+          $("#tanggal_mulai").datepicker({
               todayBtn:  1,
               autoclose: true,
           }).on('changeDate', function (selected) {

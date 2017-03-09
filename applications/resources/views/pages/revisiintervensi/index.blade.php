@@ -33,6 +33,93 @@
 </div>
 @endif
 
+<div class="modal modal-default fade" id="modaledit" role="dialog">
+  <div class="modal-dialog">
+    <form class="form-horizontal" action="{{ route('revisiintervensi.edit') }}" method="post">
+      {{ csrf_field() }}
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Edit Data Revisi Intervensi</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="col-md-2 control-label">NIP</label>
+            <div class="col-md-10">
+              <input name="nip_sapk_edit" id="nip_sapk_edit" class="form-control" readonly="true" value="{{ old('nip_sapk_edit') }}" >
+              <input type="hidden" name="id" id="id" value="{{ old('id') }}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-2 control-label">Nama</label>
+            <div class="col-md-10">
+              <input name="nama_edit" id="nama_edit" class="form-control" readonly="true" value="{{ old('nama_edit') }}">
+            </div>
+          </div>
+          
+          <div class="form-group {{ $errors->has('tanggal_mulai_edit') ? 'has-error' : '' }}">
+            <label class="col-sm-2 control-label">Tanggal Mulai</label>
+            <div class="col-sm-10">
+              <div class="input-group date">
+                <div class="input-group-addon">
+                  <i class="fa fa-calendar"></i>
+                </div>
+                <input class="form-control pull-right" id="tanggal_mulai_edit" type="text" name="tanggal_mulai_edit" 
+                 value="{{ old('tanggal_mulai_edit') }}" placeholder="@if($errors->has('tanggal_mulai_edit'))
+                  {{ $errors->first('tanggal_mulai_edit')}}@endif Tanggal Awal" readonly="true">
+              </div>
+            </div>
+          </div>
+          <div class="form-group {{ $errors->has('tanggal_akhir_edit') ? 'has-error' : '' }}">
+            <label class="col-sm-2 control-label">Tanggal Akhir</label>
+            <div class="col-sm-10">
+              <div class="input-group date">
+                <div class="input-group-addon">
+                  <i class="fa fa-calendar"></i>
+                </div>
+                <input class="form-control pull-right" id="tanggal_akhir_edit" type="text" name="tanggal_akhir_edit" 
+                 value="{{ old('tanggal_akhir_edit') }}" placeholder="@if($errors->has('tanggal_akhir_edit'))
+                  {{ $errors->first('tanggal_akhir_edit')}}@endif Tanggal Akhir" onchange="durationDay()" readonly="true">
+              </div>
+            </div>
+          </div>
+          <div class="form-group {{ $errors->has('jumlah_hari_edit') ? 'has-error' : '' }}">
+            <label class="col-sm-2 control-label">Jumlah Hari</label>
+            <div class="col-sm-10">
+              <input type="text" name="jumlah_hari_edit" id="jumlah_hari_edit" class="form-control" value="{{ old('jumlah_hari_edit') }}" placeholder="@if($errors->has('jumlah_hari_edit'))
+                {{ $errors->first('jumlah_hari_edit')}} @endif Jumlah Hari" required="" readonly="true">
+            </div>
+          </div>
+          <div class="form-group {{ $errors->has('keterangan_edit') ? 'has-error' : '' }}">
+            <label class="col-sm-2 control-label">Keterangan</label>
+            <div class="col-sm-10">
+              <textarea name="keterangan_edit" class="form-control" id="keterangan_edit" rows="5" cols="40" placeholder="@if($errors->has('keterangan_edit'))
+                {{ $errors->first('keterangan_edit')}}@endif Keterangan ">{{ old('keterangan_edit') }}</textarea>
+            </div>
+          </div>
+          <div class="form-group {{ $errors->has('upload_revisi') ? 'has-error' : '' }}">
+            <label class="col-sm-2 control-label">Upload Document</label>
+            <div class="col-sm-10">
+              <input type="file" name="upload_revisi" class="form-control {{ $errors->has('upload_revisi') ? 'has-error' : '' }}" accept=".png, .jpg, .pdf">
+              <span style="color:red;">* Biarkan kosong jika tidak ingin diganti.</span>
+               @if($errors->has('upload_revisi'))
+              <span class="help-block">
+                <strong>{{ $errors->first('upload_revisi')}}
+                </strong>
+              </span>
+              @endif
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tidak</button>
+          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-md-12">
     <div class="box box-primary box-solid">
@@ -94,6 +181,121 @@
 <script type="text/javascript">
   $("#table_mutasi").DataTable();
 </script>
+<script>
+var date = new Date();
+date.setDate(date.getDate()-3);
+  $(".select2").select2();
+  $(function () {
+    $("#table_revisi").DataTable();
+  });
+  $('#tanggal_mulai_edit').datepicker({
+  autoclose: true,
+  format: 'yyyy-mm-dd',
+  startDate: date,
+  todayHighlight: true,
+  daysOfWeekDisabled: [0,6]
+});
+  $('#tanggal_akhir_edit').datepicker({
+  autoclose: true,
+  format: 'yyyy-mm-dd',
+  // startDate: date,
+  todayHighlight: true,
+  daysOfWeekDisabled: [0,6]
+});
+</script>
+<script type="text/javascript">
+  function durationDay(){
+    $(document).ready(function() {
+      $('#tanggal_mulai_edit, #tanggal_akhir_edit').on('change textInput input', function () {
+            if ( ($("#tanggal_mulai_edit").val() != "") && ($("#tanggal_akhir_edit").val() != "")) {
+                var dDate1 = new Date($("#tanggal_mulai_edit").val());
+                var dDate2 = new Date($("#tanggal_akhir_edit").val());
+                var iWeeks, iDateDiff, iAdjust = 0;
+                if (dDate2 < dDate1) return -1; // error code if dates transposed
+                var iWeekday1 = dDate1.getDay(); // day of week
+                var iWeekday2 = dDate2.getDay();
+                iWeekday1 = (iWeekday1 == 0) ? 7 : iWeekday1; // change Sunday from 0 to 7
+                iWeekday2 = (iWeekday2 == 0) ? 7 : iWeekday2;
+                if ((iWeekday1 > 5) && (iWeekday2 > 5)) iAdjust = 1; // adjustment if both days on weekend
+                iWeekday1 = (iWeekday1 > 5) ? 5 : iWeekday1; // only count weekdays
+                iWeekday2 = (iWeekday2 > 5) ? 5 : iWeekday2;
+
+                // calculate differnece in weeks (1000mS * 60sec * 60min * 24hrs * 7 days = 604800000)
+                iWeeks = Math.floor((dDate2.getTime() - dDate1.getTime()) / 604800000)
+
+                if (iWeekday1 <= iWeekday2) {
+                  iDateDiff = (iWeeks * 5) + (iWeekday2 - iWeekday1)
+                } else {
+                  iDateDiff = ((iWeeks + 1) * 5) - (iWeekday1 - iWeekday2)
+                }
+
+                iDateDiff -= iAdjust // take into account both days on weekend
+                $("#jumlah_hari").val(iDateDiff+1);
+                //return (iDateDiff + 1); // add 1 because dates are inclusive
+            }
+        });
+    });
+  }
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+          $("#tanggal_mulai_edit").datepicker({
+              todayBtn:  1,
+              autoclose: true,
+          }).on('changeDate', function (selected) {
+            $("#tanggal_akhir_edit").prop('disabled', false);
+            $("#tanggal_akhir_edit").val("");
+            $("#jumlah_hari").val("");
+              var minDate = new Date(selected.date.valueOf());
+              $("#tanggal_akhir_edit").datepicker('setStartDate', minDate);
+          });
+
+          $("#tanggal_akhir_edit").datepicker()
+              .on('changeDate', function (selected) {
+                  var minDate = new Date(selected.date.valueOf());
+              //    $('.tgl_faktur_awal').datepicker('setEndDate', minDate);
+              });
+      });
+</script>
+
+<script type="text/javascript">
+@if ($errors->has('tanggal_mulai_edit') || $errors->has('tanggal_akhir_edit') || $errors->has('keterangan_edit'))
+  $('#modaledit').modal('show');
+@endif
+</script>
+
+<script type="text/javascript">
+  $(function(){
+    $("#table_mutasi").on("click", "a.edit", function(){
+      var a = $(this).data('value');
+
+      $.ajax({
+        url: "{{ url('/') }}/revisi-intervensi/"+a,
+        dataType: 'json',
+        success: function(data){
+          var id = data.id;
+
+          var nip_sapk_edit = data.nip_sapk_pegawai;
+          var nama_edit = data.nama;
+          var tanggal_mulai_edit = data.tanggal_mulai;
+          var tanggal_akhir_edit = data.tanggal_akhir;
+          var jumlah_hari_edit = data.jumlah_hari;
+          var keterangan_edit = data.deskripsi;
+
+
+          $('#id').attr('value', id);
+          $('#nip_sapk_edit').attr('value', nip_sapk_edit);
+          $('#nama_edit').attr('value', nama_edit);
+          $('#tanggal_akhir_edit').attr('value', tanggal_akhir_edit);
+          $('#tanggal_mulai_edit').attr('value', tanggal_mulai_edit);
+          $('#jumlah_hari_edit').attr('value', jumlah_hari_edit);
+          $('#keterangan_edit').val(keterangan_edit);
+        }
+      });
+    });
+  });
+</script>
+
 <script type="text/javascript">
   $(document).ready(function() {
       // Setup - add a text input to each footer cell

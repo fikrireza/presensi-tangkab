@@ -89,10 +89,12 @@ Route::get('manajemen-intervensi', 'ManajemenIntervensiController@index')->name(
 Route::post('manajemen-intervensi', 'ManajemenIntervensiController@store')->name('manajemenintervensi.store');
 
 // Revisi Intervensi
-Route::get('revisi-intervensi', 'RevisiIntervensiController@index')->name('revisiintervensi.index');
-Route::get('revisi-intervensi/create', 'RevisiIntervensiController@create')->name('revisiintervensi.create');
-Route::post('revisi-intervensi/caripegawai', 'RevisiIntervensiController@caripegawai')->name('revisiintervensi.caripegawai');
-Route::post('revisi-intervensi/createStore', 'RevisiIntervensiController@createStore')->name('revisiintervensi.createStore');
+Route::get('revisi-intervensi', 'RevisiIntervensiController@index')->name('revisiintervensi.index')->middleware('administrator');
+Route::get('revisi-intervensi/create', 'RevisiIntervensiController@create')->name('revisiintervensi.create')->middleware('administrator');
+Route::post('revisi-intervensi/caripegawai', 'RevisiIntervensiController@caripegawai')->name('revisiintervensi.caripegawai')->middleware('administrator');
+Route::post('revisi-intervensi/createStore', 'RevisiIntervensiController@createStore')->name('revisiintervensi.createStore')->middleware('administrator');
+Route::get('revisi-intervensi/{id}', 'RevisiIntervensiController@bind');
+Route::post('revisi-intervensi/edit', 'RevisiIntervensiController@edit')->name('revisiintervensi.edit')->middleware('administrator');
 
 
 // Absensi Administrator

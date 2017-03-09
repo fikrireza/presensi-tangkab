@@ -226,7 +226,7 @@
 
 <script type="text/javascript">
   $(function(){
-    $("#table_penegcualian").on("click", "a.edit", function(){
+    $("#table_pengecualian").on("click", "a.edit", function(){
       var a = $(this).data('value');
       $.ajax({
         url: "{{ url('/') }}/pengecualian/"+a,
