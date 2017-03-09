@@ -192,14 +192,10 @@ class RevisiIntervensiController extends Controller
     {
       // dd($request);
       $message = [
-        'tanggal_mulai_edit.required' => 'Wajib di isi',
-        'tanggal_akhir_edit.required' => 'Wajib di isi',
-        'tanggal_mulai_edit.required' => 'Wajib di isi'
+        'keterangan_edit.required' => 'Wajib di isi'
       ];
 
       $validator = Validator::make($request->all(), [
-        'tanggal_mulai_edit' => 'required',
-        'tanggal_akhir_edit' => 'required',
         'keterangan_edit' => 'required'
       ], $message);
 

@@ -57,7 +57,7 @@
             </div>
           </div>
           
-          <div class="form-group {{ $errors->has('tanggal_mulai_edit') ? 'has-error' : '' }}">
+          <div class="form-group {{ $errors->has('tanggal_mulai_edit') ? 'has-error' : '' }}" hidden="true">
             <label class="col-sm-2 control-label">Tanggal Mulai</label>
             <div class="col-sm-10">
               <div class="input-group date">
@@ -66,11 +66,11 @@
                 </div>
                 <input class="form-control pull-right" id="tanggal_mulai_edit" type="text" name="tanggal_mulai_edit" 
                  value="{{ old('tanggal_mulai_edit') }}" placeholder="@if($errors->has('tanggal_mulai_edit'))
-                  {{ $errors->first('tanggal_mulai_edit')}}@endif Tanggal Awal" disabled="true">
+                  {{ $errors->first('tanggal_mulai_edit')}}@endif Tanggal Awal" readonly="true">
               </div>
             </div>
           </div>
-          <div class="form-group {{ $errors->has('tanggal_akhir_edit') ? 'has-error' : '' }}">
+          <div class="form-group {{ $errors->has('tanggal_akhir_edit') ? 'has-error' : '' }}" hidden="true">
             <label class="col-sm-2 control-label">Tanggal Akhir</label>
             <div class="col-sm-10">
               <div class="input-group date">
@@ -79,11 +79,11 @@
                 </div>
                 <input class="form-control pull-right" id="tanggal_akhir_edit" type="text" name="tanggal_akhir_edit" 
                  value="{{ old('tanggal_akhir_edit') }}" placeholder="@if($errors->has('tanggal_akhir_edit'))
-                  {{ $errors->first('tanggal_akhir_edit')}}@endif Tanggal Akhir" onchange="durationDay()" disabled="true">
+                  {{ $errors->first('tanggal_akhir_edit')}}@endif Tanggal Akhir" onchange="durationDay()" readonly="true">
               </div>
             </div>
           </div>
-          <div class="form-group {{ $errors->has('jumlah_hari_edit') ? 'has-error' : '' }}">
+          <div class="form-group {{ $errors->has('jumlah_hari_edit') ? 'has-error' : '' }}" hidden="true">
             <label class="col-sm-2 control-label">Jumlah Hari</label>
             <div class="col-sm-10">
               <input type="text" name="jumlah_hari_edit" id="jumlah_hari_edit" class="form-control" value="{{ old('jumlah_hari_edit') }}" placeholder="@if($errors->has('jumlah_hari_edit'))
@@ -134,6 +134,8 @@
               <th>No</th>
               <th>NIP</th>
               <th>Nama Pegawai</th>
+              <th>Tanggal Mulai</th>
+              <th>Tanggal Akhir</th>
               <th>Keterangan</th>
               <th style="width: 10%">Aksi</th>
             </tr>
@@ -141,6 +143,8 @@
           <tfoot>
             <tr>
               <td></td>
+              <th></th>
+              <th></th>
               <th></th>
               <th></th>
               <th></th>
@@ -156,6 +160,8 @@
               <td>-</td>
               <td>-</td>
               <td>-</td>
+              <td>-</td>
+              <td>-</td>
             </tr>
             @else
               @foreach ($getrevisiintervensi as $key)
@@ -163,6 +169,8 @@
                 <td>{{ $no }}</td>
                 <td>{{ $key->nip_sapk_pegawai }}</td>
                 <td>{{ $key->nama }}</td>
+                <td>{{ $key->tanggal_mulai }}</td>
+                <td>{{ $key->tanggal_akhir }}</td>
                 <td>{{ $key->deskripsi }}</td>
                 <td><a href="" data-value="{{ $key->id }}" class="edit" data-toggle="modal" data-target="#modaledit"><i class="fa fa-edit"></i> Ubah</a></td>
               </tr>
