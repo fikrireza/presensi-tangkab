@@ -66,7 +66,7 @@
                 </div>
                 <input class="form-control pull-right" id="tanggal_mulai_edit" type="text" name="tanggal_mulai_edit" 
                  value="{{ old('tanggal_mulai_edit') }}" placeholder="@if($errors->has('tanggal_mulai_edit'))
-                  {{ $errors->first('tanggal_mulai_edit')}}@endif Tanggal Awal" readonly="true">
+                  {{ $errors->first('tanggal_mulai_edit')}}@endif Tanggal Awal" disabled="true">
               </div>
             </div>
           </div>
@@ -79,7 +79,7 @@
                 </div>
                 <input class="form-control pull-right" id="tanggal_akhir_edit" type="text" name="tanggal_akhir_edit" 
                  value="{{ old('tanggal_akhir_edit') }}" placeholder="@if($errors->has('tanggal_akhir_edit'))
-                  {{ $errors->first('tanggal_akhir_edit')}}@endif Tanggal Akhir" onchange="durationDay()" readonly="true">
+                  {{ $errors->first('tanggal_akhir_edit')}}@endif Tanggal Akhir" onchange="durationDay()" disabled="true">
               </div>
             </div>
           </div>
