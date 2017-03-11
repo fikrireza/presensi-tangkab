@@ -49,6 +49,17 @@
 </div>
 @endif
 
+@if(Session::has('gagaltgl'))
+<div class="row">
+  <div class="col-md-12">
+    <div class="alert alert-warning">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4><i class="icon fa fa-check"></i> Terjadi Kesalahan!</h4>
+      <p>{{ Session::get('gagaltgl') }}</p>
+    </div>
+  </div>
+</div>
+@endif
 
 {{-- Modal Tambah Intervensi--}}
 <div class="modal modal-default fade" id="modaltambahIntervensi" role="dialog">
@@ -99,7 +110,7 @@
               </div>
             </div>
           </div>
-          <div class="form-group {{ $errors->has('jumlah_hari') ? 'has-error' : '' }}">
+          <div class="form-group {{ $errors->has('jumlah_hari') ? 'has-error' : '' }}" hidden="true">
             <label class="col-sm-3">Jumlah Hari</label>
             <div class="col-sm-9">
               <input type="text" name="jumlah_hari" id="jumlah_hari" class="form-control" value="{{ old('jumlah_hari') }}" placeholder="@if($errors->has('jumlah_hari'))
@@ -220,7 +231,7 @@
               </div>
             </div>
           </div>
-          <div class="form-group {{ $errors->has('jumlah_hari_edit') ? 'has-error' : '' }}">
+          <div class="form-group {{ $errors->has('jumlah_hari_edit') ? 'has-error' : '' }}" hidden="true">
             <label class="col-sm-3">Jumlah Hari</label>
             <div class="col-sm-9">
               <input type="text" name="jumlah_hari_edit" class="form-control" id="jumlah_hari_edit" value="{{ old('jumlah_hari_edit') }}" placeholder="@if($errors->has('jumlah_hari_edit'))

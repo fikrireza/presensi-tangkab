@@ -103,7 +103,7 @@ class RevisiIntervensiController extends Controller
         return redirect()->route('revisiintervensi.create')->withErrors($validator)->withInput();
       }
 
-      //menentukan tanggal kurang dari 3 hari
+        //menentukan tanggal kurang dari 3 hari
         $datestart = Carbon::createFromFormat('Y-m-d',  $request->tanggal_mulai);
         $dateend = Carbon::createFromFormat('Y-m-d',  $request->tanggal_akhir);
         $datenow = Carbon::today();
@@ -113,34 +113,47 @@ class RevisiIntervensiController extends Controller
         $countjumlhari = $request->jumlah_hari - $getcountharilibur;
         // dd($getcountharilibur);
             
-        $datenow->modify('+1 day');
-        $interval = $datenow->diff($datestart);
+        // $datenow->modify('+1 day');
+        // $interval = $datenow->diff($datestart);
 
+        $interval = date_diff($datenow, $datestart);
+        $getvalcount =  $interval->format('%R%a');
         // total hari
-        $days = $interval->days;
+        $days = $getvalcount;
 
         // create an iterateable period of date (P1D equates to 1 day)
         $period = new DatePeriod($datestart, new DateInterval('P1D'), $datenow);
-
-        // best stored as array, so you can add more than one
-        $holidays = array('2012-09-07');
 
         foreach($period as $dt) {
             $curr = $dt->format('D');
 
             // substract if Saturday or Sunday
             if ($curr == 'Sat' || $curr == 'Sun') {
-                $days--;
+                if($days > 0)
+                  {
+                    $days--;
+                  }
+                  else if($days < 0)
+                  {
+                    $days++;
+                  }
+                  else 
+                  {
+                    $days--;
+                  }
             }
 
-            // (optional) for the updated question
-            elseif (in_array($dt->format('Y-m-d'), $holidays)) {
-                $days--;
-            }
         }
+        // if ($days >= -2) {
+        //     echo "BOLEEEEH";
+        // } else {
+        //   echo "TIDAK";
+        // }
         // dd($days);
-      if($days > 3)
+      if($days >= -2)
       {
+        
+      } else {
         return redirect()->route('revisiintervensi.create')->with('gagaltgl',' Tanggal yang pilih lebih dari 3 hari sebelum hari ini.')->withInput();
       }
 

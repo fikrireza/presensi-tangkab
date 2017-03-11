@@ -36,6 +36,19 @@
 </div>
 @endif
 
+@if(Session::has('gagaltgl'))
+<div class="row">
+  <div class="col-md-12">
+    <div class="alert alert-warning">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4><i class="icon fa fa-check"></i> Terjadi Kesalahan!</h4>
+      <p>{{ Session::get('gagaltgl') }}</p>
+    </div>
+  </div>
+</div>
+@endif
+
+
 {{-- Modal Tambah Intervensi--}}
 <div class="modal modal-default fade" id="modaltambahIntervensi" role="dialog">
   <div class="modal-dialog">
