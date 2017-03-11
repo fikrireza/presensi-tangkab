@@ -264,7 +264,7 @@
 <script>
   $(".select2").select2();
 
-  var date = new Date();
+  // var date = new Date();
   // date.setDate(date.getDate()-3);
   $('#tanggal_mulai').datepicker({
     autoclose: true,

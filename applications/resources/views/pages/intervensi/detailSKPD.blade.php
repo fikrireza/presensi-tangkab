@@ -110,7 +110,7 @@
               </div>
             </div>
           </div>
-          <div class="form-group {{ $errors->has('jumlah_hari') ? 'has-error' : '' }}">
+          <div class="form-group {{ $errors->has('jumlah_hari') ? 'has-error' : '' }}" hidden="true">
             <label class="col-sm-3">Jumlah Hari</label>
             <div class="col-sm-9">
               <input type="text" name="jumlah_hari" id="jumlah_hari" class="form-control" value="{{ old('jumlah_hari') }}" placeholder="@if($errors->has('jumlah_hari'))
@@ -211,7 +211,7 @@
 <script>
   $(".select2").select2();
 
-  var date = new Date();
+  // var date = new Date();
   // date.setDate(date.getDate()-3);
   $('#tanggal_mulai').datepicker({
     autoclose: true,
