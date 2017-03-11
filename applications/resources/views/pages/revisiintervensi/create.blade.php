@@ -106,6 +106,13 @@
                  value="{{ old('tanggal_mulai') }}" placeholder="@if($errors->has('tanggal_mulai'))
                   {{ $errors->first('tanggal_mulai')}}@endif Tanggal Awal">
               </div>
+                @if(Session::has('gagaltgl'))
+                  <div class="row">
+                    <div class="col-md-12">
+                      <span style="color:red;">{{ Session::get('gagaltgl') }}</span>
+                    </div>
+                  </div>
+                @endif
             </div>
           </div>
           <div class="form-group {{ $errors->has('tanggal_akhir') ? 'has-error' : '' }}">
@@ -121,7 +128,7 @@
               </div>
             </div>
           </div>
-          <div class="form-group {{ $errors->has('jumlah_hari') ? 'has-error' : '' }}">
+          <div class="form-group {{ $errors->has('jumlah_hari') ? 'has-error' : '' }}" hidden="true">
             <label class="col-sm-2 control-label">Jumlah Hari</label>
             <div class="col-sm-10">
               <input type="text" name="jumlah_hari" id="jumlah_hari" class="form-control" value="{{ old('jumlah_hari') }}" placeholder="@if($errors->has('jumlah_hari'))
@@ -162,8 +169,8 @@
 <script src="{{ asset('plugins/iCheck/icheck.min.js') }}"></script>
 <script src="{{ asset('plugins/select2/select2.full.min.js')}}"></script>
 <script>
-var date = new Date();
-date.setDate(date.getDate()-3);
+// var date = new Date();
+// date.setDate(date.getDate()-3);
   $(".select2").select2();
   $(function () {
     $("#table_revisi").DataTable();
@@ -171,10 +178,10 @@ date.setDate(date.getDate()-3);
   $('#tanggal_mulai').datepicker({
   autoclose: true,
   format: 'yyyy-mm-dd',
-  startDate: date,
+  // startDate: date,
   todayHighlight: true,
   daysOfWeekDisabled: [0,6]
-});
+  });
   $('#tanggal_akhir').datepicker({
   autoclose: true,
   format: 'yyyy-mm-dd',
@@ -263,16 +270,6 @@ date.setDate(date.getDate()-3);
   } );
 </script>
 <script>
-var date = new Date();
-$('#tanggal_mutasi').datepicker({
-  autoclose: true,
-  format: 'yyyy-mm-dd',
-});
-$('#tanggal_sk').datepicker({
-  autoclose: true,
-  format: 'yyyy-mm-dd',
-});
-
 function isNumber(evt) {
   evt = (evt) ? evt : window.event;
   var charCode = (evt.which) ? evt.which : evt.keyCode;
