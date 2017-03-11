@@ -183,16 +183,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Edit Data Hari Libur & Cuti Bersama</h4>
+          <h4 class="modal-title">Edit Intervensi</h4>
         </div>
         <div class="modal-body">
-          <div class="form-group {{ $errors->has('id_edit') ? 'has-error' : '' }}" style="visibility: hidden;">
-            <label class="col-sm-3">id</label>
-            <div class="col-sm-9">
-              <input type="text" name="id_edit" class="form-control" id="id_edit" value="{{ old('id_edit') }}" placeholder="@if($errors->has('id_edit'))
-                {{ $errors->first('id_edit')}} @endif Jumlah Hari" required="" readonly="true">
-            </div>
-          </div>
           <div class="form-group {{ $errors->has('jenis_intervensi_edit') ? 'has-error' : '' }}">
             <label class="col-sm-3">Jenis Intervensi</label>
             <div class="col-sm-9">
@@ -206,6 +199,8 @@
                 <option value="Cuti" id="Cuti">Cuti</option>
                 <option value="DinasLuar" id="DinasLuar">Dinas Luar</option> --}}
               </select>
+              <input type="hidden" name="id_edit" class="form-control" id="id_edit" value="{{ old('id_edit') }}" placeholder="@if($errors->has('id_edit'))
+                {{ $errors->first('id_edit')}} @endif id" required="" readonly="true">
             </div>
           </div>
           <div class="form-group {{ $errors->has('tanggal_mulai_edit') ? 'has-error' : '' }}">
