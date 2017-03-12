@@ -49,6 +49,17 @@
 </div>
 @endif
 
+@if(Session::has('gagaltgl'))
+<div class="row">
+  <div class="col-md-12">
+    <div class="alert alert-warning">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4><i class="icon fa fa-check"></i> Terjadi Kesalahan!</h4>
+      <p>{{ Session::get('gagaltgl') }}</p>
+    </div>
+  </div>
+</div>
+@endif
 
 {{-- Modal Tambah Intervensi--}}
 <div class="modal modal-default fade" id="modaltambahIntervensi" role="dialog">
@@ -99,7 +110,7 @@
               </div>
             </div>
           </div>
-          <div class="form-group {{ $errors->has('jumlah_hari') ? 'has-error' : '' }}">
+          <div class="form-group {{ $errors->has('jumlah_hari') ? 'has-error' : '' }}" hidden="true">
             <label class="col-sm-3">Jumlah Hari</label>
             <div class="col-sm-9">
               <input type="text" name="jumlah_hari" id="jumlah_hari" class="form-control" value="{{ old('jumlah_hari') }}" placeholder="@if($errors->has('jumlah_hari'))
@@ -172,16 +183,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Edit Data Hari Libur & Cuti Bersama</h4>
+          <h4 class="modal-title">Edit Intervensi</h4>
         </div>
         <div class="modal-body">
-          <div class="form-group {{ $errors->has('id_edit') ? 'has-error' : '' }}" style="visibility: hidden;">
-            <label class="col-sm-3">id</label>
-            <div class="col-sm-9">
-              <input type="text" name="id_edit" class="form-control" id="id_edit" value="{{ old('id_edit') }}" placeholder="@if($errors->has('id_edit'))
-                {{ $errors->first('id_edit')}} @endif Jumlah Hari" required="" readonly="true">
-            </div>
-          </div>
           <div class="form-group {{ $errors->has('jenis_intervensi_edit') ? 'has-error' : '' }}">
             <label class="col-sm-3">Jenis Intervensi</label>
             <div class="col-sm-9">
@@ -195,6 +199,8 @@
                 <option value="Cuti" id="Cuti">Cuti</option>
                 <option value="DinasLuar" id="DinasLuar">Dinas Luar</option> --}}
               </select>
+              <input type="hidden" name="id_edit" class="form-control" id="id_edit" value="{{ old('id_edit') }}" placeholder="@if($errors->has('id_edit'))
+                {{ $errors->first('id_edit')}} @endif id" required="" readonly="true">
             </div>
           </div>
           <div class="form-group {{ $errors->has('tanggal_mulai_edit') ? 'has-error' : '' }}">
@@ -220,7 +226,7 @@
               </div>
             </div>
           </div>
-          <div class="form-group {{ $errors->has('jumlah_hari_edit') ? 'has-error' : '' }}">
+          <div class="form-group {{ $errors->has('jumlah_hari_edit') ? 'has-error' : '' }}" hidden="true">
             <label class="col-sm-3">Jumlah Hari</label>
             <div class="col-sm-9">
               <input type="text" name="jumlah_hari_edit" class="form-control" id="jumlah_hari_edit" value="{{ old('jumlah_hari_edit') }}" placeholder="@if($errors->has('jumlah_hari_edit'))
@@ -429,7 +435,7 @@
 
 @section('script')
 <script>
-var date = new Date();
+// var date = new Date();
 // date.setDate(date.getDate()-3);
 $('#tanggal_mulai').datepicker({
   autoclose: true,

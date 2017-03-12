@@ -9,11 +9,17 @@ use App\Models\Skpd;
 use App\Models\User;
 use App\Models\ManajemenIntervensi;
 use App\Models\Intervensi;
+use App\Models\HariLibur;
 
 use Validator;
 use Auth;
 use DB;
 use Hash;
+use DateTime;
+use DatePeriod;
+use DateIntercal;
+use DateInterval;
+use Carbon\Carbon;
 
 class RevisiIntervensiController extends Controller
 {
@@ -76,7 +82,6 @@ class RevisiIntervensiController extends Controller
 
     public function createStore(Request $request)
     {
-      // dd($request);
        $message = [
         // 'skpd.required' => 'Wajib di isi',
         'tanggal_mulai.required' => 'Wajib di isi',
@@ -98,8 +103,62 @@ class RevisiIntervensiController extends Controller
         return redirect()->route('revisiintervensi.create')->withErrors($validator)->withInput();
       }
 
-          
-            // dd($request->idpegawai);
+        //menentukan tanggal kurang dari 3 hari
+        $datestart = Carbon::createFromFormat('Y-m-d',  $request->tanggal_mulai);
+        $dateend = Carbon::createFromFormat('Y-m-d',  $request->tanggal_akhir);
+        $datenow = Carbon::today();
+
+        $getcountharilibur = HariLibur::whereBetween('libur', [$request->tanggal_mulai,$request->tanggal_akhir])->count();
+
+        $countjumlhari = $request->jumlah_hari - $getcountharilibur;
+        // dd($getcountharilibur);
+            
+        // $datenow->modify('+1 day');
+        // $interval = $datenow->diff($datestart);
+
+        $interval = date_diff($datenow, $datestart);
+        $getvalcount =  $interval->format('%R%a');
+        // total hari
+        $days = $getvalcount;
+
+        // create an iterateable period of date (P1D equates to 1 day)
+        $period = new DatePeriod($datestart, new DateInterval('P1D'), $datenow);
+
+        foreach($period as $dt) {
+            $curr = $dt->format('D');
+
+            // substract if Saturday or Sunday
+            if ($curr == 'Sat' || $curr == 'Sun') {
+                if($days > 0)
+                  {
+                    $days--;
+                  }
+                  else if($days < 0)
+                  {
+                    $days++;
+                  }
+                  else 
+                  {
+                    $days--;
+                  }
+            }
+
+        }
+        // if ($days >= -2) {
+        //     echo "BOLEEEEH";
+        // } else {
+        //   echo "TIDAK";
+        // }
+        // dd($days);
+      if($days >= -2)
+      {
+        
+      } else {
+        return redirect()->route('revisiintervensi.create')->with('gagaltgl',' Tanggal yang pilih lebih dari 3 hari sebelum hari ini.')->withInput();
+      }
+
+
+      // dd($request->idpegawai);
       if ($request->idpegawai != null) {
         foreach ($request->idpegawai as $key_pegawai) {
 
@@ -154,7 +213,7 @@ class RevisiIntervensiController extends Controller
             $set->id_intervensi = 9999;
             $getnamaintervensi = ManajemenIntervensi::find(9999);
             $set->jenis_intervensi = $getnamaintervensi->nama_intervensi;
-            $set->jumlah_hari = $request->jumlah_hari;
+            $set->jumlah_hari = $countjumlhari;
             $set->tanggal_mulai = $request->tanggal_mulai;
             $set->tanggal_akhir = $request->tanggal_akhir;
             $set->deskripsi = $request->keterangan;
