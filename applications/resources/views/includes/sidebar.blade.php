@@ -18,7 +18,7 @@
               </a>
             </li>
             @if(session('status') == 'administrator' || session('status') == 'superuser')
-            <li class="treeview {{ Route::currentRouteNamed('skpd.index') ? 'active' : '' }}{{ Route::currentRouteNamed('golongan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawai.index') ? 'active' : ''}}{{ Route::currentRouteNamed('harilibur.index') ? 'active' : ''}}{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('pengecualian.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawai.create') ? 'active' : '' }}{{ Route::currentRouteNamed('pegawai.edit') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.create') ? 'active' : '' }}">
+            <li class="treeview {{ Route::currentRouteNamed('skpd.index') ? 'active' : '' }}{{ Route::currentRouteNamed('golongan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawai.index') ? 'active' : ''}}{{ Route::currentRouteNamed('harilibur.index') ? 'active' : ''}}{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('pengecualian.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawai.create') ? 'active' : '' }}{{ Route::currentRouteNamed('pegawai.edit') ? 'active' : '' }}{{ Route::currentRouteNamed('mutasi.create') ? 'active' : '' }}{{ Route::currentRouteNamed('jadwal-kerja') ? 'active' : ''}}{{ Route::currentRouteNamed('jadwal-kerja.group') ? 'active' : ''}}{{ Route::currentRouteNamed('jadwal-kerja.tambahjam') ? 'active' : ''}}{{ Route::currentRouteNamed('jadwal-kerja.jam') ? 'active' : ''}}">
               <a href="#">
                 <i class="fa fa-gear"></i> <span>Master & Setup</span>
                 <i class="fa fa-angle-left pull-right"></i>
@@ -35,7 +35,8 @@
                 <li class="{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}"><a href="{{ route('manajemenintervensi.index') }}"><i class="fa fa-circle-o"></i> Intervensi</a></li>
                 <li class="{{ Route::currentRouteNamed('shift.index') ? 'active' : '' }}"><a href="{{ route('shift.index') }}"><i class="fa fa-circle-o"></i> Shift</a></li>
                 <li class="{{ Route::currentRouteNamed('harilibur.index') ? 'active' : '' }}"><a href="{{ route('harilibur.index') }}"><i class="fa fa-circle-o"></i> Hari Libur & Cuti Bersama</a></li>
-                @if(session('status') == 'administrator' || session('status') == 'admin')
+                @if(session('status') == 'administrator' || session('status') == 'superuser')
+                <li class="{{ Route::currentRouteNamed('jadwal-kerja') ? 'active' : ''}}{{ Route::currentRouteNamed('jadwal-kerja.group') ? 'active' : ''}}{{ Route::currentRouteNamed('jadwal-kerja.tambahjam') ? 'active' : ''}}{{ Route::currentRouteNamed('jadwal-kerja.jam') ? 'active' : ''}}"><a href="{{ route('jadwal-kerja') }}"><i class="fa fa-circle-o"></i> Jadwal Kerja</a></li>
                 <li class="{{ Route::currentRouteNamed('pengecualian.index') ? 'active' : ''}}"><a href="{{ route('pengecualian.index') }}"><i class="fa fa-circle-o"></i> Pegecualian TPP</a></li>
                 @endif
               </ul>
@@ -58,7 +59,7 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li class="#"><a href="#"><i class="fa fa-circle-o"></i> Coba</a></li>
+                <li class="#"><a href="#"><i class="fa fa-circle-o"></i> Atur Jadwal Shift</a></li>
               </ul>
             </li>
             @endif
