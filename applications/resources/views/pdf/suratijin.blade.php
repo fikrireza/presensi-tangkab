@@ -8,10 +8,10 @@
     <table border="0" cellspacing="0" style="width:100%;" cellpadding="10">
       <tr>
         <td>
-          Hal: <strong><u>Datang Terlambat Masuk Kerja</u></strong>
+          Hal: <strong><u>{{$data["nama_intervensi"]}}</u></strong>
         </td>
         <td>
-          Tigaraksa, 3 Maret 2017.
+          Tigaraksa, {{$data["tanggal"]}}.
         </td>
       </tr>
       <tr>

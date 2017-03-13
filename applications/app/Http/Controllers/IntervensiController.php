@@ -27,8 +27,9 @@ class IntervensiController extends Controller
                                          ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
                                          ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
                                          ->count();
+      $getpegawai = Pegawai::where('skpd_id', Auth::user()->skpd_id)->get();
 
-      return view('pages.intervensi.index', compact('intervensi', 'getmasterintervensi','getunreadintervensi'));
+      return view('pages.intervensi.index', compact('intervensi', 'getmasterintervensi','getunreadintervensi', 'getpegawai'));
     }
 
     public function store(Request $request)
@@ -109,8 +110,8 @@ class IntervensiController extends Controller
       $tanggalakhir = $request->tanggal_akhir;
 
       $dateRange=array();
-      $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2),     substr($tanggalmulai,8,2),substr($tanggalmulai,0,4));
-      $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2),     substr($tanggalakhir,8,2),substr($tanggalakhir,0,4));
+      $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
+      $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
 
       if ($iDateTo>=$iDateFrom)
       {
@@ -172,8 +173,14 @@ class IntervensiController extends Controller
       $set->jumlah_hari = $request->jumlah_hari;
       $set->deskripsi = $request->keterangan;
 
-      if (isset($request->atasan)) {
-        $set->nama_atasan = $request->atasan;
+      if ($request->atasan!="---") {
+        $dataatasan = explode("//", $request->atasan);
+        $set->nip_atasan = $dataatasan[0];
+        $set->nama_atasan = $dataatasan[1];
+      }
+
+      if ($request->jam_ijin!="") {
+        $set->jam_ijin = $request->jam_ijin;
       }
 
       $set->berkas = $doc_name;
@@ -525,14 +532,74 @@ class IntervensiController extends Controller
 
     public function suratIjin($id)
     {
-      $data = intervensi::find($id);
+      $data = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                          ->where('preson_intervensis.id', $id)
+                          ->get();
+
       $pdf = PDF::loadView('pdf.suratijin', $data);
       return $pdf->download('suratijin.pdf');
     }
 
-    public function previewSuratIjin()
+    public function previewSuratIjin($id)
     {
-      // $data = intervensi::find($id);
-      return view('pdf.suratijin');
+      $data = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                          ->where('preson_intervensis.id', $id)
+                          ->get();
+
+      //month library
+      $monthnow = date('m');
+      $month="";
+      switch ($monthnow) {
+        case "01":
+          $month = "Januari";
+          break;
+        case "02":
+          $month = "Februari";
+          break;
+        case "03":
+          $month = "Maret";
+          break;
+        case "04":
+          $month = "April";
+          break;
+        case "05":
+          $month = "Mei";
+          break;
+        case "06":
+          $month = "Juni";
+          break;
+        case "07":
+          $month = "Juli";
+          break;
+        case "08":
+          $month = "Agustus";
+          break;
+        case "09":
+          $month = "September";
+          break;
+        case "10":
+          $month = "Oktober";
+          break;
+        case "11":
+          $month = "Novembe";
+          break;
+        case "12":
+          $month = "Desember";
+          break;
+        default:
+          $month = "Unrecognized Month Number";
+      }
+      $datenow = date('d')." $month ".date('Y');
+
+      $send = [
+        "nama_intervensi" => $data[0]->jenis_intervensi,
+        "tanggal" => $datenow,
+        "atasan_langsung" => $data[0]->nama_atasan,
+        "nama_pegawai" => $data[0]->nama,
+        "nip_pegawai" => $data[0]->nip_sapk,
+        "keterangan" => $data[0]->deskripsi
+      ];
+
+      return view('pdf.suratijin')->with('data', $send);
     }
 }

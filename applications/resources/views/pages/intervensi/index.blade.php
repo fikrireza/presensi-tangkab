@@ -110,11 +110,31 @@
             <label class="col-sm-3">Keterangan</label>
             <div class="col-sm-9">
               <input type="text" name="keterangan" class="form-control" value="{{ old('keterangan') }}" placeholder="@if($errors->has('keterangan'))
-                {{ $errors->first('keterangan')}} @endif Keterangan" required="">
+                {{ $errors->first('keterangan')}} @endif Keterangan">
             </div>
           </div>
 
-          <div id="keterangantambahan"></div>
+          <div id="keterangantambahan">
+            <div class='form-group'>
+              <label class='col-sm-3'>Nama Atasan</label>
+              <div class='col-sm-9'>
+                <select name='atasan' class='form-control'>
+                  <option value="---">-- Pilih --</option>
+                  @foreach ($getpegawai as $key)
+                    <option value='{{$key->nip_sapk}}//{{$key->nama}}'>{{$key->nama}}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div id="jamijin">
+              <div class='form-group'>
+                <label class='col-sm-3'>Jam Ijin</label>
+                <div class='col-sm-9'>
+                  <input type='text' name='jam_ijin' class='form-control'>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div class="form-group {{ $errors->has('berkas[]') ? 'has-error' : '' }}">
             <label class="col-sm-2 control-label">Upload Document</label>
@@ -126,7 +146,7 @@
                       <tr>
                         <td><input type="checkbox" name="chk"/></td>
                         <td>
-                          <input type="file" name="berkas[]" class="form-control {{ $errors->has('berkas[]') ? 'has-error' : '' }}" accept=".png, .jpg, .pdf" required>
+                          <input type="file" name="berkas[]" class="form-control {{ $errors->has('berkas[]') ? 'has-error' : '' }}" accept=".png, .jpg, .pdf">
                         </td>
                       </tr>
                     </tbody>
@@ -697,20 +717,26 @@ $('.tanggal_akhir_edit').datepicker({
 
   <script>
     $(function(){
+      //
+      $('#keterangantambahan').hide();
+      $('#jamijin').hide();
+
       // add nama_atasan column to specific intervention type
       $('select#id_intervensi').on('change', function(){
 
         var optionSelected = $("option:selected", this);
         var valueSelected = this.value;
-        if (valueSelected==5 || valueSelected==6 || valueSelected==12) {
-          $('#keterangantambahan').html("<div class='form-group'>"+
-                                        "<label class='col-sm-3'>Nama Atasan</label>"+
-                                        "<div class='col-sm-9'>"+
-                                        "<input type='text' name='atasan' class='form-control'>"+
-                                        "</div>"+
-                                        "</div>");
+
+
+        if (valueSelected==5 || valueSelected==6) {
+          $('#keterangantambahan').show();
+          $('#jamijin').show();
+        } else if (valueSelected=="12") {
+          $('#keterangantambahan').show();
+          $('#jamijin').hide();
         } else {
-          $('#keterangantambahan').html("");
+          $('#keterangantambahan').hide();
+          $('#jamijin').hide();
         }
       });
 
@@ -726,7 +752,14 @@ $('.tanggal_akhir_edit').datepicker({
                                         "<div class='col-sm-9'>"+
                                         "<input type='text' name='atasan_edit' class='form-control'>"+
                                         "</div>"+
-                                        "</div>");
+                                        "</div>"+
+                                        "<div class='form-group'>"+
+                                        "<label class='col-sm-3'>Jam Ijin</label>"+
+                                        "<div class='col-sm-9'>"+
+                                        "<input type='text' name='jam_ijin_edit' class='form-control'>"+
+                                        "</div>"+
+                                        "</div>"
+                                      );
         } else {
           $('#keterangantambahanedit').html("");
         }
