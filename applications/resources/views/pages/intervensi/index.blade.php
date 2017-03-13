@@ -17,12 +17,12 @@
   window.setTimeout(function() {
     $(".alert-success").fadeTo(500, 0).slideUp(500, function(){
         $(this).remove();
-    });
+    }, 5000);
 
     $(".alert-danger").fadeTo(500, 0).slideUp(500, function(){
         $(this).remove();
     });
-  }, 2000);
+  }, 5000);
 </script>
 
 @if(Session::has('berhasil'))
@@ -416,7 +416,7 @@
                   @endif
                 @endif
               </td>
-              <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d')))
+              <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d')))
                 <small class="label label-info">Belum Disetujui</small>
               @elseif($key->flag_status == 1)
                 <small class="label label-success">Sudah Disetujui</small>&nbsp;
@@ -431,7 +431,7 @@
                 <small class="label label-danger">Tidak Disetujui</small>
               @endif</td>
               <td>@if ($key->flag_status == 0)
-                  @if (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d'))
+                  @if (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d'))
                     <a href="" data-value="{{ $key->id }}" class="editIntervensi" data-toggle="modal" data-target="#modaleditIntervensi"><i class="fa fa-edit"></i> Ubah</a>
                     <a href="" class="batalIntervensi" data-toggle="modal" data-target="#batalIntervensi" data-value="{{ $key->id }}"><i class="fa fa-close"></i> Batal</a>
                   @else

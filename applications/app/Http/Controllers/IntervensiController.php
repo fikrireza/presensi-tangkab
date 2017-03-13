@@ -96,16 +96,16 @@ class IntervensiController extends Controller
                   {
                     $days++;
                   }
-                  else 
+                  else
                   {
                     $days--;
                   }
             }
 
         }
-      if($days >= -2)
+      if($days >= -20)
       {
-        
+
       } else {
         return redirect()->route('intervensi.index')->with('gagaltgl',' Tanggal yang pilih lebih dari 3 hari sebelum hari ini.');
       }
@@ -307,7 +307,7 @@ class IntervensiController extends Controller
                   {
                     $days++;
                   }
-                  else 
+                  else
                   {
                     $days--;
                   }
@@ -316,7 +316,7 @@ class IntervensiController extends Controller
         }
       if($days >= -2)
       {
-        
+
       } else {
         return redirect()->route('intervensi.index')->with('gagaltgl',' Tanggal yang pilih lebih dari 3 hari sebelum hari ini.');
       }
@@ -589,7 +589,7 @@ class IntervensiController extends Controller
                   {
                     $days++;
                   }
-                  else 
+                  else
                   {
                     $days--;
                   }
@@ -598,7 +598,7 @@ class IntervensiController extends Controller
         }
       if($days >= -2)
       {
-        
+
       } else {
         return redirect()->route('intervensi.kelola')->with('gagaltgl',' Tanggal yang pilih lebih dari 3 hari sebelum hari ini.');
       }

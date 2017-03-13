@@ -201,7 +201,7 @@
               <td>{{ $key->jenis_intervensi }}</td>
               <td>{{ $key->tanggal_mulai }}</td>
               <td>{{ $key->tanggal_akhir }}</td>
-              <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d')))
+              <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d')))
                 <small class="label label-info">Belum Disetujui</small>
               @elseif($key->flag_status == 1)
                 <small class="label label-success">Sudah Disetujui</small>
@@ -211,13 +211,13 @@
                 <small class="label label-danger">Tidak Disetujui</small>
               @endif</td>
               <td>@if ($key->flag_status == 0)
-                    @if (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d'))
+                    @if (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d'))
                     <a href="{{ route('intervensi.kelola.aksi', $key->id) }}"><i class="fa fa-edit"></i> Lihat</a>
                     @else
                     -
                     @endif
                   @else
-                    @if ((date('Y-m-d', strtotime($key->tanggal_akhir. ' + 3 days')) >= date('Y-m-d')))
+                    @if ((date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d')))
                       <a href="#" class="resetstatus" data-value="{{$key->id}}" data-toggle="modal" data-target="#modalresetstatus"><i class="fa fa-close"></i> Reset Status</a>
                     @else
                       -
