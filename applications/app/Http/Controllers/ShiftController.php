@@ -7,7 +7,13 @@ use Illuminate\Http\Request;
 use App\Models\Pegawai;
 use App\Models\Skpd;
 use App\Models\Shift;
-use App\Models\MasterShift;
+use App\Models\JamKerja;
+use App\Models\JadwalKerja;
+use App\Models\JamKerjaGroup;
+
+use Validator;
+use Auth;
+use DB;
 
 class ShiftController extends Controller
 {
@@ -29,5 +35,12 @@ class ShiftController extends Controller
       $set->update();
 
       return redirect()->route('shift.index')->with('berhasil', 'SKPD Terpilih Menjadi Shift');
+    }
+
+    public function jadwalShift()
+    {
+      
+
+      return view('pages.shift.jadwalShift');
     }
 }

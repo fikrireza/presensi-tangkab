@@ -8,10 +8,10 @@ class Shift extends Model
 {
     protected $table = 'preson_shift_log';
 
-    protected $fillable = ['fid', 'tanggal', 'shift_id', 'keterangan'];
+    protected $fillable = ['fid', 'tanggal', 'jam_kerja_id', 'keterangan'];
 
     public function shift()
     {
-      return $this->belongsTo('App\Models\MasterShift', 'shift_id');
+      return $this->belongsTo('App\Models\JamKerja');
     }
 }

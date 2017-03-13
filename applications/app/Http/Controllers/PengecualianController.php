@@ -23,11 +23,11 @@ class PengecualianController extends Controller
       {
         $pegawai = pegawai::select('id', 'nip_sapk', 'nama')->where('skpd_id', Auth::user()->skpd_id)->get();
       }
-      elseif(session('status') === 'administrator')
+      elseif(session('status') === 'administrator' || session('status') === 'superuser')
       {
         $pegawai = pegawai::select('id', 'nip_sapk', 'nama')->get();
       }
-     
+
       $pengecualian = DB::table('preson_pengecualian_tpp')->select('preson_pengecualian_tpp.*',
                       'preson_pegawais.id as pegawai_id','preson_pegawais.nip_sapk as nip_sapk_pegawai','preson_pegawais.nama')
                   ->leftJoin('preson_pegawais', 'preson_pengecualian_tpp.nip_sapk', '=', 'preson_pegawais.nip_sapk')

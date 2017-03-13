@@ -52,13 +52,13 @@
               </ul>
             </li>
             @elseif(session('status') == 'admin' && (Auth::user()->skpd->flag_shift == 1))
-            <li class="treeview {{ Route::currentRouteNamed('shift.index') ? 'active' : ''}}">
+            <li class="treeview {{ Route::currentRouteNamed('shift.jadwal') ? 'active' : ''}}">
               <a href="#">
                 <i class="fa fa-calendar-plus-o"></i> <span>Manajemen Shift</span>
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li class="#"><a href="#"><i class="fa fa-circle-o"></i> Atur Jadwal Shift</a></li>
+                <li class="{{ Route::currentRouteNamed('shift.jadwal') ? 'active' : ''}}"><a href="{{ route('shift.jadwal') }}"><i class="fa fa-circle-o"></i> Jadwal Shift</a></li>
               </ul>
             </li>
             @endif
