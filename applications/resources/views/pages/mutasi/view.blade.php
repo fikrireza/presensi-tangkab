@@ -128,7 +128,7 @@
       {{ $getmutasi->links() }}
     </div>
     @else
-      <div class="callout callout-info">
+      <div class="callout callout-success">
       <h4>Pemberitahuan!</h4>
 
       <p>Anda belum pernah dimutasikan ke SKPD lain.</p>

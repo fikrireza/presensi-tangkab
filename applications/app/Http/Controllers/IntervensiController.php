@@ -9,12 +9,18 @@ use App\Models\Intervensi;
 use App\Models\Pegawai;
 use App\Models\Users;
 use App\Models\Skpd;
+use App\Models\HariLibur;
 
 use Validator;
 use Auth;
 use DB;
 use Image;
 use PDF;
+use DateTime;
+use DatePeriod;
+use DateIntercal;
+use DateInterval;
+use Carbon\Carbon;
 
 class IntervensiController extends Controller
 {
@@ -59,6 +65,51 @@ class IntervensiController extends Controller
       }
       // --- end of validasi form input
 
+
+      //------ start menentukan tanggal kurang dari 3 hari
+        $datestart = Carbon::createFromFormat('Y-m-d',  $request->tanggal_mulai);
+        $dateend = Carbon::createFromFormat('Y-m-d',  $request->tanggal_akhir);
+        $datenow = Carbon::today();
+
+        $getcountharilibur = HariLibur::whereBetween('libur', [$request->tanggal_mulai,$request->tanggal_akhir])->count();
+
+        $countjumlhari = $request->jumlah_hari - $getcountharilibur;
+
+        $interval = date_diff($datenow, $datestart);
+        $getvalcount =  $interval->format('%R%a');
+        // total hari
+        $days = $getvalcount;
+
+        // create an iterateable period of date (P1D equates to 1 day)
+        $period = new DatePeriod($datestart, new DateInterval('P1D'), $datenow);
+
+        foreach($period as $dt) {
+            $curr = $dt->format('D');
+
+            // substract if Saturday or Sunday
+            if ($curr == 'Sat' || $curr == 'Sun') {
+                if($days > 0)
+                  {
+                    $days--;
+                  }
+                  else if($days < 0)
+                  {
+                    $days++;
+                  }
+                  else 
+                  {
+                    $days--;
+                  }
+            }
+
+        }
+      if($days >= -2)
+      {
+        
+      } else {
+        return redirect()->route('intervensi.index')->with('gagaltgl',' Tanggal yang pilih lebih dari 3 hari sebelum hari ini.');
+      }
+      //------ end menentukan tanggal kurang dari 3 hari
 
 
       // --- validasi izin tidak masuk kerja 2x sebulan
@@ -170,7 +221,7 @@ class IntervensiController extends Controller
 -     $set->id_intervensi = $request->jenis_intervensi;
       $set->tanggal_mulai = $request->tanggal_mulai;
       $set->tanggal_akhir = $request->tanggal_akhir;
-      $set->jumlah_hari = $request->jumlah_hari;
+      $set->jumlah_hari = $countjumlhari;
       $set->deskripsi = $request->keterangan;
 
       if ($request->atasan!="---") {
@@ -225,6 +276,52 @@ class IntervensiController extends Controller
       {
         return redirect()->route('intervensi.index')->withErrors($validator)->withInput();
       }
+
+      //------ start menentukan tanggal kurang dari 3 hari
+        $datestart = Carbon::createFromFormat('Y-m-d',  $request->tanggal_mulai_edit);
+        $dateend = Carbon::createFromFormat('Y-m-d',  $request->tanggal_akhir_edit);
+        $datenow = Carbon::today();
+
+        $getcountharilibur = HariLibur::whereBetween('libur', [$request->tanggal_mulai_edit,$request->tanggal_akhir_edit])->count();
+
+        $countjumlhari = $request->jumlah_hari_edit - $getcountharilibur;
+
+        $interval = date_diff($datenow, $datestart);
+        $getvalcount =  $interval->format('%R%a');
+        // total hari
+        $days = $getvalcount;
+
+        // create an iterateable period of date (P1D equates to 1 day)
+        $period = new DatePeriod($datestart, new DateInterval('P1D'), $datenow);
+
+        foreach($period as $dt) {
+            $curr = $dt->format('D');
+
+            // substract if Saturday or Sunday
+            if ($curr == 'Sat' || $curr == 'Sun') {
+                if($days > 0)
+                  {
+                    $days--;
+                  }
+                  else if($days < 0)
+                  {
+                    $days++;
+                  }
+                  else 
+                  {
+                    $days--;
+                  }
+            }
+
+        }
+      if($days >= -2)
+      {
+        
+      } else {
+        return redirect()->route('intervensi.index')->with('gagaltgl',' Tanggal yang pilih lebih dari 3 hari sebelum hari ini.');
+      }
+      //------ end menentukan tanggal kurang dari 3 hari
+
 
       // --- validasi izin tidak masuk kerja 2x sebulan
       if ($request->jenis_intervensi_edit==12) {
@@ -333,7 +430,7 @@ class IntervensiController extends Controller
         $set->id_intervensi = $request->jenis_intervensi_edit;
         $set->tanggal_mulai = $request->tanggal_mulai_edit;
         $set->tanggal_akhir = $request->tanggal_akhir_edit;
-        $set->jumlah_hari = $request->jumlah_hari_edit;
+        $set->jumlah_hari = $countjumlhari;
         $set->deskripsi = $request->keterangan_edit;
         $set->berkas = $doc_name;
         $set->flag_status = 0;
@@ -348,7 +445,7 @@ class IntervensiController extends Controller
         $set->id_intervensi = $request->jenis_intervensi_edit;
         $set->tanggal_mulai = $request->tanggal_mulai_edit;
         $set->tanggal_akhir = $request->tanggal_akhir_edit;
-        $set->jumlah_hari = $request->jumlah_hari_edit;
+        $set->jumlah_hari = $countjumlhari;
         $set->deskripsi = $request->keterangan_edit;
         $set->flag_status = 0;
         $set->actor = Auth::user()->pegawai_id;
@@ -436,6 +533,7 @@ class IntervensiController extends Controller
 
     public function kelolaPost(Request $request)
     {
+
       $message = [
         'pegawai_id.required' => 'Wajib di isi',
         'jenis_intervensi.required' => 'Wajib di isi',
@@ -461,6 +559,51 @@ class IntervensiController extends Controller
         return redirect()->route('intervensi.kelola')->withErrors($validator)->withInput();
       }
 
+      //------ start menentukan tanggal kurang dari 3 hari
+        $datestart = Carbon::createFromFormat('Y-m-d',  $request->tanggal_mulai);
+        $dateend = Carbon::createFromFormat('Y-m-d',  $request->tanggal_akhir);
+        $datenow = Carbon::today();
+
+        $getcountharilibur = HariLibur::whereBetween('libur', [$request->tanggal_mulai,$request->tanggal_akhir])->count();
+
+        $countjumlhari = $request->jumlah_hari - $getcountharilibur;
+
+        $interval = date_diff($datenow, $datestart);
+        $getvalcount =  $interval->format('%R%a');
+        // total hari
+        $days = $getvalcount;
+
+        // create an iterateable period of date (P1D equates to 1 day)
+        $period = new DatePeriod($datestart, new DateInterval('P1D'), $datenow);
+
+        foreach($period as $dt) {
+            $curr = $dt->format('D');
+
+            // substract if Saturday or Sunday
+            if ($curr == 'Sat' || $curr == 'Sun') {
+                if($days > 0)
+                  {
+                    $days--;
+                  }
+                  else if($days < 0)
+                  {
+                    $days++;
+                  }
+                  else 
+                  {
+                    $days--;
+                  }
+            }
+
+        }
+      if($days >= -2)
+      {
+        
+      } else {
+        return redirect()->route('intervensi.kelola')->with('gagaltgl',' Tanggal yang pilih lebih dari 3 hari sebelum hari ini.');
+      }
+      //------ end menentukan tanggal kurang dari 3 hari
+
       $file = $request->file('berkas');
 
       if($file != null)
@@ -479,7 +622,7 @@ class IntervensiController extends Controller
       $set->id_intervensi = $request->jenis_intervensi;
       $set->tanggal_mulai = $request->tanggal_mulai;
       $set->tanggal_akhir = $request->tanggal_akhir;
-      $set->jumlah_hari = $request->jumlah_hari;
+      $set->jumlah_hari = $countjumlhari;
       $set->deskripsi = $request->keterangan;
       $set->berkas = $photo_name;
       $set->flag_status = 0;

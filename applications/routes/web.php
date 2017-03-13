@@ -89,10 +89,12 @@ Route::get('manajemen-intervensi', 'ManajemenIntervensiController@index')->name(
 Route::post('manajemen-intervensi', 'ManajemenIntervensiController@store')->name('manajemenintervensi.store');
 
 // Revisi Intervensi
-Route::get('revisi-intervensi', 'RevisiIntervensiController@index')->name('revisiintervensi.index');
-Route::get('revisi-intervensi/create', 'RevisiIntervensiController@create')->name('revisiintervensi.create');
-Route::post('revisi-intervensi/caripegawai', 'RevisiIntervensiController@caripegawai')->name('revisiintervensi.caripegawai');
-Route::post('revisi-intervensi/createStore', 'RevisiIntervensiController@createStore')->name('revisiintervensi.createStore');
+Route::get('revisi-intervensi', 'RevisiIntervensiController@index')->name('revisiintervensi.index')->middleware('administrator');
+Route::get('revisi-intervensi/create', 'RevisiIntervensiController@create')->name('revisiintervensi.create')->middleware('administrator');
+Route::post('revisi-intervensi/caripegawai', 'RevisiIntervensiController@caripegawai')->name('revisiintervensi.caripegawai')->middleware('administrator');
+Route::post('revisi-intervensi/createStore', 'RevisiIntervensiController@createStore')->name('revisiintervensi.createStore')->middleware('administrator');
+Route::get('revisi-intervensi/{id}', 'RevisiIntervensiController@bind');
+Route::post('revisi-intervensi/edit', 'RevisiIntervensiController@edit')->name('revisiintervensi.edit')->middleware('administrator');
 
 
 // Absensi Administrator
@@ -167,6 +169,25 @@ Route::get('cetakAdmin', 'LaporanController@cetakAdmin')->name('laporan.cetakAdm
 Route::get('laporan-pegawai', 'LaporanController@laporanPegawai')->name('laporanPegawai');
 Route::post('laporan-pegawai', 'LaporanController@laporanPegawaiStore')->name('laporanPegawai.store');
 Route::get('cetakPegawai', 'LaporanController@cetakPegawai')->name('laporan.cetakPegawai');
+
+
+// Jam Kerja & Jem Kerja Group & Jadwal Kerja
+Route::get('jadwal-kerja', 'JadwalKerjaController@index')->name('jadwal-kerja');
+Route::get('jadwal-kerja/tambah', 'JadwalKerjaController@jadwalTambah')->name('jadwal-kerja.tambah');
+Route::post('jadwal-kerja/tambah', 'JadwalKerjaController@jadwalPost')->name('jadwal-kerja.post');
+Route::get('jadwal-kerja/ubah/{id}', 'JadwalKerjaController@jadwalUbah')->name('jadwal-kerja.ubah');
+Route::post('jadwal-kerja/ubah', 'JadwalKerjaController@jadwalEdit')->name('jadwal-kerja.edit');
+Route::get('jadwal-kerja-group', 'JadwalKerjaController@jamGroup')->name('jadwal-kerja.group');
+Route::get('jadwal-kerja-group/tambah', 'JadwalKerjaController@jamGroupAdd')->name('jadwal-kerja.tambahgroup');
+Route::post('jadwal-kerja-group/tambah', 'JadwalKerjaController@jamGroupPost')->name('jadwal-kerja.postgroup');
+Route::get('jadwal-kerja-group/lihat/{group_id}', 'JadwalKerjaController@jamGroupLihat')->name('jadwal-kerja.lihatgroup');
+Route::get('jadwal-kerja-group/non/{id}', 'JadwalKerjaController@nonAktif')->name('jadwal-kerja.nonaktif');
+Route::get('jadwal-kerja-group/aktif/{id}', 'JadwalKerjaController@aktif')->name('jadwal-kerja.aktif');
+Route::get('jam-kerja', 'JadwalKerjaController@jamKerja')->name('jadwal-kerja.jam');
+Route::get('jam-kerja/tambah', 'JadwalKerjaController@jamKerjaTambah')->name('jadwal-kerja.tambahjam');
+Route::post('jam-kerja/tambah', 'JadwalKerjaController@jamKerjaPost')->name('jadwal-kerja.postjam');
+Route::get('jam-kerja/ubah/{id}', 'JadwalKerjaController@jamKerjaUbah')->name('jadwal-kerja.ubahjam');
+Route::get('jam-kerja/ubah', 'JadwalKerjaController@jamKerjaEdit')->name('jadwal-kerja.editjam');
 
 
 // Shift
