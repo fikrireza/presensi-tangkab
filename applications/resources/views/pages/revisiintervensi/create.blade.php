@@ -169,25 +169,29 @@
 <script src="{{ asset('plugins/iCheck/icheck.min.js') }}"></script>
 <script src="{{ asset('plugins/select2/select2.full.min.js')}}"></script>
 <script>
-// var date = new Date();
+var today = new Date();
+var startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+var endDate = new Date(today.getFullYear(), today.getMonth()+1, 0);
 // date.setDate(date.getDate()-3);
   $(".select2").select2();
   $(function () {
     $("#table_revisi").DataTable();
   });
   $('#tanggal_mulai').datepicker({
-  autoclose: true,
-  format: 'yyyy-mm-dd',
-  // startDate: date,
-  todayHighlight: true,
-  daysOfWeekDisabled: [0,6]
+    autoclose: true,
+    format: 'yyyy-mm-dd',
+    startDate: startDate,
+    endDate: endDate,
+    todayHighlight: true,
+    daysOfWeekDisabled: [0,6]
   });
   $('#tanggal_akhir').datepicker({
-  autoclose: true,
-  format: 'yyyy-mm-dd',
-  // startDate: date,
-  todayHighlight: true,
-  daysOfWeekDisabled: [0,6]
+    autoclose: true,
+    format: 'yyyy-mm-dd',
+    startDate: startDate,
+    endDate: endDate,
+    todayHighlight: true,
+    daysOfWeekDisabled: [0,6]
 });
 </script>
 <script type="text/javascript">
