@@ -107,8 +107,8 @@ class RevisiIntervensiController extends Controller
         $getcountharilibur = HariLibur::whereBetween('libur', [$request->tanggal_mulai,$request->tanggal_akhir])->count();
         $countjumlhari = $request->jumlah_hari - $getcountharilibur;
         //end set Jumlah Hari Intervensi
-            
-        
+
+
       //start menentukan tanggal kurang dari 3 hari
         // $datestart = Carbon::createFromFormat('Y-m-d',  $request->tanggal_mulai);
         // $dateend = Carbon::createFromFormat('Y-m-d',  $request->tanggal_akhir);
@@ -135,7 +135,7 @@ class RevisiIntervensiController extends Controller
         //           {
         //             $days++;
         //           }
-        //           else 
+        //           else
         //           {
         //             $days--;
         //           }
@@ -144,7 +144,7 @@ class RevisiIntervensiController extends Controller
         // }
         // if($days >= -2)
         // {
-          
+
         // } else {
         //   return redirect()->route('revisiintervensi.create')->with('gagaltgl',' Tanggal yang pilih lebih dari 3 hari sebelum hari ini.')->withInput();
         // }
@@ -223,9 +223,9 @@ class RevisiIntervensiController extends Controller
             $set->berkas = $photo_name;
             $set->flag_status = 0;
             $set->actor = Auth::user()->pegawai_id;
-            $set->save(); 
+            $set->save();
         }
-        return redirect()->route('revisiintervensi.index')->with('berhasil', 'Pegawai Berhasil Dimutasi');
+        return redirect()->route('revisiintervensi.index')->with('berhasil', 'Pegawai Berhasil Intervensi');
       }else{
         return redirect()->route('revisiintervensi.create')->with('gagal', 'Pilih data pegawai tersebuh dahulu.');
       }
@@ -276,5 +276,5 @@ class RevisiIntervensiController extends Controller
       return redirect()->route('revisiintervensi.index')->with('berhasil', 'Berhasil Mengubah Data Revisi Intervensis');
     }
 
-    
+
 }
