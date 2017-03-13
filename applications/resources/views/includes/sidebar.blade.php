@@ -33,7 +33,6 @@
                 <li class="{{ Route::currentRouteNamed('jabatan.index') ? 'active' : ''}}"><a href="{{ route('jabatan.index') }}"><i class="fa fa-circle-o"></i> Jabatan</a></li>
                 <li class="{{ Route::currentRouteNamed('struktural.index') ? 'active' : ''}}"><a href="{{ route('struktural.index') }}"><i class="fa fa-circle-o"></i> Struktural/Eselon</a></li>
                 <li class="{{ Route::currentRouteNamed('manajemenintervensi.index') ? 'active' : '' }}"><a href="{{ route('manajemenintervensi.index') }}"><i class="fa fa-circle-o"></i> Intervensi</a></li>
-                <li class="{{ Route::currentRouteNamed('shift.index') ? 'active' : '' }}"><a href="{{ route('shift.index') }}"><i class="fa fa-circle-o"></i> Shift</a></li>
                 <li class="{{ Route::currentRouteNamed('harilibur.index') ? 'active' : '' }}"><a href="{{ route('harilibur.index') }}"><i class="fa fa-circle-o"></i> Hari Libur & Cuti Bersama</a></li>
                 @if(session('status') == 'administrator' || session('status') == 'superuser')
                 <li class="{{ Route::currentRouteNamed('jadwal-kerja') ? 'active' : ''}}{{ Route::currentRouteNamed('jadwal-kerja.group') ? 'active' : ''}}{{ Route::currentRouteNamed('jadwal-kerja.tambahjam') ? 'active' : ''}}{{ Route::currentRouteNamed('jadwal-kerja.jam') ? 'active' : ''}}"><a href="{{ route('jadwal-kerja') }}"><i class="fa fa-circle-o"></i> Jadwal Kerja</a></li>
