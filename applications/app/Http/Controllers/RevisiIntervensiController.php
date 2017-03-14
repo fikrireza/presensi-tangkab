@@ -103,12 +103,6 @@ class RevisiIntervensiController extends Controller
         return redirect()->route('revisiintervensi.create')->withErrors($validator)->withInput();
       }
 
-        //start set Jumlah Hari Intervensi
-        $getcountharilibur = HariLibur::whereBetween('libur', [$request->tanggal_mulai,$request->tanggal_akhir])->count();
-        $countjumlhari = $request->jumlah_hari - $getcountharilibur;
-        //end set Jumlah Hari Intervensi
-
-
       //start menentukan tanggal kurang dari 3 hari
         // $datestart = Carbon::createFromFormat('Y-m-d',  $request->tanggal_mulai);
         // $dateend = Carbon::createFromFormat('Y-m-d',  $request->tanggal_akhir);
@@ -153,6 +147,23 @@ class RevisiIntervensiController extends Controller
 
       // dd($request->idpegawai);
       if ($request->idpegawai != null) {
+
+          //start set Jumlah Hari Intervensi
+          $getcountharilibur = HariLibur::whereBetween('libur', [$request->tanggal_mulai,$request->tanggal_akhir])->count();
+          $countjumlhari = $request->jumlah_hari - $getcountharilibur;
+          //end set Jumlah Hari Intervensi
+
+          // biar file yang diupload tidak ngeloop
+          $file = $request->file('upload_revisi');
+            if($file != null)
+            {
+                $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'.' . $file->getClientOriginalExtension();
+                $file->move('documents/', $photo_name);
+              }else{
+                $photo_name = "-";
+            }
+          // biar file yang diupload tidak ngeloop
+
         foreach ($request->idpegawai as $key_pegawai) {
 
             // --- validasi ketersediaan tanggal intervensi
@@ -210,15 +221,6 @@ class RevisiIntervensiController extends Controller
             $set->tanggal_mulai = $request->tanggal_mulai;
             $set->tanggal_akhir = $request->tanggal_akhir;
             $set->deskripsi = $request->keterangan;
-
-            $file = $request->file('upload_revisi');
-            if($file != null)
-            {
-                $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'.' . $file->getClientOriginalExtension();
-                $file->move('documents/', $photo_name);
-              }else{
-                $photo_name = "-";
-            }
 
             $set->berkas = $photo_name;
             $set->flag_status = 0;
