@@ -11,7 +11,7 @@
             <ul class="nav navbar-nav">
 
               @if (isset($getunreadintervensi))
-                @if ($getunreadintervensi!=0)
+                @if ($getunreadintervensi!=0 && Auth::user()->role_id!=3)
                   <li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                       <i class="fa fa-bell-o"></i>
