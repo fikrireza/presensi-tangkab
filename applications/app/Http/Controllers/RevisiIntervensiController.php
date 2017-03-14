@@ -103,63 +103,67 @@ class RevisiIntervensiController extends Controller
         return redirect()->route('revisiintervensi.create')->withErrors($validator)->withInput();
       }
 
-        //menentukan tanggal kurang dari 3 hari
-        $datestart = Carbon::createFromFormat('Y-m-d',  $request->tanggal_mulai);
-        $dateend = Carbon::createFromFormat('Y-m-d',  $request->tanggal_akhir);
-        $datenow = Carbon::today();
+      //start menentukan tanggal kurang dari 3 hari
+        // $datestart = Carbon::createFromFormat('Y-m-d',  $request->tanggal_mulai);
+        // $dateend = Carbon::createFromFormat('Y-m-d',  $request->tanggal_akhir);
+        // $datenow = Carbon::today();
 
-        $getcountharilibur = HariLibur::whereBetween('libur', [$request->tanggal_mulai,$request->tanggal_akhir])->count();
+        // $interval = date_diff($datenow, $datestart);
+        // $getvalcount =  $interval->format('%R%a');
+        // // total hari
+        // $days = $getvalcount;
 
-        $countjumlhari = $request->jumlah_hari - $getcountharilibur;
-        // dd($getcountharilibur);
-            
-        // $datenow->modify('+1 day');
-        // $interval = $datenow->diff($datestart);
+        // // create an iterateable period of date (P1D equates to 1 day)
+        // $period = new DatePeriod($datestart, new DateInterval('P1D'), $datenow);
 
-        $interval = date_diff($datenow, $datestart);
-        $getvalcount =  $interval->format('%R%a');
-        // total hari
-        $days = $getvalcount;
+        // foreach($period as $dt) {
+        //     $curr = $dt->format('D');
 
-        // create an iterateable period of date (P1D equates to 1 day)
-        $period = new DatePeriod($datestart, new DateInterval('P1D'), $datenow);
+        //     // substract if Saturday or Sunday
+        //     if ($curr == 'Sat' || $curr == 'Sun') {
+        //         if($days > 0)
+        //           {
+        //             $days--;
+        //           }
+        //           else if($days < 0)
+        //           {
+        //             $days++;
+        //           }
+        //           else
+        //           {
+        //             $days--;
+        //           }
+        //     }
 
-        foreach($period as $dt) {
-            $curr = $dt->format('D');
-
-            // substract if Saturday or Sunday
-            if ($curr == 'Sat' || $curr == 'Sun') {
-                if($days > 0)
-                  {
-                    $days--;
-                  }
-                  else if($days < 0)
-                  {
-                    $days++;
-                  }
-                  else 
-                  {
-                    $days--;
-                  }
-            }
-
-        }
-        // if ($days >= -2) {
-        //     echo "BOLEEEEH";
-        // } else {
-        //   echo "TIDAK";
         // }
-        // dd($days);
-      if($days >= -2)
-      {
-        
-      } else {
-        return redirect()->route('revisiintervensi.create')->with('gagaltgl',' Tanggal yang pilih lebih dari 3 hari sebelum hari ini.')->withInput();
-      }
+        // if($days >= -2)
+        // {
+
+        // } else {
+        //   return redirect()->route('revisiintervensi.create')->with('gagaltgl',' Tanggal yang pilih lebih dari 3 hari sebelum hari ini.')->withInput();
+        // }
+      //end menentukan tanggal kurang dari 3 hari
 
 
       // dd($request->idpegawai);
       if ($request->idpegawai != null) {
+
+          //start set Jumlah Hari Intervensi
+          $getcountharilibur = HariLibur::whereBetween('libur', [$request->tanggal_mulai,$request->tanggal_akhir])->count();
+          $countjumlhari = $request->jumlah_hari - $getcountharilibur;
+          //end set Jumlah Hari Intervensi
+
+          // biar file yang diupload tidak ngeloop
+          $file = $request->file('upload_revisi');
+            if($file != null)
+            {
+                $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'.' . $file->getClientOriginalExtension();
+                $file->move('documents/', $photo_name);
+              }else{
+                $photo_name = "-";
+            }
+          // biar file yang diupload tidak ngeloop
+
         foreach ($request->idpegawai as $key_pegawai) {
 
             // --- validasi ketersediaan tanggal intervensi
@@ -218,21 +222,12 @@ class RevisiIntervensiController extends Controller
             $set->tanggal_akhir = $request->tanggal_akhir;
             $set->deskripsi = $request->keterangan;
 
-            $file = $request->file('upload_revisi');
-            if($file != null)
-            {
-                $photo_name = Auth::user()->nip_sapk.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'.' . $file->getClientOriginalExtension();
-                $file->move('documents/', $photo_name);
-              }else{
-                $photo_name = "-";
-            }
-
             $set->berkas = $photo_name;
             $set->flag_status = 0;
             $set->actor = Auth::user()->pegawai_id;
-            $set->save(); 
+            $set->save();
         }
-        return redirect()->route('revisiintervensi.index')->with('berhasil', 'Pegawai Berhasil Dimutasi');
+        return redirect()->route('revisiintervensi.index')->with('berhasil', 'Pegawai Berhasil Intervensi');
       }else{
         return redirect()->route('revisiintervensi.create')->with('gagal', 'Pilih data pegawai tersebuh dahulu.');
       }
@@ -283,5 +278,5 @@ class RevisiIntervensiController extends Controller
       return redirect()->route('revisiintervensi.index')->with('berhasil', 'Berhasil Mengubah Data Revisi Intervensis');
     }
 
-    
+
 }
