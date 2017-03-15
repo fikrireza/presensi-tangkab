@@ -17,8 +17,10 @@
   window.setTimeout(function() {
     $(".alert-success").fadeTo(500, 0).slideUp(500, function(){
         $(this).remove();
-    }, 5000);
+    });
+  }, 5000);
 
+  window.setTimeout(function() {
     $(".alert-danger").fadeTo(500, 0).slideUp(500, function(){
         $(this).remove();
     });
@@ -271,7 +273,7 @@
                       <tr>
                         <td><input type="checkbox" name="chk"/></td>
                         <td>
-                          <input type="file" name="berkas_edit[]" class="form-control {{ $errors->has('berkas_edit[]') ? 'has-error' : '' }}" accept=".png, .jpg, .pdf" required>
+                          <input type="file" name="berkas_edit[]" class="form-control {{ $errors->has('berkas_edit[]') ? 'has-error' : '' }}" accept=".png, .jpg, .pdf">
                         </td>
                       </tr>
                     </tbody>
@@ -781,7 +783,7 @@ $('.tanggal_akhir_edit').datepicker({
         var ext3 = ext2[ext2.length-1];
         var ext = ext3.split('.');
         if (ext[1]=="png" || ext[1]=="jpg" || ext[1]=="jpeg") {
-          $("#previewdocument").html("<img src='"+a+"'>");
+          $("#previewdocument").html("<img style='max-width:820px;' src='"+a+"'>");
         } else if (ext[1]=="pdf") {
           $("#previewdocument").html("<embed src='"+a+"' width='820px' height='700px' />");
         } else {
