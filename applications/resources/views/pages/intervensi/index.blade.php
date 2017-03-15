@@ -778,8 +778,9 @@ $('.tanggal_akhir_edit').datepicker({
         var a = $(this).data('value');
         var ext1 = a.split('//');
         var ext2 = ext1[1].split('/');
-        var ext3 = ext2[2].split('.');
-        if (ext3[1]=="png" || ext3[1]=="jpg" || ext3[1]=="jpeg") {
+        var ext3 = ext2[ext2.length-1];
+        var ext = ext3.split('.');
+        if (ext[1]=="png" || ext[1]=="jpg" || ext[1]=="jpeg") {
           $("#previewdocument").html("<img src='"+a+"'>");
         } else if (ext[1]=="pdf") {
           $("#previewdocument").html("<embed src='"+a+"' width='820px' height='700px' />");
