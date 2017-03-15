@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="{{ asset('plugins/select2/select2.min.css') }}">
 @endsection
 
+
 @section('breadcrumb')
   <h1>Tindak Intervensi</h1>
   <ol class="breadcrumb">
@@ -164,6 +165,7 @@ $('a.decline').click(function(){
   $('#setDecline').attr('href', "{{ url('/') }}/intervensi/kelola/decline/"+a);
 });
 </script>
+
 
 <script type="text/javascript">
   $(function(){

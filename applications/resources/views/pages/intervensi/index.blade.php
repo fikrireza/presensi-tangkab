@@ -487,6 +487,7 @@ $('.tanggal_akhir_edit').datepicker({
 });
 </script>
 
+
 <script type="text/javascript">
 @if ($errors->has('jenis_intervensi') || $errors->has('tanggal_mulai') || $errors->has('tanggal_akhir') || $errors->has('keterangan'))
   $('#modaltambahIntervensi').modal('show');

@@ -14,6 +14,7 @@
   </ol>
 @endsection
 
+
 @section('content')
 <script>
   window.setTimeout(function() {
