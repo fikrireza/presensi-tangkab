@@ -46,6 +46,24 @@
 </div>
 @endif
 
+{{-- Modal View Documents --}}
+<div class="modal fade" id="modalviewdocument" role="dialog">
+  <div class="modal-dialog" style="width:850px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Preview Berkas</h4>
+      </div>
+      <div class="modal-body">
+        <div id="previewdocument"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-default pull-right btn-flat" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {{-- Modal Tambah Intervensi--}}
 <div class="modal modal-default fade" id="modaltambahIntervensi" role="dialog">
   <div class="modal-dialog">
@@ -168,6 +186,7 @@
               <th>NIP</th>
               <th>Nama</th>
               <th>Jenis Intervensi</th>
+              <th>Preview Berkas</th>
               <th>Tanggal Mulai</th>
               <th>Tanggal Akhir</th>
               <th>Status Intervensi</th>
@@ -177,6 +196,7 @@
           <tfoot>
             <tr>
               <td></td>
+              <th></th>
               <th></th>
               <th></th>
               <th></th>
@@ -199,6 +219,28 @@
               <td>{{ $key->nip_sapk }}</td>
               <td>{{ $key->nama_pegawai }}</td>
               <td>{{ $key->jenis_intervensi }}</td>
+              <td>
+                @php
+                  $fileberkas = explode("//", $key->berkas);
+                @endphp
+                @if (count($fileberkas)>1)
+                  @for ($i=0; $i < count($fileberkas); $i++)
+                    @if ($fileberkas[$i]!="")
+                      <a href="#" data-value="{{url('/documents')}}/{{$fileberkas[$i]}}" class="viewdocument" data-toggle="modal" data-target="#modalviewdocument" title="Klik untuk lihat file.">
+                        <i class="fa fa-file-o"></i>
+                      </a>&nbsp;
+                    @endif
+                  @endfor
+                @elseif (count($fileberkas)==1)
+                  @if ($fileberkas[0]!="" && $fileberkas[0]!="-")
+                    <a href="#" data-value="{{url('/documents')}}/{{$fileberkas[0]}}" class="viewdocument" data-toggle="modal" data-target="#modalviewdocument" title="Klik untuk lihat file.">
+                      <i class="fa fa-file-o"></i>
+                    </a>&nbsp;
+                    @else
+                      -
+                  @endif
+                @endif
+              </td>
               <td>{{ $key->tanggal_mulai }}</td>
               <td>{{ $key->tanggal_akhir }}</td>
               <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d')))
@@ -387,6 +429,22 @@
     $(".resetstatus").on('click', function(){
       var a = $(this).data('value');
       $("#btnresetstatus").attr('href', "{{url('/')}}/intervensi/reset-status/"+a);
+    });
+
+    // preview document in modal
+    $(".viewdocument").on('click', function(){
+      var a = $(this).data('value');
+      var ext1 = a.split('//');
+      var ext2 = ext1[1].split('/');
+      var ext3 = ext2[ext2.length-1];
+      var ext = ext3.split('.');
+      if (ext[1]=="png" || ext[1]=="jpg" || ext[1]=="jpeg") {
+        $("#previewdocument").html("<img style='max-width:820px;' src='"+a+"'>");
+      } else if (ext[1]=="pdf") {
+        $("#previewdocument").html("<embed src='"+a+"' width='820px' height='700px' />");
+      } else {
+        $("#previewdocument").html("Ekstensi file tidak support!");
+      }
     });
   })
 </script>
