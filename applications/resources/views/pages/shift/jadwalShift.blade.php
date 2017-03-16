@@ -33,7 +33,77 @@
 </div>
 @endif
 
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="box box-primary box-solid">
+      <div class="box-header with-border">
+        <div class="box-title">
+          <p>Pilih Bulan</p>
+        </div>
+      </div>
+      <form action="{{ route('laporanAdmin.store')}}" method="POST">
+      {{ csrf_field() }}
+      <div class="box-body">
+        @if(isset($pilihBulan))
+        <div class="row">
+          <div class="col-xs-12">
+            <input type="text" class="form-control" name="bulan_shift" id="bulan_shift" value="{{ $bulan_shift }}" placeholder="mm/yyyy" required="">
+          </div>
+        </div>
+        @else
+        <div class="row">
+          <div class="col-xs-12">
+            <input type="text" class="form-control" name="bulan_shift" id="bulan_shift" value="" placeholder="mm/yyyy" required="">
+          </div>
+        </div>
+        @endif
+      </div>
+      <div class="box-footer">
+        <button class="btn btn-block bg-purple">Pilih</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
 
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-primary box-solid">
+      <div class="box-header">
+        <h3 class="box-title">Hari</h3>
+      </div>
+      <div class="box-body table-responsive">
+        <table id="table_hari" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Tanggal</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <td></td>
+              <th></th>
+              <td></td>
+            </tr>
+          </tfoot>
+          <tbody>
+            <?php $no = 1; ?>
+            @foreach ($tanggalBulan as $key)
+            <tr>
+              <td>{{ $no }}</td>
+              <td>{{ $key }}</td>
+              <td><a href="{{ url('jadwal-shift').'/'.$key }}"><i class="fa fa-edit"></i> Lihat</a></td>
+            </tr>
+            <?php $no++; ?>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 @endsection
@@ -41,7 +111,18 @@
 @section('script')
 <script>
   $(function () {
-    $("#").DataTable();
+    $("#table_hari").DataTable();
+  });
+  $('#bulan_shift').datepicker({
+    autoclose: true,
+    viewMode: 'years',
+    format: 'mm/yyyy',
+    changeMonth: true,
+    changeYear: true,
+    showButtonPanel: true,
+    format: "mm-yyyy",
+    viewMode: "months",
+    minViewMode: "months"
   });
 </script>
 @endsection
