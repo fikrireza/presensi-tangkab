@@ -27,6 +27,7 @@
         <section class="content">
           @yield('content')
         </section>
+        <button onclick="topFunc()" id="goTop" title="Go to top">Top</button>
       </div>
 
       <footer class="main-footer">
@@ -35,6 +36,22 @@
 
     </div><!-- ./wrapper -->
     @include('includes.bottomscript')
+    <script type="text/javascript">
+      window.onscroll = function() {scrollFunction()};
+
+      function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            document.getElementById("goTop").style.display = "block";
+        } else {
+            document.getElementById("goTop").style.display = "none";
+        }
+      }
+
+      function topFunc() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      }
+    </script>
     @yield('script')
   </body>
 </html>

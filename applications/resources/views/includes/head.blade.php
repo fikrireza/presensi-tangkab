@@ -17,3 +17,24 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 <meta name="csrf-token" content="{{ csrf_token() }}" />
+
+<style media="screen">
+#goTop {
+  display: none;
+  position: fixed;
+  bottom: 5px;
+  right: 5px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: purple;
+  color: white;
+  cursor: pointer;
+  padding: 7px;
+  border-radius: 10px;
+}
+
+#goTop:hover {
+  background-color: #000;
+}
+</style>
