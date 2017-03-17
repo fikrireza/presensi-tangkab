@@ -41,13 +41,13 @@
           <p>Pilih Bulan</p>
         </div>
       </div>
-      <form action="{{ route('laporanAdmin.store')}}" method="POST">
+      <form action="{{ route('shift.jadwalBulan')}}" method="POST">
       {{ csrf_field() }}
       <div class="box-body">
         @if(isset($pilihBulan))
         <div class="row">
           <div class="col-xs-12">
-            <input type="text" class="form-control" name="bulan_shift" id="bulan_shift" value="{{ $bulan_shift }}" placeholder="mm/yyyy" required="">
+            <input type="text" class="form-control" name="bulan_shift" id="bulan_shift" value="{{ $pilihBulan }}" placeholder="mm/yyyy" required="">
           </div>
         </div>
         @else
