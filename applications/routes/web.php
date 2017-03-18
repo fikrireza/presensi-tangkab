@@ -197,6 +197,8 @@ Route::get('jadwal-shift', 'ShiftController@jadwalShift')->name('shift.jadwal');
 Route::post('jadwal-shift', 'ShiftController@jadwalShiftBulan')->name('shift.jadwalBulan');
 Route::get('jadwal-shift/{tanggal}', 'ShiftController@jadwalShiftTanggal')->name('shift.jadwaltanggal');
 Route::post('jadwal-shift/tambah', 'ShiftController@jadwalShiftTanggalStore')->name('shift.jadwaltanggalStore');
+Route::get('jadwal-shift/ubah/{id}', 'ShiftController@jadwalShiftUbah')->name('shift.jadwalUbah');
+Route::post('jadwal-shift/ubah', 'ShiftController@jadwalShiftEdit')->name('shift.jadwalEdit');
 
 
 

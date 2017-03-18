@@ -126,7 +126,7 @@
               <td>{{ $key->nama_jam_kerja }}</td>
               <td>{{ $key->jam_masuk }}</td>
               <td>{{ $key->jam_pulang }}</td>
-              <td><a href="{{ url('jadwal-shift').'/'.$key->nama }}"><i class="fa fa-edit"></i> Ubah</a></td>
+              <td><a href="{{ route('shift.jadwalUbah', ['id' => $key->id]) }}"><i class="fa fa-edit"></i> Ubah</a></td>
             </tr>
             <?php $no++; ?>
             @endforeach

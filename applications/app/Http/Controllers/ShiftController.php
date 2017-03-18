@@ -105,7 +105,7 @@ class ShiftController extends Controller
                                 AND preson_jadwal_kerja.jam_kerja_group = preson_jam_kerja_group.group_id
                                 AND preson_jam_kerja_group.jam_kerja_id = preson_jam_kerja.id ");
 
-      $getPegawaiKerja = DB::select("SELECT preson_pegawais.nama, preson_pegawais.nip_sapk, preson_jam_kerja.nama_jam_kerja, preson_jam_kerja.jam_masuk, preson_jam_kerja.jam_pulang FROM preson_shift_log, preson_pegawais, preson_jam_kerja
+      $getPegawaiKerja = DB::select("SELECT preson_shift_log.id, preson_pegawais.nama, preson_pegawais.nip_sapk, preson_jam_kerja.nama_jam_kerja, preson_jam_kerja.jam_masuk, preson_jam_kerja.jam_pulang FROM preson_shift_log, preson_pegawais, preson_jam_kerja
                                       WHERE preson_pegawais.fid = preson_shift_log.fid
                                       AND preson_shift_log.jam_kerja_id = preson_jam_kerja.id
                                       AND preson_pegawais.skpd_id = $skpd_id
@@ -131,5 +131,40 @@ class ShiftController extends Controller
 
       return redirect()->route('shift.jadwaltanggal', ['tanggal' => $tanggal])->with('berhasil', 'Jadwal Pegawai Berhasil Diinput '.$jumlah);
 
+    }
+
+    public function jadwalShiftUbah($id)
+    {
+      $getShift = Shift::join('preson_pegawais', 'preson_pegawais.fid', '=', 'preson_shift_log.fid')
+                        ->select('preson_shift_log.*', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.nip_sapk')
+                        ->where('preson_shift_log.id', $id)
+                        ->first();
+
+      if($getShift == null){
+        abort(404);
+      }
+
+      $skpd_id   = Auth::user()->skpd_id;
+      $getJamKerja = DB::select("SELECT preson_jam_kerja.*
+                                FROM preson_jadwal_kerja, preson_jam_kerja_group, preson_jam_kerja
+                                WHERE preson_jadwal_kerja.skpd_id = $skpd_id
+                                AND preson_jadwal_kerja.jam_kerja_group = preson_jam_kerja_group.group_id
+                                AND preson_jam_kerja_group.jam_kerja_id = preson_jam_kerja.id ");
+
+      return view('pages.shift.jadwalShiftUbah', compact('getShift', 'getJamKerja'));
+
+    }
+
+    public function jadwalShiftEdit(Request $request)
+    {
+      $set = Shift::find($request->id);
+      $set->jam_kerja_id = $request->jam_kerja_id;
+      $set->actor = Auth::user()->pegawai_id;
+      $set->keterangan = $request->keterangan;
+      $set->update();
+
+      $tanggal = date("d-m-Y", strtotime($request->tanggal));
+
+      return redirect()->route('shift.jadwaltanggal', ['tanggal' => $tanggal])->with('berhasil', 'Jadwal Pegawai '.$request->nama_pegawai.' Berhasil Dirubah');
     }
 }
