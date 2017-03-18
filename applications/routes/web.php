@@ -194,6 +194,12 @@ Route::get('jam-kerja/ubah', 'JadwalKerjaController@jamKerjaEdit')->name('jadwal
 Route::get('shift', 'ShiftController@index')->name('shift.index');
 Route::post('shift', 'ShiftController@skpdShift')->name('shift.skpd');
 Route::get('jadwal-shift', 'ShiftController@jadwalShift')->name('shift.jadwal');
+Route::post('jadwal-shift', 'ShiftController@jadwalShiftBulan')->name('shift.jadwalBulan');
+Route::get('jadwal-shift/{tanggal}', 'ShiftController@jadwalShiftTanggal')->name('shift.jadwaltanggal');
+Route::post('jadwal-shift/tambah', 'ShiftController@jadwalShiftTanggalStore')->name('shift.jadwaltanggalStore');
+Route::get('jadwal-shift/ubah/{id}', 'ShiftController@jadwalShiftUbah')->name('shift.jadwalUbah');
+Route::post('jadwal-shift/ubah', 'ShiftController@jadwalShiftEdit')->name('shift.jadwalEdit');
+
 
 
 // CronJob for Convert TaLog to Preson_Log
