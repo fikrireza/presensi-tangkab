@@ -52,21 +52,14 @@
             <label class="col-sm-2 control-label"></label>
             <div class="col-md-10">
               <div class="box-body table-responsive box box-primary box-solid">
-                <table id="table_revisi" class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped">
                   <thead>
                     <tr>
-                      <th>Pilih</th>
+                      <th>Semua<br/><input type="checkbox" onClick="toggle(this)" /></th>
                       <th>NIP</th>
                       <th>Nama</th>
                     </tr>
                   </thead>
-                  <tfoot>
-                    <tr>
-                      <td></td>
-                      <th></th>
-                      <th></th>
-                    </tr>
-                  </tfoot>
                   <tbody>
                     @if($getcaripegawai == null)
                     <tr>
@@ -193,6 +186,14 @@ var endDate = new Date(today.getFullYear(), today.getMonth()+1, 0);
     todayHighlight: true,
     daysOfWeekDisabled: [0,6]
 });
+</script>
+<script type="text/javascript">
+  function toggle(pilih) {
+  checkboxes = document.getElementsByName('idpegawai[]');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = pilih.checked;
+  }
+} 
 </script>
 <script type="text/javascript">
   function durationDay(){
