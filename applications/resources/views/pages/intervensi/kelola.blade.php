@@ -209,12 +209,14 @@
           <tbody>
             <?php $no = 1; ?>
             @if ($intervensi->isEmpty())
-            <tr>
-              <td colspan="7" align="center"> Anda Belum Pernah Melakukan Intervensi </td>
-            </tr>
+              {{-- <tr>
+                <td colspan="7" align="center"> Anda Belum Pernah Melakukan Intervensi </td>
+              </tr> --}}
             @else
             @foreach ($intervensi as $key)
-            <tr>
+            <tr @if ($key->flag_view==0)
+              style="background:#c5ffba;"
+            @endif>
               <td>{{ $no }}</td>
               <td>{{ $key->nip_sapk }}</td>
               <td>{{ $key->nama_pegawai }}</td>
@@ -254,13 +256,16 @@
               @endif</td>
               <td>@if ($key->flag_status == 0)
                     @if (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d'))
-                    <a href="{{ route('intervensi.kelola.aksi', $key->id) }}"><i class="fa fa-edit"></i> Lihat</a>
+                      <a href="{{ route('intervensi.kelola.aksi', $key->id) }}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Lihat</a>
                     @else
                     -
                     @endif
                   @else
                     @if ((date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d')))
-                      <a href="#" class="resetstatus" data-value="{{$key->id}}" data-toggle="modal" data-target="#modalresetstatus"><i class="fa fa-close"></i> Reset Status</a>
+                      @if ($key->flag_view==0)
+                        <a href="{{ route('intervensi.kelola.aksi', $key->id) }}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Lihat</a>
+                      @endif
+                      <a href="#" class="btn btn-xs btn-danger resetstatus" data-value="{{$key->id}}" data-toggle="modal" data-target="#modalresetstatus"><i class="fa fa-close"></i> Reset Status</a>
                     @else
                       -
                     @endif

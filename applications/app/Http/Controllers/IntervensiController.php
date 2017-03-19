@@ -155,6 +155,7 @@ class IntervensiController extends Controller
       // --- validasi ketersediaan tanggal intervensi
       $gettanggalintervensi = Intervensi::select('tanggal_mulai', 'tanggal_akhir')
                                           ->where('pegawai_id', Auth::user()->pegawai_id)
+                                          ->where('flag_status', '!=', 3)
                                           ->get();
 
       $tanggalmulai = $request->tanggal_mulai;
@@ -510,7 +511,7 @@ class IntervensiController extends Controller
 
       return view('pages.intervensi.aksi', compact('intervensi', 'getunreadintervensi'));
     }
-    
+
 
     public function kelolaApprove($id)
     {
