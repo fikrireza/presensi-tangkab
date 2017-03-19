@@ -82,6 +82,7 @@ class RevisiIntervensiController extends Controller
 
     public function createStore(Request $request)
     {
+      dd($request);
        $message = [
         // 'skpd.required' => 'Wajib di isi',
         'tanggal_mulai.required' => 'Wajib di isi',
