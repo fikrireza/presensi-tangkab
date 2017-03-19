@@ -432,6 +432,7 @@
       } );
   } );
 </script>
+
 <script>
   $(function(){
     $(".resetstatus").on('click', function(){

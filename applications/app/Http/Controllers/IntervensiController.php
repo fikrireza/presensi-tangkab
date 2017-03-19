@@ -26,8 +26,8 @@ class IntervensiController extends Controller
 {
     public function index()
     {
-      $intervensi = intervensi::where('pegawai_id', Auth::user()->pegawai_id)->get();
-      $getmasterintervensi = ManajemenIntervensi::where('flag_old', 0)->get();
+      $intervensi = intervensi::where('pegawai_id', Auth::user()->pegawai_id)->orderby('id', 'desc')->get();
+      $getmasterintervensi = ManajemenIntervensi::where('flag_old', 0)->where('id', '!=', 9999)->get();
       $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
                                          ->where('preson_intervensis.flag_view', 0)
                                          ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
@@ -113,7 +113,7 @@ class IntervensiController extends Controller
 
 
       // --- validasi izin tidak masuk kerja 2x sebulan
-      if ($request->jenis_intervensi==12) {
+      if ($request->jenis_intervensi==13) {
         if ($request->jumlah_hari>2) {
           return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin tidak masuk kerja melebihi batas maksimal.');
         }
@@ -133,7 +133,7 @@ class IntervensiController extends Controller
 
 
       // --- validasi izin datang telat/pulang cepat 2x sebulan
-      if ($request->jenis_intervensi==5 || $request->jenis_intervensi==6) {
+      if ($request->jenis_intervensi==2 || $request->jenis_intervensi==3) {
         if ($request->jumlah_hari>2) {
           return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin datang telat atau pulang cepat melebihi batas maksimal.');
         }
@@ -261,7 +261,7 @@ class IntervensiController extends Controller
         'tanggal_akhir_edit.required' => 'Wajib di isi',
         'jumlah_hari_edit.required' => 'Wajib di isi',
         'keterangan_edit.required' => 'Wajib di isi',
-        'berkas'  => 'Hanya .jpg, .png, .pdf'
+        // 'berkas'  => 'Hanya .jpg, .png, .pdf'
       ];
 
       $validator = Validator::make($request->all(), [
@@ -270,7 +270,7 @@ class IntervensiController extends Controller
         'tanggal_akhir_edit' => 'required',
         'jumlah_hari_edit' => 'required',
         'keterangan_edit' => 'required',
-        'berkas'  => 'mimes:jpeg,png,pdf,jpg'
+        // 'berkas'  => 'mimes:jpeg,png,pdf,jpg'
       ], $message);
 
       if($validator->fails())
@@ -325,7 +325,7 @@ class IntervensiController extends Controller
 
 
       // --- validasi izin tidak masuk kerja 2x sebulan
-      if ($request->jenis_intervensi_edit==12) {
+      if ($request->jenis_intervensi_edit==13) {
         if ($request->jumlah_hari_edit>2) {
           return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin tidak masuk kerja melebihi batas maksimal.');
         }
@@ -345,7 +345,7 @@ class IntervensiController extends Controller
 
 
       // --- validasi izin datang telat/pulang cepat 2x sebulan
-      if ($request->jenis_intervensi_edit==5 || $request->jenis_intervensi_edit==6) {
+      if ($request->jenis_intervensi_edit==2 || $request->jenis_intervensi_edit==3) {
         if ($request->jumlah_hari_edit>2) {
           return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin datang telat atau pulang cepat melebihi batas maksimal.');
         }
@@ -433,6 +433,17 @@ class IntervensiController extends Controller
         $set->tanggal_akhir = $request->tanggal_akhir_edit;
         $set->jumlah_hari = $countjumlhari;
         $set->deskripsi = $request->keterangan_edit;
+
+        if ($request->atasan_edit!="---") {
+          $dataatasan = explode("//", $request->atasan_edit);
+          $set->nip_atasan = $dataatasan[0];
+          $set->nama_atasan = $dataatasan[1];
+        }
+
+        if ($request->jam_ijin_edit!="") {
+          $set->jam_ijin = $request->jam_ijin_edit;
+        }
+
         $set->berkas = $doc_name;
         $set->flag_status = 0;
         $set->actor = Auth::user()->pegawai_id;
@@ -448,6 +459,17 @@ class IntervensiController extends Controller
         $set->tanggal_akhir = $request->tanggal_akhir_edit;
         $set->jumlah_hari = $countjumlhari;
         $set->deskripsi = $request->keterangan_edit;
+
+        if ($request->atasan_edit!="---") {
+          $dataatasan = explode("//", $request->atasan_edit);
+          $set->nip_atasan = $dataatasan[0];
+          $set->nama_atasan = $dataatasan[1];
+        }
+
+        if ($request->jam_ijin_edit!="") {
+          $set->jam_ijin = $request->jam_ijin_edit;
+        }
+
         $set->flag_status = 0;
         $set->actor = Auth::user()->pegawai_id;
         $set->save();
@@ -460,7 +482,7 @@ class IntervensiController extends Controller
     {
       if(session('status') === 'admin')
       {
-        $getmasterintervensi = ManajemenIntervensi::where('flag_old', 0)->get();
+        $getmasterintervensi = ManajemenIntervensi::where('flag_old', 0)->where('id', '!=', 9999)->get();
 
         $intervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
                               ->join('preson_users', 'preson_users.skpd_id', '=', 'preson_pegawais.skpd_id')
@@ -483,7 +505,7 @@ class IntervensiController extends Controller
 
         $pegawai = pegawai::select('id', 'nama')->get();
 
-        $getmasterintervensi = ManajemenIntervensi::where('flag_old', 0)->get();
+        $getmasterintervensi = ManajemenIntervensi::where('flag_old', 0)->where('id', '!=', 9999)->get();
       }
 
       return view('pages.intervensi.kelola', compact('getSKPD', 'pegawai', 'intervensi', 'getmasterintervensi', 'getunreadintervensi'));

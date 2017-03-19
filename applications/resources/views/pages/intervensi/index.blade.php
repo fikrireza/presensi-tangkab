@@ -262,7 +262,29 @@
                 {{ $errors->first('keterangan_edit')}} @endif Keterangan" required="">
             </div>
           </div>
-          <div id="keterangantambahanedit"></div>
+
+          <div id="keterangantambahanedit">
+            <div class='form-group'>
+              <label class='col-sm-3'>Nama Atasan</label>
+              <div class='col-sm-9'>
+                <select name='atasan_edit' class='form-control'>
+                  <option value="---">-- Pilih --</option>
+                  @foreach ($getpegawai as $key)
+                    <option value='{{$key->nip_sapk}}//{{$key->nama}}'>{{$key->nama}}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div id="jamijinedit">
+              <div class='form-group'>
+                <label class='col-sm-3'>Jam Ijin</label>
+                <div class='col-sm-9'>
+                  <input type='text' name='jam_ijin_edit' class='form-control'>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="form-group {{ $errors->has('berkas_edit[]') ? 'has-error' : '' }}">
             <label class="col-sm-2 control-label">Upload Document</label>
             <div class="tab-content col-sm-10">
@@ -738,6 +760,8 @@ $('.tanggal_akhir_edit').datepicker({
       //
       $('#keterangantambahan').hide();
       $('#jamijin').hide();
+      $('#keterangantambahanedit').hide();
+      $('#jamijinedit').hide();
 
       // add nama_atasan column to specific intervention type
       $('select#id_intervensi').on('change', function(){
@@ -746,10 +770,10 @@ $('.tanggal_akhir_edit').datepicker({
         var valueSelected = this.value;
 
 
-        if (valueSelected==5 || valueSelected==6) {
+        if (valueSelected==2 || valueSelected==3) {
           $('#keterangantambahan').show();
           $('#jamijin').show();
-        } else if (valueSelected=="12") {
+        } else if (valueSelected==13) {
           $('#keterangantambahan').show();
           $('#jamijin').hide();
         } else {
@@ -764,22 +788,15 @@ $('.tanggal_akhir_edit').datepicker({
 
         var optionSelected = $("option:selected", this);
         var valueSelected = this.value;
-        if (valueSelected==5 || valueSelected==6 || valueSelected==12) {
-          $('#keterangantambahanedit').html("<div class='form-group'>"+
-                                        "<label class='col-sm-3'>Nama Atasan</label>"+
-                                        "<div class='col-sm-9'>"+
-                                        "<input type='text' name='atasan_edit' class='form-control'>"+
-                                        "</div>"+
-                                        "</div>"+
-                                        "<div class='form-group'>"+
-                                        "<label class='col-sm-3'>Jam Ijin</label>"+
-                                        "<div class='col-sm-9'>"+
-                                        "<input type='text' name='jam_ijin_edit' class='form-control'>"+
-                                        "</div>"+
-                                        "</div>"
-                                      );
+        if (valueSelected==2 || valueSelected==3) {
+          $('#keterangantambahanedit').show();
+          $('#jamijinedit').show();
+        } else if (valueSelected==13) {
+          $('#keterangantambahan').show();
+          $('#jamijinedit').hide();
         } else {
-          $('#keterangantambahanedit').html("");
+          $('#keterangantambahanedit').hide();
+          $('#jamijinedit').hide();
         }
       });
 
