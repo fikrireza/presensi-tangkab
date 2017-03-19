@@ -736,7 +736,7 @@ class IntervensiController extends Controller
 
       $getnamaintervensi = ManajemenIntervensi::find($request->jenis_intervensi);
       $set = new intervensi;
-      $set->pegawai_id = Auth::user()->pegawai_id;
+      $set->pegawai_id = $request->pegawai_id;
       $set->jenis_intervensi = $getnamaintervensi->nama_intervensi;
 -     $set->id_intervensi = $request->jenis_intervensi;
       $set->tanggal_mulai = $request->tanggal_mulai;
@@ -780,10 +780,11 @@ class IntervensiController extends Controller
                             ->get();
 
       $pegawai = pegawai::select('id', 'nama')->where('skpd_id', Auth::user()->skpd_id)->get();
+      $getpegawai = Pegawai::where('skpd_id', Auth::user()->skpd_id)->get();
 
       $getmasterintervensi = ManajemenIntervensi::where('flag_old', 0)->get();
 
-      return view('pages.intervensi.detailSKPD', compact('intervensi', 'pegawai', 'getmasterintervensi'));
+      return view('pages.intervensi.detailSKPD', compact('intervensi', 'getpegawai', 'pegawai', 'getmasterintervensi'));
     }
 
     public function batal($id)

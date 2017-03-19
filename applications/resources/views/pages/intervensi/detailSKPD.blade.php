@@ -74,7 +74,7 @@
           <div class="form-group {{ $errors->has('jenis_intervensi') ? 'has-error' : '' }}" >
             <label class="col-sm-3">Jenis Intervensi</label>
             <div class="col-sm-9">
-              <select class="form-control select2" name="jenis_intervensi" style="width:100%;">
+              <select class="form-control select2" name="jenis_intervensi" style="width:100%;" id="id_intervensi">
                 <option value="">-- PILIH --</option>
                 @foreach ($getmasterintervensi as $key)
                   <option value="{{$key->id}}">{{$key->nama_intervensi}}</option>
@@ -124,13 +124,61 @@
                 {{ $errors->first('keterangan')}} @endif Keterangan" required="">
             </div>
           </div>
-          <div class="form-group {{ $errors->has('berkas') ? 'has-error' : ''}}">
-            <label class="col-sm-3">Berkas</label>
-            <div class="col-sm-9">
-              <input type="file" name="berkas" class="form-control" accept=".png, .jpg, .pdf" value="{{ old('berkas') }}">
-              <span style="color:red;">Hanya .jpg, .png, .pdf</br>*Kosongkan Jika Tidak Ingin Mengganti Berkas</span>
+
+          <div id="keterangantambahan">
+            <div class='form-group'>
+              <label class='col-sm-3'>Nama Atasan</label>
+              <div class='col-sm-9'>
+                <select name='atasan' class='form-control'>
+                  <option value="---">-- Pilih --</option>
+                  @foreach ($getpegawai as $key)
+                    <option value='{{$key->nip_sapk}}//{{$key->nama}}'>{{$key->nama}}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div id="jamijin">
+              <div class='form-group'>
+                <label class='col-sm-3'>Jam Ijin</label>
+                <div class='col-sm-9'>
+                  <input type='text' name='jam_ijin' class='form-control'>
+                </div>
+              </div>
             </div>
           </div>
+
+          <div class="form-group {{ $errors->has('berkas[]') ? 'has-error' : '' }}">
+            <label class="col-sm-2 control-label">Upload Document</label>
+            <div class="tab-content col-sm-10">
+              <div class="tab-pane active" id="tab_Dokumen">
+                <div class="box-body">
+                  <table class="table" id="duploaddocument">
+                    <tbody>
+                      <tr>
+                        <td><input type="checkbox" name="chk"/></td>
+                        <td>
+                          <input type="file" name="berkas[]" class="form-control {{ $errors->has('berkas[]') ? 'has-error' : '' }}" accept=".png, .jpg, .pdf">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <span style="color:red;">Hanya .jpg, .png, .pdf</span>
+                   @if($errors->has('berkas[]'))
+                  <span class="help-block">
+                    <strong>{{ $errors->first('berkas[]')}}
+                    </strong>
+                  </span>
+                @endif
+                </div>
+                <div class="box-footer clearfix">
+                  <div class="col-md-9">
+                    <label class="btn btn-sm bg-green" onclick="adduploaddocument('duploaddocument')">Tambah Dokumen</label>&nbsp;<label class="btn btn-sm bg-red" onclick="deluploaddocument('duploaddocument')">Hapus Dokumen</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tidak</button>
@@ -329,5 +377,73 @@
       } );
   } );
 </script>
+
+<script language="javascript">
+    var numA=1;
+    function adduploaddocument(tableID) {
+      numA++;
+      var table = document.getElementById(tableID);
+      var rowCount = table.rows.length;
+      var row = table.insertRow(rowCount);
+      var cell1 = row.insertCell(0);
+      cell1.innerHTML = '<input type="checkbox" name="chk[]"/>';
+      var cell2 = row.insertCell(1);
+      if (tableID=="duploaddocumentedit") {
+        cell2.innerHTML = '<input type="file" name="berkas_edit[]" class="form-control" value="" accept=".png, .jpg, .pdf"/>';
+      } else{
+        cell2.innerHTML = '<input type="file" name="berkas[]" class="form-control" value="" accept=".png, .jpg, .pdf"/>';
+      }
+    }
+
+    function deluploaddocument(tableID) {
+        try {
+        var table = document.getElementById(tableID);
+        var rowCount = table.rows.length;
+
+        for(var i=0; i<rowCount; i++) {
+            var row = table.rows[i];
+            var chkbox = row.cells[0].childNodes[0];
+            if(null != chkbox && true == chkbox.checked) {
+                table.deleteRow(i);
+                rowCount--;
+                i--;
+                numA--;
+            }
+        }
+        }catch(e) {
+            alert(e);
+        }
+    }
+  </script>
+
+  <script>
+    $(function(){
+      //
+      $('#keterangantambahan').hide();
+      $('#jamijin').hide();
+      $('#keterangantambahanedit').hide();
+      $('#jamijinedit').hide();
+
+      // add nama_atasan column to specific intervention type
+      $('select#id_intervensi').on('change', function(){
+
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+
+
+        if (valueSelected==2 || valueSelected==3) {
+          $('#keterangantambahan').show();
+          $('#jamijin').show();
+        } else if (valueSelected==13) {
+          $('#keterangantambahan').show();
+          $('#jamijin').hide();
+        } else {
+          $('#keterangantambahan').hide();
+          $('#jamijin').hide();
+        }
+      });
+
+    });
+  </script>
 
 @endsection
