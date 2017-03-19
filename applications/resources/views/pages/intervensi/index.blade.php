@@ -425,7 +425,7 @@
                   <a href="{{route('intervensi.suratijin', $key->id)}}" title="Download Surat Ijin">
                     <i class="fa fa-file-o"></i>
                   </a>
-                  {{-- <a href="{{route('intervensi.previewsuratijin', $key->id)}}" title="Download Surat Ijin">
+                  {{-- <a href="{{route('intervensi.previewsuratijin', $key->id)}}" title="Preview Surat Ijin">
                     <i class="fa fa-file-o"></i>
                   </a> --}}
                 @else

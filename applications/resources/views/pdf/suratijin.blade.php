@@ -7,7 +7,7 @@
   <body>
     <table border="0" cellspacing="0" style="width:100%;" cellpadding="10">
       <tr>
-        <td width="200px;">
+        <td width="400px;">
           Hal: <strong><u>{{$data["nama_intervensi"]}}</u></strong>
         </td>
         <td>
@@ -86,17 +86,19 @@
           Dengan ini menerangkan {{$data["nama_intervensi"]}} pada:
         </td>
       </tr>
-      <tr>
-        <td style="width:100px;">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jam
-        </td>
-        <td style="width:10px;">
-          :
-        </td>
-        <td>
-          {{$data["jam_ijin"]}}
-        </td>
-      </tr>
+      @if ($data["jam_ijin"]!="")
+        <tr>
+          <td style="width:100px;">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jam
+          </td>
+          <td style="width:10px;">
+            :
+          </td>
+          <td>
+            {{$data["jam_ijin"]}}
+          </td>
+        </tr>
+      @endif
       <tr>
         <td style="width:100px;">
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tanggal
