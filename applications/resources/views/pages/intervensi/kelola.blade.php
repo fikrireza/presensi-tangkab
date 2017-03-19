@@ -440,19 +440,19 @@
     });
 
     // preview document in modal
-    $(".viewdocument").on('click', function(){
-      var a = $(this).data('value');
-      var ext1 = a.split('//');
-      var ext2 = ext1[1].split('/');
-      var ext3 = ext2[ext2.length-1];
-      var ext = ext3.split('.');
-      if (ext[1]=="png" || ext[1]=="jpg" || ext[1]=="jpeg") {
-        $("#previewdocument").html("<img style='max-width:820px;' src='"+a+"'>");
-      } else if (ext[1]=="pdf") {
-        $("#previewdocument").html("<embed src='"+a+"' width='820px' height='700px' />");
-      } else {
-        $("#previewdocument").html("Ekstensi file tidak support!");
-      }
+    $('#table_intervensi').DataTable().on('click', 'a.viewdocument[data-value]', function () {
+        var a = $(this).data('value');
+        var ext1 = a.split('//');
+        var ext2 = ext1[1].split('/');
+        var ext3 = ext2[ext2.length-1];
+        var ext = ext3.split('.');
+        if (ext[1]=="png" || ext[1]=="jpg" || ext[1]=="jpeg") {
+          $("#previewdocument").html("<img style='max-width:820px;' src='"+a+"'>");
+        } else if (ext[1]=="pdf") {
+          $("#previewdocument").html("<embed src='"+a+"' width='820px' height='700px' />");
+        } else {
+          $("#previewdocument").html("Ekstensi file tidak support!");
+        }
     });
   })
 </script>

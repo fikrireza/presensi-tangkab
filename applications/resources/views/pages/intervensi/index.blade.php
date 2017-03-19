@@ -443,8 +443,8 @@
               @endif</td>
               <td>@if ($key->flag_status == 0)
                   @if (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d'))
-                    <a href="" data-value="{{ $key->id }}" class="editIntervensi" data-toggle="modal" data-target="#modaleditIntervensi"><i class="fa fa-edit"></i> Ubah</a>
-                    <a href="" class="batalIntervensi" data-toggle="modal" data-target="#batalIntervensi" data-value="{{ $key->id }}"><i class="fa fa-close"></i> Batal</a>
+                    <a href="" data-value="{{ $key->id }}" class="btn btn-xs btn-warning editIntervensi" data-toggle="modal" data-target="#modaleditIntervensi"><i class="fa fa-edit"></i> Ubah</a>
+                    <a href="" class="btn btn-xs btn-danger batalIntervensi" data-toggle="modal" data-target="#batalIntervensi" data-value="{{ $key->id }}"><i class="fa fa-close"></i> Batal</a>
                   @else
                     -
                   @endif
@@ -785,19 +785,19 @@ $('.tanggal_akhir_edit').datepicker({
 
 
       // preview document in modal
-      $(".viewdocument").on('click', function(){
-        var a = $(this).data('value');
-        var ext1 = a.split('//');
-        var ext2 = ext1[1].split('/');
-        var ext3 = ext2[ext2.length-1];
-        var ext = ext3.split('.');
-        if (ext[1]=="png" || ext[1]=="jpg" || ext[1]=="jpeg") {
-          $("#previewdocument").html("<img style='max-width:820px;' src='"+a+"'>");
-        } else if (ext[1]=="pdf") {
-          $("#previewdocument").html("<embed src='"+a+"' width='820px' height='700px' />");
-        } else {
-          $("#previewdocument").html("Ekstensi file tidak support!");
-        }
+      $('#table_intervensi').DataTable().on('click', 'a.viewdocument[data-value]', function () {
+          var a = $(this).data('value');
+          var ext1 = a.split('//');
+          var ext2 = ext1[1].split('/');
+          var ext3 = ext2[ext2.length-1];
+          var ext = ext3.split('.');
+          if (ext[1]=="png" || ext[1]=="jpg" || ext[1]=="jpeg") {
+            $("#previewdocument").html("<img style='max-width:820px;' src='"+a+"'>");
+          } else if (ext[1]=="pdf") {
+            $("#previewdocument").html("<embed src='"+a+"' width='820px' height='700px' />");
+          } else {
+            $("#previewdocument").html("Ekstensi file tidak support!");
+          }
       });
     });
   </script>
