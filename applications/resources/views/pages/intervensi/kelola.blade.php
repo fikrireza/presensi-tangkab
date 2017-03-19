@@ -48,7 +48,7 @@
 
 {{-- Modal View Documents --}}
 <div class="modal fade" id="modalviewdocument" role="dialog">
-  <div class="modal-dialog" style="width:850px;">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -577,9 +577,9 @@
         var ext3 = ext2[ext2.length-1];
         var ext = ext3.split('.');
         if (ext[1]=="png" || ext[1]=="jpg" || ext[1]=="jpeg") {
-          $("#previewdocument").html("<img style='max-width:820px;' src='"+a+"'>");
+          $("#previewdocument").html("<img style='max-width:100%;' src='"+a+"'>");
         } else if (ext[1]=="pdf") {
-          $("#previewdocument").html("<embed src='"+a+"' width='820px' height='700px' />");
+          $("#previewdocument").html("<embed src='"+a+"' width='100%' height='700px' />");
         } else {
           $("#previewdocument").html("Ekstensi file tidak support!");
         }

@@ -559,6 +559,7 @@ class IntervensiController extends Controller
 
     public function kelolaPost(Request $request)
     {
+      // dd($request);
       // --- validasi form input
       $message = [
         'jenis_intervensi.required' => 'Wajib di isi',
