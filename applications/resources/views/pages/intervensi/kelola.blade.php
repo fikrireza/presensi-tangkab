@@ -187,6 +187,7 @@
               <th>Nama</th>
               <th>Jenis Intervensi</th>
               <th>Preview Berkas</th>
+              <th>Form Izin</th>
               <th>Tanggal Mulai</th>
               <th>Tanggal Akhir</th>
               <th>Status Intervensi</th>
@@ -196,6 +197,7 @@
           <tfoot>
             <tr>
               <td></td>
+              <th></th>
               <th></th>
               <th></th>
               <th></th>
@@ -243,6 +245,7 @@
                   @endif
                 @endif
               </td>
+              <td> - </td>
               <td>{{ $key->tanggal_mulai }}</td>
               <td>{{ $key->tanggal_akhir }}</td>
               <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d')))

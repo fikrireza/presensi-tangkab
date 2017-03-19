@@ -371,6 +371,7 @@
               <th>Tanggal Akhir</th>
               <th>Keterangan</th>
               <th>Preview Berkas</th>
+              <th>Form Izin</th>
               <th>Status Intervensi</th>
               <th>Action</th>
             </tr>
@@ -378,6 +379,7 @@
           <tfoot>
             <tr>
               <td></td>
+              <th></th>
               <th></th>
               <th></th>
               <th></th>
@@ -418,15 +420,22 @@
                   @endif
                 @endif
               </td>
-              <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d')))
-                <small class="label label-info">Belum Disetujui</small>
-              @elseif($key->flag_status == 1)
-                <small class="label label-success">Sudah Disetujui</small>&nbsp;
+              <td>
                 @if ($key->id_intervensi==5 || $key->id_intervensi==6 || $key->id_intervensi==12)
                   <a href="{{route('intervensi.suratijin', $key->id)}}" title="Download Surat Ijin">
                     <i class="fa fa-file-o"></i>
                   </a>
+                  {{-- <a href="{{route('intervensi.previewsuratijin', $key->id)}}" title="Download Surat Ijin">
+                    <i class="fa fa-file-o"></i>
+                  </a> --}}
+                @else
+                  -
                 @endif
+              </td>
+              <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d')))
+                <small class="label label-info">Belum Disetujui</small>
+              @elseif($key->flag_status == 1)
+                <small class="label label-success">Sudah Disetujui</small>
               @elseif($key->flag_status == 3)
                 <small class="label label-warning">Dibatalkan</small>
               @else

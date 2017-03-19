@@ -7,7 +7,7 @@
   <body>
     <table border="0" cellspacing="0" style="width:100%;" cellpadding="10">
       <tr>
-        <td>
+        <td width="200px;">
           Hal: <strong><u>{{$data["nama_intervensi"]}}</u></strong>
         </td>
         <td>
@@ -26,8 +26,8 @@
         <td>
 
         </td>
-        <td>
-          Yth. Soma Atmaja.
+        <td width="200px;">
+          Yth. {{$data["jabatan_atasan"]}}
         </td>
       </tr>
       <tr>
@@ -56,7 +56,7 @@
           :
         </td>
         <td>
-          Dudy Fathan Ali
+          {{$data["nama_pegawai"]}}
         </td>
       </tr>
       <tr>
@@ -67,7 +67,7 @@
           :
         </td>
         <td>
-          123123123
+          {{$data["nip_pegawai"]}}
         </td>
       </tr>
       <tr>
@@ -78,12 +78,12 @@
           :
         </td>
         <td>
-          Kepala Dinas Diskominfo Bidang Telematika
+          {{$data["jabatan_pegawai"]}}
         </td>
       </tr>
       <tr>
         <td colspan="3">
-          Dengan ini menerangkan Datang Terlambat Masuk Kerja pada:
+          Dengan ini menerangkan {{$data["nama_intervensi"]}} pada:
         </td>
       </tr>
       <tr>
@@ -94,7 +94,7 @@
           :
         </td>
         <td>
-          09:00
+          {{$data["jam_ijin"]}}
         </td>
       </tr>
       <tr>
@@ -105,17 +105,17 @@
           :
         </td>
         <td>
-          3 Maret 2017
+          {{$data["tanggal_ijin"]}}
         </td>
       </tr>
       <tr>
         <td colspan="3">
-          Dikarenakan bus terlambat.
+          Dikarenakan {{$data["keterangan"]}}.
         </td>
       </tr>
       <tr>
         <td colspan="3">
-          Demikian keterangan ini saya sampaikan, atas perkenannya diucapkan terima kasih.
+          Demikian keterangan ini saya sampaikan. Atas perhatiannya, saya ucapkan terima kasih.
         </td>
       </tr>
     </table>
@@ -129,7 +129,7 @@
         </td>
       </tr>
       <tr>
-        <td>
+        <td width="700px;">
           Atasan Langsung
         </td>
         <td>
@@ -138,10 +138,10 @@
       </tr>
       <tr>
         <td>
-          Soma Atmaja
+          {{$data["atasan_langsung"]}}
         </td>
         <td>
-
+          {{$data["nama_pegawai"]}}
         </td>
       </tr>
       <tr>
@@ -170,10 +170,10 @@
       </tr>
       <tr>
         <td>
-          NIP. 123123123
+          NIP. {{$data["nip_atasan"]}}
         </td>
         <td>
-          NIP. 345345345
+          NIP. {{$data["nip_pegawai"]}}
         </td>
       </tr>
     </table>

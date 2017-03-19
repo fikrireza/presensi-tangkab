@@ -677,19 +677,13 @@ class IntervensiController extends Controller
 
     public function suratIjin($id)
     {
-      $data = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+      $get = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
                           ->where('preson_intervensis.id', $id)
                           ->get();
 
-      $pdf = PDF::loadView('pdf.suratijin', $data);
-      return $pdf->download('suratijin.pdf');
-    }
+      $atasan = pegawai::where('nip_sapk', $get[0]->nip_atasan)->get();
 
-    public function previewSuratIjin($id)
-    {
-      $data = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
-                          ->where('preson_intervensis.id', $id)
-                          ->get();
+      $pribadi = pegawai::find($get[0]->id);
 
       //month library
       $monthnow = date('m');
@@ -736,15 +730,189 @@ class IntervensiController extends Controller
       }
       $datenow = date('d')." $month ".date('Y');
 
-      $send = [
-        "nama_intervensi" => $data[0]->jenis_intervensi,
+      $tanggalijin = $get[0]->tanggal_mulai;
+      $d = date_parse_from_format("Y-m-d", $tanggalijin);
+
+      $month="";
+      switch ($monthnow) {
+        case "1":
+          $month = "Januari";
+          break;
+        case "2":
+          $month = "Februari";
+          break;
+        case "3":
+          $month = "Maret";
+          break;
+        case "4":
+          $month = "April";
+          break;
+        case "5":
+          $month = "Mei";
+          break;
+        case "6":
+          $month = "Juni";
+          break;
+        case "7":
+          $month = "Juli";
+          break;
+        case "8":
+          $month = "Agustus";
+          break;
+        case "9":
+          $month = "September";
+          break;
+        case "10":
+          $month = "Oktober";
+          break;
+        case "11":
+          $month = "Novembe";
+          break;
+        case "12":
+          $month = "Desember";
+          break;
+        default:
+          $month = "Unrecognized Month Number";
+      }
+
+      $tanggalijin = $d["day"]." $month ".$d["year"];
+
+      $data = array('data' => [
+        "nama_intervensi" => $get[0]->jenis_intervensi,
         "tanggal" => $datenow,
-        "atasan_langsung" => $data[0]->nama_atasan,
-        "nama_pegawai" => $data[0]->nama,
-        "nip_pegawai" => $data[0]->nip_sapk,
-        "keterangan" => $data[0]->deskripsi
+        "atasan_langsung" => $get[0]->nama_atasan,
+        "nip_atasan" => $get[0]->nip_atasan,
+        "jabatan_atasan" => $atasan[0]->jabatan,
+        "nama_pegawai" => $get[0]->nama,
+        "nip_pegawai" => $get[0]->nip_sapk,
+        "jabatan_pegawai" => $pribadi->jabatan,
+        "jam_ijin" => $get[0]->jam_ijin,
+        "tanggal_ijin" => $tanggalijin,
+        "keterangan" => $get[0]->deskripsi
+      ]);
+
+      // dd($data);
+
+      $pdf = PDF::loadView('pdf.suratijin', $data);
+      return $pdf->download('suratijin.pdf');
+    }
+
+    public function previewSuratIjin($id)
+    {
+      $get = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
+                          ->where('preson_intervensis.id', $id)
+                          ->get();
+
+      $atasan = pegawai::where('nip_sapk', $get[0]->nip_atasan)->get();
+
+      $pribadi = pegawai::find($get[0]->id);
+
+      //month library
+      $monthnow = date('m');
+      $month="";
+      switch ($monthnow) {
+        case "01":
+          $month = "Januari";
+          break;
+        case "02":
+          $month = "Februari";
+          break;
+        case "03":
+          $month = "Maret";
+          break;
+        case "04":
+          $month = "April";
+          break;
+        case "05":
+          $month = "Mei";
+          break;
+        case "06":
+          $month = "Juni";
+          break;
+        case "07":
+          $month = "Juli";
+          break;
+        case "08":
+          $month = "Agustus";
+          break;
+        case "09":
+          $month = "September";
+          break;
+        case "10":
+          $month = "Oktober";
+          break;
+        case "11":
+          $month = "Novembe";
+          break;
+        case "12":
+          $month = "Desember";
+          break;
+        default:
+          $month = "Unrecognized Month Number";
+      }
+      $datenow = date('d')." $month ".date('Y');
+
+      $tanggalijin = $get[0]->tanggal_mulai;
+      $d = date_parse_from_format("Y-m-d", $tanggalijin);
+
+      $month="";
+      switch ($monthnow) {
+        case "1":
+          $month = "Januari";
+          break;
+        case "2":
+          $month = "Februari";
+          break;
+        case "3":
+          $month = "Maret";
+          break;
+        case "4":
+          $month = "April";
+          break;
+        case "5":
+          $month = "Mei";
+          break;
+        case "6":
+          $month = "Juni";
+          break;
+        case "7":
+          $month = "Juli";
+          break;
+        case "8":
+          $month = "Agustus";
+          break;
+        case "9":
+          $month = "September";
+          break;
+        case "10":
+          $month = "Oktober";
+          break;
+        case "11":
+          $month = "Novembe";
+          break;
+        case "12":
+          $month = "Desember";
+          break;
+        default:
+          $month = "Unrecognized Month Number";
+      }
+
+      $tanggalijin = $d["day"]." $month ".$d["year"];
+
+      $data = [
+        "nama_intervensi" => $get[0]->jenis_intervensi,
+        "tanggal" => $datenow,
+        "atasan_langsung" => $get[0]->nama_atasan,
+        "nip_atasan" => $get[0]->nip_atasan,
+        "jabatan_atasan" => $atasan[0]->jabatan,
+        "nama_pegawai" => $get[0]->nama,
+        "nip_pegawai" => $get[0]->nip_sapk,
+        "jabatan_pegawai" => $pribadi->jabatan,
+        "jam_ijin" => $get[0]->jam_ijin,
+        "tanggal_ijin" => $tanggalijin,
+        "keterangan" => $get[0]->deskripsi
       ];
 
-      return view('pdf.suratijin')->with('data', $send);
+      return view('pdf.suratijin')->with('data', $data);
     }
 }
