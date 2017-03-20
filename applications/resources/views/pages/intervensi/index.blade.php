@@ -495,11 +495,15 @@
 
 <script src="{{asset('plugins/timepicker/bootstrap-timepicker.min.js')}}"/>
 <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-
 <script>
   $('#timepicker1').timepicker({
     showInputs: false
   });
+</script>
+
+<script src="{{asset('plugins/gdocviewer/jquery.gdocsviewer.min.js')}}"/>
+<script>
+  $('a.embed').gdocsViewer();
 </script>
 
 <script>
@@ -826,7 +830,14 @@ $('.tanggal_akhir_edit').datepicker({
           if (ext[1]=="png" || ext[1]=="jpg" || ext[1]=="jpeg") {
             $("#previewdocument").html("<img style='max-width:100%;' src='"+a+"'>");
           } else if (ext[1]=="pdf") {
-            $("#previewdocument").html("<embed src='"+a+"' width='100%' height='700px' />");
+
+            if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+              $("#previewdocument").html("<a href='"+a+"' target='_blank'>Download File</a>");
+             } else {
+               $("#previewdocument").html("<embed src='"+a+"' width='100%' height='700px' />");
+             }
+            // $("#previewdocument").html("<span href='"+a+"' class='embed'></span>");
+            // $('span.embed').gdocsViewer();
           } else {
             $("#previewdocument").html("Ekstensi file tidak support!");
           }
