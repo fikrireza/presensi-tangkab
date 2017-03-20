@@ -59,7 +59,9 @@ class IntervensiMassalController extends Controller
     public function create()
     {
       $getpegawai = Pegawai::select('*')->where('skpd_id', Auth::user()->skpd_id)->get();
-      $getjenisintervensi = ManajemenIntervensi::select('*')->get();
+      $getjenisintervensi = ManajemenIntervensi::where('flag_old', 0)
+                            ->where('id', '!=', 9999)
+                            ->orderby('nama_intervensi', 'asc')->get();
       // dd($getjenisintervensi);
       return view('pages.intervensimassal.create', compact('getpegawai', 'getjenisintervensi'));
     }
@@ -216,7 +218,7 @@ class IntervensiMassalController extends Controller
         }
         return redirect()->route('intervensimassal.index')->with('berhasil', 'Pegawai Berhasil Intervensi');
       }else{
-        return redirect()->route('intervensimassal.create')->with('gagal', 'Pilih data pegawai tersebuh dahulu.');
+        return redirect()->route('intervensimassal.create')->withInput()->with('gagal', 'Pilih data pegawai tersebuh dahulu.');
       }
     }
 
