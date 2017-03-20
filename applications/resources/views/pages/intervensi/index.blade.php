@@ -2,6 +2,7 @@
 
 @section('title')
   <title>Intervensi</title>
+  <link rel='stylesheet' href='{{asset('plugins/timepicki/css/timepicki.css')}}'/>
 @endsection
 
 @section('breadcrumb')
@@ -144,6 +145,7 @@
                 <label class='col-sm-3'>Jam Ijin</label>
                 <div class='col-sm-9'>
                   <input type='text' name='jam_ijin' class='form-control'>
+                  <input id='timepicker' type='text' name='timepicker'/>
                 </div>
               </div>
             </div>
