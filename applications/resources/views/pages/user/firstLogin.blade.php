@@ -18,7 +18,7 @@
 
 @if(Session::has('erroroldpass'))
 <div class="col-md-12">
-  <div class="alert alert-info alert-dismissable">
+  <div class="alert alert-warning alert-dismissable">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
     <h4><i class="icon fa fa-info"></i> Informasi</h4>
     {{ Session::get('erroroldpass') }}
@@ -27,7 +27,7 @@
 @endif
 
 <div class="row">
-  <div class="col-md-9">
+  <div class="col-md-12">
     <div class="box box-primary box-solid">
       <div class="box-header">
         <h3 class="box-title">Ubah Password</h3>
