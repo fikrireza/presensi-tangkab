@@ -443,7 +443,7 @@
                 @endif
               </td>
               <td>
-                @if ($key->id_intervensi==5 || $key->id_intervensi==6 || $key->id_intervensi==12)
+                @if ($key->id_intervensi==2 || $key->id_intervensi==3 || $key->id_intervensi==13)
                   <a href="{{route('intervensi.suratijin', $key->id)}}" title="Download Surat Ijin">
                     <i class="fa fa-file-o"></i>
                   </a>
