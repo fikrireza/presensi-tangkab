@@ -6,8 +6,8 @@
 @endsection
 
 @section('content')
-
-<div class="row">
+Dalam maintenance..
+{{-- <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <div class="box box-primary box-solid">
       <div class="box-header with-border">
@@ -47,8 +47,9 @@
       </form>
     </div>
   </div>
-</div>
+</div> --}}
 
+<!--
 <div class="row">
   <div class="col-md-12">
     <div class="box box-primary box-solid">
@@ -399,6 +400,7 @@
     </div>
   </div>
 </div>
+-->
 @endsection
 
 @section('script')
