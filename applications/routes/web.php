@@ -55,6 +55,7 @@ Route::get('pengecualian', 'PengecualianController@index')->name('pengecualian.i
 Route::post('pengecualian', 'PengecualianController@store')->name('pengecualian.post')->middleware('administrator');
 Route::get('pengecualian/{id}', 'PengecualianController@bind');
 Route::post('pengecualian/edit', 'PengecualianController@edit')->name('pengecualian.edit')->middleware('administrator');
+Route::get('pengecualian/delete-pengecualian/{id}', 'PengecualianController@delete')->name('pengecualian.delete')->middleware('administrator');
 
 // Struktural
 Route::get('struktural', 'StrukturalController@index')->name('struktural.index')->middleware('administrator');
@@ -95,6 +96,15 @@ Route::post('revisi-intervensi/caripegawai', 'RevisiIntervensiController@caripeg
 Route::post('revisi-intervensi/createStore', 'RevisiIntervensiController@createStore')->name('revisiintervensi.createStore')->middleware('administrator');
 Route::get('revisi-intervensi/{id}', 'RevisiIntervensiController@bind');
 Route::post('revisi-intervensi/edit', 'RevisiIntervensiController@edit')->name('revisiintervensi.edit')->middleware('administrator');
+
+
+
+// Intervensi Massal
+Route::get('intervensi-massal', 'IntervensiMassalController@index')->name('intervensimassal.index');
+Route::get('intervensi-massal/create', 'IntervensiMassalController@create')->name('intervensimassal.create');
+Route::post('intervensi-massal/createStore', 'IntervensiMassalController@createStore')->name('intervensimassal.createStore');
+Route::get('intervensi-massal/{id}', 'IntervensiMassalController@bind');
+Route::post('intervensi-massal/edit', 'IntervensiMassalController@edit')->name('intervensimassal.edit');
 
 
 // Absensi Administrator

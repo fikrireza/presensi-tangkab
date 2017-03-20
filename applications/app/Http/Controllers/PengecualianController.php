@@ -106,4 +106,13 @@ class PengecualianController extends Controller
 
       return redirect()->route('pengecualian.index')->with('berhasil', 'Berhasil Mengubah Data Pengecualian');
     }
+
+
+    public function delete($id)
+    {
+      $set = Pengecualian::find($id);
+      $set->delete();
+
+      return redirect()->route('pengecualian.index')->with('berhasil', 'Berhasil menghapus pengecualian.');
+    }
 }

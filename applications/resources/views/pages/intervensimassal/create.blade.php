@@ -1,16 +1,16 @@
 @extends('layout.master')
 
 @section('title')
-  <title>Revisi Intervensi</title>
+  <title>Intervensi Massal</title>
   <link rel="stylesheet" href="{{ asset('plugins/select2/select2.min.css') }}">
 @endsection
 
 @section('breadcrumb')
-  <h1>Revisi Intervensi</h1>
+  <h1>Intervensi Massal</h1>
   <ol class="breadcrumb">
     <li><a href=""><i class="fa fa-dashboard"></i>Dashboard</a></li>
-    <li><a href="{{ route('revisiintervensi.index') }}">Revisi Intervensi</a></li>
-    <li class="active">Tambah Revisi</li>
+    <li><a href="{{ route('intervensimassal.index') }}">Intervensi Massal</a></li>
+    <li class="active">Tambah Massal</li>
   </ol>
 @endsection
 
@@ -19,35 +19,29 @@
   <div class="col-md-12">
     <div class="box box-primary box-solid">
       <div class="box-header with-border">
-        <h3 class="box-title" style="line-height:30px;">Tambah Data Revisi Intervensi</h3>
-        <a href="{{ route('revisiintervensi.index') }}" class="btn bg-blue pull-right">Kembali</a>
+        <h3 class="box-title" style="line-height:30px;">Tambah Data Intervensi Massal</h3>
+        <a href="{{ route('intervensimassal.index') }}" class="btn bg-blue pull-right">Kembali</a>
       </div>
-      <form action="{{ route('revisiintervensi.caripegawai') }}" method="post" class="form-horizontal" role="search">
+    <form class="form-horizontal" role="form" action="{{ route('intervensimassal.createStore') }}" method="post" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="box-body">
-          <div class="form-group {{ $errors->has('skpd') ? 'has-error' : '' }}">
-            <label class="col-sm-2 control-label">SKPD</label>
-            <div class="col-sm-8">
-              <select name="skpd" class="form-control select2">
-                <option value="">-- Pilih --</option>
-                  @foreach ($getskpd as $key)
-                    <option value="{{ $key->id }}" @if($key->id == $skpd_id) selected="" @endif>{{ $key->nama }}</option>
-                  @endforeach
+        <div class="form-group {{ $errors->has('jenis_intervensi') ? 'has-error' : '' }}">
+            <label class="col-sm-2 control-label">Jenis Intervensi</label>
+            <div class="col-sm-10">
+              <select class="form-control select2" name="jenis_intervensi" id="id_intervensi">
+                <option value="">-- PILIH --</option>
+                @foreach ($getjenisintervensi as $key)
+                  <option value="{{$key->id}}" {{ old('jenis_intervensi') == $key->id ? 'selected' : ''}}>{{$key->nama_intervensi}}</option>
+                @endforeach
               </select>
-                @if($errors->has('skpd'))
-                  <span class="help-block">
-                    <strong>{{ $errors->first('skpd')}}
-                    </strong>
-                  </span>
-                @endif
+              @if($errors->has('jenis_intervensi'))
+                <span class="help-block">
+                  <strong>{{ $errors->first('jenis_intervensi')}}
+                  </strong>
+                </span>
+              @endif
             </div>
-            <button type="submit" class="btn bg-green pull-left">Cari Pegawai</button>
           </div>
-        </div>
-     </form>
-    <form class="form-horizontal" role="form" action="{{ route('revisiintervensi.createStore') }}" method="post" enctype="multipart/form-data">
-        {{ csrf_field() }}
-        <div class="box-body">
           <div class="form-group">
             <label class="col-sm-2 control-label"></label>
             <div class="col-md-10">
@@ -65,14 +59,14 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @if($getcaripegawai == null)
+                    @if($getpegawai == null)
                     <tr>
                       <td>-</td>
                       <td>-</td>
                       <td>-</td>
                     </tr>
                     @else
-                      @foreach($getcaripegawai as $key)
+                      @foreach($getpegawai as $key)
                       <tr>
                         <td><input type="checkbox" class="minimal" name="idpegawai[]" value="{{$key->id}}"></td>
                         <td>{{ $key->nip_sapk }}</td>
@@ -103,6 +97,13 @@
                  value="{{ old('tanggal_mulai') }}" placeholder="@if($errors->has('tanggal_mulai'))
                   {{ $errors->first('tanggal_mulai')}}@endif Tanggal Awal">
               </div>
+                @if(Session::has('gagaltgl'))
+                  <div class="row">
+                    <div class="col-md-12">
+                      <span style="color:red;">{{ Session::get('gagaltgl') }}</span>
+                    </div>
+                  </div>
+                @endif
             </div>
           </div>
           <div class="form-group {{ $errors->has('tanggal_akhir') ? 'has-error' : '' }}">
@@ -132,14 +133,14 @@
                 {{ $errors->first('keterangan')}}@endif Keterangan ">{{ old('keterangan') }}</textarea>
             </div>
           </div>
-          <div class="form-group {{ $errors->has('upload_revisi') ? 'has-error' : '' }}">
+          <div class="form-group {{ $errors->has('upload_massal') ? 'has-error' : '' }}">
             <label class="col-sm-2 control-label">Upload Document</label>
             <div class="col-sm-10">
-              <input type="file" name="upload_revisi" class="form-control {{ $errors->has('upload_revisi') ? 'has-error' : '' }}" accept=".png, .jpg, .pdf">
+              <input type="file" name="upload_massal" class="form-control {{ $errors->has('upload_massal') ? 'has-error' : '' }}" accept=".png, .jpg, .pdf">
               <span style="color:red;">Hanya .jpg, .png, .pdf</span>
-               @if($errors->has('upload_revisi'))
+               @if($errors->has('upload_massal'))
               <span class="help-block">
-                <strong>{{ $errors->first('upload_revisi')}}
+                <strong>{{ $errors->first('upload_massal')}}
                 </strong>
               </span>
               @endif
@@ -160,26 +161,26 @@
 <script src="{{ asset('plugins/select2/select2.full.min.js')}}"></script>
 <script>
 var today = new Date();
-var startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-var endDate = new Date(today.getFullYear(), today.getMonth()+1, 0);
+// var startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+// var endDate = new Date(today.getFullYear(), today.getMonth()+1, 0);
 // date.setDate(date.getDate()-3);
   $(".select2").select2();
   $(function () {
-    $("#table_revisi").DataTable();
+    $("#table_massal").DataTable();
   });
   $('#tanggal_mulai').datepicker({
     autoclose: true,
     format: 'yyyy-mm-dd',
-    startDate: startDate,
-    endDate: endDate,
+    // startDate: startDate,
+    // endDate: endDate,
     todayHighlight: true,
     daysOfWeekDisabled: [0,6]
   });
   $('#tanggal_akhir').datepicker({
     autoclose: true,
     format: 'yyyy-mm-dd',
-    startDate: startDate,
-    endDate: endDate,
+    // startDate: startDate,
+    // endDate: endDate,
     todayHighlight: true,
     daysOfWeekDisabled: [0,6]
 });
@@ -249,13 +250,13 @@ var endDate = new Date(today.getFullYear(), today.getMonth()+1, 0);
 <script type="text/javascript">
   $(document).ready(function() {
       // Setup - add a text input to each footer cell
-      $('#table_revisi tfoot th').each( function () {
+      $('#table_massal tfoot th').each( function () {
           var title = $(this).text();
           $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
       } );
 
       // DataTable
-      var table = $('#table_revisi').DataTable();
+      var table = $('#table_massal').DataTable();
 
       // Apply the search
       table.columns().every( function () {

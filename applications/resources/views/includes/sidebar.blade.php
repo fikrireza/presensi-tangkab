@@ -128,7 +128,9 @@
             @if(session('status') == 'administrator' || session('status') == 'superuser')
             <li class="treeview {{ Route::currentRouteNamed('intervensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('intervensi.kelola') ? 'active' : '' }}{{ Route::currentRouteNamed('intervensi.kelola.aksi') ? 'active' : '' }}
             {{ Route::currentRouteNamed('revisiintervensi.index') ? 'active' : '' }}
-            {{ Route::currentRouteNamed('revisiintervensi.create') ? 'active' : '' }}">
+            {{ Route::currentRouteNamed('revisiintervensi.create') ? 'active' : '' }}
+            {{ Route::currentRouteNamed('intervensimassal.index') ? 'active' : '' }}
+            {{ Route::currentRouteNamed('intervensimassal.create') ? 'active' : '' }}">
               <a href="">
                 <i class="fa fa-envelope"></i> <span>Manajemen Intervensi</span>
                 <i class="fa fa-angle-left pull-right"></i>
@@ -138,12 +140,24 @@
                 <li class="{{ Route::currentRouteNamed('revisiintervensi.index') ? 'active' : ''}}
                 {{ Route::currentRouteNamed('revisiintervensi.create') ? 'active' : ''}}
                 {{ Route::currentRouteNamed('revisiintervensi.caripegawai') ? 'active' : ''}}"><a href="{{route('revisiintervensi.index')}}"><i class="fa fa-circle-o"></i> <span>Revisi Intervensi</span></a></li>
+                @if(session('status') == 'superuser')
+                <li class="{{ Route::currentRouteNamed('intervensimassal.index') ? 'active' : ''}}
+                {{ Route::currentRouteNamed('intervensimassal.create') ? 'active' : ''}}"><a href="{{route('intervensimassal.index')}}"><i class="fa fa-circle-o"></i> <span>Intervensi Massal</span></a></li>
+                @endif
               </ul>
             </li>
             @elseif(session('status') == 'pegawai' || session('status') == 'admin' || session('status') == 'sekretaris')
             <li class="{{ Route::currentRouteNamed('intervensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('intervensi.kelola') ? 'active' : '' }}{{ Route::currentRouteNamed('intervensi.kelola.aksi') ? 'active' : '' }}">
               <a href="{{ route('intervensi.index') }}">
                 <i class="fa fa-envelope"></i> <span>Intervensi</span>
+              </a>
+            </li>
+            @endif
+            @if(session('status') == 'admin')
+            <li class="{{ Route::currentRouteNamed('intervensimassal.index') ? 'active' : ''}}
+                {{ Route::currentRouteNamed('intervensimassal.create') ? 'active' : ''}}">
+              <a href="{{ route('intervensimassal.index') }}">
+                <i class="fa fa-envelope-o"></i> <span>Intervensi Massal</span>
               </a>
             </li>
             @endif

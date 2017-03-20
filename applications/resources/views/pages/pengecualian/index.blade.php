@@ -53,6 +53,24 @@
 </div>
 @endif
 
+<div class="modal fade" id="modaldelete" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Hapus Pengecualian</h4>
+      </div>
+      <div class="modal-body">
+        <p>Apakah anda yakin untuk menghapus pengecualian ini?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-default pull-left btn-flat" data-dismiss="modal">Tidak</button>
+        <a class="btn btn-danger btn-flat" id="sethapus">Ya, saya yakin</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal modal-default fade" id="modaltambah" role="dialog">
   <div class="modal-dialog">
     <form class="form-horizontal" action="{{ route('pengecualian.post') }}" method="post">
@@ -192,7 +210,10 @@
                 <td>{{ $key->nip_sapk }}</td>
                 <td>{{ $key->nama }}</td>
                 <td>{{ $key->catatan }}</td>
-                <td><a href="" data-value="{{ $key->id }}" class="edit" data-toggle="modal" data-target="#modaledit"><i class="fa fa-edit"></i> Ubah</a></td>
+                <td>
+                  <a href="#" data-value="{{ $key->id }}" class="edit" data-toggle="modal" data-target="#modaledit"><i class="fa fa-edit"></i> Ubah</a>
+                  <a href="#" data-value="{{ $key->id }}" class="hapus" data-toggle="modal" data-target="#modaldelete"><i class="fa fa-trash"></i> Hapus</a>
+                </td>
               </tr>
               <?php $no++; ?>
               @endforeach
@@ -211,6 +232,11 @@
   $(".select2").select2();
   $(function () {
     $("#table_pengecualian").DataTable();
+  });
+
+  $("#table_pengecualian").on("click", "a.hapus", function(){
+    var a = $(this).data('value');
+    $('#sethapus').attr('href', '{{url('/pengecualian/delete-pengecualian/')}}/'+a);
   });
 </script>
 

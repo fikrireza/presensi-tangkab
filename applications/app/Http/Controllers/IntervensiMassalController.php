@@ -21,7 +21,7 @@ use DateIntercal;
 use DateInterval;
 use Carbon\Carbon;
 
-class RevisiIntervensiController extends Controller
+class IntervensiMassalController extends Controller
 {
 
     /**
@@ -35,114 +35,98 @@ class RevisiIntervensiController extends Controller
     }
 
     public function index()
-    {
-       $getrevisiintervensi = DB::table('preson_intervensis')->select('preson_intervensis.*',
+    { 
+      if (session('status') == 'superuser') {
+        $getintervensimassal = DB::table('preson_intervensis')->select('preson_intervensis.*',
                       'preson_pegawais.id as pegawai_id','preson_pegawais.nip_sapk as nip_sapk_pegawai','preson_pegawais.nama')
                   ->leftJoin('preson_pegawais', 'preson_intervensis.pegawai_id', '=', 'preson_pegawais.id')
                   ->orderby('preson_intervensis.created_at', 'desc')
-                  ->where('preson_intervensis.id_intervensi', 9999)->get();
-      // dd($getrevisiintervensi);
-      return view('pages.revisiintervensi.index', compact('getrevisiintervensi'));
+                  ->where('preson_intervensis.flag_massal', 1)->get();
+      } elseif(session('status') === 'admin') {
+        $getintervensimassal = DB::table('preson_intervensis')->select('preson_intervensis.*',
+                      'preson_pegawais.id as pegawai_id','preson_pegawais.nip_sapk as nip_sapk_pegawai',
+                      'preson_pegawais.nama','preson_pegawais.skpd_id as skpd_pegawai_id')
+                  ->leftJoin('preson_pegawais', 'preson_intervensis.pegawai_id', '=', 'preson_pegawais.id')
+                  ->orderby('preson_intervensis.created_at', 'desc')
+                  ->where('preson_intervensis.flag_massal', 1)
+                  ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
+                  ->get();
+      }
+      return view('pages.intervensimassal.index', compact('getintervensimassal'));
     }
 
 
     public function create()
     {
-      $getskpd = Skpd::select('*')->get();
-      $getcaripegawai = null;
-      // dd($getcaripegawai);
-      $skpd_id = "";
-      return view('pages.revisiintervensi.create', compact('getskpd','getcaripegawai','skpd_id'));
-    }
-
-
-    public function caripegawai(Request $request)
-      {
-      // dd($request);
-      $message = [
-        'skpd.required' => 'Wajib di isi'
-      ];
-
-      $validator = Validator::make($request->all(), [
-        'skpd' => 'required'
-      ], $message);
-
-      if($validator->fails())
-      {
-        return redirect()->route('revisiintervensi.create')->withErrors($validator)->withInput();
-      }
-
-      $getskpd = Skpd::select('*')->get();
-      $skpd_id = $request->skpd;
-      $getcaripegawai = Pegawai::select('*')->where('skpd_id', $request->skpd)->get();
-      // dd($getcaripegawai);
-
-        return view('pages.revisiintervensi.create', compact('getskpd','getcaripegawai','skpd_id'));
+      $getpegawai = Pegawai::select('*')->where('skpd_id', Auth::user()->skpd_id)->get();
+      $getjenisintervensi = ManajemenIntervensi::select('*')->get();
+      // dd($getjenisintervensi);
+      return view('pages.intervensimassal.create', compact('getpegawai', 'getjenisintervensi'));
     }
 
     public function createStore(Request $request)
     {
       // dd($request);
        $message = [
-        // 'skpd.required' => 'Wajib di isi',
+        'jenis_intervensi.required' => 'Wajib di isi',
         'tanggal_mulai.required' => 'Wajib di isi',
         'tanggal_akhir.required' => 'Wajib di isi',
         'keterangan.required' => 'Wajib di isi',
-        'upload_revisi' => 'Hanya .jpg, .png, .pdf'
+        'upload_massal' => 'Hanya .jpg, .png, .pdf'
       ];
 
       $validator = Validator::make($request->all(), [
-        // 'skpd' => 'required',
+        'jenis_intervensi' => 'required',
         'tanggal_mulai' => 'required',
         'tanggal_akhir' => 'required',
         'keterangan' => 'required',
-        'upload_revisi'  => 'mimes:jpeg,png,pdf,jpg'
+        'upload_massal'  => 'mimes:jpeg,png,pdf,jpg'
       ], $message);
 
       if($validator->fails())
       {
-        return redirect()->route('revisiintervensi.create')->withErrors($validator)->withInput();
+        return redirect()->route('intervensimassal.create')->withErrors($validator)->withInput();
       }
 
       //start menentukan tanggal kurang dari 3 hari
-        // $datestart = Carbon::createFromFormat('Y-m-d',  $request->tanggal_mulai);
-        // $dateend = Carbon::createFromFormat('Y-m-d',  $request->tanggal_akhir);
-        // $datenow = Carbon::today();
+        $datestart = Carbon::createFromFormat('Y-m-d',  $request->tanggal_mulai);
+        $dateend = Carbon::createFromFormat('Y-m-d',  $request->tanggal_akhir);
+        $datenow = Carbon::today();
 
-        // $interval = date_diff($datenow, $datestart);
-        // $getvalcount =  $interval->format('%R%a');
-        // // total hari
-        // $days = $getvalcount;
+        $interval = date_diff($datenow, $datestart);
+        $getvalcount =  $interval->format('%R%a');
+        // total hari
+        $days = $getvalcount;
 
-        // // create an iterateable period of date (P1D equates to 1 day)
-        // $period = new DatePeriod($datestart, new DateInterval('P1D'), $datenow);
+        // create an iterateable period of date (P1D equates to 1 day)
+        $period = new DatePeriod($datestart, new DateInterval('P1D'), $datenow);
 
-        // foreach($period as $dt) {
-        //     $curr = $dt->format('D');
+        foreach($period as $dt) {
+            $curr = $dt->format('D');
 
-        //     // substract if Saturday or Sunday
-        //     if ($curr == 'Sat' || $curr == 'Sun') {
-        //         if($days > 0)
-        //           {
-        //             $days--;
-        //           }
-        //           else if($days < 0)
-        //           {
-        //             $days++;
-        //           }
-        //           else
-        //           {
-        //             $days--;
-        //           }
-        //     }
+            // substract if Saturday or Sunday
+            if ($curr == 'Sat' || $curr == 'Sun') {
+                if($days > 0)
+                  {
+                    $days--;
+                  }
+                  else if($days < 0)
+                  {
+                    $days++;
+                  }
+                  else
+                  {
+                    $days--;
+                  }
+            }
 
-        // }
-        // if($days >= -2)
-        // {
+        }
+        if($days >= -2)
+        {
 
-        // } else {
-        //   return redirect()->route('revisiintervensi.create')->with('gagaltgl',' Tanggal yang pilih lebih dari 3 hari sebelum hari ini.')->withInput();
-        // }
+        } else {
+          return redirect()->route('intervensimassal.create')->with('gagaltgl',' Tanggal yang pilih lebih dari 3 hari sebelum hari ini.')->withInput();
+        }
       //end menentukan tanggal kurang dari 3 hari
 
 
@@ -155,10 +139,10 @@ class RevisiIntervensiController extends Controller
           //end set Jumlah Hari Intervensi
 
           // biar file yang diupload tidak ngeloop
-          $file = $request->file('upload_revisi');
+          $file = $request->file('upload_massal');
             if($file != null)
             {
-                $photo_name = Auth::user()->nip_sapk.'-'.'RevisiIntervensi'.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'.' . $file->getClientOriginalExtension();
+                $photo_name = Auth::user()->nip_sapk.'-'.'IntervensiMassal'.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'.' . $file->getClientOriginalExtension();
                 $file->move('documents/', $photo_name);
               }else{
                 $photo_name = "-";
@@ -208,15 +192,16 @@ class RevisiIntervensiController extends Controller
             }
             // dd($getnamapegawai);
             if ($flagtanggal==1) {
-              return redirect()->route('revisiintervensi.create')->with('gagal', $getnamapegawai.' Tanggal yang pilih telah tercatat pada database.')->withInput();
+              $getpegawai = Pegawai::select('*')->where('skpd_id', Auth::user()->skpd_id)->get();
+              return redirect()->route('intervensimassal.create')->with('gagal', $getnamapegawai.' Tanggal yang pilih telah tercatat pada database.')->with('getpegawai')->withInput();
             }
             // --- end of validasi ketersediaan tanggal intervensi
 
 
             $set = new Intervensi;
             $set->pegawai_id = $key_pegawai;
-            $set->id_intervensi = 9999;
-            $getnamaintervensi = ManajemenIntervensi::find(9999);
+            $set->id_intervensi = $request->jenis_intervensi;
+            $getnamaintervensi = ManajemenIntervensi::find($request->jenis_intervensi);
             $set->jenis_intervensi = $getnamaintervensi->nama_intervensi;
             $set->jumlah_hari = $countjumlhari;
             $set->tanggal_mulai = $request->tanggal_mulai;
@@ -225,12 +210,13 @@ class RevisiIntervensiController extends Controller
 
             $set->berkas = $photo_name;
             $set->flag_status = 0;
+            $set->flag_massal = 1;
             $set->actor = Auth::user()->pegawai_id;
             $set->save();
         }
-        return redirect()->route('revisiintervensi.index')->with('berhasil', 'Pegawai Berhasil Intervensi');
+        return redirect()->route('intervensimassal.index')->with('berhasil', 'Pegawai Berhasil Intervensi');
       }else{
-        return redirect()->route('revisiintervensi.create')->with('gagal', 'Pilih data pegawai tersebuh dahulu.');
+        return redirect()->route('intervensimassal.create')->with('gagal', 'Pilih data pegawai tersebuh dahulu.');
       }
     }
 
@@ -256,7 +242,7 @@ class RevisiIntervensiController extends Controller
 
       if($validator->fails())
       {
-        return redirect()->route('revisiintervensi.index')->withErrors($validator)->withInput();
+        return redirect()->route('intervensimassal.index')->withErrors($validator)->withInput();
       }
 
 
@@ -266,17 +252,18 @@ class RevisiIntervensiController extends Controller
       $set->tanggal_mulai = $request->tanggal_mulai_edit;
       $set->tanggal_akhir = $request->tanggal_akhir_edit;
       $set->deskripsi = $request->keterangan_edit;
-      $file = $request->file('upload_revisi');
+      $set->flag_massal = 1;
+      $file = $request->file('upload_massal');
       if($file != null)
         {
-          $photo_name = Auth::user()->nip_sapk.'-'.'RevisiIntervensi'.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'.' . $file->getClientOriginalExtension();
+          $photo_name = Auth::user()->nip_sapk.'-'.'IntervensiMassal'.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'.' . $file->getClientOriginalExtension();
           $file->move('documents/', $photo_name);
           $set->berkas = $photo_name;
         }
       $set->actor = Auth::user()->pegawai_id;
       $set->update();
 
-      return redirect()->route('revisiintervensi.index')->with('berhasil', 'Berhasil Mengubah Data Revisi Intervensis');
+      return redirect()->route('intervensimassal.index')->with('berhasil', 'Berhasil Mengubah Data Revisi Intervensis');
     }
 
 
