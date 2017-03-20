@@ -292,7 +292,18 @@
                   @endif
                 @endif
               </td>
-              <td> - </td>
+              <td>
+                @if ($key->id_intervensi==2 || $key->id_intervensi==3 || $key->id_intervensi==13)
+                  <a href="{{route('intervensi.suratijin', $key->id)}}" title="Download Surat Ijin">
+                    <i class="fa fa-file-o"></i>
+                  </a>
+                  {{-- <a href="{{route('intervensi.previewsuratijin', $key->id)}}" title="Preview Surat Ijin">
+                    <i class="fa fa-file-o"></i>
+                  </a> --}}
+                @else
+                  -
+                @endif
+              </td>
               <td>{{ $key->tanggal_mulai }}</td>
               <td>{{ $key->tanggal_akhir }}</td>
               <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d')))
@@ -520,7 +531,7 @@
 
 <script>
   $(function(){
-    $(".resetstatus").on('click', function(){
+    $('#table_intervensi').DataTable().on('click', 'a.resetstatus[data-value]', function () {
       var a = $(this).data('value');
       $("#btnresetstatus").attr('href', "{{url('/')}}/intervensi/reset-status/"+a);
     });
