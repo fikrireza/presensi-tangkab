@@ -2,7 +2,7 @@
 
 @section('title')
   <title>Intervensi</title>
-  <link rel='stylesheet' href='{{asset('plugins/timepicki/css/timepicki.css')}}'/>
+  <link rel="stylesheet" href="{{asset('plugins/timepicker/bootstrap-timepicker.min.css')}}" media="screen" title="no title">
 @endsection
 
 @section('breadcrumb')
@@ -140,13 +140,15 @@
                 </select>
               </div>
             </div>
-            
+
             <div id="jamijin">
               <div class='form-group'>
                 <label class='col-sm-3'>Jam Ijin</label>
                 <div class='col-sm-9'>
-                  <input type='text' name='jam_ijin' class='form-control'>
-                  <input id='timepicker' type='text' name='timepicker'/>
+                  <div class="input-group bootstrap-timepicker timepicker">
+                    <input id="timepicker1" type="text" class="form-control input-small" name="jam_ijin">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -490,6 +492,16 @@
 @endsection
 
 @section('script')
+
+<script src="{{asset('plugins/timepicker/bootstrap-timepicker.min.js')}}"/>
+<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+
+<script>
+  $('#timepicker1').timepicker({
+    showInputs: false
+  });
+</script>
+
 <script>
 // var date = new Date();
 // date.setDate(date.getDate()-3);
