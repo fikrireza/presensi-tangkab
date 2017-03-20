@@ -82,13 +82,13 @@
               <td>{{ $key->periode_awal }}</td>
               <td>{{ $key->periode_akhir }}</td>
               <td>{{ $key->jam_kerja_group }}</td>
-              <td><a href="{{ url('jadwal-kerja/ubah').'/'.$key->id }}"><i class="fa fa-edit"></i> Ubah</a>@if ($key->flag_status == 1)
+              <td><a class="btn btn-xs btn-warning" href="{{ url('jadwal-kerja/ubah').'/'.$key->id }}"><i class="fa fa-edit"></i> Ubah</a>@if ($key->flag_status == 1)
               @if (session('status') == 'administrator' || session('status') == 'superuser')
-                <a href="" class="nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
+                <a class="btn btn-xs btn-danger" href="" class="nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
               @endif
               @else
               @if (session('status') == 'administrator' || session('status') == 'superuser')
-                <a href="" class="aktif" data-toggle="modal" data-target="#myModalAktif" data-value="{{ $key->id }}">Aktifkan</a>
+                <a href="" class="aktif" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#myModalAktif" data-value="{{ $key->id }}">Aktifkan</a>
               @endif
               @endif</td>
             </tr>

@@ -185,13 +185,13 @@
               <td>@if($key->singkatan == null) - @else {{ $key->singkatan }} @endif</td>
               <td>
               @if ($key->status == 1)
-                <a href="" data-value="{{ $key->id }}" class="editSKPD" data-toggle="modal" data-target="#modaleditSKPD"><i class="fa fa-edit"></i> Ubah</a>
+                <a href="" data-value="{{ $key->id }}" class="btn btn-xs btn-warning editSKPD" data-toggle="modal" data-target="#modaleditSKPD"><i class="fa fa-edit"></i> Ubah</a>
               @if (session('status') == 'superuser')
-                <a href="" class="nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
+                <a href="" class="btn btn-xs btn-danger nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
               @endif
               @else
               @if (session('status') == 'superuser')
-                <a href="" class="aktif" data-toggle="modal" data-target="#myModalAktif" data-value="{{ $key->id }}">Aktifkan</a>
+                <a href="" class="btn btn-xs btn-primary aktif" data-toggle="modal" data-target="#myModalAktif" data-value="{{ $key->id }}">Aktifkan</a>
               @endif
               @endif
               </td>

@@ -71,7 +71,7 @@
               <td>{{ $no }}</td>
               <td>{{ $key->skpd_nama_last }}</td>
               <td>
-                <a href="{{ url('mutasi/viewall', $key->skpd_new_last) }}"><i class="fa fa-eye"></i> Lihat</a>
+                <a class="btn btn-xs btn-primary" href="{{ url('mutasi/viewall', $key->skpd_new_last) }}"><i class="fa fa-eye"></i> Lihat</a>
               </td>
             </tr>
             <?php $no++; ?>
@@ -93,7 +93,7 @@
       @else
         <p><b>Singkatan</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{$getskpdterkait->singkatan}}</p>
       @endif
-    </div> 
+    </div>
     <div class="box box-primary box-solid">
       <div class="box-header">
         <h3 class="box-title">Mutasi</h3>

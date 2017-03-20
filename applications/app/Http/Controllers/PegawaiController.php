@@ -54,7 +54,7 @@ class PegawaiController extends Controller
 
           return Datatables::of($pegawai)
                             ->addColumn('action', function($pegawai){
-                              return '<a href="pegawai/edit/'.$pegawai->id.'"><i class="fa fa-edit"></i> Ubah</a></br><a href="mutasi/create/'.$pegawai->id.'"><i class="fa fa-code-fork"></i> Mutasi</a>';
+                              return '<a class="btn btn-xs btn-warning" href="pegawai/edit/'.$pegawai->id.'"><i class="fa fa-edit"></i> Ubah</a></br><a class="btn btn-xs btn-success" href="mutasi/create/'.$pegawai->id.'"><i class="fa fa-code-fork"></i> Mutasi</a>';
                             })
                           ->make(true);
 
@@ -68,7 +68,7 @@ class PegawaiController extends Controller
 
           return Datatables::of($pegawai)
                             ->addColumn('action', function($pegawai){
-                              return '<a href="pegawai/edit/'.$pegawai->id.'"><i class="fa fa-edit"></i> Ubah</a>';
+                              return '<a class="btn btn-xs btn-warning" href="pegawai/edit/'.$pegawai->id.'"><i class="fa fa-edit"></i> Ubah</a>';
                             })
                           ->make(true);
 

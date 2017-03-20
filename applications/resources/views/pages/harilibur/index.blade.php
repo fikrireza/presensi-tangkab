@@ -151,7 +151,7 @@
               <td>{{ $no }}</td>
               <td>{{ $key->libur }}</td>
               <td>{{ $key->keterangan }}</td>
-              <td><a href="" data-value="{{ $key->id }}" class="editharilibur" data-toggle="modal" data-target="#modaleditharilibur"><i class="fa fa-edit"></i> Ubah</a></td>
+              <td><a href="" data-value="{{ $key->id }}" class="btn btn-xs btn-warning editharilibur" data-toggle="modal" data-target="#modaleditharilibur"><i class="fa fa-edit"></i> Ubah</a></td>
             </tr>
             <?php $no++; ?>
             @endforeach

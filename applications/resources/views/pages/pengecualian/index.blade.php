@@ -202,6 +202,7 @@
               <td>-</td>
               <td>-</td>
               <td>-</td>
+              <td>-</td>
             </tr>
             @else
               @foreach ($pengecualian as $key)
@@ -211,8 +212,8 @@
                 <td>{{ $key->nama }}</td>
                 <td>{{ $key->catatan }}</td>
                 <td>
-                  <a href="#" data-value="{{ $key->id }}" class="edit" data-toggle="modal" data-target="#modaledit"><i class="fa fa-edit"></i> Ubah</a>
-                  <a href="#" data-value="{{ $key->id }}" class="hapus" data-toggle="modal" data-target="#modaldelete"><i class="fa fa-trash"></i> Hapus</a>
+                  <a href="#" data-value="{{ $key->id }}" class="btn btn-xs btn-warning edit" data-toggle="modal" data-target="#modaledit"><i class="fa fa-edit"></i> Ubah</a>
+                  <a href="#" data-value="{{ $key->id }}" class="btn btn-xs btn-danger hapus" data-toggle="modal" data-target="#modaldelete"><i class="fa fa-trash"></i> Hapus</a>
                 </td>
               </tr>
               <?php $no++; ?>

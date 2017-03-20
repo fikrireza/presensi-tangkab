@@ -130,9 +130,9 @@
           </tfoot>
           <tbody>
           @if($getuser->isEmpty())
-          <tr>
+          {{-- <tr>
             <td colspan="7" class="text-muted" style="text-align:center;">Akun Pengelola Belum Ada.</td>
-          </tr>
+          </tr> --}}
           @else
           <?php $no = 1;?>
           @foreach($getuser as $key)
@@ -143,7 +143,9 @@
             <td>{{ $key->nama_skpd }}</td>
             <td>
               @if (Auth::user()->pegawai_id != $key->pegawai_id)
-                  <a href="" class="hapus" data-toggle="modal" data-target="#myModalHapus" data-value="{{ $key->pegawai_id }}"><i class="fa fa-remove"></i> Hapus</a>
+                  <a href="" class="btn btn-xs btn-danger hapus" data-toggle="modal" data-target="#myModalHapus" data-value="{{ $key->pegawai_id }}"><i class="fa fa-remove"></i> Hapus</a>
+              @else
+                -
               @endif
             </td>
           </tr>

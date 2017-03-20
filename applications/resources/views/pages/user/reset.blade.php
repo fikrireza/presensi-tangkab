@@ -99,7 +99,7 @@
               <td>{{ $key->nama_skpd }}</td>
               <td>{{ $key->title }}</td>
               <td>
-                <a href="" class="reset" data-toggle="modal" data-target="#myModalReset" data-value="{{ $key->pegawai_id }}"><i class="fa fa-refresh"></i> Reset Password</a>
+                <a href="" class="btn btn-xs btn-danger reset" data-toggle="modal" data-target="#myModalReset" data-value="{{ $key->pegawai_id }}"><i class="fa fa-refresh"></i> Reset Password</a>
               </td>
             </tr>
             <?php $no++; ?>

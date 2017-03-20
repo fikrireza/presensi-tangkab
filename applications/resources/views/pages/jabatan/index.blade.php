@@ -125,7 +125,7 @@
             <tr>
               <td>{{ $no }}</td>
               <td>{{ $key->nama }}</td>
-              <td><a href="" data-value="{{ $key->id }}" class="editJabatan" data-toggle="modal" data-target="#modaleditJabatan"><i class="fa fa-edit"></i> Ubah</a></td>
+              <td><a href="" data-value="{{ $key->id }}" class="btn btn-xs btn-warning editJabatan" data-toggle="modal" data-target="#modaleditJabatan"><i class="fa fa-edit"></i> Ubah</a></td>
             </tr>
             <?php $no++; ?>
             @endforeach
@@ -178,14 +178,14 @@
           var title = $(this).text();
           $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
       } );
-   
+
       // DataTable
       var table = $('#table_jabatan').DataTable();
-   
+
       // Apply the search
       table.columns().every( function () {
           var that = this;
-   
+
           $( 'input', this.footer() ).on( 'keyup change', function () {
               if ( that.search() !== this.value ) {
                   that
