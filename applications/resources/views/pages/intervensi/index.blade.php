@@ -551,7 +551,7 @@ $('.tanggal_akhir_edit').datepicker({
 
 <script type="text/javascript">
   $(function(){
-    $('.editIntervensi').click(function(){
+    $('#table_intervensi').DataTable().on('click', 'a.editIntervensi[data-value]', function () {
       var a = $(this).data('value');
       $.ajax({
         url: "{{ url('/') }}/intervensi/bind/"+a,
@@ -574,29 +574,12 @@ $('.tanggal_akhir_edit').datepicker({
           $('#keterangan_edit').attr('value', keterangan_edit);
 
           $('#mi_'+id_intervensi).attr('selected', 'true');
-
-          // if(jenis_intervensi_edit=="Ijin")
-          // {
-          //   $('#Ijin').attr('selected', 'true');
-          // }
-          // else if(jenis_intervensi_edit=="Sakit")
-          // {
-          //   $('#Sakit').attr('selected', 'true');
-          // }
-          // else if(jenis_intervensi_edit=="Cuti")
-          // {
-          //   $('#Cuti').attr('selected', 'true');
-          // }
-          // else if(jenis_intervensi_edit=="DinasLuar")
-          // {
-          //   $('#DinasLuar').attr('selected', 'true');
-          // }
         }
       });
     });
   });
 
-  $('a.batalIntervensi').click(function(){
+  $('#table_intervensi').DataTable().on('click', 'a.batalIntervensi[data-value]', function () {
     var a = $(this).data('value');
     $('#setBatal').attr('href', "{{ url('/') }}/intervensi/batal/"+a);
   });
