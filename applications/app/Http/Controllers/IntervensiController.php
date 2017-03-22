@@ -142,7 +142,7 @@ class IntervensiController extends Controller
         $pegawaiid = Auth::user()->pegawai_id;
         $countsum = DB::select("select sum(jumlah_hari) as 'total' from preson_intervensis
                                 where DATE_FORMAT(tanggal_mulai,'%m-%Y') = '$datenow'
-                                and pegawai_id = $pegawaiid and (id_intervensi = 2 or id_intervensi = 3)");
+                                and pegawai_id = $pegawaiid and (id_intervensi = 2 or id_intervensi = 3) and flag_status != 3");
 
         $result = $countsum[0]->total;
         if ($result>=2) {
