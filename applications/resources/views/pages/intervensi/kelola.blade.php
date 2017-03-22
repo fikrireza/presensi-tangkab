@@ -225,6 +225,7 @@
 
         {{-- button dibawah untuk mengintervensikan pegawai lain --}}
         {{-- <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahIntervensi">Tambah Intervensi Pegawai</a> --}}
+        <a href="{{route('intervensi.index')}}" class="btn bg-blue pull-right">Kembali</a>
 
 
       </div>
