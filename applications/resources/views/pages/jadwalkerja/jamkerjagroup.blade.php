@@ -88,6 +88,9 @@
               <th>Nama Group Kerja</th>
               <th>Nama Jam Kerja</th>
               <th>Jadwal Kerja</th>
+              @if (session('status') == 'superuser')
+              <th>Aktor</th>
+              @endif
               <th>Aksi</th>
             </tr>
           </thead>
@@ -102,34 +105,27 @@
           </tfoot>
           <tbody>
             <?php $no = 1; ?>
-            @if ($getJamGroup->isEmpty())
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            @else
             @foreach ($getJamGroup as $key)
             <tr>
               <td>{{ $no }}</td>
               <td><a href="{{ url('jadwal-kerja-group/lihat')."/". $key->group_id }}">{{ $key->nama_group }}</a></td>
               <td>{{ $key->nama_jam }}</td>
               <td>{{ $key->jam_masuk }} s/d {{ $key->jam_pulang }}</td>
+              @if (session('status') == 'superuser')
+              <td>{{ $key->actor }}</td>
+              @endif
               <td>@if ($key->flag_status == 1)
               @if (session('status') == 'administrator' || session('status') == 'superuser')
-                <a href="" class="nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
+                <a href="" class="btn btn-xs btn-danger nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
               @endif
               @else
               @if (session('status') == 'administrator' || session('status') == 'superuser')
-                <a href="" class="aktif" data-toggle="modal" data-target="#myModalAktif" data-value="{{ $key->id }}">Aktifkan</a>
+                <a href="" class="btn btn-xs btn-primary aktif" data-toggle="modal" data-target="#myModalAktif" data-value="{{ $key->id }}">Aktifkan</a>
               @endif
               @endif</td>
             </tr>
             <?php $no++; ?>
             @endforeach
-            @endif
           </tbody>
         </table>
         <p><span class="help-block">*Klik Nama Group Untuk Menambah Jam Kerja</span></p>

@@ -126,6 +126,9 @@
               <th>Hari</th>
               <th>Tanggal</th>
               <th>Keterangan</th>
+              @if(session('status') == 'superuser')
+              <th>Aktor</th>
+              @endif
               <th>Action</th>
             </tr>
           </thead>
@@ -135,6 +138,9 @@
               <th></th>
               <th></th>
               <th></th>
+              @if(session('status') == 'superuser')
+              <th></th>
+              @endif
               <td></td>
             </tr>
           </tfoot>
@@ -173,6 +179,9 @@
                   $tanggal_apel = $day[2]."/".$day[1]."/".$day[0];
               @endphp{{ $tanggal_apel }}</td>
               <td>{{ $key->keterangan }}</td>
+              @if(session('status') == 'superuser')
+              <td>{{ $key->actor }}</td>
+              @endif
               <td>@if($key->tanggal_apel >= date('Y-m-d'))
                 <a href="" data-value="{{ $key->id }}" class="editApel" data-toggle="modal" data-target="#modaleditApel"><i class="fa fa-edit"></i> Ubah</a>
               @else

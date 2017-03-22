@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Golongan;
+use App\Models\Pegawai;
 use Validator;
 use Auth;
 
@@ -14,7 +15,9 @@ class GolonganController extends Controller
 
     public function index()
     {
-      $golongan = golongan::get();
+      $golongan = golongan::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_golongans.actor')
+                          ->select('preson_golongans.*', 'preson_pegawais.nama as actor')
+                          ->get();
 
       return view('pages.golongan.index', compact('golongan'));
     }
@@ -47,6 +50,7 @@ class GolonganController extends Controller
     {
       $set = golongan::find($id);
       $set->status = 0;
+      $set->actor = Auth::user()->pegawai_id;
       $set->update();
 
       return redirect()->route('golongan.index')->with('berhasil', 'Berhasil Non-Aktifkan Golongan');
@@ -56,6 +60,7 @@ class GolonganController extends Controller
     {
       $set = golongan::find($id);
       $set->status = 1;
+      $set->actor = Auth::user()->pegawai_id;
       $set->update();
 
       return redirect()->route('golongan.index')->with('berhasil', 'Berhasil Aktifkan Golongan');

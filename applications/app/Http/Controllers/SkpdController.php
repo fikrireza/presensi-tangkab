@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Skpd;
+use App\Models\Pegawai;
 
 use Validator;
 use Auth;
@@ -23,7 +24,9 @@ class SkpdController extends Controller
 
     public function index()
     {
-      $skpd = skpd::get();
+      $skpd = skpd::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_skpd.actor')
+                    ->select('preson_skpd.*', 'preson_pegawais.nama as actor')
+                    ->get();
 
       return view('pages.skpd.index', compact('skpd'));
     }

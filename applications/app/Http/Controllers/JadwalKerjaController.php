@@ -26,7 +26,8 @@ class JadwalKerjaController extends Controller
     public function index()
     {
       $getSKPD = JadwalKerja::join('preson_skpd', 'preson_skpd.id', '=', 'preson_jadwal_kerja.skpd_id')
-                            ->select('preson_jadwal_kerja.*', 'preson_skpd.nama as skpd')
+                            ->join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_jadwal_kerja.actor')
+                            ->select('preson_jadwal_kerja.*', 'preson_skpd.nama as skpd', 'preson_pegawais.nama as actor')
                             ->get();
 
       return view('pages.jadwalkerja.jadwal', compact('getSKPD'));
@@ -67,6 +68,7 @@ class JadwalKerjaController extends Controller
       $set->periode_akhir = $request->periode_akhir;
       $set->jam_kerja_group = $request->jam_kerja_group;
       $set->flag_status = 1;
+      $set->actor = Auth::user()->pegawai_id;
       $set->save();
 
       return redirect()->route('jadwal-kerja')->with('berhasil', 'Berhasil Menambahkan Jadwal Kerja');
@@ -110,6 +112,7 @@ class JadwalKerjaController extends Controller
       $set->periode_akhir = $request->periode_akhir;
       $set->jam_kerja_group = $request->jam_kerja_group;
       $set->flag_status = $request->flag_status;
+      $set->actor = Auth::user()->pegawai_id;
       $set->update();
 
       return redirect()->route('jadwal-kerja')->with('berhasil', 'Berhasil Mengubah Jadwal Kerja');
@@ -117,7 +120,9 @@ class JadwalKerjaController extends Controller
 
     public function jamKerja()
     {
-      $getJamKerja = JamKerja::get();
+      $getJamKerja = JamKerja::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_jam_kerja.actor')
+                              ->select('preson_jam_kerja.*', 'preson_pegawais.nama as actor')
+                              ->get();
 
       return view('pages.jadwalkerja.jamkerja', compact('getJamKerja'));
     }
@@ -169,6 +174,7 @@ class JadwalKerjaController extends Controller
       $set->toleransi_pulcep = $request->toleransi_pulcep;
       $set->toleransi_terlambat = $request->toleransi_terlambat;
       $set->flag_status = 1;
+      $set->actor = Auth::user()->pegawai_id;
       $set->save();
 
       return redirect()->route('jadwal-kerja.jam')->with('berhasil', 'Berhasil Menambahkan Jam Kerja');
@@ -223,6 +229,7 @@ class JadwalKerjaController extends Controller
       $set->toleransi_pulcep = $request->toleransi_pulcep;
       $set->toleransi_terlambat = $request->toleransi_terlambat;
       $set->flag_status = 1;
+      $set->actor = Auth::user()->pegawai_id;
       $set->update();
 
       return redirect()->route('jadwal-kerja.jam')->with('berhasil', 'Berhasil Mengubah Jam Kerja');
@@ -231,7 +238,8 @@ class JadwalKerjaController extends Controller
     public function jamGroup()
     {
       $getJamGroup = JamKerjaGroup::join('preson_jam_kerja', 'preson_jam_kerja.id', '=', 'preson_jam_kerja_group.jam_kerja_id')
-                                  ->select('preson_jam_kerja_group.*', 'preson_jam_kerja.nama_jam_kerja as nama_jam', 'preson_jam_kerja.jam_masuk as jam_masuk', 'preson_jam_kerja.jam_pulang as jam_pulang')
+                                  ->join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_jam_kerja_group.actor')
+                                  ->select('preson_jam_kerja_group.*', 'preson_jam_kerja.nama_jam_kerja as nama_jam', 'preson_jam_kerja.jam_masuk as jam_masuk', 'preson_jam_kerja.jam_pulang as jam_pulang', 'preson_pegawais.nama as actor')
                                   ->orderBy('preson_jam_kerja_group.nama_group')
                                   ->get();
 
@@ -277,6 +285,7 @@ class JadwalKerjaController extends Controller
             $create->group_id     = $group;
             $create->jam_kerja_id = $jam['jam_kerja_id'];
             $create->flag_status = 1;
+            $set->actor = Auth::user()->pegawai_id;
             $create->save();
           }
         }
@@ -297,6 +306,7 @@ class JadwalKerjaController extends Controller
     {
       $set = JamKerjaGroup::find($id);
       $set->flag_status = 0;
+      $set->actor = Auth::user()->pegawai_id;
       $set->update();
 
       return redirect()->route('jadwal-kerja.group')->with('berhasil','Group Jam Kerja Berhasil Dinonktif');
@@ -306,6 +316,7 @@ class JadwalKerjaController extends Controller
     {
       $set = JamKerjaGroup::find($id);
       $set->flag_status = 1;
+      $set->actor = Auth::user()->pegawai_id;
       $set->update();
 
       return redirect()->route('jadwal-kerja.group')->with('berhasil','Group Jam Kerja Berhasil Diaktifkan');
