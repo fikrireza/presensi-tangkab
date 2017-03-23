@@ -2,6 +2,7 @@
 
 @section('title')
   <title>Intervensi Massal</title>
+  <link rel="stylesheet" href="{{asset('plugins/iCheck/all.css')}}">
   <link rel="stylesheet" href="{{ asset('plugins/select2/select2.min.css') }}">
 @endsection
 
@@ -46,12 +47,12 @@
             <label class="col-sm-2 control-label"></label>
             <div class="col-md-10">
               <div class="box-body table-responsive box box-primary box-solid">
-                <table class="table table-bordered table-striped">
+                 <table id="" class="table table-bordered table-striped">
                   <thead>
                     <tr>
                       <th>
                         <span data-toggle="tooltip" data-placement="right" title="Pilih Semua">
-                          <input type="checkbox" onClick="toggle(this)" />
+                          <input type="checkbox" onClick="toggle(this)"  class="flat-red"/>
                         </span>
                       </th>
                       <th>NIP</th>
@@ -192,6 +193,12 @@ var today = new Date();
     checkboxes[i].checked = pilih.checked;
   }
 } 
+</script>
+<script type="text/javascript">
+  $(function(){
+      //Flat red color scheme for iCheck
+      
+  })
 </script>
 <script type="text/javascript">
   function durationDay(){
