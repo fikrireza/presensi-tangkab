@@ -138,7 +138,7 @@
                 <li class="{{ Route::currentRouteNamed('intervensi.index') ? 'active' : ''}}"><a href="{{ route('intervensi.index') }}"><i class="fa fa-circle-o"></i> <span>Intervensi</span></a></li>
                 <li class="{{ Route::currentRouteNamed('revisiintervensi.index') ? 'active' : ''}}
                 {{ Route::currentRouteNamed('revisiintervensi.create') ? 'active' : ''}}
-                {{ Route::currentRouteNamed('revisiintervensi.caripegawai') ? 'active' : ''}}"><a href="{{route('revisiintervensi.index')}}"><i class="fa fa-circle-o"></i> <span>Revisi Intervensi</span></a></li>
+                {{ Route::currentRouteNamed('revisiintervensi.caripegawai') ? 'active' : ''}}"><a href="{{route('revisiintervensi.index')}}"><i class="fa fa-circle-o"></i> <span>Revisi Presensi</span></a></li>
                 @if(session('status') == 'superuser')
                 <li class="{{ Route::currentRouteNamed('intervensimassal.index') ? 'active' : ''}}
                 {{ Route::currentRouteNamed('intervensimassal.create') ? 'active' : ''}}"><a href="{{route('intervensimassal.index')}}"><i class="fa fa-circle-o"></i> <span>Intervensi Massal</span></a></li>

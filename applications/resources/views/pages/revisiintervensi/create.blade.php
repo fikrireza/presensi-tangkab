@@ -1,15 +1,15 @@
 @extends('layout.master')
 
 @section('title')
-  <title>Revisi Intervensi</title>
+  <title>Revisi Presensi</title>
   <link rel="stylesheet" href="{{ asset('plugins/select2/select2.min.css') }}">
 @endsection
 
 @section('breadcrumb')
-  <h1>Revisi Intervensi</h1>
+  <h1>Revisi Presensi</h1>
   <ol class="breadcrumb">
     <li><a href=""><i class="fa fa-dashboard"></i>Dashboard</a></li>
-    <li><a href="{{ route('revisiintervensi.index') }}">Revisi Intervensi</a></li>
+    <li><a href="{{ route('revisiintervensi.index') }}">Revisi Presensi</a></li>
     <li class="active">Tambah Revisi</li>
   </ol>
 @endsection
@@ -19,7 +19,7 @@
   <div class="col-md-12">
     <div class="box box-primary box-solid">
       <div class="box-header with-border">
-        <h3 class="box-title" style="line-height:30px;">Tambah Data Revisi Intervensi</h3>
+        <h3 class="box-title" style="line-height:30px;">Tambah Data Revisi Presensi</h3>
         <a href="{{ route('revisiintervensi.index') }}" class="btn bg-blue pull-right">Kembali</a>
       </div>
       <form action="{{ route('revisiintervensi.caripegawai') }}" method="post" class="form-horizontal" role="search">

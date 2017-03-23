@@ -1,14 +1,14 @@
 @extends('layout.master')
 
 @section('title')
-  <title>Revisi Intervensi</title>
+  <title>Revisi Presensi</title>
 @endsection
 
 @section('breadcrumb')
-  <h1>Revisi Intervensi</h1>
+  <h1>Revisi Presensi</h1>
   <ol class="breadcrumb">
     <li><a href=""><i class="fa fa-dashboard"></i>Dashboard</a></li>
-    <li class="active">Revisi Intervensi</li>
+    <li class="active">Revisi Presensi</li>
   </ol>
 @endsection
 
@@ -40,7 +40,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Edit Data Revisi Intervensi</h4>
+          <h4 class="modal-title">Edit Data Revisi Presensi</h4>
         </div>
         <div class="modal-body">
           <div class="form-group">
@@ -124,7 +124,7 @@
   <div class="col-md-12">
     <div class="box box-primary box-solid">
       <div class="box-header">
-        <h3 class="box-title">Revisi Intervensi</h3>
+        <h3 class="box-title">Revisi Presensi</h3>
         <a href="{{ route('revisiintervensi.create') }}" class="btn bg-blue pull-right">Tambah Revisi</a>
       </div>
       <div class="box-body table-responsive">
