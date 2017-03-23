@@ -125,6 +125,9 @@
               <th>No</th>
               <th>Tanggal</th>
               <th>Keterangan</th>
+              @if(session('status') == 'superuser')
+              <th>Aktor</th>
+              @endif
               <th>Action</th>
             </tr>
           </thead>
@@ -133,29 +136,26 @@
               <td></td>
               <th></th>
               <th></th>
+              @if(session('status') == 'superuser')
+              <th></th>
+              @endif
               <td></td>
             </tr>
           </tfoot>
           <tbody>
             <?php $no = 1; ?>
-            @if ($harilibur->isEmpty())
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            @else
             @foreach ($harilibur as $key)
             <tr>
               <td>{{ $no }}</td>
               <td>{{ $key->libur }}</td>
               <td>{{ $key->keterangan }}</td>
+              @if(session('status') == 'superuser')
+              <td>{{ $key->actor}}</td>
+              @endif
               <td><a href="" data-value="{{ $key->id }}" class="btn btn-xs btn-warning editharilibur" data-toggle="modal" data-target="#modaleditharilibur"><i class="fa fa-edit"></i> Ubah</a></td>
             </tr>
             <?php $no++; ?>
             @endforeach
-            @endif
           </tbody>
         </table>
       </div>

@@ -50,6 +50,9 @@
               <th>Periode Awal</th>
               <th>Periode Akhir</th>
               <th>Jam Kerja Group</th>
+              @if (session('status') == 'superuser')
+              <th>Aktor</th>
+              @endif
               <th>Aksi</th>
             </tr>
           </thead>
@@ -60,21 +63,14 @@
               <td></td>
               <td></td>
               <td></td>
+              @if (session('status') == 'superuser')
+              <th></th>
+              @endif
               <td></td>
             </tr>
           </tfoot>
           <tbody>
             <?php $no = 1; ?>
-            @if ($getSKPD->isEmpty())
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            @else
             @foreach ($getSKPD as $key)
             <tr>
               <td>{{ $no }}</td>
@@ -82,6 +78,9 @@
               <td>{{ $key->periode_awal }}</td>
               <td>{{ $key->periode_akhir }}</td>
               <td>{{ $key->jam_kerja_group }}</td>
+              @if (session('status') == 'superuser')
+              <td>{{ $key->actor }}</td>
+              @endif
               <td><a class="btn btn-xs btn-warning" href="{{ url('jadwal-kerja/ubah').'/'.$key->id }}"><i class="fa fa-edit"></i> Ubah</a>@if ($key->flag_status == 1)
               @if (session('status') == 'administrator' || session('status') == 'superuser')
                 <a class="btn btn-xs btn-danger" href="" class="nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
@@ -94,7 +93,6 @@
             </tr>
             <?php $no++; ?>
             @endforeach
-            @endif
           </tbody>
         </table>
       </div>

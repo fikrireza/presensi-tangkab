@@ -83,6 +83,9 @@
               <th>No</th>
               <th>Mesin ID</th>
               <th>Catatan</th>
+              @if (session('status') == 'superuser')
+              <th>Aktor</th>
+              @endif
               <th>Status</th>
             </tr>
           </thead>
@@ -91,6 +94,9 @@
               <td></td>
               <th></th>
               <th></th>
+              @if (session('status') == 'superuser')
+              <th></th>
+              @endif
               <th></th>
             </tr>
           </tfoot>
@@ -102,6 +108,7 @@
               <td>-</td>
               <td>-</td>
               <td>-</td>
+              <td>-</td>
             </tr>
             @else
             @foreach ($getMesin as $key)
@@ -109,6 +116,9 @@
               <td>{{ $no }}</td>
               <td>{{ $key->mach_id }}</td>
               <td>{{ $key->catatan }}</td>
+              @if (session('status') == 'superuser')
+              <th>{{ $key->actor }}</th>
+              @endif
               <td>@if($key->flag_status == 1)
                 Aktif
                 @else

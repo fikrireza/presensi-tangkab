@@ -114,6 +114,7 @@
               <th style="width: 10%">No</th>
               <th>Nama</th>
               @if (session('status') == 'superuser')
+              <th>Aktor</th>
               <th>Aksi</th>
               @endif
             </tr>
@@ -124,23 +125,18 @@
               <th></th>
               @if (session('status') == 'superuser')
               <th></th>
+              <th></th>
               @endif
             </tr>
           </tfoot>
           <tbody>
             <?php $no = 1; ?>
-            @if ($golongan->isEmpty())
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            @else
             @foreach ($golongan as $key)
             <tr>
               <td>{{ $no }}</td>
               <td>{{ $key->nama }}</td>
               @if(session('status') == 'superuser')
+              <td>{{ $key->actor }}</td>
               <td>
                 @if ($key->status == 1)
                 <span data-toggle="tooltip" title="NonAktif Golongan">
@@ -153,11 +149,9 @@
                 @endif
               </td>
               @endif
-
             </tr>
             <?php $no++; ?>
             @endforeach
-            @endif
           </tbody>
         </table>
       </div>

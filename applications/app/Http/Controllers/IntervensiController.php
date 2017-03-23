@@ -122,7 +122,7 @@ class IntervensiController extends Controller
         $pegawaiid = Auth::user()->pegawai_id;
         $countsum = DB::select("select sum(jumlah_hari) as 'total' from preson_intervensis
                                         where DATE_FORMAT(tanggal_mulai,'%m-%Y') = '$datenow'
-                                        and pegawai_id = $pegawaiid and id_intervensi = 12");
+                                        and pegawai_id = $pegawaiid and id_intervensi = 13");
 
         $result = $countsum[0]->total;
         if ($result>=2) {
@@ -142,7 +142,7 @@ class IntervensiController extends Controller
         $pegawaiid = Auth::user()->pegawai_id;
         $countsum = DB::select("select sum(jumlah_hari) as 'total' from preson_intervensis
                                 where DATE_FORMAT(tanggal_mulai,'%m-%Y') = '$datenow'
-                                and pegawai_id = $pegawaiid and id_intervensi = 5 or id_intervensi = 6");
+                                and pegawai_id = $pegawaiid and (id_intervensi = 2 or id_intervensi = 3) and flag_status != 3");
 
         $result = $countsum[0]->total;
         if ($result>=2) {
@@ -813,7 +813,13 @@ class IntervensiController extends Controller
                           ->where('preson_intervensis.id', $id)
                           ->get();
 
-      $atasan = pegawai::where('nip_sapk', $get[0]->nip_atasan)->get();
+
+      if ($get[0]->nip_atasan!="") {
+        $atasan = pegawai::where('nip_sapk', $get[0]->nip_atasan)->get();
+      } else {
+        return redirect()->route('intervensi.index')->with('gagal', 'Data intervensi anda tidak memiliki data yang lengkap sehingga form izin tidak dapat dicetak.');
+      }
+
 
       $pribadi = pegawai::find($get[0]->id);
 
@@ -852,7 +858,7 @@ class IntervensiController extends Controller
           $month = "Oktober";
           break;
         case "11":
-          $month = "Novembe";
+          $month = "November";
           break;
         case "12":
           $month = "Desember";
@@ -898,7 +904,7 @@ class IntervensiController extends Controller
           $month = "Oktober";
           break;
         case "11":
-          $month = "Novembe";
+          $month = "November";
           break;
         case "12":
           $month = "Desember";
@@ -922,8 +928,6 @@ class IntervensiController extends Controller
         "tanggal_ijin" => $tanggalijin,
         "keterangan" => $get[0]->deskripsi
       ]);
-
-      // dd($data);
 
       $pdf = PDF::loadView('pdf.suratijin', $data);
       return $pdf->download('suratijin.pdf');

@@ -20,10 +20,21 @@ use PDF;
 class ApelController extends Controller
 {
 
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
-      $getApel = apel::orderBy('tanggal_apel', 'desc')->get();
+      $getApel = apel::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_apel.actor')
+                      ->select('preson_apel.*', 'preson_pegawais.nama as actor')
+                      ->orderBy('tanggal_apel', 'desc')->get();
 
       return view('pages.apel.index', compact('getApel'));
     }
@@ -91,7 +102,9 @@ class ApelController extends Controller
 
     public function mesin()
     {
-      $getMesin = mesinapel::get();
+      $getMesin = mesinapel::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_mesinapel.actor')
+                            ->select('preson_mesinapel.*', 'preson_pegawais.nama as actor')
+                            ->get();
 
       return view('pages.apel.mesin', compact('getMesin'));
     }

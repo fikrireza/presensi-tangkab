@@ -56,6 +56,9 @@
               <th>Jam Pulang Akhir</th>
               <th>Toleransi Terlambat (min)</th>
               <th>Toleransi Pulcep (min)</th>
+              @if (session('status') == 'superuser')
+              <th>Aktor</th>
+              @endif
               <th>Aksi</th>
             </tr>
           </thead>
@@ -72,25 +75,11 @@
               <td></td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
           </tfoot>
           <tbody>
             <?php $no = 1; ?>
-            @if ($getJamKerja->isEmpty())
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            @else
             @foreach ($getJamKerja as $key)
             <tr>
               <td>{{ $no }}</td>
@@ -103,11 +92,13 @@
               <td>{{ $key->jam_pulang_akhir }}</td>
               <td>{{ $key->toleransi_terlambat }}</td>
               <td>{{ $key->toleransi_pulcep }}</td>
-              <td><a href="{{ url('jam-kerja/ubah').'/'. $key->id }}"><i class="fa fa-edit"></i> Ubah</a></td>
+              @if (session('status') == 'superuser')
+              <td>{{ $key->actor }}</td>
+              @endif
+              <td><a href="{{ url('jam-kerja/ubah').'/'. $key->id }}" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Ubah</a></td>
             </tr>
             <?php $no++; ?>
             @endforeach
-            @endif
           </tbody>
         </table>
       </div>
