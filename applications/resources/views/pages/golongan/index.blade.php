@@ -140,11 +140,11 @@
               <td>
                 @if ($key->status == 1)
                 <span data-toggle="tooltip" title="NonAktif Golongan">
-                  <a href="" class="btn btn-danger btn-flat btn-xs nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
+                  <a href="" class="btn btn-danger btn-xs nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
                 </span>
                 @else
                 <span data-toggle="tooltip" title="Aktif Golongan">
-                  <a href="" class="btn btn-primary btn-flat btn-xs aktif" data-toggle="modal" data-target="#myModalAktif" data-value="{{ $key->id }}">Aktifkan</a>
+                  <a href="" class="btn btn-primary btn-xs aktif" data-toggle="modal" data-target="#myModalAktif" data-value="{{ $key->id }}">Aktifkan</a>
                 </span>
                 @endif
               </td>

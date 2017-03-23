@@ -181,7 +181,7 @@
                 <td>{{ $key->tanggal_mulai }}</td>
                 <td>{{ $key->tanggal_akhir }}</td>
                 <td>{{ $key->deskripsi }}</td>
-                <td><a href="" data-value="{{ $key->id }}" class="edit" data-toggle="modal" data-target="#modaledit"><i class="fa fa-edit"></i> Ubah</a></td>
+                <td><a href="" data-value="{{ $key->id }}" class="btn btn-warning btn-xs edit" data-toggle="modal" data-target="#modaledit"><i class="fa fa-edit"></i> Ubah</a></td>
               </tr>
               <?php $no++; ?>
               @endforeach
