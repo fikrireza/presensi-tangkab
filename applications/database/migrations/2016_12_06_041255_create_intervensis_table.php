@@ -23,7 +23,7 @@ class CreateIntervensisTable extends Migration
           $table->date('tanggal_akhir')->nullable();
           $table->text('deskripsi');
           $table->string('berkas', 150)->nullable();
-          // 0 = Belum di approve; 1 = Sudah di Approve; 2 = Tidak di Approve;
+          // 0 = Belum di approve; 1 = Sudah di Approve; 2 = Tidak di Approve; 3 dibatalkan.
           $table->integer('flag_status')->unsigned();
           $table->integer('actor');
           $table->timestamps();
