@@ -157,6 +157,9 @@
               <th>No</th>
               <th>Nama</th>
               <th>Singkatan</th>
+              @if(session('status') == 'superuser')
+              <th>Aktor</th>
+              @endif
               <th>Action</th>
             </tr>
           </thead>
@@ -165,24 +168,22 @@
               <td></td>
               <th></th>
               <th></th>
+              @if(session('status') == 'superuser')
+              <th></th>
+              @endif
               <td></td>
             </tr>
           </tfoot>
           <tbody>
             <?php $no = 1; ?>
-            @if ($skpd->isEmpty())
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            @else
             @foreach ($skpd as $key)
             <tr>
               <td>{{ $no }}</td>
               <td>{{ $key->nama }}</td>
               <td>@if($key->singkatan == null) - @else {{ $key->singkatan }} @endif</td>
+              @if(session('status') == 'superuser')
+              <td>{{ $key->actor }}</td>
+              @endif
               <td>
               @if ($key->status == 1)
                 <a href="" data-value="{{ $key->id }}" class="btn btn-xs btn-warning editSKPD" data-toggle="modal" data-target="#modaleditSKPD"><i class="fa fa-edit"></i> Ubah</a>
@@ -198,7 +199,6 @@
             </tr>
             <?php $no++; ?>
             @endforeach
-            @endif
           </tbody>
         </table>
       </div>

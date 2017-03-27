@@ -68,7 +68,7 @@ class IntervensiMassalController extends Controller
 
     public function createStore(Request $request)
     {
-      // dd($request);
+      dd($request);
        $message = [
         'jenis_intervensi.required' => 'Wajib di isi',
         'tanggal_mulai.required' => 'Wajib di isi',

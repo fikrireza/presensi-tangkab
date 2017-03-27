@@ -222,7 +222,12 @@
     <div class="box box-primary box-solid">
       <div class="box-header">
         <h3 class="box-title">Kelola Intervensi</h3>
-        <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahIntervensi">Tambah Intervensi Pegawai</a>
+
+        {{-- button dibawah untuk mengintervensikan pegawai lain --}}
+        {{-- <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahIntervensi">Tambah Intervensi Pegawai</a> --}}
+        <a href="{{route('intervensi.index')}}" class="btn bg-blue pull-right">Kembali</a>
+
+
       </div>
       <div class="box-body table-responsive">
         @if(session('status') == 'admin')

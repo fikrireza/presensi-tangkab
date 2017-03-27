@@ -114,6 +114,7 @@
               <th style="width: 10%">No</th>
               <th>Nama</th>
               @if (session('status') == 'superuser')
+              <th>Aktor</th>
               <th>Aksi</th>
               @endif
             </tr>
@@ -124,40 +125,33 @@
               <th></th>
               @if (session('status') == 'superuser')
               <th></th>
+              <th></th>
               @endif
             </tr>
           </tfoot>
           <tbody>
             <?php $no = 1; ?>
-            @if ($golongan->isEmpty())
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            @else
             @foreach ($golongan as $key)
             <tr>
               <td>{{ $no }}</td>
               <td>{{ $key->nama }}</td>
               @if(session('status') == 'superuser')
+              <td>{{ $key->actor }}</td>
               <td>
                 @if ($key->status == 1)
                 <span data-toggle="tooltip" title="NonAktif Golongan">
-                  <a href="" class="btn btn-danger btn-flat btn-xs nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
+                  <a href="" class="btn btn-danger btn-xs nonaktif" data-toggle="modal" data-target="#myModalNonAktif" data-value="{{ $key->id }}">NonAktif</a>
                 </span>
                 @else
                 <span data-toggle="tooltip" title="Aktif Golongan">
-                  <a href="" class="btn btn-primary btn-flat btn-xs aktif" data-toggle="modal" data-target="#myModalAktif" data-value="{{ $key->id }}">Aktifkan</a>
+                  <a href="" class="btn btn-primary btn-xs aktif" data-toggle="modal" data-target="#myModalAktif" data-value="{{ $key->id }}">Aktifkan</a>
                 </span>
                 @endif
               </td>
               @endif
-
             </tr>
             <?php $no++; ?>
             @endforeach
-            @endif
           </tbody>
         </table>
       </div>

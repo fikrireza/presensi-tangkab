@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\HariLibur;
+use App\Models\Pegawai;
 
 use Validator;
 use Auth;
@@ -15,7 +16,9 @@ class HariLiburController extends Controller
 
     public function index()
     {
-      $harilibur = harilibur::get();
+      $harilibur = harilibur::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_harilibur.actor')
+                              ->select('preson_harilibur.*', 'preson_pegawais.nama as actor')
+                              ->get();
 
       return view('pages.harilibur.index', compact('harilibur'));
     }
