@@ -15,6 +15,7 @@
           <p>Pilih Periode</p>
         </div>
       </div>
+
       <form action="{{ route('laporanAdmin.store')}}" method="POST">
       {{ csrf_field() }}
       <div class="box-body">
@@ -30,7 +31,7 @@
 
       </div>
       <div class="box-footer">
-        <button class="btn btn-block bg-purple">Pilih</button>
+        <input type="submit" class="btn btn-block bg-purple" value="Pilih">
 
           {{-- <a href="{{ route('laporan.cetakAdmin', ['download'=>'pdf', 'start_date'=>$start_dateR, 'end_date'=>$end_dateR]) }}" class="btn btn-block bg-green">Download PDF</a> --}}
 
@@ -79,9 +80,11 @@
             @else
               @php
               $number = 1;
+              $arrpengecualian = array();
+              $flagpengecualiantpp = 0;
               @endphp
               @foreach ($dataabsensi as $key)
-                <tr>
+                <tr id="row{{$number}}">
                   <td align="center">{{$number}}</td>
                   @php
                     $flagpotongantpp = 0;
@@ -90,6 +93,12 @@
                     $nettotpp = 0;
                   @endphp
                   @foreach ($key as $k)
+                      @if ($tracker==0 && in_array($k, $pengecualian))
+                        @php
+                          $arrpengecualian[] = "row".$number;
+                          $flagpengecualiantpp = 1;
+                        @endphp
+                      @endif
                       <td align="center">{{$k}}</td>
                       @if (in_array($tracker, $potongantppindex))
                         @php
@@ -105,7 +114,14 @@
                         $tracker++;
                       @endphp
                   @endforeach
-                  <td align="center">{{$flagpotongantpp}}</td>
+                  <td align="center">
+                    @if ($flagpengecualiantpp == 1)
+                      @php
+                        $flagpotongantpp = 0;
+                      @endphp
+                    @endif
+                    {{$flagpotongantpp}}
+                  </td>
                   <td align="center">
                     @php
                       $totaltppdibayar = $nettotpp - $flagpotongantpp;
@@ -128,6 +144,10 @@
 
 @section('script')
 <script>
+  @foreach ($arrpengecualian as $key)
+    $("#{{$key}}").attr('style', 'background:#c4ffd1;');
+  @endforeach
+
 $('#start_date').datepicker({
   autoclose: true,
   format: 'dd/mm/yyyy',

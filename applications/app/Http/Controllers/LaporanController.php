@@ -450,6 +450,13 @@ class LaporanController extends Controller
 
       $gethariapel = DB::select("select tanggal_apel from preson_apel where tanggal_apel between '$start_date' and '$end_date'");
 
+      $getpengecualiantpp = DB::select("select nip_sapk from preson_pengecualian_tpp");
+
+      $arrpengecualian = array();
+      foreach ($getpengecualiantpp as $key) {
+        $arrpengecualian[] = $key->nip_sapk;
+      }
+
       // get hari libur
       $harilibur = DB::select("select libur from preson_harilibur
                                 where libur between '$start_date' and '$end_date'");
@@ -713,7 +720,9 @@ class LaporanController extends Controller
         $dataabsensi[] = $arrayrow;
       }
 
-      return view('pages.laporan.laporanAdmin')->with('dataabsensi', $dataabsensi);
+      return view('pages.laporan.laporanAdmin')
+        ->with('dataabsensi', $dataabsensi)
+        ->with('pengecualian', $arrpengecualian);
 
       // END OF DFA LOGIC BARU
 
