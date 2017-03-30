@@ -22,19 +22,27 @@
 
         <div class="row">
           <div class="col-xs-6">
-            <input type="text" class="form-control" name="start_date" id="start_date" value="" placeholder="dd/mm/yyyy" required="">
+            <input type="text" class="form-control" name="start_date" id="start_date" placeholder="dd/mm/yyyy" required=""
+              @if (isset($dataabsensi))
+                value="{{$start_dateR}}"
+              @endif
+            >
           </div>
           <div class="col-xs-6">
-            <input type="text" class="form-control" name="end_date" id="end_date" value="" placeholder="dd/mm/yyyy" required="">
+            <input type="text" class="form-control" name="end_date" id="end_date" placeholder="dd/mm/yyyy" required=""
+              @if (isset($dataabsensi))
+                value="{{$end_dateR}}"
+              @endif
+            >
           </div>
         </div>
 
       </div>
       <div class="box-footer">
         <input type="submit" class="btn btn-block bg-purple" value="Pilih">
-
-          {{-- <a href="{{ route('laporan.cetakAdmin', ['download'=>'pdf', 'start_date'=>$start_dateR, 'end_date'=>$end_dateR]) }}" class="btn btn-block bg-green">Download PDF</a> --}}
-
+          @if (isset($dataabsensi))
+            <a href="{{ route('laporan.cetakAdmin', ['download'=>'pdf', 'start_date'=>$start_dateR, 'end_date'=>$end_dateR]) }}" class="btn btn-block bg-green">Download PDF</a>
+          @endif
       </div>
       </form>
     </div>
@@ -79,9 +87,9 @@
               </tr>
             @else
               @php
-              $number = 1;
-              $arrpengecualian = array();
-              $flagpengecualiantpp = 0;
+                $number = 1;
+                $arrpengecualian = array();
+                $flagpengecualiantpp = 0;
               @endphp
               @foreach ($dataabsensi as $key)
                 <tr id="row{{$number}}">
@@ -144,9 +152,15 @@
 
 @section('script')
 <script>
-  @foreach ($arrpengecualian as $key)
-    $("#{{$key}}").attr('style', 'background:#c4ffd1;');
-  @endforeach
+  @php
+    if (isset($arrpengecualian)) {
+      @endphp
+        @foreach ($arrpengecualian as $key)
+          $("#{{$key}}").attr('style', 'background:#c4ffd1;');
+        @endforeach
+      @php
+    }
+  @endphp
 
 $('#start_date').datepicker({
   autoclose: true,
