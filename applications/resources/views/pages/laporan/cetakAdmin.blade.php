@@ -42,7 +42,7 @@
                 $flagpengecualiantpp = 0;
               @endphp
               @foreach ($dataabsensi as $key)
-                <tr id="row{{$number}}">
+                <tr id="row{{$number}}" style="border: 1px solid black;border-collapse: collapse;font-size: 16px;">
                   <td align="center">{{$number}}</td>
                   @php
                     $flagpotongantpp = 0;
@@ -89,6 +89,7 @@
                 </tr>
                 @php
                 $number++;
+                $flagpengecualiantpp = 0;
                 @endphp
               @endforeach
             @endif
