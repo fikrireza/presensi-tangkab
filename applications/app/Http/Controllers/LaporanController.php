@@ -777,7 +777,7 @@ class LaporanController extends Controller
         }
         if ($jumlahdianggapbolos_jamdatang!=0) {
           foreach ($intervensiperskpd as $key) {
-            if (($key->fid == $p->fid) and $key->id_intervensi==2) {
+            if (($key->fid == $p->fid) and $key->id_intervensi!=3) {
               $tanggalmulai = $key->tanggal_mulai;
               $tanggalakhir = $key->tanggal_akhir;
 
@@ -822,7 +822,7 @@ class LaporanController extends Controller
         }
         if ($jumlahdianggapbolos_jampulang!=0) {
           foreach ($intervensiperskpd as $key) {
-            if (($key->fid == $p->fid) and $key->id_intervensi==3) {
+            if (($key->fid == $p->fid) and $key->id_intervensi!=2) {
               $tanggalmulai = $key->tanggal_mulai;
               $tanggalakhir = $key->tanggal_akhir;
 
@@ -867,7 +867,7 @@ class LaporanController extends Controller
         }
         if ($jumlahdianggapbolos_jamdatangjampulang!=0) {
           foreach ($intervensiperskpd as $key) {
-            if (($key->fid == $p->fid) and ($key->id_intervensi==3 or $key->id_intervensi==2)) {
+            if (($key->fid == $p->fid)) {
               $tanggalmulai = $key->tanggal_mulai;
               $tanggalakhir = $key->tanggal_akhir;
 
@@ -1628,7 +1628,7 @@ class LaporanController extends Controller
         }
         if ($jumlahdianggapbolos_jamdatang!=0) {
           foreach ($intervensiperskpd as $key) {
-            if (($key->fid == $p->fid) and $key->id_intervensi==2) {
+            if (($key->fid == $p->fid) and $key->id_intervensi!=3) {
               $tanggalmulai = $key->tanggal_mulai;
               $tanggalakhir = $key->tanggal_akhir;
 
@@ -1673,7 +1673,7 @@ class LaporanController extends Controller
         }
         if ($jumlahdianggapbolos_jampulang!=0) {
           foreach ($intervensiperskpd as $key) {
-            if (($key->fid == $p->fid) and $key->id_intervensi==3) {
+            if (($key->fid == $p->fid) and $key->id_intervensi!=2) {
               $tanggalmulai = $key->tanggal_mulai;
               $tanggalakhir = $key->tanggal_akhir;
 
@@ -1690,7 +1690,7 @@ class LaporanController extends Controller
                       array_push($dateRange,date('Y-m-d',$iDateFrom));
                   }
               }
-              foreach ($jumlahdianggapbolos_jampulang as $gdt) {
+              foreach ($gettanggaldianggaptidakmasuk_jampulang as $gdt) {
                 if (strpos($gdt->tanggal, '/') !== false) {
                   $tglnew = explode('/', $gdt->tanggal);
                   $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
@@ -1718,7 +1718,7 @@ class LaporanController extends Controller
         }
         if ($jumlahdianggapbolos_jamdatangjampulang!=0) {
           foreach ($intervensiperskpd as $key) {
-            if (($key->fid == $p->fid) and ($key->id_intervensi==3 or $key->id_intervensi==2)) {
+            if (($key->fid == $p->fid)) {
               $tanggalmulai = $key->tanggal_mulai;
               $tanggalakhir = $key->tanggal_akhir;
 
@@ -1735,7 +1735,7 @@ class LaporanController extends Controller
                       array_push($dateRange,date('Y-m-d',$iDateFrom));
                   }
               }
-              foreach ($jumlahdianggapbolos_jamdatangjampulang as $gdt) {
+              foreach ($gettanggaldianggaptidakmasuk_jamdatangjampulang as $gdt) {
                 if (strpos($gdt->tanggal, '/') !== false) {
                   $tglnew = explode('/', $gdt->tanggal);
                   $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
