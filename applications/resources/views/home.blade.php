@@ -301,6 +301,7 @@
                 <th>Hari</th>
                 <th>Jam Datang</th>
                 <th>Jam Pulang</th>
+                <th>Keterangan</th>
               </tr>
             </thead>
             <tfoot>
@@ -359,6 +360,33 @@
                     $flaginter = 0;
                 @endphp
 
+                @foreach ($absensi as $absen)
+                  @if ($absen->tanggal == $tanggal && $flaginter == 0)
+                    @php
+                      $flag++;
+                    @endphp
+                    <td align="center">@if($absen->jam_datang != null) {{ $absen->jam_datang }} @else x @endif</td>
+                    <td align="center">@if($absen->jam_pulang != null) {{ $absen->jam_pulang }} @else x @endif</td>
+                  @endif
+
+                  @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
+                    @php
+                      $flag++;
+                    @endphp
+                    <td colspan="2" align="center">Libur</td>
+                    @break
+                  @endif
+                @endforeach
+
+                @if ($flag==0)
+                  @if ($tanggal > date("d/m/Y"))
+                    <td align="center">x</td>
+                    <td align="center">x</td>
+                  @else
+                    <td colspan="2" align="center">Alpa</td>
+                  @endif
+                @endif
+
                 @foreach ($intervensi as $interv)
                   @php
                   $mulai = explode('-', $interv->tanggal_mulai);
@@ -370,56 +398,50 @@
                   $akhir   = new DateTime($interv->tanggal_akhir);
 
                   @endphp
-                  @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
-                    @php
-                    $flag++;
-                    @endphp
-                    <td colspan="2" align="center">Libur</td>
-                    @break
-                  @else
+
                   @for($i = $mulai; $mulai <= $akhir; $i->modify('+1 day'))
                     @if ($tanggal == $i->format("d/m/Y"))
                         @php
                         $flag++;
                         $flaginter++;
                         @endphp
-                      <td colspan="2" align="center">{{ $interv->deskripsi }}</td>
+                      <td align="center"><b>{{ $interv->jenis_intervensi}}</b> | {{ $interv->deskripsi }}</td>
                     @endif
                   @endfor
-                  @endif
                 @endforeach
 
-                @foreach ($absensi as $absen)
-
-                  @foreach ($absen as $key)
-                    @if ($key->Tanggal_Log == $tanggal && $flaginter == 0)
-                      @php
-                        $flag++;
-                      @endphp
-                      <td align="center">@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else x @endif</td>
-                      <td align="center">@if($key->Jam_Pulang != null) {{ $key->Jam_Pulang }} @else x @endif</td>
-                    @endif
-                  @endforeach
-
-                  @if ($intervensi->isEmpty())
-                    @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
-                      @php
-                        $flag++;
-                      @endphp
-                      <td colspan="2" align="center">Libur</td>
-                      @break
-                    @endif
-                  @endif
-
-
-                @endforeach
-
-                @if ($flag==0)
-                  @if ($tanggal > date("d/m/Y"))
-                    <td align="center">x</td>
-                    <td align="center">x</td>
+                @if ($flaginter==0 && $flag==0)
+                <td align="center"><span style="color:red;"><b>Alpa</b></span></td>
+                @elseif($flaginter==0)
+                  @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
+                    @php
+                      $flag++;
+                    @endphp
+                    <td colspan="2" align="center">Libur</td>
                   @else
-                    <td colspan="2" align="center">Alpa</td>
+                    @foreach ($absensi as $absen)
+                      @if ($absen->tanggal == $tanggal)
+                        @php
+                          $flag++;
+                        @endphp
+
+                        @if($absen->jam_datang >= '09:01:00')
+                          <td align="center"><b>Alpa</b></td>
+                        @elseif($absen->jam_pulang == null)
+                          <td align="center"><b>Alpa</b></td>
+                        @elseif (($absen->jam_datang >= '08:01:00') && ($absen->jam_pulang <= '15:59:00'))
+                          <td align="center"><b>Terlambat dan Pulang Cepat</td>
+                        @elseif (($absen->jam_datang >= '08:01:00') && ($absen->jam_datang <= '09:00:00') && ($absen->jam_pulang == null))
+                          <td align="center"><b>Terlambat dan Pulang Cepat</td>
+                        @elseif($absen->jam_datang >= '08:01:00')
+                          <td align="center"><b>Terlambat</b></td>
+                        @elseif($absen->jam_pulang <= '15:01:00')
+                          <td align="center"><b>Pulang Cepat</b></td>
+                        @else
+                          <td align="center"></td>
+                        @endif
+                      @endif
+                    @endforeach
                   @endif
                 @endif
               </tr>
