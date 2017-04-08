@@ -969,9 +969,11 @@ class LaporanController extends Controller
     public function cetakAdmin(Request $request)
     {
       // get request
+      // get request
       $skpd_id = Auth::user()->skpd_id;
       $start_dateR = $request->start_date;
       $start_date = explode('/', $start_dateR);
+      $bulanhitung = $start_date[1]."/".$start_date[2];
       $start_date = $start_date[2].'-'.$start_date[1].'-'.$start_date[0];
       $end_dateR = $request->end_date;
       $end_date = explode('/', $end_dateR);
@@ -1029,7 +1031,7 @@ class LaporanController extends Controller
       $gettanggaldianggaptidakmasuk_jamdatang = DB::select("select fid, tanggal from preson_log
                                                             where (jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
                                                             and !(jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
-                                                            and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
+                                                            and (tanggal like '%$bulanhitung')
                                                             and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
                                                             and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
                                                             ");
@@ -1037,7 +1039,7 @@ class LaporanController extends Controller
       $gettanggaldianggaptidakmasuk_jampulang = DB::select("select fid, tanggal from preson_log
                                                             where !(jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
                                                             and (jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
-                                                            and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
+                                                            and (tanggal like '%$bulanhitung')
                                                             and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
                                                             and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
                                                             ");
@@ -1045,7 +1047,7 @@ class LaporanController extends Controller
       $gettanggaldianggaptidakmasuk_jamdatangjampulang = DB::select("select fid, tanggal from preson_log
                                                             where (jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
                                                             and (jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
-                                                            and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
+                                                            and (tanggal like '%$bulanhitung')
                                                             and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
                                                             and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
                                                             ");
@@ -1053,31 +1055,28 @@ class LaporanController extends Controller
 
       $tanggalhadirperskpd = DB::select("select a.fid, tanggal from preson_log a join preson_pegawais b
                                           on a.fid = b.fid
-                                          where tanggal between '$start_dateR' and '$end_dateR'
+                                          where tanggal like '%$bulanhitung'
                                           and skpd_id = $skpd_id");
 
-      $intervensiperskpd = DB::select("select fid, tanggal_mulai, tanggal_akhir, id_intervensi
-                                        from preson_intervensis a join preson_pegawais b
-                                        on a.pegawai_id = b.id where skpd_id = $skpd_id and flag_status = 1");
 
       $getdatetelat = DB::select("select fid, tanggal from preson_log
-                                  where ((jam_datang > '08:01:00' and jam_datang < '09:00:00') or jam_datang is null or jam_datang > '09:00:00')
+                                  where ((jam_datang > '08:01:00' and jam_datang < '09:00:00'))
                                    and (jam_pulang > '16:00:00' and jam_pulang < '19:00:00')
-                                   and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
+                                   and (tanggal like '%$bulanhitung')
                                    and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date')
                                    and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
                                    )");
 
       $getdatepulcep = DB::select("select fid, tanggal from preson_log
-                                   where ((jam_pulang > '13:00:00' and jam_pulang < '16:00:00') or jam_pulang is null or jam_pulang < '13:00:00')
+                                   where ((jam_pulang > '13:00:00' and jam_pulang < '16:00:00'))
                                     and (jam_datang < '08:00:00' and jam_datang > '07:00:00')
-                                    and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
+                                    and (tanggal like '%$bulanhitung')
                                     and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))");
 
       $getdatedtpc = DB::select("select fid, tanggal from preson_log
-                                  where ((jam_datang > '08:01:00' and jam_datang < '09:00:00') or jam_datang is null or jam_datang > '09:00:00')
-                                    and ((jam_pulang > '15:00:00' and jam_pulang < '16:00:00') or jam_pulang is null or jam_pulang < '13:00:00')
-                                    and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
+                                  where ((jam_datang > '08:01:00' and jam_datang < '09:00:00'))
+                                    and ((jam_pulang > '15:00:00' and jam_pulang < '16:00:00'))
+                                    and (tanggal like '%$bulanhitung')
                                     and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
                                     and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
                                     ");
@@ -1093,6 +1092,10 @@ class LaporanController extends Controller
 
       $getpengecualiantpp = DB::select("select nip_sapk from preson_pengecualian_tpp");
 
+      $intervensiperskpd = DB::select("select fid, tanggal_mulai, tanggal_akhir, id_intervensi
+                                        from preson_intervensis a join preson_pegawais b
+                                        on a.pegawai_id = b.id where skpd_id = $skpd_id and flag_status = 1");
+
       $arrpengecualian = array();
       foreach ($getpengecualiantpp as $key) {
         $arrpengecualian[] = $key->nip_sapk;
@@ -1102,6 +1105,10 @@ class LaporanController extends Controller
       // masukin data ke array
       $dataabsensi = array();
       foreach ($pegawainya as $p) {
+        // $intervensiperpegawai = array();
+        // foreach ($intervensiperskpd as $key) {
+        //   return "baa";
+        // }
 
         $arrayrow = array();
         $arrayrow[] = $p->nip_sapk;
