@@ -43,7 +43,7 @@
               @endphp
               @foreach ($dataabsensi as $key)
                 <tr id="row{{$number}}" style="border: 1px solid black;border-collapse: collapse;font-size: 16px;">
-                  <td align="center">{{$number}}</td>
+                  <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$number}}</td>
                   @php
                     $flagpotongantpp = 0;
                     $tracker = 0;
@@ -57,7 +57,7 @@
                           $flagpengecualiantpp = 1;
                         @endphp
                       @endif
-                      <td align="center">{{$k}}</td>
+                      <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$k}}</td>
                       @if (in_array($tracker, $potongantppindex))
                         @php
                           $flagpotongantpp = $flagpotongantpp + $k;
@@ -72,7 +72,7 @@
                         $tracker++;
                       @endphp
                   @endforeach
-                  <td align="center">
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">
                     @if ($flagpengecualiantpp == 1)
                       @php
                         $flagpotongantpp = 0;
@@ -80,7 +80,7 @@
                     @endif
                     {{$flagpotongantpp}}
                   </td>
-                  <td align="center">
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">
                     @php
                       $totaltppdibayar = $nettotpp - $flagpotongantpp;
                     @endphp

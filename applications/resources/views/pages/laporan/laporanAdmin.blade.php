@@ -6,7 +6,7 @@
 @endsection
 
 @section('content')
-@if (Auth::user()->skpd_id==15)
+@if (Auth::user()->skpd_id==15 || Auth::user()->skpd_id==1 || Auth::user()->skpd_id==7)
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
       <div class="box box-primary box-solid">
@@ -107,7 +107,16 @@
                             $flagpengecualiantpp = 1;
                           @endphp
                         @endif
-                        <td align="center">{{$k}}</td>
+
+                        @if ($tracker==0)
+                          <td align="center">
+                            <a href="{{ route('laporan.cetakPegawai', ['download'=>'pdf', 'start_date'=>$start_dateR, 'end_date'=>$end_dateR, 'nip_sapk'=>$k]) }}">{{$k}}</a>
+                          </td>
+                        @else
+                          <td align="center">{{$k}}</td>
+                        @endif
+
+
                         @if (in_array($tracker, $potongantppindex))
                           @php
                             $flagpotongantpp = $flagpotongantpp + $k;

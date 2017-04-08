@@ -362,162 +362,11 @@ class LaporanController extends Controller
       $skpd_id = Auth::user()->skpd_id;
       $start_dateR = $request->start_date;
       $start_date = explode('/', $start_dateR);
+      $bulanhitung = $start_date[1]."/".$start_date[2];
       $start_date = $start_date[2].'-'.$start_date[1].'-'.$start_date[0];
       $end_dateR = $request->end_date;
       $end_date = explode('/', $end_dateR);
       $end_date = $end_date[2].'-'.$end_date[1].'-'.$end_date[0];
-
-      // Get Data Pegawai berdasarkan SKPD
-      $pegawainya = pegawai::join('preson_strukturals', 'preson_strukturals.id', '=', 'preson_pegawais.struktural_id')
-                            ->select('preson_pegawais.id as pegawai_id', 'nip_sapk', 'fid', 'tpp_dibayarkan', 'preson_pegawais.nama')->where('skpd_id', $skpd_id)
-                            ->orderby('preson_strukturals.nama', 'asc')->get();
-
-
-      // DFA LOGIC BARU
-      $datangterlambat = DB::select("select p.fid, telat from
-                                      (
-                                      	select fid, count(*) as telat from preson_log
-                                        where (jam_datang > '08:00:00' and jam_datang < '09:00:00')
-	                                       and (jam_pulang > '16:00:00' and jam_pulang < '19:00:00')
-                                         and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                         and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                                         and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
-                                      	group by fid
-                                      ) s join preson_pegawais p
-                                      on p.fid = s.fid where skpd_id = $skpd_id");
-
-      $dianggaptidakmasuk_jamdatang = DB::select("select p.fid, jumlahdianggapbolos from
-                                                  (
-                                                  select fid, count(*) as jumlahdianggapbolos from preson_log
-                                                  where (jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
-                                                  and !(jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
-                                                  and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                                  and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                                                  and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
-                                                  group by fid
-                                                  ) s join preson_pegawais p
-                                                  on p.fid = s.fid where skpd_id = $skpd_id");
-
-      $gettanggaldianggaptidakmasuk_jamdatang = DB::select("select fid, tanggal from preson_log
-                                                            where (jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
-                                                            and !(jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
-                                                            and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                                            and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                                                            and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
-                                                            ");
-
-      $dianggaptidakmasuk_jampulang = DB::select("select p.fid, jumlahdianggapbolos from
-                                                  (
-                                                  select fid, count(*) as jumlahdianggapbolos from preson_log
-                                                  where !(jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
-                                                  and (jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
-                                                  and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                                  and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                                                  and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
-                                                  group by fid
-                                                  ) s join preson_pegawais p
-                                                  on p.fid = s.fid where skpd_id = $skpd_id");
-
-      $gettanggaldianggaptidakmasuk_jampulang = DB::select("select fid, tanggal from preson_log
-                                                            where !(jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
-                                                            and (jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
-                                                            and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                                            and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                                                            and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
-                                                            ");
-
-      $dianggaptidakmasuk_jamdatangjampulang = DB::select("select p.fid, jumlahdianggapbolos from
-                                                  (
-                                                  select fid, count(*) as jumlahdianggapbolos from preson_log
-                                                  where (jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
-                                                  and (jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
-                                                  and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                                  and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                                                  and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
-                                                  group by fid
-                                                  ) s join preson_pegawais p
-                                                  on p.fid = s.fid where skpd_id = $skpd_id");
-
-      $gettanggaldianggaptidakmasuk_jamdatangjampulang = DB::select("select fid, tanggal from preson_log
-                                                            where (jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
-                                                            and (jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
-                                                            and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                                            and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                                                            and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
-                                                            ");
-
-      $pulangcepat = DB::select("select p.fid, pulcep from
-                                  (
-                                  	select fid, count(*) as pulcep from preson_log
-                                    where (jam_pulang > '13:00:00' and jam_pulang < '16:00:00')
-	                                   and (jam_datang < '08:00:00' and jam_datang > '07:00:00')
-                                     and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                     and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                                  	group by fid
-                                  ) s join preson_pegawais p
-                                  on p.fid = s.fid where skpd_id = $skpd_id");
-
-      $dtpc = DB::select("select p.fid, dtpc from
-                          (
-                          	select fid, count(*) as dtpc from preson_log
-                          	where (jam_datang > '08:01:00' and jam_datang < '09:00:00')
-                              and (jam_pulang > '13:00:00' and jam_pulang < '16:00:00')
-                              and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                              and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                              and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
-                          	group by fid
-                          ) s join preson_pegawais p
-                          on p.fid = s.fid where skpd_id = $skpd_id");
-
-
-
-      $tanggalhadirperskpd = DB::select("select a.fid, tanggal from preson_log a join preson_pegawais b
-                                          on a.fid = b.fid
-                                          where tanggal between '$start_dateR' and '$end_dateR'
-                                          and skpd_id = $skpd_id");
-
-      $intervensiperskpd = DB::select("select fid, tanggal_mulai, tanggal_akhir, id_intervensi
-                                        from preson_intervensis a join preson_pegawais b
-                                        on a.pegawai_id = b.id where skpd_id = $skpd_id and flag_status = 1");
-
-      $getdatetelat = DB::select("select fid, tanggal from preson_log
-                                  where ((jam_datang > '08:01:00' and jam_datang < '09:00:00') or jam_datang is null or jam_datang > '09:00:00')
-                                   and (jam_pulang > '16:00:00' and jam_pulang < '19:00:00')
-                                   and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                   and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date')
-                                   and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
-                                   )");
-
-      $getdatepulcep = DB::select("select fid, tanggal from preson_log
-                                   where ((jam_pulang > '13:00:00' and jam_pulang < '16:00:00') or jam_pulang is null or jam_pulang < '13:00:00')
-                                    and (jam_datang < '08:00:00' and jam_datang > '07:00:00')
-                                    and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                    and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))");
-
-      $getdatedtpc = DB::select("select fid, tanggal from preson_log
-                                  where ((jam_datang > '08:01:00' and jam_datang < '09:00:00') or jam_datang is null or jam_datang > '09:00:00')
-                                    and ((jam_pulang > '15:00:00' and jam_pulang < '16:00:00') or jam_pulang is null or jam_pulang < '13:00:00')
-                                    and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                    and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                                    and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
-                                    ");
-
-      $tanggalhadirapel = DB::select("select fid, count(*) as jmlapel from (
-                                      select * from preson_log
-                                      where tanggal in
-                                      (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date')
-                                      and (jam_datang < '08:31:00' and jam_datang > '06:00:00')
-                                      ) a
-                                      group by fid");
-
-      $gethariapel = DB::select("select tanggal_apel from preson_apel where tanggal_apel between '$start_date' and '$end_date'");
-
-      $getpengecualiantpp = DB::select("select nip_sapk from preson_pengecualian_tpp");
-
-      $arrpengecualian = array();
-      foreach ($getpengecualiantpp as $key) {
-        $arrpengecualian[] = $key->nip_sapk;
-      }
 
       // get hari libur
       $harilibur = DB::select("select libur from preson_harilibur
@@ -544,66 +393,163 @@ class LaporanController extends Controller
               array_push($dateRange,date('Y-m-d',$iDateFrom));
           }
       }
+
       $weekdayDate = array();
+      $fridayDate = null;
       foreach ($dateRange as $key) {
         if ((date('N', strtotime($key)) < 6) && (!in_array($key, $arrharilibur))) {
           $weekdayDate[] = $key;
         }
+
+        if ((date('N', strtotime($key)) == 5) && (!in_array($key, $arrharilibur))) {
+          if ($fridayDate==null) {
+            $fridayDate .= $key;
+          } else {
+            $fridayDate .= ", ".$key;
+          }
+        }
       }
+
+      // Get Data Pegawai berdasarkan SKPD
+      $pegawainya = pegawai::join('preson_strukturals', 'preson_strukturals.id', '=', 'preson_pegawais.struktural_id')
+                            ->select('preson_pegawais.id as pegawai_id', 'nip_sapk', 'fid', 'tpp_dibayarkan', 'preson_pegawais.nama')->where('skpd_id', $skpd_id)
+                            ->orderby('preson_strukturals.nama', 'asc')->get();
+
+
+      // DFA LOGIC BARU
+      $gettanggaldianggaptidakmasuk_jamdatang = DB::select("select fid, tanggal from preson_log
+                                                            where (jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
+                                                            and !(jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
+                                                            and (tanggal like '%$bulanhitung')
+                                                            and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
+                                                            and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
+                                                            ");
+
+      $gettanggaldianggaptidakmasuk_jampulang = DB::select("select fid, tanggal from preson_log
+                                                            where !(jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
+                                                            and (jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
+                                                            and (tanggal like '%$bulanhitung')
+                                                            and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
+                                                            and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
+                                                            ");
+
+      $gettanggaldianggaptidakmasuk_jamdatangjampulang = DB::select("select fid, tanggal from preson_log
+                                                            where (jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
+                                                            and (jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
+                                                            and (tanggal like '%$bulanhitung')
+                                                            and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
+                                                            and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
+                                                            ");
+
+
+      $tanggalhadirperskpd = DB::select("select a.fid, tanggal from preson_log a join preson_pegawais b
+                                          on a.fid = b.fid
+                                          where tanggal like '%$bulanhitung'
+                                          and skpd_id = $skpd_id");
+
+
+      $getdatetelat = DB::select("select fid, tanggal from preson_log
+                                  where ((jam_datang > '08:01:00' and jam_datang < '09:00:00'))
+                                   and (jam_pulang > '16:00:00' and jam_pulang < '19:00:00')
+                                   and (tanggal like '%$bulanhitung')
+                                   and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date')
+                                   and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
+                                   )");
+
+      $getdatepulcep = DB::select("select fid, tanggal from preson_log
+                                   where ((jam_pulang > '13:00:00' and jam_pulang < '16:00:00'))
+                                    and (jam_datang < '08:00:00' and jam_datang > '07:00:00')
+                                    and (tanggal like '%$bulanhitung')
+                                    and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))");
+
+      $getdatedtpc = DB::select("select fid, tanggal from preson_log
+                                  where ((jam_datang > '08:01:00' and jam_datang < '09:00:00'))
+                                    and ((jam_pulang > '15:00:00' and jam_pulang < '16:00:00'))
+                                    and (tanggal like '%$bulanhitung')
+                                    and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
+                                    and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
+                                    ");
+
+      $getdatehariapel = DB::select("select * from preson_log
+                                      where tanggal in
+                                      (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel
+                                      where tanggal_apel between '$start_date' and '$end_date')
+                                      and (jam_datang < '08:31:00' and jam_datang > '06:00:00')
+                                      ");
+
+      $gethariapel = DB::select("select tanggal_apel from preson_apel where tanggal_apel between '$start_date' and '$end_date'");
+
+      $getpengecualiantpp = DB::select("select nip_sapk from preson_pengecualian_tpp");
+
+      $intervensiperskpd = DB::select("select fid, tanggal_mulai, tanggal_akhir, id_intervensi
+                                        from preson_intervensis a join preson_pegawais b
+                                        on a.pegawai_id = b.id where skpd_id = $skpd_id and flag_status = 1");
+
+      $arrpengecualian = array();
+      foreach ($getpengecualiantpp as $key) {
+        $arrpengecualian[] = $key->nip_sapk;
+      }
+
 
       // masukin data ke array
       $dataabsensi = array();
       foreach ($pegawainya as $p) {
+        // $intervensiperpegawai = array();
+        // foreach ($intervensiperskpd as $key) {
+        //   return "baa";
+        // }
 
         $arrayrow = array();
         $arrayrow[] = $p->nip_sapk;
         $arrayrow[] = $p->nama;
         $arrayrow[] = $p->tpp_dibayarkan;
 
-
-        // itung jumlah telat (berdasarkan range tanggal dan bukan hari libur)
+        $arrfid = array_count_values(array_column($getdatetelat, 'fid'));
+        $statarr = array_key_exists($p->fid, $arrfid);
         $jmltelat = 0;
-        foreach ($datangterlambat as $dt) {
-          if ($p->fid == $dt->fid) {
-            $jmltelat = $dt->telat;
-            break;
-          }
+        if ($statarr) {
+           $jmltelat = $arrfid[$p->fid];
         }
         if ($jmltelat!=0) {
-          foreach ($intervensiperskpd as $key) {
-            if (($key->fid == $p->fid) and $key->id_intervensi==2) {
-              $tanggalmulai = $key->tanggal_mulai;
-              $tanggalakhir = $key->tanggal_akhir;
+          foreach ($getdatetelat as $gdt) {
+            if ($p->fid==$gdt->fid) {
+              foreach ($intervensiperskpd as $key) {
+                if (($key->fid == $p->fid) and $key->id_intervensi!=3) {
+                  $tanggalmulai = $key->tanggal_mulai;
+                  $tanggalakhir = $key->tanggal_akhir;
 
-              $dateRange=array();
-              $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
-              $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
+                  $dateRange=array();
+                  $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
+                  $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
 
-              if ($iDateTo>=$iDateFrom)
-              {
-                  array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
-                  while ($iDateFrom<$iDateTo)
+                  if ($iDateTo>=$iDateFrom)
                   {
-                      $iDateFrom+=86400; // add 24 hours
-                      array_push($dateRange,date('Y-m-d',$iDateFrom));
+                      array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
+                      while ($iDateFrom<$iDateTo)
+                      {
+                          $iDateFrom+=86400; // add 24 hours
+                          array_push($dateRange,date('Y-m-d',$iDateFrom));
+                      }
                   }
-              }
-              foreach ($getdatetelat as $gdt) {
-                foreach ($dateRange as $dr) {
-                  if ($p->fid==$gdt->fid) {
-                    if (strpos($gdt->tanggal, '/') !== false) {
-                      $tglnew = explode('/', $gdt->tanggal);
-                      $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
-                    } else {
-                      $tglformat = $gdt->tanggal;
-                    }
+
+                  if (strpos($gdt->tanggal, '/') !== false) {
+                    $tglnew = explode('/', $gdt->tanggal);
+                    $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+                  } else {
+                    $tglformat = $gdt->tanggal;
+                  }
+
+
+                  foreach ($dateRange as $dr) {
                     if ($tglformat==$dr) {
                       $jmltelat--;
+                      break 2;
                     }
                   }
                 }
               }
             }
+            if ($jmltelat==0) break;
           }
         }
         $arrayrow[] = $jmltelat;
@@ -612,99 +558,105 @@ class LaporanController extends Controller
 
 
         // itung jumlah pulcep
+        $arrfid = array_count_values(array_column($getdatepulcep, 'fid'));
+        $statarr = array_key_exists($p->fid, $arrfid);
         $jmlpulcep = 0;
-        foreach ($pulangcepat as $pc) {
-          if ($p->fid == $pc->fid) {
-            $jmlpulcep = $pc->pulcep;
-            break;
-          }
+        if ($statarr) {
+           $jmlpulcep = $arrfid[$p->fid];
         }
         if ($jmlpulcep!=0) {
-          foreach ($intervensiperskpd as $key) {
-            if (($key->fid == $p->fid) and $key->id_intervensi==3) {
-              $tanggalmulai = $key->tanggal_mulai;
-              $tanggalakhir = $key->tanggal_akhir;
+          foreach ($getdatepulcep as $gdt) {
+            if ($p->fid==$gdt->fid) {
+              foreach ($intervensiperskpd as $key) {
+                if (($key->fid == $p->fid) and $key->id_intervensi!=2) {
+                  $tanggalmulai = $key->tanggal_mulai;
+                  $tanggalakhir = $key->tanggal_akhir;
 
-              $dateRange=array();
-              $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
-              $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
+                  $dateRange=array();
+                  $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
+                  $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
 
-              if ($iDateTo>=$iDateFrom)
-              {
-                  array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
-                  while ($iDateFrom<$iDateTo)
+                  if ($iDateTo>=$iDateFrom)
                   {
-                      $iDateFrom+=86400; // add 24 hours
-                      array_push($dateRange,date('Y-m-d',$iDateFrom));
+                      array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
+                      while ($iDateFrom<$iDateTo)
+                      {
+                          $iDateFrom+=86400; // add 24 hours
+                          array_push($dateRange,date('Y-m-d',$iDateFrom));
+                      }
                   }
-              }
-              foreach ($getdatepulcep as $gdp) {
-                foreach ($dateRange as $dr) {
-                  if ($p->fid==$gdp->fid) {
-                    if (strpos($gdp->tanggal, '/') !== false) {
-                      $tglnew = explode('/', $gdp->tanggal);
-                      $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
-                    } else {
-                      $tglformat = $gdp->tanggal;
-                    }
+
+                  if (strpos($gdt->tanggal, '/') !== false) {
+                    $tglnew = explode('/', $gdt->tanggal);
+                    $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+                  } else {
+                    $tglformat = $gdt->tanggal;
+                  }
+
+                  foreach ($dateRange as $dr) {
                     if ($tglformat==$dr) {
                       $jmlpulcep--;
+                      break 2;
                     }
                   }
                 }
               }
             }
+            if ($jmlpulcep==0) break;
           }
         }
+
         $arrayrow[] = $jmlpulcep;
         $potongtpppulcep = ($p->tpp_dibayarkan*60/100)*2/100*$jmlpulcep;
         $arrayrow[] = $potongtpppulcep;
 
 
         //itung datang telat dan pulang cepat
+        $arrfid = array_count_values(array_column($getdatedtpc, 'fid'));
+        $statarr = array_key_exists($p->fid, $arrfid);
         $jmldtpc = 0;
-        foreach ($dtpc as $pc) {
-          if ($p->fid == $pc->fid) {
-            $jmldtpc = $pc->dtpc;
-            break;
-          }
+        if ($statarr) {
+           $jmldtpc = $arrfid[$p->fid];
         }
         if ($jmldtpc!=0) {
-          foreach ($intervensiperskpd as $key) {
-            if (($key->fid == $p->fid) and ($key->id_intervensi==3 or $key->id_intervensi==2)) {
-              $tanggalmulai = $key->tanggal_mulai;
-              $tanggalakhir = $key->tanggal_akhir;
+          foreach ($getdatedtpc as $gdt) {
+            if ($p->fid==$gdt->fid) {
+              foreach ($intervensiperskpd as $key) {
+                if ($key->fid == $p->fid) {
+                  $tanggalmulai = $key->tanggal_mulai;
+                  $tanggalakhir = $key->tanggal_akhir;
 
-              $dateRange=array();
-              $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
-              $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
+                  $dateRange=array();
+                  $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
+                  $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
 
-              if ($iDateTo>=$iDateFrom)
-              {
-                  array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
-                  while ($iDateFrom<$iDateTo)
+                  if ($iDateTo>=$iDateFrom)
                   {
-                      $iDateFrom+=86400; // add 24 hours
-                      array_push($dateRange,date('Y-m-d',$iDateFrom));
+                      array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
+                      while ($iDateFrom<$iDateTo)
+                      {
+                          $iDateFrom+=86400; // add 24 hours
+                          array_push($dateRange,date('Y-m-d',$iDateFrom));
+                      }
                   }
-              }
 
-              foreach ($getdatedtpc as $gddtpc) {
-                foreach ($dateRange as $dr) {
-                  if ($p->fid==$gddtpc->fid) {
-                    if (strpos($gddtpc->tanggal, '/') !== false) {
-                      $tglnew = explode('/', $gddtpc->tanggal);
-                      $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
-                    } else {
-                      $tglformat = $gddtpc->tanggal;
-                    }
+                  if (strpos($gdt->tanggal, '/') !== false) {
+                    $tglnew = explode('/', $gdt->tanggal);
+                    $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+                  } else {
+                    $tglformat = $gdt->tanggal;
+                  }
+
+                  foreach ($dateRange as $dr) {
                     if ($tglformat==$dr) {
                       $jmldtpc--;
+                      break 2;
                     }
                   }
                 }
               }
             }
+            if ($jmldtpc==0) break;
           }
         }
         $arrayrow[] = $jmldtpc;
@@ -732,48 +684,51 @@ class LaporanController extends Controller
           $flagtanggal=0;
         }
         $jmlmurnitidakhadir = count($tanggaltidakhadir);
-        // return $tanggaltidakhadir;
+        if ($jmlmurnitidakhadir!=0) {
+          foreach ($tanggaltidakhadir as $gdt) {
+            foreach ($intervensiperskpd as $key) {
+              if ($key->fid == $p->fid) {
+                $tanggalmulai = $key->tanggal_mulai;
+                $tanggalakhir = $key->tanggal_akhir;
 
-        foreach ($intervensiperskpd as $key) {
-          if (($key->fid == $p->fid) and ($key->id_intervensi != 2 and $key->id_intervensi != 3)) {
-            $tanggalmulai = $key->tanggal_mulai;
-            $tanggalakhir = $key->tanggal_akhir;
+                $dateRange=array();
+                $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
+                $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
 
-            $dateRange=array();
-            $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
-            $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
-
-            if ($iDateTo>=$iDateFrom)
-            {
-                array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
-                while ($iDateFrom<$iDateTo)
+                if ($iDateTo>=$iDateFrom)
                 {
-                    $iDateFrom+=86400; // add 24 hours
-                    array_push($dateRange,date('Y-m-d',$iDateFrom));
+                    array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
+                    while ($iDateFrom<$iDateTo)
+                    {
+                        $iDateFrom+=86400; // add 24 hours
+                        array_push($dateRange,date('Y-m-d',$iDateFrom));
+                    }
                 }
-            }
 
-            foreach ($tanggaltidakhadir as $tth) {
-              $tglnew = explode('/', $tth);
-              $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
-              foreach ($dateRange as $dr) {
-                if ($tglformat==$dr) {
-                  $jmlmurnitidakhadir--;
+                if (strpos($gdt, '/') !== false) {
+                  $tglnew = explode('/', $gdt);
+                  $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+                } else {
+                  $tglformat = $gdt;
+                }
+
+                foreach ($dateRange as $dr) {
+                  if ($tglformat==$dr) {
+                    $jmlmurnitidakhadir--;
+                    break 2;
+                  }
                 }
               }
-              if ($jmlmurnitidakhadir==0) { //mohon cek kembali logicnya.
-                break;
-              }
             }
+            if ($jmlmurnitidakhadir==0) break;
           }
         }
 
+        $arrfid = array_count_values(array_column($gettanggaldianggaptidakmasuk_jamdatang, 'fid'));
+        $statarr = array_key_exists($p->fid, $arrfid);
         $jumlahdianggapbolos_jamdatang = 0;
-        foreach ($dianggaptidakmasuk_jamdatang as $dianggapbolos) {
-          if ($p->fid == $dianggapbolos->fid) {
-            $jumlahdianggapbolos_jamdatang = $dianggapbolos->jumlahdianggapbolos;
-            break;
-          }
+        if ($statarr) {
+           $jumlahdianggapbolos_jamdatang = $arrfid[$p->fid];
         }
         if ($jumlahdianggapbolos_jamdatang!=0) {
           foreach ($intervensiperskpd as $key) {
@@ -804,21 +759,32 @@ class LaporanController extends Controller
                 foreach ($dateRange as $dr) {
                   if ($p->fid==$gdt->fid) {
                     if ($tglformat==$dr) {
+                      if ($jumlahdianggapbolos_jamdatang==0) { //mohon cek kembali logicnya.
+                        break;
+                      }
                       $jumlahdianggapbolos_jamdatang--;
                     }
                   }
+                  if ($jumlahdianggapbolos_jamdatang==0) {
+                    break;
+                  }
+                }
+                if ($jumlahdianggapbolos_jamdatang==0) {
+                  break;
                 }
               }
+            }
+            if ($jumlahdianggapbolos_jamdatang==0) {
+              break;
             }
           }
         }
 
+        $arrfid = array_count_values(array_column($gettanggaldianggaptidakmasuk_jampulang, 'fid'));
+        $statarr = array_key_exists($p->fid, $arrfid);
         $jumlahdianggapbolos_jampulang = 0;
-        foreach ($dianggaptidakmasuk_jampulang as $dianggapbolos) {
-          if ($p->fid == $dianggapbolos->fid) {
-            $jumlahdianggapbolos_jampulang = $dianggapbolos->jumlahdianggapbolos;
-            break;
-          }
+        if ($statarr) {
+           $jumlahdianggapbolos_jampulang = $arrfid[$p->fid];
         }
         if ($jumlahdianggapbolos_jampulang!=0) {
           foreach ($intervensiperskpd as $key) {
@@ -849,6 +815,9 @@ class LaporanController extends Controller
                 foreach ($dateRange as $dr) {
                   if ($p->fid==$gdt->fid) {
                     if ($tglformat==$dr) {
+                      if ($jumlahdianggapbolos_jampulang==0) { //mohon cek kembali logicnya.
+                        break;
+                      }
                       $jumlahdianggapbolos_jampulang--;
                     }
                   }
@@ -858,12 +827,11 @@ class LaporanController extends Controller
           }
         }
 
+        $arrfid = array_count_values(array_column($gettanggaldianggaptidakmasuk_jamdatangjampulang, 'fid'));
+        $statarr = array_key_exists($p->fid, $arrfid);
         $jumlahdianggapbolos_jamdatangjampulang = 0;
-        foreach ($dianggaptidakmasuk_jamdatangjampulang as $dianggapbolos) {
-          if ($p->fid == $dianggapbolos->fid) {
-            $jumlahdianggapbolos_jamdatangjampulang = $dianggapbolos->jumlahdianggapbolos;
-            break;
-          }
+        if ($statarr) {
+           $jumlahdianggapbolos_jamdatangjampulang = $arrfid[$p->fid];
         }
         if ($jumlahdianggapbolos_jamdatangjampulang!=0) {
           foreach ($intervensiperskpd as $key) {
@@ -894,6 +862,9 @@ class LaporanController extends Controller
                 foreach ($dateRange as $dr) {
                   if ($p->fid==$gdt->fid) {
                     if ($tglformat==$dr) {
+                      if ($jumlahdianggapbolos_jamdatangjampulang==0) { //mohon cek kembali logicnya.
+                        break;
+                      }
                       $jumlahdianggapbolos_jamdatangjampulang--;
                     }
                   }
@@ -902,7 +873,6 @@ class LaporanController extends Controller
             }
           }
         }
-
 
         // return $jmlmurnitidakhadir."---".$jumlahdianggapbolos_jamdatang."---".$jumlahdianggapbolos_jampulang."---".$jumlahdianggapbolos_jamdatangjampulang;
         $totaltidakhadir = $jmlmurnitidakhadir+$jumlahdianggapbolos_jamdatang+$jumlahdianggapbolos_jampulang+$jumlahdianggapbolos_jamdatangjampulang;
@@ -914,24 +884,69 @@ class LaporanController extends Controller
 
         //hitung apel
         $jumlahharushadirapel = count($gethariapel);
-        $jumlahhadirapel = 0;
-        foreach ($tanggalhadirapel as $key) {
-          if ($key->fid == $p->fid) {
-            $jumlahhadirapel = $key->jmlapel;
-            break;
+
+        $arrhadirapel = array();
+        foreach ($getdatehariapel as $key) {
+          $tglnew = explode('/', $key->tanggal);
+          $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+          if ($p->fid == $key->fid) {
+            $arrhadirapel[] = $tglformat;
           }
         }
 
-        $jumlahtidakapel = $jumlahharushadirapel - $jumlahhadirapel;
-        $jumlahtidakapelempatkali = 0;
-
-        if ($jumlahtidakapel>=4) {
-          $jumlahtidakapelempatkali = floor($jumlahtidakapel / 4);
-          $jumlahtidakapel = $jumlahtidakapel % 4;
+        $arrharushadirapel = array();
+        foreach ($gethariapel as $key) {
+            $arrharushadirapel[] = $key->tanggal_apel;
         }
 
-        $arrayrow[] = $jumlahtidakapel;
-        $potongantppapel = ($p->tpp_dibayarkan*60/100)*2.5/100*$jumlahtidakapel;
+        $jumlahtidakhadirapel = count($arrharushadirapel) - count($arrhadirapel);
+
+        if ($jumlahtidakhadirapel != 0) {
+          $arrtidakhadirapel = array_diff($arrharushadirapel, $arrhadirapel);
+          foreach ($intervensiperskpd as $key) {
+            if (($key->fid == $p->fid)) {
+              $tanggalmulai = $key->tanggal_mulai;
+              $tanggalakhir = $key->tanggal_akhir;
+
+              $dateRange=array();
+              $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
+              $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
+
+              if ($iDateTo>=$iDateFrom)
+              {
+                  array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
+                  while ($iDateFrom<$iDateTo)
+                  {
+                      $iDateFrom+=86400; // add 24 hours
+                      array_push($dateRange,date('Y-m-d',$iDateFrom));
+                  }
+              }
+              foreach ($arrtidakhadirapel as $tha) {
+                foreach ($dateRange as $tgl) {
+                  if ($tgl == $tha) {
+                    $jumlahtidakhadirapel--;
+                    break;
+                  }
+                }
+                if ($jumlahtidakhadirapel==0) {
+                  break;
+                }
+              }
+            }
+            if ($jumlahtidakhadirapel==0) {
+              break;
+            }
+          }
+        }
+
+        $jumlahtidakapelempatkali = 0;
+        if ($jumlahtidakhadirapel>=4) {
+          $jumlahtidakapelempatkali = floor($jumlahtidakhadirapel / 4);
+          $jumlahtidakhadirapel = $jumlahtidakhadirapel % 4;
+        }
+
+        $arrayrow[] = $jumlahtidakhadirapel;
+        $potongantppapel = ($p->tpp_dibayarkan*60/100)*2.5/100*$jumlahtidakhadirapel;
         $arrayrow[] = $potongantppapel;
 
         $arrayrow[] = $jumlahtidakapelempatkali;
@@ -949,267 +964,11 @@ class LaporanController extends Controller
         ->with('pengecualian', $arrpengecualian);
 
       // END OF DFA LOGIC BARU
-
-
-
-
-
-      //-------------- OLD LOGIC -------------------//
-      // $absensi = DB::select("select a.id, a.fid, nama, tanggal_log, jam_log
-      //                       from (select id, fid, nama from preson_pegawais where skpd_id = '$skpd_id') as a
-      //                       left join ta_log b on a.fid = b.fid
-      //                       where str_to_date(b.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'
-      //                       AND str_to_date(b.Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT libur FROM preson_harilibur)
-      //                       AND str_to_date(b.Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT tanggal_mulai FROM preson_intervensis where pegawai_id = a.id and flag_status = 1)");
-      //
-      // // START = Menghitung Total Datang Terlambat dan Pulang Cepat
-      // $date_from = strtotime($start_date);
-      // $date_to = strtotime($end_date);
-      // $jam_masuk = array();
-      // $jam_pulang = array();
-      // foreach ($pegawainya as $pegawai) {
-      //   for ($i=$date_from; $i<=$date_to; $i+=86400) {
-      //     $tanggalini = date('d/m/Y', $i);
-      //
-      //     foreach ($absensi as $key) {
-      //       if($tanggalini == $key->tanggal_log){
-      //         if ($pegawai->fid == $key->fid) {
-      //           $jammasuk1 = 80000;
-      //           $jammasuk2 = 100000;
-      //           $jamlog = (int) str_replace(':','',$key->jam_log);
-      //           if( ($jamlog > $jammasuk1) && ($jamlog <= $jammasuk2)){
-      //             $jam_masuk[] = $key->fid.'-'.$tanggalini;
-      //           }
-      //         }
-      //       }
-      //     }
-      //
-      //     foreach ($absensi as $key) {
-      //       if($tanggalini == $key->tanggal_log){
-      //         if ($pegawai->fid == $key->fid) {
-      //           $jampulang1 = 140000;
-      //           $jampulang2 = 160000;
-      //           $jamlog = (int) str_replace(':','',$key->jam_log);
-      //           if(($jamlog >= $jampulang1) && ($jamlog < $jampulang2)){
-      //             $jam_pulang[] = $key->fid.'-'.$tanggalini;
-      //           }
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
-      //
-      // $jam_masuk = array_unique($jam_masuk);
-      // $jam_pulang = array_unique($jam_pulang);
-      //
-      // if(($jam_masuk==null) && ($jam_pulang==null)){
-      //   $total_telat_dan_pulcep = '';
-      //   $total_telat_dan_pulcep = collect($total_telat_dan_pulcep);
-      // }else{
-      //   $total_telat_dan_pulcep = array_intersect($jam_masuk,$jam_pulang);
-      //   $total_telat_dan_pulcep = collect(array_unique($total_telat_dan_pulcep));
-      // }
-      // // END = Menghitung Total Datang Terlambat dan Pulang Cepat
-      //
-      //
-      // // START = Mencari Hari Libur Dalam Periode Tertentu
-      // $potongHariLibur = harilibur::select('libur')->whereBetween('libur', array($start_date, $end_date))->get();
-      // if($potongHariLibur->isEmpty()){
-      //   $hariLibur = array();
-      // }else{
-      //   foreach ($potongHariLibur as $liburs) {
-      //     $hariLibur[] = $liburs->libur;
-      //   }
-      // }
-      // // END = Mencari Hari Libur Dalam Periode Tertentu
-      //
-      // // START = Mencari Hari Apel Dalam Periode Tertentu
-      // $potongApel = apel::select('tanggal_apel')->whereBetween('tanggal_apel', array($start_date, $end_date))->get();
-      // if($potongApel->isEmpty()){
-      //   $hariApel = array();
-      // }else{
-      //   foreach ($potongApel as $apel) {
-      //     $hariApel[] = $apel->tanggal_apel;
-      //   }
-      // }
-      // // END = Mencari Hari Apel Dalam Periode Tertentu
-      //
-      // // START =  Menghitung Jumlah Hadir dalam Periode
-      // $jumlahMasuk = DB::select("SELECT pegawai.id as pegawai_id, pegawai.nip_sapk, pegawai.nama as nama_pegawai, Jumlah_Masuk
-      //                           FROM (select nama, id, nip_sapk from preson_pegawais where preson_pegawais.skpd_id = '$skpd_id') as pegawai
-      //
-      //                           LEFT OUTER JOIN(SELECT b.id as pegawai_id, b.nip_sapk, count(DISTINCT a.Tanggal_Log) as Jumlah_Masuk
-      //                               FROM ta_log a, preson_pegawais b
-      //                               WHERE a.Fid = b.fid
-      //                               AND b.skpd_id = '$skpd_id'
-      //                               AND str_to_date(a.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'
-      //                               AND TIME_FORMAT(STR_TO_DATE(a.Jam_Log,'%H:%i:%s'), '%H:%i:%s') <= '10:00:00'
-      //                               AND str_to_date(a.Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT libur FROM preson_harilibur)
-      //                               group By b.id) as tabel_Jumlah_Masuk
-      //                           ON pegawai.id = tabel_Jumlah_Masuk.pegawai_id");
-      // // END =  Menghitung Jumlah Hadir dalam Periode
-      //
-      //
-      // // START = Get Data Intervensi
-      // $intervensi = intervensi::select('pegawai_id', 'tanggal_mulai', 'tanggal_akhir')->whereBetween('tanggal_akhir', array($start_date, $end_date))->where('flag_status', 1)->get();
-      // // END = Get Data Intervensi
-      //
-      //
-      // // START = Pejabat Dokumen Jika Login sebagai admin skpd
-      // $pejabatDokumen = pejabatDokumen::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_pejabat_dokumen.pegawai_id')
-      //                                 ->select('preson_pejabat_dokumen.*', 'preson_pegawais.nama', 'preson_pegawais.nip_sapk')
-      //                                 ->where('preson_pegawais.skpd_id', $skpd_id)
-      //                                 ->where('preson_pejabat_dokumen.flag_status', 1)
-      //                                 ->get();
-      // // END = Pejabat Dokumen Jika Login sebagai admin skpd
-      //
-      // return view('pages.laporan.laporanAdmin', compact('start_dateR', 'end_dateR', 'pegawainya', 'absensi', 'total_telat_dan_pulcep', 'start_date', 'end_date', 'hariLibur', 'hariApel', 'jumlahMasuk', 'intervensi', 'pejabatDokumen'));
     }
 
     public function cetakAdmin(Request $request)
     {
-      // $skpd_id = Auth::user()->skpd_id;
-      // $start_dateR = $request->start_date;
-      // $start_date = explode('/', $start_dateR);
-      // $start_date = $start_date[2].'-'.$start_date[1].'-'.$start_date[0];
-      // $end_dateR = $request->end_date;
-      // $end_date = explode('/', $end_dateR);
-      // $end_date = $end_date[2].'-'.$end_date[1].'-'.$end_date[0];
-      //
-      // // Get Data Pegawai berdasarkan SKPD
-      // $pegawainya = pegawai::join('preson_strukturals', 'preson_strukturals.id', '=', 'preson_pegawais.struktural_id')
-      //                       ->select('preson_pegawais.id as pegawai_id', 'nip_sapk', 'fid', 'tpp_dibayarkan', 'preson_pegawais.nama')->where('skpd_id', $skpd_id)
-      //                       ->orderby('preson_strukturals.nama', 'asc')->get();
-      //
-      // $absensi = DB::select("select a.id, a.fid, nama, tanggal_log, jam_log
-      //                       from (select id, fid, nama from preson_pegawais where skpd_id = '$skpd_id') as a
-      //                       left join ta_log b on a.fid = b.fid
-      //                       where str_to_date(b.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'
-      //                       AND str_to_date(b.Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT libur FROM preson_harilibur)
-      //                       AND str_to_date(b.Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT tanggal_mulai FROM preson_intervensis where pegawai_id = a.id and flag_status = 1)");
-      //
-      // // START = Menghitung Total Datang Terlambat dan Pulang Cepat
-      // $date_from = strtotime($start_date);
-      // $date_to = strtotime($end_date);
-      // $jam_masuk = array();
-      // $jam_pulang = array();
-      // foreach ($pegawainya as $pegawai) {
-      //   for ($i=$date_from; $i<=$date_to; $i+=86400) {
-      //     $tanggalini = date('d/m/Y', $i);
-      //
-      //     foreach ($absensi as $key) {
-      //       if($tanggalini == $key->tanggal_log){
-      //         if ($pegawai->fid == $key->fid) {
-      //           $jammasuk1 = 80000;
-      //           $jammasuk2 = 100000;
-      //           $jamlog = (int) str_replace(':','',$key->jam_log);
-      //           if( ($jamlog > $jammasuk1) && ($jamlog <= $jammasuk2)){
-      //             $jam_masuk[] = $key->fid.'-'.$tanggalini;
-      //           }
-      //         }
-      //       }
-      //     }
-      //
-      //     foreach ($absensi as $key) {
-      //       if($tanggalini == $key->tanggal_log){
-      //         if ($pegawai->fid == $key->fid) {
-      //           $jampulang1 = 140000;
-      //           $jampulang2 = 160000;
-      //           $jamlog = (int) str_replace(':','',$key->jam_log);
-      //           if(($jamlog >= $jampulang1) && ($jamlog < $jampulang2)){
-      //             $jam_pulang[] = $key->fid.'-'.$tanggalini;
-      //           }
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
-      //
-      // $jam_masuk = array_unique($jam_masuk);
-      // $jam_pulang = array_unique($jam_pulang);
-      //
-      // if(($jam_masuk==null) && ($jam_pulang==null)){
-      //   $total_telat_dan_pulcep = '';
-      //   $total_telat_dan_pulcep = collect($total_telat_dan_pulcep);
-      // }else{
-      //   $total_telat_dan_pulcep = array_intersect($jam_masuk,$jam_pulang);
-      //   $total_telat_dan_pulcep = collect(array_unique($total_telat_dan_pulcep));
-      // }
-      // // END = Menghitung Total Datang Terlambat dan Pulang Cepat
-      //
-      //
-      // // START = Mencari Hari Libur Dalam Periode Tertentu
-      // $potongHariLibur = harilibur::select('libur')->whereBetween('libur', array($start_date, $end_date))->get();
-      // if($potongHariLibur->isEmpty()){
-      //   $hariLibur = array();
-      // }else{
-      //   foreach ($potongHariLibur as $liburs) {
-      //     $hariLibur[] = $liburs->libur;
-      //   }
-      // }
-      // // END = Mencari Hari Libur Dalam Periode Tertentu
-      //
-      // // START = Mencari Hari Apel Dalam Periode Tertentu
-      // $potongApel = apel::select('tanggal_apel')->whereBetween('tanggal_apel', array($start_date, $end_date))->get();
-      // if($potongApel->isEmpty()){
-      //   $hariApel = array();
-      // }else{
-      //   foreach ($potongApel as $apel) {
-      //     $hariApel[] = $apel->tanggal_apel;
-      //   }
-      // }
-      // // END = Mencari Hari Apel Dalam Periode Tertentu
-      //
-      // // START =  Menghitung Jumlah Hadir dalam Periode
-      // $jumlahMasuk = DB::select("SELECT pegawai.id as pegawai_id, pegawai.nip_sapk, pegawai.nama as nama_pegawai, Jumlah_Masuk
-      //                           FROM (select nama, id, nip_sapk from preson_pegawais where preson_pegawais.skpd_id = '$skpd_id') as pegawai
-      //
-      //                           LEFT OUTER JOIN(SELECT b.id as pegawai_id, b.nip_sapk, count(DISTINCT a.Tanggal_Log) as Jumlah_Masuk
-      //                               FROM ta_log a, preson_pegawais b
-      //                               WHERE a.Fid = b.fid
-      //                               AND b.skpd_id = '$skpd_id'
-      //                               AND str_to_date(a.Tanggal_Log, '%d/%m/%Y') BETWEEN '$start_date' AND '$end_date'
-      //                               AND TIME_FORMAT(STR_TO_DATE(a.Jam_Log,'%H:%i:%s'), '%H:%i:%s') <= '10:00:00'
-      //                               AND str_to_date(a.Tanggal_Log, '%d/%m/%Y') NOT IN (SELECT libur FROM preson_harilibur)
-      //                               group By b.id) as tabel_Jumlah_Masuk
-      //                           ON pegawai.id = tabel_Jumlah_Masuk.pegawai_id");
-      // // END =  Menghitung Jumlah Hadir dalam Periode
-      //
-      //
-      // // START = Get Data Intervensi
-      // $intervensi = intervensi::select('pegawai_id', 'tanggal_mulai', 'tanggal_akhir')->whereBetween('tanggal_akhir', array($start_date, $end_date))->where('flag_status', 1)->get();
-      // // END = Get Data Intervensi
-      //
-      //
-      // // START = Pejabat Dokumen Jika Login sebagai admin skpd
-      // $pejabatDokumen = pejabatDokumen::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_pejabat_dokumen.pegawai_id')
-      //                                 ->select('preson_pejabat_dokumen.*', 'preson_pegawais.nama', 'preson_pegawais.nip_sapk')
-      //                                 ->where('preson_pegawais.skpd_id', $skpd_id)
-      //                                 ->where('preson_pejabat_dokumen.flag_status', 1)
-      //                                 ->get();
-      // // END = Pejabat Dokumen Jika Login sebagai admin skpd
-      //
-      // $nama_skpd = skpd::select('nama')->where('id', $skpd_id)->first();
-      //
-      // view()->share('start_dateR', $start_dateR);
-      // view()->share('end_dateR', $end_dateR);
-      // view()->share('pegawainya', $pegawainya);
-      // view()->share('absensi', $absensi);
-      // view()->share('total_telat_dan_pulcep', $total_telat_dan_pulcep);
-      // view()->share('start_date', $start_date);
-      // view()->share('end_date', $end_date);
-      // view()->share('hariLibur', $hariLibur);
-      // view()->share('hariApel', $hariApel);
-      // view()->share('jumlahMasuk', $jumlahMasuk);
-      // view()->share('intervensi', $intervensi);
-      // view()->share('pejabatDokumen', $pejabatDokumen);
-      // view()->share('nama_skpd', $nama_skpd);
-      //
-      // if($request->has('download')){
-      //   $pdf = PDF::loadView('pages.laporan.cetakAdmin')->setPaper('a4', 'landscape');
-      //   return $pdf->download('Presensi Online - '.$nama_skpd->nama.' Periode '.$start_date.' - '.$end_date.'.pdf');
-      // }
-
+      // get request
       $skpd_id = Auth::user()->skpd_id;
       $start_dateR = $request->start_date;
       $start_date = explode('/', $start_dateR);
@@ -1218,6 +977,48 @@ class LaporanController extends Controller
       $end_date = explode('/', $end_dateR);
       $end_date = $end_date[2].'-'.$end_date[1].'-'.$end_date[0];
 
+      // get hari libur
+      $harilibur = DB::select("select libur from preson_harilibur
+                                where libur between '$start_date' and '$end_date'");
+      $arrharilibur = array();
+      foreach ($harilibur as $hl) {
+        $arrharilibur[] = $hl->libur;
+      }
+
+      // get tanggal kerja seharusnya (tanpa hari libur)
+      $tanggalmulai = $start_date;
+      $tanggalakhir = $end_date;
+
+      $dateRange=array();
+      $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
+      $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
+
+      if ($iDateTo>=$iDateFrom)
+      {
+          array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
+          while ($iDateFrom<$iDateTo)
+          {
+              $iDateFrom+=86400; // add 24 hours
+              array_push($dateRange,date('Y-m-d',$iDateFrom));
+          }
+      }
+
+      $weekdayDate = array();
+      $fridayDate = null;
+      foreach ($dateRange as $key) {
+        if ((date('N', strtotime($key)) < 6) && (!in_array($key, $arrharilibur))) {
+          $weekdayDate[] = $key;
+        }
+
+        if ((date('N', strtotime($key)) == 5) && (!in_array($key, $arrharilibur))) {
+          if ($fridayDate==null) {
+            $fridayDate .= $key;
+          } else {
+            $fridayDate .= ", ".$key;
+          }
+        }
+      }
+
       // Get Data Pegawai berdasarkan SKPD
       $pegawainya = pegawai::join('preson_strukturals', 'preson_strukturals.id', '=', 'preson_pegawais.struktural_id')
                             ->select('preson_pegawais.id as pegawai_id', 'nip_sapk', 'fid', 'tpp_dibayarkan', 'preson_pegawais.nama')->where('skpd_id', $skpd_id)
@@ -1225,30 +1026,6 @@ class LaporanController extends Controller
 
 
       // DFA LOGIC BARU
-      $datangterlambat = DB::select("select p.fid, telat from
-                                      (
-                                      	select fid, count(*) as telat from preson_log
-                                        where (jam_datang > '08:00:00' and jam_datang < '09:00:00')
-	                                       and (jam_pulang > '16:00:00' and jam_pulang < '19:00:00')
-                                         and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                         and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                                         and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
-                                      	group by fid
-                                      ) s join preson_pegawais p
-                                      on p.fid = s.fid where skpd_id = $skpd_id");
-
-      $dianggaptidakmasuk_jamdatang = DB::select("select p.fid, jumlahdianggapbolos from
-                                                  (
-                                                  select fid, count(*) as jumlahdianggapbolos from preson_log
-                                                  where (jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
-                                                  and !(jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
-                                                  and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                                  and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                                                  and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
-                                                  group by fid
-                                                  ) s join preson_pegawais p
-                                                  on p.fid = s.fid where skpd_id = $skpd_id");
-
       $gettanggaldianggaptidakmasuk_jamdatang = DB::select("select fid, tanggal from preson_log
                                                             where (jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
                                                             and !(jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
@@ -1256,18 +1033,6 @@ class LaporanController extends Controller
                                                             and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
                                                             and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
                                                             ");
-
-      $dianggaptidakmasuk_jampulang = DB::select("select p.fid, jumlahdianggapbolos from
-                                                  (
-                                                  select fid, count(*) as jumlahdianggapbolos from preson_log
-                                                  where !(jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
-                                                  and (jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
-                                                  and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                                  and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                                                  and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
-                                                  group by fid
-                                                  ) s join preson_pegawais p
-                                                  on p.fid = s.fid where skpd_id = $skpd_id");
 
       $gettanggaldianggaptidakmasuk_jampulang = DB::select("select fid, tanggal from preson_log
                                                             where !(jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
@@ -1277,18 +1042,6 @@ class LaporanController extends Controller
                                                             and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
                                                             ");
 
-      $dianggaptidakmasuk_jamdatangjampulang = DB::select("select p.fid, jumlahdianggapbolos from
-                                                  (
-                                                  select fid, count(*) as jumlahdianggapbolos from preson_log
-                                                  where (jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
-                                                  and (jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
-                                                  and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                                  and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                                                  and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
-                                                  group by fid
-                                                  ) s join preson_pegawais p
-                                                  on p.fid = s.fid where skpd_id = $skpd_id");
-
       $gettanggaldianggaptidakmasuk_jamdatangjampulang = DB::select("select fid, tanggal from preson_log
                                                             where (jam_datang is null or jam_datang > '09:00:00' or jam_datang < '07:00:00')
                                                             and (jam_pulang is null or jam_pulang > '19:00:00' or jam_pulang < '13:00:00')
@@ -1296,30 +1049,6 @@ class LaporanController extends Controller
                                                             and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
                                                             and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
                                                             ");
-
-      $pulangcepat = DB::select("select p.fid, pulcep from
-                                  (
-                                  	select fid, count(*) as pulcep from preson_log
-                                    where (jam_pulang > '13:00:00' and jam_pulang < '16:00:00')
-	                                   and (jam_datang < '08:00:00' and jam_datang > '07:00:00')
-                                     and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                                     and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                                  	group by fid
-                                  ) s join preson_pegawais p
-                                  on p.fid = s.fid where skpd_id = $skpd_id");
-
-      $dtpc = DB::select("select p.fid, dtpc from
-                          (
-                          	select fid, count(*) as dtpc from preson_log
-                          	where (jam_datang > '08:01:00' and jam_datang < '09:00:00')
-                              and (jam_pulang > '13:00:00' and jam_pulang < '16:00:00')
-                              and (STR_TO_DATE(tanggal,'%d/%m/%Y') between '$start_date' and '$end_date')
-                              and (tanggal not in (select DATE_FORMAT(libur,'%d/%m/%Y') from preson_harilibur where libur between '$start_date' and '$end_date'))
-                              and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
-                          	group by fid
-                          ) s join preson_pegawais p
-                          on p.fid = s.fid where skpd_id = $skpd_id");
-
 
 
       $tanggalhadirperskpd = DB::select("select a.fid, tanggal from preson_log a join preson_pegawais b
@@ -1353,13 +1082,12 @@ class LaporanController extends Controller
                                     and (tanggal not in (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date'))
                                     ");
 
-      $tanggalhadirapel = DB::select("select fid, count(*) as jmlapel from (
-                                      select * from preson_log
+      $getdatehariapel = DB::select("select * from preson_log
                                       where tanggal in
-                                      (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel where tanggal_apel between '$start_date' and '$end_date')
+                                      (select DATE_FORMAT(tanggal_apel,'%d/%m/%Y') from preson_apel
+                                      where tanggal_apel between '$start_date' and '$end_date')
                                       and (jam_datang < '08:31:00' and jam_datang > '06:00:00')
-                                      ) a
-                                      group by fid");
+                                      ");
 
       $gethariapel = DB::select("select tanggal_apel from preson_apel where tanggal_apel between '$start_date' and '$end_date'");
 
@@ -1370,37 +1098,6 @@ class LaporanController extends Controller
         $arrpengecualian[] = $key->nip_sapk;
       }
 
-      // get hari libur
-      $harilibur = DB::select("select libur from preson_harilibur
-                                where libur between '$start_date' and '$end_date'");
-      $arrharilibur = array();
-      foreach ($harilibur as $hl) {
-        $arrharilibur[] = $hl->libur;
-      }
-
-      // get tanggal kerja seharusnya (tanpa hari libur)
-      $tanggalmulai = $start_date;
-      $tanggalakhir = $end_date;
-
-      $dateRange=array();
-      $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
-      $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
-
-      if ($iDateTo>=$iDateFrom)
-      {
-          array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
-          while ($iDateFrom<$iDateTo)
-          {
-              $iDateFrom+=86400; // add 24 hours
-              array_push($dateRange,date('Y-m-d',$iDateFrom));
-          }
-      }
-      $weekdayDate = array();
-      foreach ($dateRange as $key) {
-        if ((date('N', strtotime($key)) < 6) && (!in_array($key, $arrharilibur))) {
-          $weekdayDate[] = $key;
-        }
-      }
 
       // masukin data ke array
       $dataabsensi = array();
@@ -1411,50 +1108,52 @@ class LaporanController extends Controller
         $arrayrow[] = $p->nama;
         $arrayrow[] = $p->tpp_dibayarkan;
 
-
-        // itung jumlah telat (berdasarkan range tanggal dan bukan hari libur)
+        $arrfid = array_count_values(array_column($getdatetelat, 'fid'));
+        $statarr = array_key_exists($p->fid, $arrfid);
         $jmltelat = 0;
-        foreach ($datangterlambat as $dt) {
-          if ($p->fid == $dt->fid) {
-            $jmltelat = $dt->telat;
-            break;
-          }
+        if ($statarr) {
+           $jmltelat = $arrfid[$p->fid];
         }
         if ($jmltelat!=0) {
-          foreach ($intervensiperskpd as $key) {
-            if (($key->fid == $p->fid) and $key->id_intervensi==2) {
-              $tanggalmulai = $key->tanggal_mulai;
-              $tanggalakhir = $key->tanggal_akhir;
+          foreach ($getdatetelat as $gdt) {
+            if ($p->fid==$gdt->fid) {
+              foreach ($intervensiperskpd as $key) {
+                if (($key->fid == $p->fid) and $key->id_intervensi!=3) {
+                  $tanggalmulai = $key->tanggal_mulai;
+                  $tanggalakhir = $key->tanggal_akhir;
 
-              $dateRange=array();
-              $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
-              $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
+                  $dateRange=array();
+                  $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
+                  $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
 
-              if ($iDateTo>=$iDateFrom)
-              {
-                  array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
-                  while ($iDateFrom<$iDateTo)
+                  if ($iDateTo>=$iDateFrom)
                   {
-                      $iDateFrom+=86400; // add 24 hours
-                      array_push($dateRange,date('Y-m-d',$iDateFrom));
+                      array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
+                      while ($iDateFrom<$iDateTo)
+                      {
+                          $iDateFrom+=86400; // add 24 hours
+                          array_push($dateRange,date('Y-m-d',$iDateFrom));
+                      }
                   }
-              }
-              foreach ($getdatetelat as $gdt) {
-                foreach ($dateRange as $dr) {
-                  if ($p->fid==$gdt->fid) {
-                    if (strpos($gdt->tanggal, '/') !== false) {
-                      $tglnew = explode('/', $gdt->tanggal);
-                      $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
-                    } else {
-                      $tglformat = $gdt->tanggal;
-                    }
+
+                  if (strpos($gdt->tanggal, '/') !== false) {
+                    $tglnew = explode('/', $gdt->tanggal);
+                    $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+                  } else {
+                    $tglformat = $gdt->tanggal;
+                  }
+
+
+                  foreach ($dateRange as $dr) {
                     if ($tglformat==$dr) {
                       $jmltelat--;
+                      break 2;
                     }
                   }
                 }
               }
             }
+            if ($jmltelat==0) break;
           }
         }
         $arrayrow[] = $jmltelat;
@@ -1463,99 +1162,105 @@ class LaporanController extends Controller
 
 
         // itung jumlah pulcep
+        $arrfid = array_count_values(array_column($getdatepulcep, 'fid'));
+        $statarr = array_key_exists($p->fid, $arrfid);
         $jmlpulcep = 0;
-        foreach ($pulangcepat as $pc) {
-          if ($p->fid == $pc->fid) {
-            $jmlpulcep = $pc->pulcep;
-            break;
-          }
+        if ($statarr) {
+           $jmlpulcep = $arrfid[$p->fid];
         }
         if ($jmlpulcep!=0) {
-          foreach ($intervensiperskpd as $key) {
-            if (($key->fid == $p->fid) and $key->id_intervensi==3) {
-              $tanggalmulai = $key->tanggal_mulai;
-              $tanggalakhir = $key->tanggal_akhir;
+          foreach ($getdatepulcep as $gdt) {
+            if ($p->fid==$gdt->fid) {
+              foreach ($intervensiperskpd as $key) {
+                if (($key->fid == $p->fid) and $key->id_intervensi!=2) {
+                  $tanggalmulai = $key->tanggal_mulai;
+                  $tanggalakhir = $key->tanggal_akhir;
 
-              $dateRange=array();
-              $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
-              $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
+                  $dateRange=array();
+                  $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
+                  $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
 
-              if ($iDateTo>=$iDateFrom)
-              {
-                  array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
-                  while ($iDateFrom<$iDateTo)
+                  if ($iDateTo>=$iDateFrom)
                   {
-                      $iDateFrom+=86400; // add 24 hours
-                      array_push($dateRange,date('Y-m-d',$iDateFrom));
+                      array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
+                      while ($iDateFrom<$iDateTo)
+                      {
+                          $iDateFrom+=86400; // add 24 hours
+                          array_push($dateRange,date('Y-m-d',$iDateFrom));
+                      }
                   }
-              }
-              foreach ($getdatepulcep as $gdp) {
-                foreach ($dateRange as $dr) {
-                  if ($p->fid==$gdp->fid) {
-                    if (strpos($gdp->tanggal, '/') !== false) {
-                      $tglnew = explode('/', $gdp->tanggal);
-                      $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
-                    } else {
-                      $tglformat = $gdp->tanggal;
-                    }
+
+                  if (strpos($gdt->tanggal, '/') !== false) {
+                    $tglnew = explode('/', $gdt->tanggal);
+                    $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+                  } else {
+                    $tglformat = $gdt->tanggal;
+                  }
+
+                  foreach ($dateRange as $dr) {
                     if ($tglformat==$dr) {
                       $jmlpulcep--;
+                      break 2;
                     }
                   }
                 }
               }
             }
+            if ($jmlpulcep==0) break;
           }
         }
+
         $arrayrow[] = $jmlpulcep;
         $potongtpppulcep = ($p->tpp_dibayarkan*60/100)*2/100*$jmlpulcep;
         $arrayrow[] = $potongtpppulcep;
 
 
         //itung datang telat dan pulang cepat
+        $arrfid = array_count_values(array_column($getdatedtpc, 'fid'));
+        $statarr = array_key_exists($p->fid, $arrfid);
         $jmldtpc = 0;
-        foreach ($dtpc as $pc) {
-          if ($p->fid == $pc->fid) {
-            $jmldtpc = $pc->dtpc;
-            break;
-          }
+        if ($statarr) {
+           $jmldtpc = $arrfid[$p->fid];
         }
         if ($jmldtpc!=0) {
-          foreach ($intervensiperskpd as $key) {
-            if (($key->fid == $p->fid) and ($key->id_intervensi==3 or $key->id_intervensi==2)) {
-              $tanggalmulai = $key->tanggal_mulai;
-              $tanggalakhir = $key->tanggal_akhir;
+          foreach ($getdatedtpc as $gdt) {
+            if ($p->fid==$gdt->fid) {
+              foreach ($intervensiperskpd as $key) {
+                if ($key->fid == $p->fid) {
+                  $tanggalmulai = $key->tanggal_mulai;
+                  $tanggalakhir = $key->tanggal_akhir;
 
-              $dateRange=array();
-              $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
-              $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
+                  $dateRange=array();
+                  $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
+                  $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
 
-              if ($iDateTo>=$iDateFrom)
-              {
-                  array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
-                  while ($iDateFrom<$iDateTo)
+                  if ($iDateTo>=$iDateFrom)
                   {
-                      $iDateFrom+=86400; // add 24 hours
-                      array_push($dateRange,date('Y-m-d',$iDateFrom));
+                      array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
+                      while ($iDateFrom<$iDateTo)
+                      {
+                          $iDateFrom+=86400; // add 24 hours
+                          array_push($dateRange,date('Y-m-d',$iDateFrom));
+                      }
                   }
-              }
 
-              foreach ($getdatedtpc as $gddtpc) {
-                foreach ($dateRange as $dr) {
-                  if ($p->fid==$gddtpc->fid) {
-                    if (strpos($gddtpc->tanggal, '/') !== false) {
-                      $tglnew = explode('/', $gddtpc->tanggal);
-                      $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
-                    } else {
-                      $tglformat = $gddtpc->tanggal;
-                    }
+                  if (strpos($gdt->tanggal, '/') !== false) {
+                    $tglnew = explode('/', $gdt->tanggal);
+                    $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+                  } else {
+                    $tglformat = $gdt->tanggal;
+                  }
+
+                  foreach ($dateRange as $dr) {
                     if ($tglformat==$dr) {
                       $jmldtpc--;
+                      break 2;
                     }
                   }
                 }
               }
             }
+            if ($jmldtpc==0) break;
           }
         }
         $arrayrow[] = $jmldtpc;
@@ -1583,48 +1288,51 @@ class LaporanController extends Controller
           $flagtanggal=0;
         }
         $jmlmurnitidakhadir = count($tanggaltidakhadir);
-        // return $tanggaltidakhadir;
+        if ($jmlmurnitidakhadir!=0) {
+          foreach ($tanggaltidakhadir as $gdt) {
+            foreach ($intervensiperskpd as $key) {
+              if ($key->fid == $p->fid) {
+                $tanggalmulai = $key->tanggal_mulai;
+                $tanggalakhir = $key->tanggal_akhir;
 
-        foreach ($intervensiperskpd as $key) {
-          if (($key->fid == $p->fid) and ($key->id_intervensi != 2 and $key->id_intervensi != 3)) {
-            $tanggalmulai = $key->tanggal_mulai;
-            $tanggalakhir = $key->tanggal_akhir;
+                $dateRange=array();
+                $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
+                $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
 
-            $dateRange=array();
-            $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
-            $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
-
-            if ($iDateTo>=$iDateFrom)
-            {
-                array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
-                while ($iDateFrom<$iDateTo)
+                if ($iDateTo>=$iDateFrom)
                 {
-                    $iDateFrom+=86400; // add 24 hours
-                    array_push($dateRange,date('Y-m-d',$iDateFrom));
+                    array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
+                    while ($iDateFrom<$iDateTo)
+                    {
+                        $iDateFrom+=86400; // add 24 hours
+                        array_push($dateRange,date('Y-m-d',$iDateFrom));
+                    }
                 }
-            }
 
-            foreach ($tanggaltidakhadir as $tth) {
-              $tglnew = explode('/', $tth);
-              $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
-              foreach ($dateRange as $dr) {
-                if ($tglformat==$dr) {
-                  $jmlmurnitidakhadir--;
+                if (strpos($gdt, '/') !== false) {
+                  $tglnew = explode('/', $gdt);
+                  $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+                } else {
+                  $tglformat = $gdt;
+                }
+
+                foreach ($dateRange as $dr) {
+                  if ($tglformat==$dr) {
+                    $jmlmurnitidakhadir--;
+                    break 2;
+                  }
                 }
               }
-              if ($jmlmurnitidakhadir==0) { //mohon cek kembali logicnya.
-                break;
-              }
             }
+            if ($jmlmurnitidakhadir==0) break;
           }
         }
 
+        $arrfid = array_count_values(array_column($gettanggaldianggaptidakmasuk_jamdatang, 'fid'));
+        $statarr = array_key_exists($p->fid, $arrfid);
         $jumlahdianggapbolos_jamdatang = 0;
-        foreach ($dianggaptidakmasuk_jamdatang as $dianggapbolos) {
-          if ($p->fid == $dianggapbolos->fid) {
-            $jumlahdianggapbolos_jamdatang = $dianggapbolos->jumlahdianggapbolos;
-            break;
-          }
+        if ($statarr) {
+           $jumlahdianggapbolos_jamdatang = $arrfid[$p->fid];
         }
         if ($jumlahdianggapbolos_jamdatang!=0) {
           foreach ($intervensiperskpd as $key) {
@@ -1655,21 +1363,32 @@ class LaporanController extends Controller
                 foreach ($dateRange as $dr) {
                   if ($p->fid==$gdt->fid) {
                     if ($tglformat==$dr) {
+                      if ($jumlahdianggapbolos_jamdatang==0) { //mohon cek kembali logicnya.
+                        break;
+                      }
                       $jumlahdianggapbolos_jamdatang--;
                     }
                   }
+                  if ($jumlahdianggapbolos_jamdatang==0) {
+                    break;
+                  }
+                }
+                if ($jumlahdianggapbolos_jamdatang==0) {
+                  break;
                 }
               }
+            }
+            if ($jumlahdianggapbolos_jamdatang==0) {
+              break;
             }
           }
         }
 
+        $arrfid = array_count_values(array_column($gettanggaldianggaptidakmasuk_jampulang, 'fid'));
+        $statarr = array_key_exists($p->fid, $arrfid);
         $jumlahdianggapbolos_jampulang = 0;
-        foreach ($dianggaptidakmasuk_jampulang as $dianggapbolos) {
-          if ($p->fid == $dianggapbolos->fid) {
-            $jumlahdianggapbolos_jampulang = $dianggapbolos->jumlahdianggapbolos;
-            break;
-          }
+        if ($statarr) {
+           $jumlahdianggapbolos_jampulang = $arrfid[$p->fid];
         }
         if ($jumlahdianggapbolos_jampulang!=0) {
           foreach ($intervensiperskpd as $key) {
@@ -1700,6 +1419,9 @@ class LaporanController extends Controller
                 foreach ($dateRange as $dr) {
                   if ($p->fid==$gdt->fid) {
                     if ($tglformat==$dr) {
+                      if ($jumlahdianggapbolos_jampulang==0) { //mohon cek kembali logicnya.
+                        break;
+                      }
                       $jumlahdianggapbolos_jampulang--;
                     }
                   }
@@ -1709,12 +1431,11 @@ class LaporanController extends Controller
           }
         }
 
+        $arrfid = array_count_values(array_column($gettanggaldianggaptidakmasuk_jamdatangjampulang, 'fid'));
+        $statarr = array_key_exists($p->fid, $arrfid);
         $jumlahdianggapbolos_jamdatangjampulang = 0;
-        foreach ($dianggaptidakmasuk_jamdatangjampulang as $dianggapbolos) {
-          if ($p->fid == $dianggapbolos->fid) {
-            $jumlahdianggapbolos_jamdatangjampulang = $dianggapbolos->jumlahdianggapbolos;
-            break;
-          }
+        if ($statarr) {
+           $jumlahdianggapbolos_jamdatangjampulang = $arrfid[$p->fid];
         }
         if ($jumlahdianggapbolos_jamdatangjampulang!=0) {
           foreach ($intervensiperskpd as $key) {
@@ -1745,6 +1466,9 @@ class LaporanController extends Controller
                 foreach ($dateRange as $dr) {
                   if ($p->fid==$gdt->fid) {
                     if ($tglformat==$dr) {
+                      if ($jumlahdianggapbolos_jamdatangjampulang==0) { //mohon cek kembali logicnya.
+                        break;
+                      }
                       $jumlahdianggapbolos_jamdatangjampulang--;
                     }
                   }
@@ -1753,7 +1477,6 @@ class LaporanController extends Controller
             }
           }
         }
-
 
         // return $jmlmurnitidakhadir."---".$jumlahdianggapbolos_jamdatang."---".$jumlahdianggapbolos_jampulang."---".$jumlahdianggapbolos_jamdatangjampulang;
         $totaltidakhadir = $jmlmurnitidakhadir+$jumlahdianggapbolos_jamdatang+$jumlahdianggapbolos_jampulang+$jumlahdianggapbolos_jamdatangjampulang;
@@ -1765,24 +1488,69 @@ class LaporanController extends Controller
 
         //hitung apel
         $jumlahharushadirapel = count($gethariapel);
-        $jumlahhadirapel = 0;
-        foreach ($tanggalhadirapel as $key) {
-          if ($key->fid == $p->fid) {
-            $jumlahhadirapel = $key->jmlapel;
-            break;
+
+        $arrhadirapel = array();
+        foreach ($getdatehariapel as $key) {
+          $tglnew = explode('/', $key->tanggal);
+          $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+          if ($p->fid == $key->fid) {
+            $arrhadirapel[] = $tglformat;
           }
         }
 
-        $jumlahtidakapel = $jumlahharushadirapel - $jumlahhadirapel;
-        $jumlahtidakapelempatkali = 0;
-
-        if ($jumlahtidakapel>=4) {
-          $jumlahtidakapelempatkali = floor($jumlahtidakapel / 4);
-          $jumlahtidakapel = $jumlahtidakapel % 4;
+        $arrharushadirapel = array();
+        foreach ($gethariapel as $key) {
+            $arrharushadirapel[] = $key->tanggal_apel;
         }
 
-        $arrayrow[] = $jumlahtidakapel;
-        $potongantppapel = ($p->tpp_dibayarkan*60/100)*2.5/100*$jumlahtidakapel;
+        $jumlahtidakhadirapel = count($arrharushadirapel) - count($arrhadirapel);
+
+        if ($jumlahtidakhadirapel != 0) {
+          $arrtidakhadirapel = array_diff($arrharushadirapel, $arrhadirapel);
+          foreach ($intervensiperskpd as $key) {
+            if (($key->fid == $p->fid)) {
+              $tanggalmulai = $key->tanggal_mulai;
+              $tanggalakhir = $key->tanggal_akhir;
+
+              $dateRange=array();
+              $iDateFrom=mktime(1,0,0,substr($tanggalmulai,5,2), substr($tanggalmulai,8,2), substr($tanggalmulai,0,4));
+              $iDateTo=mktime(1,0,0,substr($tanggalakhir,5,2), substr($tanggalakhir,8,2), substr($tanggalakhir,0,4));
+
+              if ($iDateTo>=$iDateFrom)
+              {
+                  array_push($dateRange,date('Y-m-d',$iDateFrom)); // first entry
+                  while ($iDateFrom<$iDateTo)
+                  {
+                      $iDateFrom+=86400; // add 24 hours
+                      array_push($dateRange,date('Y-m-d',$iDateFrom));
+                  }
+              }
+              foreach ($arrtidakhadirapel as $tha) {
+                foreach ($dateRange as $tgl) {
+                  if ($tgl == $tha) {
+                    $jumlahtidakhadirapel--;
+                    break;
+                  }
+                }
+                if ($jumlahtidakhadirapel==0) {
+                  break;
+                }
+              }
+            }
+            if ($jumlahtidakhadirapel==0) {
+              break;
+            }
+          }
+        }
+
+        $jumlahtidakapelempatkali = 0;
+        if ($jumlahtidakhadirapel>=4) {
+          $jumlahtidakapelempatkali = floor($jumlahtidakhadirapel / 4);
+          $jumlahtidakhadirapel = $jumlahtidakhadirapel % 4;
+        }
+
+        $arrayrow[] = $jumlahtidakhadirapel;
+        $potongantppapel = ($p->tpp_dibayarkan*60/100)*2.5/100*$jumlahtidakhadirapel;
         $arrayrow[] = $potongantppapel;
 
         $arrayrow[] = $jumlahtidakapelempatkali;
