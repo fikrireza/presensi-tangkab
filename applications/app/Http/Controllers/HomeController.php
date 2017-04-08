@@ -71,16 +71,17 @@ class HomeController extends Controller
           $tanggalinter = date('Y-m-d');
 
           $jumlahintervensi = DB::select("select c.nama, count(*) as 'jumlah_intervensi'
-          from preson_intervensis a
-          join preson_pegawais b on a.pegawai_id = b.id
-          join preson_skpd c on b.skpd_id = c.id
-          where a.tanggal_mulai <= '$tanggalinter'
-          and a.tanggal_akhir >= '$tanggalinter'
-          group by c.nama");
+                                          from preson_intervensis a
+                                          join preson_pegawais b on a.pegawai_id = b.id
+                                          join preson_skpd c on b.skpd_id = c.id
+                                          where a.tanggal_mulai <= '$tanggalinter'
+                                          and a.tanggal_akhir >= '$tanggalinter'
+                                          group by c.nama");
 
           $jumlahPegawaiSKPD = DB::select("select b.nama as skpd, a.skpd_id, count(a.skpd_id) as jumlah_pegawai
                                           from preson_pegawais a, preson_skpd b
                                           where a.skpd_id = b.id
+                                          and b.status = 1
                                           group by skpd_id");
 
           $absensi = DB::select("select id, skpd, count(*) as 'jumlah_hadir'
@@ -97,6 +98,7 @@ class HomeController extends Controller
                                   from preson_skpd a
                                   left join preson_pegawais b
                                   on a.id = b.skpd_id
+                                  where a.status = 1
                                   group by a.nama");
 
           $totalHadir = collect($absensi)->sum('jumlah_hadir');
