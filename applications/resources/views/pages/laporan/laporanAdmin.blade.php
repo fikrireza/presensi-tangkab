@@ -21,8 +21,13 @@
         <div class="box-body">
 
           <div class="row">
-            <div class="col-xs-6">
-              <input type="text" class="form-control" name="start_date" id="start_date" placeholder="dd/mm/yyyy" required=""
+            <div class="col-xs-12">
+              <input type="text" class="form-control" name="pilih_bulan" id="pilih_bulan"
+                @if (isset($dataabsensi))
+                  value="{{$bulanhitung}}"
+                @endif
+               placeholder="Klik disini." required="">
+              {{-- <input type="text" class="form-control" name="start_date" id="start_date" placeholder="dd/mm/yyyy" required=""
                 @if (isset($dataabsensi))
                   value="{{$start_dateR}}"
                 @endif
@@ -33,7 +38,7 @@
                 @if (isset($dataabsensi))
                   value="{{$end_dateR}}"
                 @endif
-              >
+              > --}}
             </div>
           </div>
 
@@ -41,7 +46,7 @@
         <div class="box-footer">
           <input type="submit" class="btn btn-block bg-purple" value="Pilih">
             @if (isset($dataabsensi))
-              <a href="{{ route('laporan.cetakAdmin', ['download'=>'pdf', 'start_date'=>$start_dateR, 'end_date'=>$end_dateR]) }}" class="btn btn-block bg-green">Download PDF</a>
+              <a href="{{ route('laporan.cetakAdmin', ['download'=>'pdf', 'bulanhitung'=>$bulanhitung]) }}" class="btn btn-block bg-green">Download PDF</a>
             @endif
         </div>
         </form>
@@ -110,7 +115,7 @@
 
                         @if ($tracker==0)
                           <td align="center">
-                            <a href="{{ route('laporan.cetakPegawai', ['download'=>'pdf', 'start_date'=>$start_dateR, 'end_date'=>$end_dateR, 'nip_sapk'=>$k]) }}">{{$k}}</a>
+                            <a href="{{ route('laporan.cetakPegawai', ['download'=>'pdf', 'bulanhitung'=>$bulanhitung, 'nip_sapk'=>$k]) }}">{{$k}}</a>
                           </td>
                         @else
                           <td align="center">{{$k}}</td>
@@ -164,6 +169,17 @@
 @endsection
 
 @section('script')
+<script>
+$('#pilih_bulan').datepicker({
+    autoclose: true,
+    format: 'mm/yyyy',
+    changeMonth: true,
+    changeYear: true,
+    showButtonPanel: true,
+    viewMode: "months",
+    minViewMode: "months"
+   });
+</script>
 <script>
   @php
     if (isset($arrpengecualian)) {
