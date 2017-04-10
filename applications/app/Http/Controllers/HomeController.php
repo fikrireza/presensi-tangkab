@@ -38,7 +38,7 @@ class HomeController extends Controller
         $fid = Auth::user()->fid;
         $skpd_id   = Auth::user()->skpd_id;
 
-        if(session('status') == 'administrator' || session('status') == 'superuser' || session('status') == 'sekretaris')
+        if(session('status') == 'administrator' || session('status') == 'superuser' || session('status') == 'sekretaris' || session('status') == 'bpkad')
         {
           $jumlahPegawai = pegawai::count();
           $jumlahTPP = DB::select("select sum(preson_pegawais.tpp_dibayarkan) as jumlah_tpp from preson_pegawais");
@@ -180,7 +180,7 @@ class HomeController extends Controller
 
           $hariLibur = hariLibur::where('libur', 'LIKE', '____-'.$month.'-__')->get();
 
-          return view('home', compact('absensi', 'pegawai', 'tanggalBulan', 'intervensi', 'hariLibur', 'tpp', 'jumlahPegawai'));
+          return view('home', compact('absensi', 'pegawai', 'tanggalBulan', 'intervensi', 'hariLibur', 'tpp', 'jumlahPegawai', 'jumlahTPP'));
         }
     }
 

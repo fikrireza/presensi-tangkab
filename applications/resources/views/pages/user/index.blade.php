@@ -66,10 +66,12 @@
             <option value="1" {{ old('role_id')=="1" ? 'selected' : '' }} >Administrator BKPPD</option>
             <option value="2" {{ old('role_id')=="2" ? 'selected' : '' }} >Admin SKPD</option>
             <option value="5" {{ old('role_id')=="5" ? 'selected' : '' }} >Sekretaris/TU</option>
+            <option value="6" {{ old('role_id')=="6" ? 'selected' : '' }} >Admin BPKAD</option>
             @elseif(session('status') == 'administrator')
             <option value="1" {{ old('role_id')=="1" ? 'selected' : '' }} >Administrator BKPPD</option>
             <option value="2" {{ old('role_id')=="2" ? 'selected' : '' }} >Admin SKPD</option>
             <option value="5" {{ old('role_id')=="5" ? 'selected' : '' }} >Sekretaris/TU</option>
+            <option value="6" {{ old('role_id')=="6" ? 'selected' : '' }} >Admin BPKAD</option>
             @elseif(session('status') == 'admin')
             <option value="2" {{ old('role_id')=="2" ? 'selected' : '' }} >Admin SKPD</option>
             @endif
