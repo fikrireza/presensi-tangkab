@@ -97,6 +97,17 @@
                 {{ $errors->first('keterangan_edit')}}@endif Keterangan ">{{ old('keterangan_edit') }}</textarea>
             </div>
           </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Status Jam</label>
+            <div class="col-sm-3">
+              <input type="checkbox" class="flat-red" name="status_jam_datang_edit" id="status_jam_datang_edit">
+              <span class="text-muted"><b style="color: #333333">Jam Datang</b></span>
+            </div>
+            <div class="col-sm-3">
+              <input type="checkbox" class="flat-red" name="status_jam_pulang_edit" id="status_jam_pulang_edit">
+              <span class="text-muted"><b style="color: #333333">Jam Pulang</b></span>
+            </div>
+          </div>
           <div class="form-group {{ $errors->has('upload_revisi') ? 'has-error' : '' }}">
             <label class="col-sm-2 control-label">Upload Document</label>
             <div class="col-sm-10">
@@ -209,7 +220,6 @@
   $('#modaledit').modal('show');
 @endif
 </script>
-
 <script type="text/javascript">
   $(function(){
     $("#table_mutasi").on("click", "a.edit", function(){
@@ -227,6 +237,8 @@
           var tanggal_akhir_edit = data.tanggal_akhir;
           var jumlah_hari_edit = data.jumlah_hari;
           var keterangan_edit = data.deskripsi;
+          var status_jam_datang_edit = data.status_jam_datang;
+          var status_jam_pulang_edit = data.status_jam_pulang;
 
 
           $('#id').attr('value', id);
@@ -236,6 +248,18 @@
           $('#tanggal_mulai_edit').attr('value', tanggal_mulai_edit);
           $('#jumlah_hari_edit').attr('value', jumlah_hari_edit);
           $('#keterangan_edit').val(keterangan_edit);
+          
+          if (status_jam_datang_edit==1) {
+            $("#status_jam_datang_edit").attr("checked", true);
+          } else {
+            $("#status_jam_datang_edit").attr("checked", false);
+          }
+
+          if (status_jam_pulang_edit==1) {
+            $("#status_jam_pulang_edit").attr("checked", true);
+          } else {
+            $("#status_jam_pulang_edit").attr("checked", false);
+          }
         }
       });
     });
@@ -267,5 +291,9 @@
       } );
   } );
 </script>
-
+ <script type="text/javascript">
+    $('#modaledit').on('hidden.bs.modal', function () {
+     location.reload();
+    });
+  </script>
 @endsection

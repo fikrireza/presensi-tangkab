@@ -132,6 +132,17 @@
                 {{ $errors->first('keterangan')}}@endif Keterangan ">{{ old('keterangan') }}</textarea>
             </div>
           </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Status Jam</label>
+            <div class="col-sm-2">
+              <input type="checkbox" class="flat-red" name="status_jam_datang">
+              <span class="text-muted"><b style="color: #333333">Jam Datang</b></span>
+            </div>
+            <div class="col-sm-2">
+              <input type="checkbox" class="flat-red" name="status_jam_pulang">
+              <span class="text-muted"><b style="color: #333333">Jam Pulang</b></span>
+            </div>
+          </div>
           <div class="form-group {{ $errors->has('upload_revisi') ? 'has-error' : '' }}">
             <label class="col-sm-2 control-label">Upload Document</label>
             <div class="col-sm-10">
@@ -156,12 +167,11 @@
 @endsection
 
 @section('script')
-<script src="{{ asset('plugins/iCheck/icheck.min.js') }}"></script>
 <script src="{{ asset('plugins/select2/select2.full.min.js')}}"></script>
 <script>
 var today = new Date();
-var startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-var endDate = new Date(today.getFullYear(), today.getMonth()+1, 0);
+// var startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+// var endDate = new Date(today.getFullYear(), today.getMonth()+1, 0);
 // date.setDate(date.getDate()-3);
   $(".select2").select2();
   $(function () {
@@ -170,16 +180,16 @@ var endDate = new Date(today.getFullYear(), today.getMonth()+1, 0);
   $('#tanggal_mulai').datepicker({
     autoclose: true,
     format: 'yyyy-mm-dd',
-    startDate: startDate,
-    endDate: endDate,
+    // startDate: startDate,
+    // endDate: endDate,
     todayHighlight: true,
     daysOfWeekDisabled: [0,6]
   });
   $('#tanggal_akhir').datepicker({
     autoclose: true,
     format: 'yyyy-mm-dd',
-    startDate: startDate,
-    endDate: endDate,
+    // startDate: startDate,
+    // endDate: endDate,
     todayHighlight: true,
     daysOfWeekDisabled: [0,6]
 });
@@ -192,6 +202,7 @@ var endDate = new Date(today.getFullYear(), today.getMonth()+1, 0);
   }
 } 
 </script>
+
 <script type="text/javascript">
   function durationDay(){
     $(document).ready(function() {

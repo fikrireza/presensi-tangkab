@@ -1,4 +1,4 @@
-BKPPD 	= 196406011991081001 (administrator)
+BKPSDM atau BKPPD 	= 196406011991081001 (administrator)
 SKPD 	= 196612301986091002 (admin) Dinas Komunikasi dan Informatika
 		  197006192007012007 (admin) Dinas Komunikasi dan Informatika
 		  196704132001121002 (admin) Dinas Komunikasi dan Informatika

@@ -214,6 +214,19 @@ class RevisiIntervensiController extends Controller
         }
 
         foreach ($request->idpegawai as $key_pegawai) {
+          $valjamdtg="";
+          if($request->status_jam_datang=="") {
+            $valjamdtg=0;
+          } else {
+            $valjamdtg=1;
+          }
+
+          $valjamplg="";
+          if($request->status_jam_pulang=="") {
+            $valjamplg=0;
+          } else {
+            $valjamplg=1;
+          }
 
             $set = new Intervensi;
             $set->pegawai_id = $key_pegawai;
@@ -227,6 +240,8 @@ class RevisiIntervensiController extends Controller
 
             $set->berkas = $photo_name;
             $set->flag_status = 1;
+            $set->status_jam_datang = $valjamdtg;
+            $set->status_jam_pulang = $valjamplg;
             $set->actor = Auth::user()->pegawai_id;
             $set->save();
         }
@@ -263,11 +278,27 @@ class RevisiIntervensiController extends Controller
 
 
       // dd($request);
+      $valjamdtg="";
+      if($request->status_jam_datang_edit=="") {
+        $valjamdtg=0;
+      } else {
+        $valjamdtg=1;
+      }
+
+      $valjamplg="";
+      if($request->status_jam_pulang_edit=="") {
+        $valjamplg=0;
+      } else {
+        $valjamplg=1;
+      }
+
       $set = Intervensi::find($request->id);
       $set->jumlah_hari = $request->jumlah_hari_edit;
       $set->tanggal_mulai = $request->tanggal_mulai_edit;
       $set->tanggal_akhir = $request->tanggal_akhir_edit;
       $set->deskripsi = $request->keterangan_edit;
+      $set->status_jam_datang = $valjamdtg;
+      $set->status_jam_pulang = $valjamplg;
       $file = $request->file('upload_revisi');
       if($file != null)
         {
