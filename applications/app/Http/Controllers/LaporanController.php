@@ -12,7 +12,7 @@ use App\Models\Intervensi;
 use App\Models\HariLibur;
 use App\Models\PejabatDokumen;
 use App\Models\Apel;
-
+use App\Models\Jurnal;
 
 use Auth;
 use Validator;
@@ -1037,7 +1037,66 @@ class LaporanController extends Controller
         $dataabsensi[] = $arrayrow;
       }
 
-      // dd($dataabsensi);
+//      dd($dataabsensi);
+
+      /// Simpan ke preson_jurnal
+      $arrpengecualian = array();
+      $flagpengecualiantpp = 0;
+      $simpantpp = 0;
+
+      foreach ($dataabsensi as $key){
+        $flagpotongantpp = 0;
+        $tracker = 0;
+        $potongantppindex = [4,6,8,10,12,14];
+        $nettotpp = 0;
+
+        foreach ($key as $k){
+          if ($tracker==0 && in_array($k, $arrpengecualian)){
+            $arrpengecualian[] = "row".$number;
+            $flagpengecualiantpp = 1;
+          }
+
+          if(in_array($tracker, $potongantppindex)){
+            $flagpotongantpp = $flagpotongantpp + $k;
+          }
+
+          if($tracker==2){
+            $nettotpp = $k;
+          }
+
+          $tracker++;
+        }
+
+        if ($flagpengecualiantpp == 1){
+          $flagpotongantpp = 0;
+        }
+
+        $totaltppdibayar = $nettotpp - $flagpotongantpp;
+        $simpantpp+= $totaltppdibayar;
+
+        $flagpengecualiantpp = 0;
+      }
+
+      $getJurnal = Jurnal::select('*')
+                          ->where('skpd_id', $skpd_id)
+                          ->where('bulan', $bulanhitungformatnormal[0])
+                          ->where('tahun', $bulanhitungformatnormal[1])
+                          ->where('flag_sesuai', 0)
+                          ->first();
+
+      if($getJurnal != null){
+        $updateJurnal = Jurnal::find($getJurnal->id);
+        $updateJurnal->jumlah_tpp = $simpantpp;
+        $updateJurnal->update();
+      }else{
+        $saveJurnal = new Jurnal;
+        $saveJurnal->skpd_id  = $skpd_id;
+        $saveJurnal->bulan = $bulanhitungformatnormal[0];
+        $saveJurnal->tahun = $bulanhitungformatnormal[1];
+        $saveJurnal->jumlah_tpp = $simpantpp;
+        $saveJurnal->save();
+      }
+
 
       // return $dataabsensi;
       return view('pages.laporan.laporanAdmin')
