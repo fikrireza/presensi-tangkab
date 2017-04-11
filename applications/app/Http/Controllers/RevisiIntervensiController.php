@@ -211,7 +211,9 @@ class RevisiIntervensiController extends Controller
               return redirect()->route('revisiintervensi.create')->with('gagal', $getnamapegawai.' Tanggal yang pilih telah tercatat pada database.')->withInput();
             }
             // --- end of validasi ketersediaan tanggal intervensi
+        }
 
+        foreach ($request->idpegawai as $key_pegawai) {
 
             $set = new Intervensi;
             $set->pegawai_id = $key_pegawai;
@@ -224,7 +226,7 @@ class RevisiIntervensiController extends Controller
             $set->deskripsi = $request->keterangan;
 
             $set->berkas = $photo_name;
-            $set->flag_status = 0;
+            $set->flag_status = 1;
             $set->actor = Auth::user()->pegawai_id;
             $set->save();
         }

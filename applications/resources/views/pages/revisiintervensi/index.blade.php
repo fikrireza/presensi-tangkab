@@ -137,12 +137,14 @@
               <th>Tanggal Mulai</th>
               <th>Tanggal Akhir</th>
               <th>Keterangan</th>
+              <th>Status Intervensi</th>
               <th style="width: 10%">Aksi</th>
             </tr>
           </thead>
           <tfoot>
             <tr>
               <td></td>
+              <th></th>
               <th></th>
               <th></th>
               <th></th>
@@ -162,6 +164,7 @@
               <td>-</td>
               <td>-</td>
               <td>-</td>
+              <td>-</td>
             </tr>
             @else
               @foreach ($getrevisiintervensi as $key)
@@ -172,6 +175,17 @@
                 <td>{{ $key->tanggal_mulai }}</td>
                 <td>{{ $key->tanggal_akhir }}</td>
                 <td>{{ $key->deskripsi }}</td>
+                <td>
+                  @if($key->flag_status == 0)
+                    <small class="label label-info">Belum Disetujui</small>
+                  @elseif($key->flag_status == 1)
+                    <small class="label label-success">Sudah Disetujui</small>
+                  @elseif($key->flag_status == 3)
+                    <small class="label label-warning">Dibatalkan</small>
+                  @else
+                    <small class="label label-danger">Tidak Disetujui</small>
+                  @endif
+                </td>
                 <td><a href="" data-value="{{ $key->id }}" class="btn btn-warning btn-xs edit" data-toggle="modal" data-target="#modaledit"><i class="fa fa-edit"></i> Ubah</a></td>
               </tr>
               <?php $no++; ?>
