@@ -214,3 +214,6 @@ Route::post('jadwal-shift/ubah', 'ShiftController@jadwalShiftEdit')->name('shift
 
 // CronJob for Convert TaLog to Preson_Log
 Route::get('convert', 'ConvertController@log_to_preson_log')->name('convert.index');
+
+// BPKAD
+Route::get('jurnal', 'JurnalController@index')->name('jurnal.index');

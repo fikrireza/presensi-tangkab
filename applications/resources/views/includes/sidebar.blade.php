@@ -209,28 +209,35 @@
               </a>
             </li>
             @endif
-            @if(session('status') != 'pegawai' && session('status') != 'sekretaris' && session('status') != 'bpkad')
+            @if(session('status') != 'pegawai' || session('status') != 'sekretaris' || session('status') == 'bpkad')
             <li class="treeview {{ Route::currentRouteNamed('tpp.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pejabatdokumen.index') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdministrator') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdmin') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdmin.store') ? 'active' : '' }}">
               <a href="">
                 <i class="fa fa fa-file"></i> <span>Laporan</span>
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                @if (session('status') == ('administrator') || session('status') == 'superuser')
+                @if(session('status') == 'bpkad')
+                <li class="{{ Route::currentRouteNamed('jurnal.index') ? 'active' : '' }}">
+                  <a href="{{ route('jurnal.index') }}">
+                    <i class="fa fa-circle-o"></i> <span>Jurnal TPP</span>
+                  </a>
+                </li>
+                @endif
+                @if (session('status') == 'administrator' || session('status') == 'superuser')
                 <li class="{{ Route::currentRouteNamed('laporanAdministrator') ? 'active' : '' }}">
                   <a href="{{ route('laporanAdministrator') }}">
                     <i class="fa fa-circle-o"></i> <span>Cetak TPP</span>
                   </a>
                 </li>
                 @endif
-                @if (session('status') == ('admin'))
+                @if (session('status') == 'admin' || session('status') == 'bpkad')
                 <li class="{{ Route::currentRouteNamed('laporanAdmin') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdmin.store') ? 'active' : '' }}">
                   <a href="{{ route('laporanAdmin') }}">
                     <i class="fa fa-circle-o"></i> <span>Cetak TPP</span>
                   </a>
                 </li>
                 @endif
-                @if(session('status') == 'administrator' || session('status') == 'admin')
+                @if(session('status') == 'admin')
                 <li class="{{ Route::currentRouteNamed('pejabatdokumen.index') ? 'active' : '' }}">
                   <a href="{{ route('pejabatdokumen.index') }}">
                     <i class="fa fa-circle-o"></i> <span>Pejabat Dokumen</span>
