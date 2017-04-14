@@ -31,7 +31,7 @@
             </tr>
           </thead>
           <tbody>
-            @if (!isset($dataabsensi))
+            @if (!isset($rekaptpp))
               <tr>
                 <td colspan="18" align="center">Pilih Periode Waktu</td>
               </tr>
@@ -41,55 +41,29 @@
                 $arrpengecualian = array();
                 $flagpengecualiantpp = 0;
               @endphp
-              @foreach ($dataabsensi as $key)
-                <tr id="row{{$number}}" style="border: 1px solid black;border-collapse: collapse;font-size: 16px;">
-                  <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$number}}</td>
-                  @php
-                    $flagpotongantpp = 0;
-                    $tracker = 0;
-                    $potongantppindex = [4,6,8,10,12,14];
-                    $nettotpp = 0;
-                  @endphp
-                  @foreach ($key as $k)
-                      @if ($tracker==0 && in_array($k, $pengecualian))
-                        @php
-                          $arrpengecualian[] = "row".$number;
-                          $flagpengecualiantpp = 1;
-                        @endphp
-                      @endif
-                      <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$k}}</td>
-                      @if (in_array($tracker, $potongantppindex))
-                        @php
-                          $flagpotongantpp = $flagpotongantpp + $k;
-                        @endphp
-                      @endif
-                      @if ($tracker==2)
-                        @php
-                          $nettotpp = $k;
-                        @endphp
-                      @endif
-                      @php
-                        $tracker++;
-                      @endphp
-                  @endforeach
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">
-                    @if ($flagpengecualiantpp == 1)
-                      @php
-                        $flagpotongantpp = 0;
-                      @endphp
-                    @endif
-                    {{$flagpotongantpp}}
-                  </td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">
-                    @php
-                      $totaltppdibayar = $nettotpp - $flagpotongantpp;
-                    @endphp
-                    {{$totaltppdibayar}}
-                  </td>
+              @foreach ($rekaptpp as $key)
+                <tr>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$number}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["nip"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["nama"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["tpp"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["telat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["potongantelat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["pulangcepat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["potonganpulangcepat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["telatpulangcepat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["potongantelatpulangcepat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["tidakhadir"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["potongantidakhadir"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["tidakapel"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["potongantidakapel"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["tidakapelempat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["potongantidakapelempat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["totalpotongantpp"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["totalterimatpp"]}}</td>
                 </tr>
                 @php
-                $number++;
-                $flagpengecualiantpp = 0;
+                  $number++;
                 @endphp
               @endforeach
             @endif

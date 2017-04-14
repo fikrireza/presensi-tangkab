@@ -23,8 +23,8 @@
           <div class="row">
             <div class="col-xs-12">
               <input type="text" class="form-control" name="pilih_bulan" id="pilih_bulan"
-                @if (isset($dataabsensi))
-                  value="{{$bulanhitung}}"
+                @if (isset($rekaptpp))
+                  value="{{$bulan}}"
                 @endif
                placeholder="Klik disini." required="">
               {{-- <input type="text" class="form-control" name="start_date" id="start_date" placeholder="dd/mm/yyyy" required=""
@@ -45,8 +45,8 @@
         </div>
         <div class="box-footer">
           <input type="submit" class="btn btn-block bg-purple" value="Pilih">
-            @if (isset($dataabsensi))
-              <a href="{{ route('laporan.cetakAdmin', ['download'=>'pdf', 'bulanhitung'=>$bulanhitung]) }}" class="btn btn-block bg-green">Download PDF</a>
+            @if (isset($rekaptpp))
+              <a href="{{ route('laporan.cetakAdmin', ['download'=>'pdf', 'bulanhitung'=>$bulan]) }}" class="btn btn-block bg-green">Download PDF</a>
             @endif
         </div>
         </form>
@@ -86,7 +86,7 @@
               </tr>
             </thead>
             <tbody>
-              @if (!isset($dataabsensi))
+              @if (!isset($rekaptpp))
                 <tr>
                   <td colspan="18" align="center">Pilih Periode Waktu</td>
                 </tr>
@@ -96,64 +96,31 @@
                   $arrpengecualian = array();
                   $flagpengecualiantpp = 0;
                 @endphp
-                @foreach ($dataabsensi as $key)
-                  <tr id="row{{$number}}">
-                    <td align="center">{{$number}}</td>
-                    @php
-                      $flagpotongantpp = 0;
-                      $tracker = 0;
-                      $potongantppindex = [4,6,8,10,12,14];
-                      $nettotpp = 0;
-                    @endphp
-                    @foreach ($key as $k)
-                        @if ($tracker==0 && in_array($k, $pengecualian))
-                          @php
-                            $arrpengecualian[] = "row".$number;
-                            $flagpengecualiantpp = 1;
-                          @endphp
-                        @endif
-
-                        @if ($tracker==0)
-                          <td align="center">
-                            <a href="{{ route('laporan.cetakPegawai', ['download'=>'pdf', 'bulanhitung'=>$bulanhitung, 'nip_sapk'=>$k]) }}">{{$k}}</a>
-                          </td>
-                        @else
-                          <td align="center">{{$k}}</td>
-                        @endif
-
-
-                        @if (in_array($tracker, $potongantppindex))
-                          @php
-                            $flagpotongantpp = $flagpotongantpp + $k;
-                          @endphp
-                        @endif
-                        @if ($tracker==2)
-                          @php
-                            $nettotpp = $k;
-                          @endphp
-                        @endif
-                        @php
-                          $tracker++;
-                        @endphp
-                    @endforeach
-                    <td align="center">
-                      @if ($flagpengecualiantpp == 1)
-                        @php
-                          $flagpotongantpp = 0;
-                        @endphp
-                      @endif
-                      {{$flagpotongantpp}}
+                @foreach ($rekaptpp as $key)
+                  <tr>
+                    <td>{{$number}}</td>
+                    <td>
+                      <a href="{{ route('laporan.cetakPegawai', ['download'=>'pdf', 'bulanhitung'=>$bulan, 'nip_sapk'=>$key["nip"]]) }}">{{$key["nip"]}}</a>
                     </td>
-                    <td align="center">
-                      @php
-                        $totaltppdibayar = $nettotpp - $flagpotongantpp;
-                      @endphp
-                      {{$totaltppdibayar}}
-                    </td>
+                    <td>{{$key["nama"]}}</td>
+                    <td>{{$key["tpp"]}}</td>
+                    <td>{{$key["telat"]}}</td>
+                    <td>{{$key["potongantelat"]}}</td>
+                    <td>{{$key["pulangcepat"]}}</td>
+                    <td>{{$key["potonganpulangcepat"]}}</td>
+                    <td>{{$key["telatpulangcepat"]}}</td>
+                    <td>{{$key["potongantelatpulangcepat"]}}</td>
+                    <td>{{$key["tidakhadir"]}}</td>
+                    <td>{{$key["potongantidakhadir"]}}</td>
+                    <td>{{$key["tidakapel"]}}</td>
+                    <td>{{$key["potongantidakapel"]}}</td>
+                    <td>{{$key["tidakapelempat"]}}</td>
+                    <td>{{$key["potongantidakapelempat"]}}</td>
+                    <td>{{$key["totalpotongantpp"]}}</td>
+                    <td>{{$key["totalterimatpp"]}}</td>
                   </tr>
                   @php
-                  $number++;
-                  $flagpengecualiantpp = 0;
+                    $number++;
                   @endphp
                 @endforeach
               @endif
