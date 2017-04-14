@@ -6,7 +6,7 @@
 @endsection
 
 @section('content')
-@if (Auth::user()->skpd_id==15 || Auth::user()->skpd_id==1 || Auth::user()->skpd_id==7)
+{{-- @if (Auth::user()->skpd_id==15 || Auth::user()->skpd_id==1 || Auth::user()->skpd_id==7) --}}
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
       <div class="box box-primary box-solid">
@@ -163,9 +163,9 @@
       </div>
     </div>
   </div>
-@else
+{{-- @else
   Dalam maintenance..
-@endif
+@endif --}}
 @endsection
 
 @section('script')

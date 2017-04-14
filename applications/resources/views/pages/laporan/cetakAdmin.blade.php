@@ -4,7 +4,7 @@
     <h2 style="font-size:18px;">DAFTAR POTONGAN TPP PNS {{ strtoupper($nama_skpd->nama) }} ABSENSI ELEKTRONIK</h2>
     <div class="box box-primary box-solid">
       <div class="box-header">
-        <h3 class="box-title" style="font-size:16px;">PERIODE TANGGAL {{ $start_dateR }} S/D {{ $end_dateR }}</h3>
+        <h3 class="box-title" style="font-size:16px;">PERIODE TANGGAL {{ $tanggalmulai }} S/D {{ $tanggalakhir }}</h3>
       </div>
       <div class="box-body">
         <table class="table table-bordered" style="border: 1px solid black;border-collapse: collapse;font-size: 16px;">
