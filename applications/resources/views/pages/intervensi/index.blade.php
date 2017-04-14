@@ -83,10 +83,6 @@
                 @foreach ($getmasterintervensi as $key)
                   <option value="{{$key->id}}">{{$key->nama_intervensi}}</option>
                 @endforeach
-                {{-- <option value="Ijin" {{ old('jenis_interrvensi') == 'Ijin' ? 'selected' : ''}}>Ijin</option>
-                <option value="Sakit" {{ old('jenis_intervensi') == 'Sakit' ? 'selected' : ''}}>Sakit</option>
-                <option value="Cuti" {{ old('jenis_intervensi') == 'Cuti' ? 'selected' : ''}}>Cuti</option>
-                <option value="DinasLuar" {{ old('jenis_intervensi') == 'DinasLuar' ? 'selected' : ''}}>Dinas Luar</option> --}}
               </select>
             </div>
           </div>
@@ -185,13 +181,6 @@
               </div>
             </div>
           </div>
-          {{-- <div class="form-group {{ $errors->has('berkas') ? 'has-error' : ''}}">
-            <label class="col-sm-3">Berkas</label>
-            <div class="col-sm-9">
-              <input type="file" name="berkas" class="form-control" accept=".png, .jpg, .pdf" value="{{ old('berkas') }}">
-              <span style="color:red;">Hanya .jpg, .png, .pdf</span>
-            </div>
-          </div> --}}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tidak</button>
@@ -221,10 +210,6 @@
                 @foreach ($getmasterintervensi as $key)
                   <option value="{{$key->id}}" id="mi_{{$key->id}}">{{$key->nama_intervensi}}</option>
                 @endforeach
-                {{-- <option value="Ijin" id="Ijin">Ijin</option>
-                <option value="Sakit" id="Sakit">Sakit</option>
-                <option value="Cuti" id="Cuti">Cuti</option>
-                <option value="DinasLuar" id="DinasLuar">Dinas Luar</option> --}}
               </select>
               <input type="hidden" name="id_edit" class="form-control" id="id_edit" value="{{ old('id_edit') }}" placeholder="@if($errors->has('id_edit'))
                 {{ $errors->first('id_edit')}} @endif id" required="" readonly="true">
@@ -321,13 +306,6 @@
               </div>
             </div>
           </div>
-          {{-- <div class="form-group {{ $errors->has('berkas_edit') ? 'has-error' : ''}}">
-            <label class="col-sm-3">Berkas</label>
-            <div class="col-sm-9">
-              <input type="file" name="berkas_edit" class="form-control" accept=".png, .jpg, .pdf" value="{{ old('berkas_edit') }}">
-              <span style="color:red;">Hanya .jpg, .png, .pdf</br>*Kosongkan Jika Tidak Ingin Mengganti Berkas</span>
-            </div>
-          </div> --}}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tidak</button>
@@ -384,7 +362,7 @@
       <div class="box-header">
         <h3 class="box-title">Intervensi</h3>
         <a href="#" class="btn bg-blue pull-right" data-toggle="modal" data-target="#modaltambahIntervensi">Tambah Intervensi</a>
-        @if(session('status') != 'pegawai' && session('status') != 'sekretaris')
+        @if(session('status') != 'pegawai' && session('status') != 'sekretaris' && session('status') != 'bpkad')
         <a href="{{ route('intervensi.kelola') }}" class="btn bg-green pull-right">Lihat Intervensi</a>
         @endif
       </div>
@@ -452,9 +430,6 @@
                   <a href="{{route('intervensi.suratijin', $key->id)}}" title="Download Surat Ijin">
                     <i class="fa fa-file-o"></i>
                   </a>
-                  {{-- <a href="{{route('intervensi.previewsuratijin', $key->id)}}" title="Preview Surat Ijin">
-                    <i class="fa fa-file-o"></i>
-                  </a> --}}
                 @else
                   -
                 @endif

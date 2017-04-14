@@ -68,7 +68,7 @@ class IntervensiMassalController extends Controller
 
     public function createStore(Request $request)
     {
-      dd($request);
+      // dd($request);
        $message = [
         'jenis_intervensi.required' => 'Wajib di isi',
         'tanggal_mulai.required' => 'Wajib di isi',
@@ -197,24 +197,26 @@ class IntervensiMassalController extends Controller
               $getpegawai = Pegawai::select('*')->where('skpd_id', Auth::user()->skpd_id)->get();
               return redirect()->route('intervensimassal.create')->with('gagal', $getnamapegawai.' Tanggal yang pilih telah tercatat pada database.')->with('getpegawai')->withInput();
             }
-            // --- end of validasi ketersediaan tanggal intervensi
+            // --- end of validasi ketersediaan tanggal intervensi                 
+        }
 
+        foreach ($request->idpegawai as $key_pegawai) 
+        {
+          $set = new Intervensi;
+          $set->pegawai_id = $key_pegawai;
+          $set->id_intervensi = $request->jenis_intervensi;
+          $getnamaintervensi = ManajemenIntervensi::find($request->jenis_intervensi);
+          $set->jenis_intervensi = $getnamaintervensi->nama_intervensi;
+          $set->jumlah_hari = $countjumlhari;
+          $set->tanggal_mulai = $request->tanggal_mulai;
+          $set->tanggal_akhir = $request->tanggal_akhir;
+          $set->deskripsi = $request->keterangan;
 
-            $set = new Intervensi;
-            $set->pegawai_id = $key_pegawai;
-            $set->id_intervensi = $request->jenis_intervensi;
-            $getnamaintervensi = ManajemenIntervensi::find($request->jenis_intervensi);
-            $set->jenis_intervensi = $getnamaintervensi->nama_intervensi;
-            $set->jumlah_hari = $countjumlhari;
-            $set->tanggal_mulai = $request->tanggal_mulai;
-            $set->tanggal_akhir = $request->tanggal_akhir;
-            $set->deskripsi = $request->keterangan;
-
-            $set->berkas = $photo_name;
-            $set->flag_status = 0;
-            $set->flag_massal = 1;
-            $set->actor = Auth::user()->pegawai_id;
-            $set->save();
+          $set->berkas = $photo_name;
+          $set->flag_status = 0;
+          $set->flag_massal = 1;
+          $set->actor = Auth::user()->pegawai_id;
+          $set->save();
         }
         return redirect()->route('intervensimassal.index')->with('berhasil', 'Pegawai Berhasil Intervensi');
       }else{

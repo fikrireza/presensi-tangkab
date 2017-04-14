@@ -131,7 +131,7 @@
                         $flag++;
                       @endphp
 
-                      @if($absen->jam_datang >= '09:01:00')
+                      @if(($absen->jam_datang >= '09:01:00') || ($absen->jam_datang == null))
                         <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"><b>Alpa</b></td>
                       @elseif($absen->jam_pulang == null)
                         <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"><b>Alpa</b></td>

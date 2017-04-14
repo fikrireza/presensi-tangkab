@@ -204,32 +204,32 @@ var today = new Date();
   function durationDay(){
     $(document).ready(function() {
       $('#tanggal_mulai, #tanggal_akhir').on('change textInput input', function () {
-            if ( ($("#tanggal_mulai").val() != "") && ($("#tanggal_akhir").val() != "")) {
-                var dDate1 = new Date($("#tanggal_mulai").val());
-                var dDate2 = new Date($("#tanggal_akhir").val());
-                var iWeeks, iDateDiff, iAdjust = 0;
-                if (dDate2 < dDate1) return -1; // error code if dates transposed
-                var iWeekday1 = dDate1.getDay(); // day of week
-                var iWeekday2 = dDate2.getDay();
-                iWeekday1 = (iWeekday1 == 0) ? 7 : iWeekday1; // change Sunday from 0 to 7
-                iWeekday2 = (iWeekday2 == 0) ? 7 : iWeekday2;
-                if ((iWeekday1 > 5) && (iWeekday2 > 5)) iAdjust = 1; // adjustment if both days on weekend
-                iWeekday1 = (iWeekday1 > 5) ? 5 : iWeekday1; // only count weekdays
-                iWeekday2 = (iWeekday2 > 5) ? 5 : iWeekday2;
+          if ( ($("#tanggal_mulai").val() != "") && ($("#tanggal_akhir").val() != "")) {
+              var dDate1 = new Date($("#tanggal_mulai").val());
+              var dDate2 = new Date($("#tanggal_akhir").val());
+              var iWeeks, iDateDiff, iAdjust = 0;
+              if (dDate2 < dDate1) return -1; // error code if dates transposed
+              var iWeekday1 = dDate1.getDay(); // day of week
+              var iWeekday2 = dDate2.getDay();
+              iWeekday1 = (iWeekday1 == 0) ? 7 : iWeekday1; // change Sunday from 0 to 7
+              iWeekday2 = (iWeekday2 == 0) ? 7 : iWeekday2;
+              if ((iWeekday1 > 5) && (iWeekday2 > 5)) iAdjust = 1; // adjustment if both days on weekend
+              iWeekday1 = (iWeekday1 > 5) ? 5 : iWeekday1; // only count weekdays
+              iWeekday2 = (iWeekday2 > 5) ? 5 : iWeekday2;
 
-                // calculate differnece in weeks (1000mS * 60sec * 60min * 24hrs * 7 days = 604800000)
-                iWeeks = Math.floor((dDate2.getTime() - dDate1.getTime()) / 604800000)
+              // calculate differnece in weeks (1000mS * 60sec * 60min * 24hrs * 7 days = 604800000)
+              iWeeks = Math.floor((dDate2.getTime() - dDate1.getTime()) / 604800000)
 
-                if (iWeekday1 <= iWeekday2) {
-                  iDateDiff = (iWeeks * 5) + (iWeekday2 - iWeekday1)
-                } else {
-                  iDateDiff = ((iWeeks + 1) * 5) - (iWeekday1 - iWeekday2)
-                }
+              if (iWeekday1 <= iWeekday2) {
+                iDateDiff = (iWeeks * 5) + (iWeekday2 - iWeekday1)
+              } else {
+                iDateDiff = ((iWeeks + 1) * 5) - (iWeekday1 - iWeekday2)
+              }
 
-                iDateDiff -= iAdjust // take into account both days on weekend
-                $("#jumlah_hari").val(iDateDiff+1);
-                //return (iDateDiff + 1); // add 1 because dates are inclusive
-            }
+              iDateDiff -= iAdjust // take into account both days on weekend
+              $("#jumlah_hari").val(iDateDiff+1);
+              //return (iDateDiff + 1); // add 1 because dates are inclusive
+          }
         });
     });
   }

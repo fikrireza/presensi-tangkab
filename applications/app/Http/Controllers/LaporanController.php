@@ -14,7 +14,7 @@ use App\Models\PejabatDokumen;
 use App\Models\Apel;
 use App\Models\PresonLog;
 use App\Models\MesinApel;
-
+use App\Models\Jurnal;
 
 use Auth;
 use Validator;
@@ -595,10 +595,8 @@ class LaporanController extends Controller
 
         $rekaptpp[] = $rowdata;
       }
+      dd($rekaptpp);
       // --- END OF LOOP GET PEGAWAI ---
-
-      // dd($rekaptpp);
-      return $rekaptpp;
     }
 
     public function cetakAdmin(Request $request)

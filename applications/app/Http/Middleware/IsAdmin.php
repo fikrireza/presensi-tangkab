@@ -14,7 +14,7 @@ class IsAdmin {
 	 */
 	public function handle($request, Closure $next)
 	{
-		if (session('status') === 'admin')
+		if (session('status') === 'admin' || session('status') === 'bpkad')
 		{
 			return $next($request);
 		}

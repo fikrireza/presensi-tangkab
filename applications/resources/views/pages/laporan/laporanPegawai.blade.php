@@ -182,7 +182,7 @@
                           $flag++;
                         @endphp
 
-                        @if($absen->jam_datang >= '09:01:00')
+                        @if(($absen->jam_datang >= '09:01:00') || ($absen->jam_datang == null))
                           <td align="center"><b>Alpa</b></td>
                         @elseif($absen->jam_pulang == null)
                           <td align="center"><b>Alpa</b></td>

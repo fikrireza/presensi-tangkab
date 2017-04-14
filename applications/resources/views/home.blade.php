@@ -62,6 +62,16 @@
       </div>
     </div>
     @endif
+    @if (session('status') == 'bpkad')
+    <div class="col-lg-3 col-md-3 col-xs-12">
+      <div class="small-box bg-purple">
+        <div class="inner">
+          <h3><sup style="font-size: 20px">Rp. {{ number_format($jumlahTPP[0]->jumlah_tpp,0,',','.') }},-</sup></h3>
+          <p>Jumlah TPP</p>
+        </div>
+      </div>
+    </div>
+    @endif
     <div class="col-lg-3 col-md-3 col-xs-12">
       <div class="small-box bg-maroon">
         <div class="inner">
@@ -238,61 +248,10 @@
                 $no++;
               @endphp
             @endforeach
-
-            {{-- KODE YANG LAMA CUUY, SEBELUM REVISI BANG BANG.. --}}
-            {{-- @foreach ($absensi as $key)
-              <tr>
-                <td>{{ $no }}</td>
-                <td><a href="{{route('detail.absensi', $key->id)}}">{{ $key->skpd }}</a></td>
-                @foreach ($jumlahPegawaiSKPD as $pegSKPD)
-                  @if($key->id == $pegSKPD->skpd_id)
-                    <td>{{ $pegSKPD->jumlah_pegawai }}</td>
-                  @endif
-                @endforeach
-                <td>{{ $key->jumlah_hadir }}</td>
-                <td>
-                  @php
-                    $count=0;
-                  @endphp
-                  @foreach ($pegawai as $keys)
-                    @if ($key->skpd == $keys->nama_skpd)
-                      @php
-                        $count++;
-                      @endphp
-                    @endif
-                  @endforeach
-                  @php
-                    $jumlahabsen = $count - $key->jumlah_hadir;
-                    echo $jumlahabsen;
-                  @endphp
-                </td>
-                <td>
-                  @php
-                    $countintervensi = 0;
-                  @endphp
-                  @foreach ($jumlahintervensi as $keys)
-                    @if ($keys->nama == $key->skpd)
-                      @php
-                        $countintervensi++;
-                      @endphp
-                    @endif
-                  @endforeach
-                  {{$countintervensi}}
-                </td>
-                <td>@foreach ($lastUpdate as $update)
-                  @if ($update->id == $key->id)
-                    {{ $update->last_update }}
-                  @endif
-                @endforeach</td>
-              </tr>
-              @php
-                $no++;
-              @endphp
-            @endforeach --}}
           </tbody>
         </table>
 
-        @elseif(session('status') == 'pegawai')
+        @elseif(session('status') == 'pegawai' || session('status') == 'bpkad')
           <table class="table table-bordered">
             <thead>
               <tr>
