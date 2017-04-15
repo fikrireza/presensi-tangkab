@@ -46,7 +46,7 @@
         <div class="box-footer">
           <input type="submit" class="btn btn-block bg-purple" value="Pilih">
             @if (isset($rekaptpp))
-              <a href="{{ route('laporan.cetakAdmin', ['download'=>'pdf', 'bulanhitung'=>$bulan]) }}" class="btn btn-block bg-green">Download PDF</a>
+              <a href="{{ route('laporan.cetakAdmin', ['download'=>'pdf', 'pilih_bulan'=>$bulan]) }}" class="btn btn-block bg-green">Download PDF</a>
             @endif
         </div>
         </form>
