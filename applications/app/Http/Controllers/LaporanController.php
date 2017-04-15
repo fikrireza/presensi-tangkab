@@ -383,7 +383,13 @@ class LaporanController extends Controller
         ->orderby('preson_strukturals.nama', 'asc')
         ->orderby('preson_pegawais.nama', 'asc')
         ->get();
+
+      $getidpegawaiperskpd = array();
+      foreach ($getpegawai as $key) {
+        $getidpegawaiperskpd[] = $key->pegawai_id;
+      }
       // --- END OF GET DATA PEGAWAI BASED ON SKPD ID ---
+
 
       // --- GET DATA PRESON LOG ---
       $getpresonlog = PresonLog::
@@ -429,10 +435,11 @@ class LaporanController extends Controller
 
       // --- GET INTERVENSI SKPD ---
       $getintervensi = Intervensi::
-        select('fid', 'tanggal_mulai', 'tanggal_akhir', 'preson_pegawais.id as id')
+        select('fid', 'tanggal_mulai', 'tanggal_akhir', 'preson_pegawais.id as id', 'preson_intervensis.id_intervensi as id_intervensi')
         ->join('preson_pegawais', 'preson_intervensis.pegawai_id', '=', 'preson_pegawais.id')
         ->where('preson_pegawais.skpd_id', $skpd_id)
         ->where('preson_intervensis.flag_status', 1)
+        ->whereIn('preson_pegawais.id', $getidpegawaiperskpd)
         ->orderby('fid')
         ->get();
       // ---  END OF GET INTERVENSI SKPD ---
@@ -462,23 +469,55 @@ class LaporanController extends Controller
         $rowdata["tpp"] = $pegawai->tpp_dibayarkan;
 
         // --- INTERVENSI FOR SPECIFIC PEGAWAI
-        $dateintervensi = array();
+        $dateintervensibebas = array();
+        $dateintervensitelat = array();
+        $dateintervensipulcep = array();
         foreach ($getintervensi as $intervensi) {
           if ($pegawai->pegawai_id == $intervensi->id) {
-            $period = new DatePeriod(
-                 new DateTime("$intervensi->tanggal_mulai"),
-                 new DateInterval('P1D'),
-                 new DateTime("$intervensi->tanggal_akhir 23:59:59")
-            );
-            foreach($period as $date) {$dateintervensi[] = $date->format('Y-m-d'); }
+            if ($intervensi->id_intervensi==2) {
+              $period = new DatePeriod(
+                   new DateTime("$intervensi->tanggal_mulai"),
+                   new DateInterval('P1D'),
+                   new DateTime("$intervensi->tanggal_akhir 23:59:59")
+              );
+              foreach($period as $date) {$dateintervensitelat[] = $date->format('Y-m-d'); }
+            } else if ($intervensi->id_intervensi==3) {
+              $period = new DatePeriod(
+                   new DateTime("$intervensi->tanggal_mulai"),
+                   new DateInterval('P1D'),
+                   new DateTime("$intervensi->tanggal_akhir 23:59:59")
+              );
+              foreach($period as $date) {$dateintervensipulcep[] = $date->format('Y-m-d'); }
+            } else {
+              $period = new DatePeriod(
+                   new DateTime("$intervensi->tanggal_mulai"),
+                   new DateInterval('P1D'),
+                   new DateTime("$intervensi->tanggal_akhir 23:59:59")
+              );
+              foreach($period as $date) {$dateintervensibebas[] = $date->format('Y-m-d'); }
+            }
           }
         }
-        $tanggalintervensi = array();
-        $unique = array_unique($dateintervensi);
+        $tanggalintervensitelat = array();
+        $unique = array_unique($dateintervensitelat);
         foreach ($unique as $key) {
           $tglnew = explode('-', $key);
           $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
-          $tanggalintervensi[] = $tglformat;
+          $tanggalintervensitelat[] = $tglformat;
+        }
+        $tanggalintervensipulcep = array();
+        $unique = array_unique($dateintervensipulcep);
+        foreach ($unique as $key) {
+          $tglnew = explode('-', $key);
+          $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+          $tanggalintervensipulcep[] = $tglformat;
+        }
+        $tanggalintervensibebas = array();
+        $unique = array_unique($dateintervensibebas);
+        foreach ($unique as $key) {
+          $tglnew = explode('-', $key);
+          $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+          $tanggalintervensibebas[] = $tglformat;
         }
         // --- END OF INTERVENSI FOR SPECIFIC PEGAWAI
 
@@ -513,34 +552,53 @@ class LaporanController extends Controller
                 $jamplg = str_replace(':', '', $rawjamplg);
                 // --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
 
-                if ($presonlog->jam_datang==null || $presonlog->jam_pulang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg || $jamplg > 190000) {
-                  if (!in_array($presonlog->tanggal, $tanggalintervensi)) {
-                    // echo "dianggapbolos: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                if ($presonlog->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+                    // echo "dianggapbolos-jamdtg: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
                   }
-                } else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && ($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat)) {
-                  if (!in_array($presonlog->tanggal, $tanggalintervensi)) {
-                    // echo "telat-pulcep: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                    $telatpulangcepat++;
+                } else if (($presonlog->jam_pulang==null && !($jamdtg > 70000 && $jamdtg < $lower_telatdtg)) || $jamplg > 190000) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+                    // echo "dianggapbolos-jamplg: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                    $dianggapbolos++;
+                  }
+                } else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
+                  $intertelat = 0;
+                  $interpulcep = 0;
+                  $interbebas = 0;
+                  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
+                  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
+                  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+                  if ($interbebas==0) {
+                    if ($intertelat==0 && $interpulcep==0) {
+                      // echo "telat-pulcep: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                      $telatpulangcepat++;
+                    } else if ($intertelat!=0 && $interpulcep==0) {
+                      // echo "pulcep-(dtpc): ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                      $pulangcepat++;
+                    } else if ($intertelat==0 && $interpulcep!=0) {
+                      // echo "telat-(dtpc): ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                      $telat++;
+                    }
                   }
                 } else if ($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) {
-                  if (!in_array($presonlog->tanggal, $tanggalintervensi)) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
                     // echo "telat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."<br>";
                     $telat++;
                   }
                 } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > 70000 && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
-                  if (!in_array($presonlog->tanggal, $tanggalintervensi)) {
-                    // echo "pulangcepat: ".$presonlog->fid."--".$presonlog->tanggal."--jampulang:".$jamplg."<br>";
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+                    // echo "pulangcepat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $pulangcepat++;
                   }
                 }
               } else {
-                // --- SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT ---
+                // --- SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT JUMAT ---
                 $lower_telatdtg = 73100;
                 $upper_telatdtg = 83100;
-                $lower_plgcepat = 143000;
-                $upper_plgcepat = 153000;
-                // --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT ---
+                $lower_plgcepat = 150000;
+                $upper_plgcepat = 160000;
+                // --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT JUMAT ---
 
                 // --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
                 $rawjamdtg = $presonlog->jam_datang;
@@ -549,24 +607,43 @@ class LaporanController extends Controller
                 $jamplg = str_replace(':', '', $rawjamplg);
                 // --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
 
-                if ($presonlog->jam_datang==null || $presonlog->jam_pulang==null || $jamdtg < 63000 || $jamdtg > $upper_telatdtg || $jamplg > 190000) {
-                  if (!in_array($presonlog->tanggal, $tanggalintervensi)) {
-                    // echo "dianggapbolosjumat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                if ($presonlog->jam_datang==null || $jamdtg < 63000 || $jamdtg > $upper_telatdtg) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+                    // echo "dianggapbolos-jamdtg-jumat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
                   }
-                } else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && ($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat)) {
-                  if (!in_array($presonlog->tanggal, $tanggalintervensi)) {
-                    // echo "telat-pulcepjumat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                    $telatpulangcepat++;
+                } else if (($presonlog->jam_pulang==null && !($jamdtg > 63000 && $jamdtg < $lower_telatdtg)) || $jamplg > 190000) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+                    // echo "dianggapbolos-jamplg-jumat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                    $dianggapbolos++;
+                  }
+                } else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
+                  $intertelat = 0;
+                  $interpulcep = 0;
+                  $interbebas = 0;
+                  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
+                  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
+                  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+                  if ($interbebas==0) {
+                    if ($intertelat==0 && $interpulcep==0) {
+                      // echo "telat-pulcep-jumat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                      $telatpulangcepat++;
+                    } else if ($intertelat!=0 && $interpulcep==0) {
+                      // echo "pulcep-(dtpc)-jumat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                      $pulangcepat++;
+                    } else if ($intertelat==0 && $interpulcep!=0) {
+                      // echo "telat-(dtpc)-jumat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                      $telat++;
+                    }
                   }
                 } else if ($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) {
-                  if (!in_array($presonlog->tanggal, $tanggalintervensi)) {
-                    // echo "telatjumat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."<br>";
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+                    // echo "telat-jumat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."<br>";
                     $telat++;
                   }
-                } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > 70000 && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
-                  if (!in_array($presonlog->tanggal, $tanggalintervensi)) {
-                    // echo "pulangcepatjumat: ".$presonlog->fid."--".$presonlog->tanggal."--jampulang:".$jamplg."<br>";
+                } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > 63000 && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+                    // echo "pulangcepat-jumat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $pulangcepat++;
                   }
                 }
@@ -590,19 +667,41 @@ class LaporanController extends Controller
               $jamplg = str_replace(':', '', $rawjamplg);
               // --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
 
-              if ($presonlog->jam_datang==null || $presonlog->jam_pulang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg || $jamplg > 190000) {
-                if (!in_array($presonlog->tanggal, $tanggalintervensi)) {
-                  // echo "dianggapboloshariapel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                  $dianggapbolos++;
-                }
-              } else if (($jamdtg > $maxjamdatang) || (!in_array($presonlog->mach_id, $mesinapel))) {
-                // echo "tidakapel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                $tidakapel++;
-              }
-
-              if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || ($jamplg < $upper_plgcepat)) {
-                if (!in_array($presonlog->tanggal, $tanggalintervensi)) {
-                  // echo "pulangcepathariapel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+              if (in_array($presonlog->mach_id, $mesinapel)) {
+                if ($presonlog->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+                    // echo "dianggapbolos-jamdtg-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                    $dianggapbolos++;
+                  }
+                } else if (($presonlog->jam_pulang==null && !($jamdtg > 70000 && $jamdtg < $maxjamdatang)) || $jamplg > 190000) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+                    // echo "dianggapbolos-jamplg-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                    $dianggapbolos++;
+                  }
+                } else if ($jamdtg > $maxjamdatang && $jamplg > $upper_plgcepat) {
+                  // echo "tidak-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                  $tidakapel++;
+                } else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
+                  $intertelat = 0;
+                  $interpulcep = 0;
+                  $interbebas = 0;
+                  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
+                  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
+                  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+                  if ($interbebas==0) {
+                    if ($intertelat==0 && $interpulcep==0) {
+                      // echo "telat-pulcep-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                      $telatpulangcepat++;
+                    } else if ($intertelat!=0 && $interpulcep==0) {
+                      // echo "pulcep-(dtpc)-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                      $pulangcepat++;
+                    } else if ($intertelat==0 && $interpulcep!=0) {
+                      // echo "telat-(dtpc)-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                      $telat++;
+                    }
+                  }
+                } else if ((($jamdtg < $maxjamdatang && $jamdtg > 70000) && $jamplg < $upper_plgcepat) || (($jamdtg < $maxjamdatang && $jamdtg > 70000) && $jamplg==null)) {
+                  // echo "pulcep-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                   $pulangcepat++;
                 }
               }
@@ -623,7 +722,8 @@ class LaporanController extends Controller
         $tidakhadir = array_diff($arrharikerja, $tanggalhadir);
         $murnibolos = 0;
         foreach ($tidakhadir as $bolos) {
-          if (!in_array($bolos, $tanggalintervensi)) {
+          if (!in_array($bolos, $tanggalintervensibebas)) {
+            // echo "murnibolos: ".$pegawai->fid."---".$bolos."<br>";
             $murnibolos++;
           }
         }
