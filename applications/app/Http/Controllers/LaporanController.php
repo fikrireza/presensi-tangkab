@@ -460,13 +460,23 @@ class LaporanController extends Controller
       }
       // --- GET HARI KERJA SEHARUSNYA ---
 
+      // --- GET PENGECUALIAN TPP ---
+      $getpengecualiantpp = DB::select("select nip_sapk from preson_pengecualian_tpp");
+      $arrpengecualian = array();
+      foreach ($getpengecualiantpp as $key) {
+        $arrpengecualian[] = $key->nip_sapk;
+      }
+      // --- END OF GET PENGECUALIAN TPP ---
+
       // --- LOOP GET PEGAWAI ---
       $rekaptpp = array();
+      $grandtotalpotongantpp=0;
+      $grandtotaltppdibayarkan=0;
       foreach ($getpegawai as $pegawai) {
         $rowdata = array();
         $rowdata["nip"] = $pegawai->nip_sapk;
         $rowdata["nama"] = $pegawai->nama;
-        $rowdata["tpp"] = $pegawai->tpp_dibayarkan;
+        $rowdata["tpp"] = number_format($pegawai->tpp_dibayarkan, 0, '.', '.');
 
         // --- INTERVENSI FOR SPECIFIC PEGAWAI
         $dateintervensibebas = array();
@@ -519,6 +529,9 @@ class LaporanController extends Controller
           $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
           $tanggalintervensibebas[] = $tglformat;
         }
+        // foreach ($tanggalintervensibebas as $key) {
+        //   echo "intervensibebas:".$pegawai->pegawai_id."----".$key."<br>";
+        // }
         // --- END OF INTERVENSI FOR SPECIFIC PEGAWAI
 
         // -- LOOP PRESON LOG
@@ -557,7 +570,7 @@ class LaporanController extends Controller
                     // echo "dianggapbolos-jamdtg: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
                   }
-                } else if (($presonlog->jam_pulang==null && !($jamdtg > 70000 && $jamdtg < $lower_telatdtg)) || $jamplg > 190000) {
+                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
                   if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
                     // echo "dianggapbolos-jamplg: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
@@ -612,7 +625,7 @@ class LaporanController extends Controller
                     // echo "dianggapbolos-jamdtg-jumat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
                   }
-                } else if (($presonlog->jam_pulang==null && !($jamdtg > 63000 && $jamdtg < $lower_telatdtg)) || $jamplg > 190000) {
+                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
                   if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
                     // echo "dianggapbolos-jamplg-jumat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
@@ -673,14 +686,16 @@ class LaporanController extends Controller
                     // echo "dianggapbolos-jamdtg-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
                   }
-                } else if (($presonlog->jam_pulang==null && !($jamdtg > 70000 && $jamdtg < $maxjamdatang)) || $jamplg > 190000) {
+                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
                   if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
                     // echo "dianggapbolos-jamplg-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
                   }
                 } else if ($jamdtg > $maxjamdatang && $jamplg > $upper_plgcepat) {
-                  // echo "tidak-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                  $tidakapel++;
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+                    // echo "tidak-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                    $tidakapel++;
+                  }
                 } else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
                   $intertelat = 0;
                   $interpulcep = 0;
@@ -701,8 +716,46 @@ class LaporanController extends Controller
                     }
                   }
                 } else if ((($jamdtg < $maxjamdatang && $jamdtg > 70000) && $jamplg < $upper_plgcepat) || (($jamdtg < $maxjamdatang && $jamdtg > 70000) && $jamplg==null)) {
-                  // echo "pulcep-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                  $pulangcepat++;
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+                    // echo "pulcep-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                    $pulangcepat++;
+                  }
+                }
+              } else {
+                if ($presonlog->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+                    // echo "dianggapbolos-jamdtg-bukanmesinapel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                    $dianggapbolos++;
+                  }
+                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+                    // echo "dianggapbolos-jamplg-bukanmesinapel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                    $dianggapbolos++;
+                  }
+                } else if (($jamdtg <= $maxjamdatang || $jamdtg >= $maxjamdatang) && $jamplg > $upper_plgcepat) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+                    // echo "tidak-apel-bukanmesinapel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                    $tidakapel++;
+                  }
+                } else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
+                  $intertelat = 0;
+                  $interpulcep = 0;
+                  $interbebas = 0;
+                  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
+                  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
+                  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+                  if ($interbebas==0) {
+                    if ($intertelat==0 && $interpulcep==0) {
+                      // echo "telat-pulcep-bukanmesinapel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                      $telatpulangcepat++;
+                    } else if ($intertelat!=0 && $interpulcep==0) {
+                      // echo "pulcep-(dtpc)-bukanmesinapel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                      $pulangcepat++;
+                    } else if ($intertelat==0 && $interpulcep!=0) {
+                      // echo "telat-(dtpc)-bukanmesinapel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                      $telat++;
+                    }
+                  }
                 }
               }
             }
@@ -732,24 +785,32 @@ class LaporanController extends Controller
 
         $totalpotongantpp = 0;
 
+        if (in_array($pegawai->nip_sapk, $arrpengecualian)) {
+          $telat=0;
+          $pulangcepat=0;
+          $telatpulangcepat=0;
+          $totalbolos=0;
+          $tidakapel=0;
+        }
+
         $rowdata["telat"] = $telat;
         $potongtpptelat = ($pegawai->tpp_dibayarkan*60/100)*2/100*$telat;
-        $rowdata["potongantelat"] = $potongtpptelat;
+        $rowdata["potongantelat"] = number_format($potongtpptelat, 0, '.', '.');
         $totalpotongantpp += $potongtpptelat;
 
         $rowdata["pulangcepat"] = $pulangcepat;
         $potongtpppulcep = ($pegawai->tpp_dibayarkan*60/100)*2/100*$pulangcepat;
-        $rowdata["potonganpulangcepat"] = $potongtpppulcep;
+        $rowdata["potonganpulangcepat"] = number_format($potongtpppulcep, 0, '.', '.');
         $totalpotongantpp += $potongtpppulcep;
 
         $rowdata["telatpulangcepat"] = $telatpulangcepat;
         $potongtppdtpc = ($pegawai->tpp_dibayarkan*60/100)*3/100*$telatpulangcepat;
-        $rowdata["potongantelatpulangcepat"] = $potongtppdtpc;
+        $rowdata["potongantelatpulangcepat"] = number_format($potongtppdtpc, 0, '.', '.');
         $totalpotongantpp += $potongtppdtpc;
 
         $rowdata["tidakhadir"] = $totalbolos;
         $potongantppbolos = ($pegawai->tpp_dibayarkan*100/100)*3/100*$totalbolos;
-        $rowdata["potongantidakhadir"] = $potongantppbolos;
+        $rowdata["potongantidakhadir"] = number_format($potongantppbolos, 0, '.', '.');
         $totalpotongantpp += $potongantppbolos;
 
         $jumlahtidakapelempatkali = 0;
@@ -760,32 +821,35 @@ class LaporanController extends Controller
 
         $rowdata["tidakapel"] = $tidakapel;
         $potongantppapel = ($pegawai->tpp_dibayarkan*60/100)*2.5/100*$tidakapel;
-        $rowdata["potongantidakapel"] = $potongantppapel;
-        $totalpotongantpp += $potongantppapel;
+        $rowdata["potongantidakapel"] = number_format(floor($potongantppapel), 0, '.', '.');
+        $totalpotongantpp += floor($potongantppapel);
 
         $rowdata["tidakapelempat"] = $jumlahtidakapelempatkali;
         $potongantppapelempatkali = ($pegawai->tpp_dibayarkan*60/100)*25/100*$jumlahtidakapelempatkali;
-        $rowdata["potongantidakapelempat"] = $potongantppapelempatkali;
-        $totalpotongantpp += $potongantppapelempatkali;
+        $rowdata["potongantidakapelempat"] = floor($potongantppapelempatkali);
+        $totalpotongantpp += floor($potongantppapelempatkali);
 
-        $rowdata["totalpotongantpp"] = $totalpotongantpp;
-        $rowdata["totalterimatpp"] = $pegawai->tpp_dibayarkan - $totalpotongantpp;
+        $rowdata["totalpotongantpp"] = number_format($totalpotongantpp, 0, '.', '.');
+        $rowdata["totalterimatpp"] = number_format(($pegawai->tpp_dibayarkan - $totalpotongantpp), 0, '.', '.');
 
+        // return "--- MAINTENANCE ----";
         $rekaptpp[] = $rowdata;
+        $grandtotalpotongantpp += $totalpotongantpp;
+        $grandtotaltppdibayarkan += ($pegawai->tpp_dibayarkan - $totalpotongantpp);
       }
       // --- END OF LOOP GET PEGAWAI ---
 
-      $getpengecualiantpp = DB::select("select nip_sapk from preson_pengecualian_tpp");
-      $arrpengecualian = array();
-      foreach ($getpengecualiantpp as $key) {
-        $arrpengecualian[] = $key->nip_sapk;
-      }
+      // echo "grand total potongan: ".$grandtotalpotongantpp."<br>";
+      // echo "grand total tpp: ".$grandtotaltppdibayarkan."<br>";
+      // return "--- MAINTENANCE ----";
 
       return view('pages.laporan.laporanAdmin')
         ->with('rekaptpp', $rekaptpp)
         ->with('bulan', $bulan)
         ->with('start_dateR', $tanggal_mulai)
         ->with('end_dateR', $tanggal_akhir)
+        ->with('grandtotalpotongantpp', number_format($grandtotalpotongantpp, 0, '.', '.'))
+        ->with('grandtotaltppdibayarkan', number_format($grandtotaltppdibayarkan, 0, '.', '.'))
         ->with('pengecualian', $arrpengecualian);
     }
 
@@ -888,13 +952,23 @@ class LaporanController extends Controller
       }
       // --- GET HARI KERJA SEHARUSNYA ---
 
+      // --- GET PENGECUALIAN TPP ---
+      $getpengecualiantpp = DB::select("select nip_sapk from preson_pengecualian_tpp");
+      $arrpengecualian = array();
+      foreach ($getpengecualiantpp as $key) {
+        $arrpengecualian[] = $key->nip_sapk;
+      }
+      // --- END OF GET PENGECUALIAN TPP ---
+
       // --- LOOP GET PEGAWAI ---
       $rekaptpp = array();
+      $grandtotalpotongantpp=0;
+      $grandtotaltppdibayarkan=0;
       foreach ($getpegawai as $pegawai) {
         $rowdata = array();
         $rowdata["nip"] = $pegawai->nip_sapk;
         $rowdata["nama"] = $pegawai->nama;
-        $rowdata["tpp"] = $pegawai->tpp_dibayarkan;
+        $rowdata["tpp"] = number_format($pegawai->tpp_dibayarkan, 0, '.', '.');
 
         // --- INTERVENSI FOR SPECIFIC PEGAWAI
         $dateintervensibebas = array();
@@ -947,6 +1021,9 @@ class LaporanController extends Controller
           $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
           $tanggalintervensibebas[] = $tglformat;
         }
+        // foreach ($tanggalintervensibebas as $key) {
+        //   echo "intervensibebas:".$pegawai->pegawai_id."----".$key."<br>";
+        // }
         // --- END OF INTERVENSI FOR SPECIFIC PEGAWAI
 
         // -- LOOP PRESON LOG
@@ -985,7 +1062,7 @@ class LaporanController extends Controller
                     // echo "dianggapbolos-jamdtg: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
                   }
-                } else if (($presonlog->jam_pulang==null && !($jamdtg > 70000 && $jamdtg < $lower_telatdtg)) || $jamplg > 190000) {
+                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
                   if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
                     // echo "dianggapbolos-jamplg: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
@@ -1040,7 +1117,7 @@ class LaporanController extends Controller
                     // echo "dianggapbolos-jamdtg-jumat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
                   }
-                } else if (($presonlog->jam_pulang==null && !($jamdtg > 63000 && $jamdtg < $lower_telatdtg)) || $jamplg > 190000) {
+                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
                   if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
                     // echo "dianggapbolos-jamplg-jumat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
@@ -1101,14 +1178,16 @@ class LaporanController extends Controller
                     // echo "dianggapbolos-jamdtg-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
                   }
-                } else if (($presonlog->jam_pulang==null && !($jamdtg > 70000 && $jamdtg < $maxjamdatang)) || $jamplg > 190000) {
+                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
                   if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
                     // echo "dianggapbolos-jamplg-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
                   }
                 } else if ($jamdtg > $maxjamdatang && $jamplg > $upper_plgcepat) {
-                  // echo "tidak-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                  $tidakapel++;
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+                    // echo "tidak-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                    $tidakapel++;
+                  }
                 } else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
                   $intertelat = 0;
                   $interpulcep = 0;
@@ -1129,8 +1208,46 @@ class LaporanController extends Controller
                     }
                   }
                 } else if ((($jamdtg < $maxjamdatang && $jamdtg > 70000) && $jamplg < $upper_plgcepat) || (($jamdtg < $maxjamdatang && $jamdtg > 70000) && $jamplg==null)) {
-                  // echo "pulcep-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                  $pulangcepat++;
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+                    // echo "pulcep-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                    $pulangcepat++;
+                  }
+                }
+              } else {
+                if ($presonlog->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+                    // echo "dianggapbolos-jamdtg-bukanmesinapel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                    $dianggapbolos++;
+                  }
+                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+                    // echo "dianggapbolos-jamplg-bukanmesinapel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                    $dianggapbolos++;
+                  }
+                } else if (($jamdtg <= $maxjamdatang || $jamdtg >= $maxjamdatang) && $jamplg > $upper_plgcepat) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+                    // echo "tidak-apel-bukanmesinapel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                    $tidakapel++;
+                  }
+                } else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
+                  $intertelat = 0;
+                  $interpulcep = 0;
+                  $interbebas = 0;
+                  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
+                  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
+                  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+                  if ($interbebas==0) {
+                    if ($intertelat==0 && $interpulcep==0) {
+                      // echo "telat-pulcep-bukanmesinapel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                      $telatpulangcepat++;
+                    } else if ($intertelat!=0 && $interpulcep==0) {
+                      // echo "pulcep-(dtpc)-bukanmesinapel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                      $pulangcepat++;
+                    } else if ($intertelat==0 && $interpulcep!=0) {
+                      // echo "telat-(dtpc)-bukanmesinapel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+                      $telat++;
+                    }
+                  }
                 }
               }
             }
@@ -1160,24 +1277,32 @@ class LaporanController extends Controller
 
         $totalpotongantpp = 0;
 
+        if (in_array($pegawai->nip_sapk, $arrpengecualian)) {
+          $telat=0;
+          $pulangcepat=0;
+          $telatpulangcepat=0;
+          $totalbolos=0;
+          $tidakapel=0;
+        }
+
         $rowdata["telat"] = $telat;
         $potongtpptelat = ($pegawai->tpp_dibayarkan*60/100)*2/100*$telat;
-        $rowdata["potongantelat"] = $potongtpptelat;
+        $rowdata["potongantelat"] = number_format($potongtpptelat, 0, '.', '.');
         $totalpotongantpp += $potongtpptelat;
 
         $rowdata["pulangcepat"] = $pulangcepat;
         $potongtpppulcep = ($pegawai->tpp_dibayarkan*60/100)*2/100*$pulangcepat;
-        $rowdata["potonganpulangcepat"] = $potongtpppulcep;
+        $rowdata["potonganpulangcepat"] = number_format($potongtpppulcep, 0, '.', '.');
         $totalpotongantpp += $potongtpppulcep;
 
         $rowdata["telatpulangcepat"] = $telatpulangcepat;
         $potongtppdtpc = ($pegawai->tpp_dibayarkan*60/100)*3/100*$telatpulangcepat;
-        $rowdata["potongantelatpulangcepat"] = $potongtppdtpc;
+        $rowdata["potongantelatpulangcepat"] = number_format($potongtppdtpc, 0, '.', '.');
         $totalpotongantpp += $potongtppdtpc;
 
         $rowdata["tidakhadir"] = $totalbolos;
         $potongantppbolos = ($pegawai->tpp_dibayarkan*100/100)*3/100*$totalbolos;
-        $rowdata["potongantidakhadir"] = $potongantppbolos;
+        $rowdata["potongantidakhadir"] = number_format($potongantppbolos, 0, '.', '.');
         $totalpotongantpp += $potongantppbolos;
 
         $jumlahtidakapelempatkali = 0;
@@ -1188,18 +1313,21 @@ class LaporanController extends Controller
 
         $rowdata["tidakapel"] = $tidakapel;
         $potongantppapel = ($pegawai->tpp_dibayarkan*60/100)*2.5/100*$tidakapel;
-        $rowdata["potongantidakapel"] = $potongantppapel;
-        $totalpotongantpp += $potongantppapel;
+        $rowdata["potongantidakapel"] = number_format(floor($potongantppapel), 0, '.', '.');
+        $totalpotongantpp += floor($potongantppapel);
 
         $rowdata["tidakapelempat"] = $jumlahtidakapelempatkali;
         $potongantppapelempatkali = ($pegawai->tpp_dibayarkan*60/100)*25/100*$jumlahtidakapelempatkali;
-        $rowdata["potongantidakapelempat"] = $potongantppapelempatkali;
-        $totalpotongantpp += $potongantppapelempatkali;
+        $rowdata["potongantidakapelempat"] = floor($potongantppapelempatkali);
+        $totalpotongantpp += floor($potongantppapelempatkali);
 
-        $rowdata["totalpotongantpp"] = $totalpotongantpp;
-        $rowdata["totalterimatpp"] = $pegawai->tpp_dibayarkan - $totalpotongantpp;
+        $rowdata["totalpotongantpp"] = number_format($totalpotongantpp, 0, '.', '.');
+        $rowdata["totalterimatpp"] = number_format(($pegawai->tpp_dibayarkan - $totalpotongantpp), 0, '.', '.');
 
+        // return "--- MAINTENANCE ----";
         $rekaptpp[] = $rowdata;
+        $grandtotalpotongantpp += $totalpotongantpp;
+        $grandtotaltppdibayarkan += ($pegawai->tpp_dibayarkan - $totalpotongantpp);
       }
 
       $nama_skpd = skpd::select('nama')->where('id', $skpd_id)->first();
