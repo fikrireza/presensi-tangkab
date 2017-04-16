@@ -843,6 +843,27 @@ class LaporanController extends Controller
       // echo "grand total tpp: ".$grandtotaltppdibayarkan."<br>";
       // return "--- MAINTENANCE ----";
 
+      // --- SAVE TO PRESON JURNAL ---
+      // $getJurnal = Jurnal::select('*')
+      //   ->where('skpd_id', $skpd_id)
+      //   ->where('bulan', $bulanexplode[0])
+      //   ->where('tahun', $bulanexplode[1])
+      //   ->where('flag_sesuai', 0)
+      //   ->first();
+      // if($getJurnal != null){
+      //   $updateJurnal = Jurnal::find($getJurnal->id);
+      //   $updateJurnal->jumlah_tpp = $grandtotaltppdibayarkan;
+      //   $updateJurnal->update();
+      // }else{
+      //   $saveJurnal = new Jurnal;
+      //   $saveJurnal->skpd_id  = $skpd_id;
+      //   $saveJurnal->bulan = $bulanexplode[0];
+      //   $saveJurnal->tahun = $bulanexplode[1];
+      //   $saveJurnal->jumlah_tpp = $grandtotaltppdibayarkan;
+      //   $saveJurnal->save();
+      // }
+      // --- SAVE TO PRESON JURNAL ---
+
       return view('pages.laporan.laporanAdmin')
         ->with('rekaptpp', $rekaptpp)
         ->with('bulan', $bulan)
@@ -1344,6 +1365,8 @@ class LaporanController extends Controller
       view()->share('nama_skpd', $nama_skpd);
       view()->share('tanggalmulai', $tanggal_mulai);
       view()->share('tanggalakhir', $tanggal_akhir);
+      view()->share('grandtotalpotongantpp', number_format($grandtotalpotongantpp, 0, '.', '.'));
+      view()->share('grandtotaltppdibayarkan', number_format($grandtotaltppdibayarkan, 0, '.', '.'));
       view()->share('bulan', $bulan);
       view()->share('pejabatDokumen', $pejabatDokumen);
 
