@@ -69,6 +69,9 @@
             @endif
           </tbody>
         </table>
+        <br>
+        <span style="font-size:18px;"><strong>Grand Total TPP Dibayarkan: Rp. {{$grandtotaltppdibayarkan}},-</strong></span><br>
+        <span style="font-size:18px;"><strong>Grand Total Potongan TPP: Rp. {{$grandtotalpotongantpp}},-</strong></span>
 
         @php
         $ttd_now = date('F Y');

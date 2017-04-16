@@ -8,7 +8,7 @@
 @section('content')
 {{-- @if (Auth::user()->skpd_id==15 || Auth::user()->skpd_id==1 || Auth::user()->skpd_id==7) --}}
   <div class="row">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-6">
       <div class="box box-primary box-solid">
         <div class="box-header with-border">
           <div class="box-title">
@@ -46,10 +46,42 @@
         <div class="box-footer">
           <input type="submit" class="btn btn-block bg-purple" value="Pilih">
             @if (isset($rekaptpp))
-              <a href="{{ route('laporan.cetakAdmin', ['download'=>'pdf', 'bulanhitung'=>$bulan]) }}" class="btn btn-block bg-green">Download PDF</a>
+              <a href="{{ route('laporan.cetakAdmin', ['download'=>'pdf', 'pilih_bulan'=>$bulan]) }}" class="btn btn-block bg-green">Download PDF</a>
             @endif
         </div>
         </form>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="col-md-12">
+        <div class="box box-success box-solid">
+          <div class="box-header">
+            <div class="box-title" style="font-size:15px;">
+              Grand Total TPP Dibayarkan
+            </div>
+            <hr style="margin-top:10px;margin-bottom:5px;">
+            @if (isset($grandtotaltppdibayarkan))
+              <span style="font-size:28px;"><strong>Rp. {{$grandtotaltppdibayarkan}},-</strong></span>
+            @else
+              <span style="font-size:28px;"><strong>Rp. 0,-</strong></span>
+            @endif
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="box box-danger box-solid">
+          <div class="box-header">
+            <div class="box-title" style="font-size:15px;">
+              Grand Total Potongan TPP
+            </div>
+            <hr style="margin-top:10px;margin-bottom:5px;">
+            @if (isset($grandtotalpotongantpp))
+              <span style="font-size:28px;"><strong>Rp. {{$grandtotalpotongantpp}},-</strong></span>
+            @else
+              <span style="font-size:28px;"><strong>Rp. 0,-</strong></span>
+            @endif
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -97,7 +129,7 @@
                   $flagpengecualiantpp = 0;
                 @endphp
                 @foreach ($rekaptpp as $key)
-                  <tr>
+                  <tr id="row{{$key['nip']}}">
                     <td>{{$number}}</td>
                     <td>
                       <a href="{{ route('laporan.cetakPegawai', ['download'=>'pdf', 'bulanhitung'=>$bulan, 'nip_sapk'=>$key["nip"]]) }}">{{$key["nip"]}}</a>
@@ -126,6 +158,9 @@
               @endif
             </tbody>
           </table>
+          <span>
+            <i>* KETERANGAN: Baris yang berwarna hijau adalah pegawai yang dikecualikan dari potongan TPP.</i>
+          </span>
         </div>
       </div>
     </div>
@@ -148,16 +183,15 @@ $('#pilih_bulan').datepicker({
    });
 </script>
 <script>
-  @php
-    if (isset($arrpengecualian)) {
+@php
+  if (isset($pengecualian)) {
+    foreach ($pengecualian as $key) {
       @endphp
-        @foreach ($arrpengecualian as $key)
-          $("#{{$key}}").attr('style', 'background:#c4ffd1;');
-        @endforeach
+        $('#row{{$key}}').attr('style', 'background:#abffd8;');
       @php
     }
-  @endphp
-
+  }
+@endphp
 $('#start_date').datepicker({
   autoclose: true,
   format: 'dd/mm/yyyy',
