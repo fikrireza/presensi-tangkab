@@ -681,6 +681,35 @@ class LaporanController extends Controller
         $arrpengecualian[] = $key->nip_sapk;
       }
 
+
+      // SAVE TO PRESON_JURNAL
+      $jumlah_bayarTPP = 0;
+      foreach ($rekaptpp as $key) {
+        $jumlah_bayarTPP += $key["totalterimatpp"];
+      }
+
+      $getJurnal = Jurnal::select('*')
+                          ->where('skpd_id', $skpd_id)
+                          ->where('bulan', $bulanexplode[0])
+                          ->where('tahun', $bulanexplode[1])
+                          ->where('flag_sesuai', 0)
+                          ->first();
+
+      if($getJurnal != null){
+        $updateJurnal = Jurnal::find($getJurnal->id);
+        $updateJurnal->jumlah_tpp = $jumlah_bayarTPP;
+        $updateJurnal->update();
+      }else{
+        $saveJurnal = new Jurnal;
+        $saveJurnal->skpd_id  = $skpd_id;
+        $saveJurnal->bulan = $bulanexplode[0];
+        $saveJurnal->tahun = $bulanexplode[1];
+        $saveJurnal->jumlah_tpp = $jumlah_bayarTPP;
+        $saveJurnal->save();
+      }
+      // SAVE TO PRESON_JURNAL
+
+
       return view('pages.laporan.laporanAdmin')
         ->with('rekaptpp', $rekaptpp)
         ->with('bulan', $bulan)

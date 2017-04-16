@@ -217,3 +217,4 @@ Route::get('convert', 'ConvertController@log_to_preson_log')->name('convert.inde
 
 // BPKAD
 Route::get('jurnal', 'JurnalController@index')->name('jurnal.index');
+Route::post('jurnal', 'JurnalController@getJurnal')->name('jurnal.getJurnal');  
