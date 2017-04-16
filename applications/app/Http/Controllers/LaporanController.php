@@ -880,14 +880,14 @@ class LaporanController extends Controller
 
       if($getJurnal != null){
         $updateJurnal = Jurnal::find($getJurnal->id);
-        $updateJurnal->jumlah_tpp = $jumlah_bayarTPP;
+        $updateJurnal->jumlah_tpp = $grandtotaltppdibayarkan;
         $updateJurnal->update();
       }else{
         $saveJurnal = new Jurnal;
         $saveJurnal->skpd_id  = $skpd_id;
         $saveJurnal->bulan = $bulanexplode[0];
         $saveJurnal->tahun = $bulanexplode[1];
-        $saveJurnal->jumlah_tpp = $jumlah_bayarTPP;
+        $saveJurnal->jumlah_tpp = $grandtotaltppdibayarkan;
         $saveJurnal->save();
       }
       // SAVE TO PRESON_JURNAL
