@@ -1428,13 +1428,93 @@ class LaporanController extends Controller
     public function laporanPegawaiStore(Request $request)
     {
       $nip_sapk = $request->nip_sapk;
-      $fid = pegawai::select('fid')->where('nip_sapk', $nip_sapk)->first();
+      $fid = pegawai::select('id','fid','skpd_id')->where('nip_sapk', $nip_sapk)->first();
       $start_dateR = $request->start_date;
       $start_date = explode('/', $start_dateR);
+      $bulan = $start_date[1].'/'.$start_date[2];
       $start_date = $start_date[2].'-'.$start_date[1].'-'.$start_date[0];
       $end_dateR = $request->end_date;
       $end_date = explode('/', $end_dateR);
       $end_date = $end_date[2].'-'.$end_date[1].'-'.$end_date[0];
+
+      // --- GET TANGGAL APEL ----
+      $getapel = Apel::select('tanggal_apel')->get();
+      $tanggalapel = array();
+      foreach ($getapel as $key) {
+        $tglnew = explode('-', $key->tanggal_apel);
+        $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+        $tanggalapel[] = $tglformat;
+      }
+      // --- END OF GET TANGGAL APEL ----
+
+      // --- GET MESIN APEL ---
+      $getmesinapel = MesinApel::select('mach_id')->where('flag_status', 1)->get();
+      $mesinapel = array();
+      foreach ($getmesinapel as $key) {
+        $mesinapel[] = $key->mach_id;
+      }
+
+      // --- GET INTERVENSI SKPD ---
+      $getintervensi = Intervensi::
+        select('fid', 'tanggal_mulai', 'tanggal_akhir', 'preson_pegawais.id as id', 'preson_intervensis.id_intervensi as id_intervensi')
+        ->join('preson_pegawais', 'preson_intervensis.pegawai_id', '=', 'preson_pegawais.id')
+        ->where('preson_pegawais.skpd_id', $fid->skpd_id)
+        ->where('preson_intervensis.flag_status', 1)
+        ->where('preson_pegawais.id', $fid->id)
+        ->orderby('fid')
+        ->get();
+
+      // --- INTERVENSI FOR SPECIFIC PEGAWAI
+      $dateintervensibebas = array();
+      $dateintervensitelat = array();
+      $dateintervensipulcep = array();
+      foreach ($getintervensi as $intervensi) {
+        if ($fid->id == $intervensi->id) {
+          if ($intervensi->id_intervensi==2) {
+            $period = new DatePeriod(
+                 new DateTime("$intervensi->tanggal_mulai"),
+                 new DateInterval('P1D'),
+                 new DateTime("$intervensi->tanggal_akhir 23:59:59")
+            );
+            foreach($period as $date) {$dateintervensitelat[] = $date->format('Y-m-d'); }
+          } else if ($intervensi->id_intervensi==3) {
+            $period = new DatePeriod(
+                 new DateTime("$intervensi->tanggal_mulai"),
+                 new DateInterval('P1D'),
+                 new DateTime("$intervensi->tanggal_akhir 23:59:59")
+            );
+            foreach($period as $date) {$dateintervensipulcep[] = $date->format('Y-m-d'); }
+          } else {
+            $period = new DatePeriod(
+                 new DateTime("$intervensi->tanggal_mulai"),
+                 new DateInterval('P1D'),
+                 new DateTime("$intervensi->tanggal_akhir 23:59:59")
+            );
+            foreach($period as $date) {$dateintervensibebas[] = $date->format('Y-m-d'); }
+          }
+        }
+      }
+      $tanggalintervensitelat = array();
+      $unique = array_unique($dateintervensitelat);
+      foreach ($unique as $key) {
+        $tglnew = explode('-', $key);
+        $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+        $tanggalintervensitelat[] = $tglformat;
+      }
+      $tanggalintervensipulcep = array();
+      $unique = array_unique($dateintervensipulcep);
+      foreach ($unique as $key) {
+        $tglnew = explode('-', $key);
+        $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+        $tanggalintervensipulcep[] = $tglformat;
+      }
+      $tanggalintervensibebas = array();
+      $unique = array_unique($dateintervensibebas);
+      foreach ($unique as $key) {
+        $tglnew = explode('-', $key);
+        $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+        $tanggalintervensibebas[] = $tglformat;
+      }
 
       // Mencari jadwal intervensi pegawai dalam periode tertentu
       $intervensi = DB::select("select a.tanggal_mulai, a.tanggal_akhir, a.jenis_intervensi, a.deskripsi
@@ -1464,24 +1544,97 @@ class LaporanController extends Controller
 
       $absensi = collect($list);
 
-      return view('pages.laporan.laporanPegawai', compact('start_dateR', 'end_dateR', 'intervensi', 'absensi', 'hariLibur', 'nip_sapk', 'tanggalBulan'));
+      return view('pages.laporan.laporanPegawai', compact('start_dateR', 'end_dateR', 'intervensi', 'absensi', 'hariLibur', 'nip_sapk', 'bulan', 'tanggalBulan', 'tanggalapel', 'mesinapel', 'tanggalintervensitelat', 'tanggalintervensipulcep', 'tanggalintervensibebas'));
     }
 
     public function cetakPegawai(Request $request)
     {
       $bulanhitung = $request->bulanhitung;
       $bulanhitungformatnormal = explode("/", $bulanhitung);
-      // dd($bulanhitungformatnormal);
       $bulanhitung2 = $bulanhitungformatnormal[1]."-".$bulanhitungformatnormal[0];
 
       $nip_sapk = $request->nip_sapk;
-      $fid = pegawai::select('fid', 'nama')->where('nip_sapk', $nip_sapk)->first();
-      // $start_dateR = $request->start_date;
-      // $start_date = explode('/', $start_dateR);
-      // $start_date = $start_date[2].'-'.$start_date[1].'-'.$start_date[0];
-      // $end_dateR = $request->end_date;
-      // $end_date = explode('/', $end_dateR);
-      // $end_date = $end_date[2].'-'.$end_date[1].'-'.$end_date[0];
+      $fid = pegawai::select('id', 'fid', 'nama', 'skpd_id')->where('nip_sapk', $nip_sapk)->first();
+
+      // --- GET TANGGAL APEL ----
+      $getapel = Apel::select('tanggal_apel')->get();
+      $tanggalapel = array();
+      foreach ($getapel as $key) {
+        $tglnew = explode('-', $key->tanggal_apel);
+        $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+        $tanggalapel[] = $tglformat;
+      }
+      // --- END OF GET TANGGAL APEL ----
+
+      // --- GET MESIN APEL ---
+      $getmesinapel = MesinApel::select('mach_id')->where('flag_status', 1)->get();
+      $mesinapel = array();
+      foreach ($getmesinapel as $key) {
+        $mesinapel[] = $key->mach_id;
+      }
+
+      // --- GET INTERVENSI SKPD ---
+      $getintervensi = Intervensi::
+        select('fid', 'tanggal_mulai', 'tanggal_akhir', 'preson_pegawais.id as id', 'preson_intervensis.id_intervensi as id_intervensi')
+        ->join('preson_pegawais', 'preson_intervensis.pegawai_id', '=', 'preson_pegawais.id')
+        ->where('preson_pegawais.skpd_id', $fid->skpd_id)
+        ->where('preson_intervensis.flag_status', 1)
+        ->where('preson_pegawais.id', $fid->id)
+        ->orderby('fid')
+        ->get();
+
+      // --- INTERVENSI FOR SPECIFIC PEGAWAI
+      $dateintervensibebas = array();
+      $dateintervensitelat = array();
+      $dateintervensipulcep = array();
+      foreach ($getintervensi as $intervensi) {
+        if ($fid->id == $intervensi->id) {
+          if ($intervensi->id_intervensi==2) {
+            $period = new DatePeriod(
+                 new DateTime("$intervensi->tanggal_mulai"),
+                 new DateInterval('P1D'),
+                 new DateTime("$intervensi->tanggal_akhir 23:59:59")
+            );
+            foreach($period as $date) {$dateintervensitelat[] = $date->format('Y-m-d'); }
+          } else if ($intervensi->id_intervensi==3) {
+            $period = new DatePeriod(
+                 new DateTime("$intervensi->tanggal_mulai"),
+                 new DateInterval('P1D'),
+                 new DateTime("$intervensi->tanggal_akhir 23:59:59")
+            );
+            foreach($period as $date) {$dateintervensipulcep[] = $date->format('Y-m-d'); }
+          } else {
+            $period = new DatePeriod(
+                 new DateTime("$intervensi->tanggal_mulai"),
+                 new DateInterval('P1D'),
+                 new DateTime("$intervensi->tanggal_akhir 23:59:59")
+            );
+            foreach($period as $date) {$dateintervensibebas[] = $date->format('Y-m-d'); }
+          }
+        }
+      }
+      $tanggalintervensitelat = array();
+      $unique = array_unique($dateintervensitelat);
+      foreach ($unique as $key) {
+        $tglnew = explode('-', $key);
+        $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+        $tanggalintervensitelat[] = $tglformat;
+      }
+      $tanggalintervensipulcep = array();
+      $unique = array_unique($dateintervensipulcep);
+      foreach ($unique as $key) {
+        $tglnew = explode('-', $key);
+        $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+        $tanggalintervensipulcep[] = $tglformat;
+      }
+      $tanggalintervensibebas = array();
+      $unique = array_unique($dateintervensibebas);
+      foreach ($unique as $key) {
+        $tglnew = explode('-', $key);
+        $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+        $tanggalintervensibebas[] = $tglformat;
+      }
+
 
       $start_date = $bulanhitung2."-01";
       $end_date = date("Y-m-t", strtotime($start_date));
@@ -1524,6 +1677,11 @@ class LaporanController extends Controller
       view()->share('hariLibur', $hariLibur);
       view()->share('nip_sapk', $nip_sapk);
       view()->share('fid', $fid);
+      view()->share('tanggalapel', $tanggalapel);
+      view()->share('mesinapel', $mesinapel);
+      view()->share('tanggalintervensitelat', $tanggalintervensitelat);
+      view()->share('tanggalintervensipulcep', $tanggalintervensipulcep);
+      view()->share('tanggalintervensibebas', $tanggalintervensibebas);
 
       if($request->has('download')){
         $pdf = PDF::loadView('pages.laporan.cetakPegawai')->setPaper('a4', 'potrait');
