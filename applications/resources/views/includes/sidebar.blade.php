@@ -210,14 +210,14 @@
             </li>
             @endif
             @if(session('status') != 'pegawai' || session('status') != 'sekretaris' || session('status') == 'bpkad')
-            <li class="treeview {{ Route::currentRouteNamed('tpp.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pejabatdokumen.index') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdministrator') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdmin') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdmin.store') ? 'active' : '' }}">
+            <li class="treeview {{ Route::currentRouteNamed('tpp.index') ? 'active' : ''}}{{ Route::currentRouteNamed('pejabatdokumen.index') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdministrator') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdmin') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanAdmin.store') ? 'active' : '' }}{{ Route::currentRouteNamed('jurnal.index') ? 'active' : '' }}{{ Route::currentRouteNamed('jurnal.getJurnal') ? 'active' : '' }}">
               <a href="">
                 <i class="fa fa fa-file"></i> <span>Laporan</span>
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
                 @if(session('status') == 'bpkad')
-                <li class="{{ Route::currentRouteNamed('jurnal.index') ? 'active' : '' }}">
+                <li class="{{ Route::currentRouteNamed('jurnal.index') ? 'active' : '' }}{{ Route::currentRouteNamed('jurnal.getJurnal') ? 'active' : '' }}">
                   <a href="{{ route('jurnal.index') }}">
                     <i class="fa fa-circle-o"></i> <span>Jurnal TPP</span>
                   </a>
