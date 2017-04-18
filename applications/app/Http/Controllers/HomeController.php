@@ -10,10 +10,15 @@ use App\Models\Pegawai;
 use App\Models\Skpd;
 use App\Models\Intervensi;
 use App\Models\HariLibur;
+use App\Models\Apel;
+use App\Models\MesinApel;
 
 use Auth;
 use DB;
 use Carbon;
+use DatePeriod;
+use DateTime;
+use DateInterval;
 
 class HomeController extends Controller
 {
@@ -35,10 +40,11 @@ class HomeController extends Controller
     public function index()
     {
         $pegawai_id = Auth::user()->pegawai_id;
+        $nip_sapk = Auth::user()->nip_sapk;
         $fid = Auth::user()->fid;
         $skpd_id   = Auth::user()->skpd_id;
 
-        if(session('status') == 'administrator' || session('status') == 'superuser' || session('status') == 'sekretaris' || session('status') == 'bpkad')
+        if(session('status') == 'administrator' || session('status') == 'superuser' || session('status') == 'sekretaris')
         {
           $jumlahPegawai = pegawai::count();
           $jumlahTPP = DB::select("select sum(preson_pegawais.tpp_dibayarkan) as jumlah_tpp from preson_pegawais");
@@ -55,7 +61,7 @@ class HomeController extends Controller
                             ->select('preson_skpd.*', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.fid', 'preson_pegawais.tpp_dibayarkan')
                             ->get();
 
-        $month = date('m');
+        $month = '03';
         $year = date('Y');
 
         $start_date = "01-".$month."-".$year;
@@ -156,31 +162,125 @@ class HomeController extends Controller
 
           return view('home', compact('getunreadintervensi', 'absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'totalHadir'));
         }else{
-          for($i=$start_time; $i<$end_time; $i+=86400)
-          {
+
+          $fid = pegawai::select('id','fid','skpd_id')->where('nip_sapk', $nip_sapk)->first();
+          $bulan = $month."/".$year;
+          $bulanexplode = explode("/", $bulan);
+          $bulanhitung = $bulanexplode[1]."-".$bulanexplode[0];
+          // --- END OF GET REQUEST ---
+
+          // --- GET TANGGAL MULAI & TANGGAL AKHIR ---
+          $tanggal_mulai = $bulanhitung."-01";
+          $tanggal_akhir = date("Y-m-t", strtotime($tanggal_mulai));
+
+          // --- GET TANGGAL APEL ----
+          $getapel = Apel::select('tanggal_apel')->get();
+          $tanggalapel = array();
+          foreach ($getapel as $key) {
+            $tglnew = explode('-', $key->tanggal_apel);
+            $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+            $tanggalapel[] = $tglformat;
+          }
+          // --- END OF GET TANGGAL APEL ----
+
+          // --- GET MESIN APEL ---
+          $getmesinapel = MesinApel::select('mach_id')->where('flag_status', 1)->get();
+          $mesinapel = array();
+          foreach ($getmesinapel as $key) {
+            $mesinapel[] = $key->mach_id;
+          }
+
+          // --- GET INTERVENSI SKPD ---
+          $getintervensi = Intervensi::
+            select('fid', 'tanggal_mulai', 'tanggal_akhir', 'preson_pegawais.id as id', 'preson_intervensis.id_intervensi as id_intervensi')
+            ->join('preson_pegawais', 'preson_intervensis.pegawai_id', '=', 'preson_pegawais.id')
+            ->where('preson_pegawais.skpd_id', $fid->skpd_id)
+            ->where('preson_intervensis.flag_status', 1)
+            ->where('preson_pegawais.id', $fid->id)
+            ->orderby('fid')
+            ->get();
+
+          // --- INTERVENSI FOR SPECIFIC PEGAWAI
+          $dateintervensibebas = array();
+          $dateintervensitelat = array();
+          $dateintervensipulcep = array();
+          foreach ($getintervensi as $intervensi) {
+            if ($fid->id == $intervensi->id) {
+              if ($intervensi->id_intervensi==2) {
+                $period = new DatePeriod(
+                     new DateTime("$intervensi->tanggal_mulai"),
+                     new DateInterval('P1D'),
+                     new DateTime("$intervensi->tanggal_akhir 23:59:59")
+                );
+                foreach($period as $date) {$dateintervensitelat[] = $date->format('Y-m-d'); }
+              } else if ($intervensi->id_intervensi==3) {
+                $period = new DatePeriod(
+                     new DateTime("$intervensi->tanggal_mulai"),
+                     new DateInterval('P1D'),
+                     new DateTime("$intervensi->tanggal_akhir 23:59:59")
+                );
+                foreach($period as $date) {$dateintervensipulcep[] = $date->format('Y-m-d'); }
+              } else {
+                $period = new DatePeriod(
+                     new DateTime("$intervensi->tanggal_mulai"),
+                     new DateInterval('P1D'),
+                     new DateTime("$intervensi->tanggal_akhir 23:59:59")
+                );
+                foreach($period as $date) {$dateintervensibebas[] = $date->format('Y-m-d'); }
+              }
+            }
+          }
+          $tanggalintervensitelat = array();
+          $unique = array_unique($dateintervensitelat);
+          foreach ($unique as $key) {
+            $tglnew = explode('-', $key);
+            $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+            $tanggalintervensitelat[] = $tglformat;
+          }
+          $tanggalintervensipulcep = array();
+          $unique = array_unique($dateintervensipulcep);
+          foreach ($unique as $key) {
+            $tglnew = explode('-', $key);
+            $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+            $tanggalintervensipulcep[] = $tglformat;
+          }
+          $tanggalintervensibebas = array();
+          $unique = array_unique($dateintervensibebas);
+          foreach ($unique as $key) {
+            $tglnew = explode('-', $key);
+            $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+            $tanggalintervensibebas[] = $tglformat;
+          }
+
+          // Mencari jadwal intervensi pegawai dalam periode tertentu
+          $intervensi = DB::select("select a.tanggal_mulai, a.tanggal_akhir, a.jenis_intervensi, a.deskripsi
+                                    from preson_intervensis a, preson_pegawais b
+                                    where a.pegawai_id = b.id
+                                    and b.nip_sapk = '$nip_sapk'
+                                    and a.flag_status = 1");
+
+          // Mencari Hari Libur Dalam Periode Tertentu
+          $hariLibur = harilibur::select('libur', 'keterangan')->whereBetween('libur', array($tanggal_mulai, $tanggal_akhir))->get();
+
+          // Mengambil data Absen Pegawai per Periode
+          $date_from = strtotime($tanggal_mulai); // Convert date to a UNIX timestamp
+          $date_to = strtotime($tanggal_akhir); // Convert date to a UNIX timestamp
+
+          for ($i=$date_from; $i<=$date_to; $i+=86400) {
             $tanggalBulan[] = date('d/m/Y', $i);
           }
 
           $list = DB::select("SELECT a.*
                               FROM preson_log a, preson_pegawais b, preson_skpd c
                               WHERE b.skpd_id = c.id
-                              AND a.tanggal like '%/.$month./.$year.%'
+                              AND (STR_TO_DATE(a.tanggal,'%d/%m/%Y') between '$tanggal_mulai' and '$tanggal_akhir')
                               AND a.fid = b.fid
                               AND str_to_date(a.tanggal, '%d/%m/%Y') NOT IN (SELECT libur FROM preson_harilibur)
-                              AND a.fid = '$tpp->fid'");
+                              AND a.fid = '$fid->fid'");
 
           $absensi = collect($list);
 
-          $intervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
-                                  ->select('preson_pegawais.id as pegawai_id', 'preson_intervensis.tanggal_mulai', 'preson_intervensis.jumlah_hari', 'preson_intervensis.tanggal_akhir', 'preson_intervensis.deskripsi', 'preson_intervensis.jenis_intervensi')
-                                  ->where('preson_pegawais.id', $pegawai_id)
-                                  ->where('preson_intervensis.tanggal_mulai', 'LIKE', '%'.$month.'%')
-                                  ->where('preson_intervensis.flag_status', 1)
-                                  ->get();
-
-          $hariLibur = hariLibur::where('libur', 'LIKE', '____-'.$month.'-__')->get();
-
-          return view('home', compact('absensi', 'pegawai', 'tanggalBulan', 'intervensi', 'hariLibur', 'tpp', 'jumlahPegawai', 'jumlahTPP'));
+          return view('home', compact('absensi', 'pegawai', 'tanggalBulan', 'intervensi', 'hariLibur', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'bulan', 'tanggalBulan', 'tanggalapel', 'mesinapel', 'tanggalintervensitelat', 'tanggalintervensipulcep', 'tanggalintervensibebas'));
         }
     }
 

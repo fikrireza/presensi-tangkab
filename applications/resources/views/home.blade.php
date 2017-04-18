@@ -38,9 +38,6 @@
           </h3>
           <p>Jumlah Hadir</p>
         </div>
-        {{-- <a class="small-box-footer">
-          <i>Jumlah Hadir</i>
-        </a> --}}
       </div>
     </div>
     <div class="col-lg-3 col-md-3 col-xs-12">
@@ -52,7 +49,7 @@
       </div>
     </div>
     @endif
-    @if (session('status') == 'pegawai')
+    @if (session('status') == 'pegawai' || session('status') == 'bpkad')
     <div class="col-lg-3 col-md-3 col-xs-12">
       <div class="small-box bg-purple">
         <div class="inner">
@@ -61,17 +58,6 @@
         </div>
       </div>
     </div>
-    @endif
-    @if (session('status') == 'bpkad')
-    <div class="col-lg-3 col-md-3 col-xs-12">
-      <div class="small-box bg-purple">
-        <div class="inner">
-          <h3><sup style="font-size: 20px">Rp. {{ number_format($jumlahTPP[0]->jumlah_tpp,0,',','.') }},-</sup></h3>
-          <p>Jumlah TPP</p>
-        </div>
-      </div>
-    </div>
-    @endif
     <div class="col-lg-3 col-md-3 col-xs-12">
       <div class="small-box bg-maroon">
         <div class="inner">
@@ -80,6 +66,7 @@
         </div>
       </div>
     </div>
+    @endif
   </div>
 </div>
 
@@ -320,7 +307,7 @@
                 @endphp
 
                 @foreach ($absensi as $absen)
-                  @if ($absen->tanggal == $tanggal && $flaginter == 0)
+                  @if ($absen->tanggal == $tanggal)
                     @php
                       $flag++;
                     @endphp
@@ -342,7 +329,8 @@
                     <td align="center">x</td>
                     <td align="center">x</td>
                   @else
-                    <td colspan="2" align="center">Alpa</td>
+                    <td align="center">x</td>
+                    <td align="center">x</td>
                   @endif
                 @endif
 
@@ -376,7 +364,7 @@
                     @php
                       $flag++;
                     @endphp
-                    <td colspan="2" align="center">Libur</td>
+                    <td align="center">Libur</td>
                   @else
                     @foreach ($absensi as $absen)
                       @if ($absen->tanggal == $tanggal)
@@ -384,21 +372,182 @@
                           $flag++;
                         @endphp
 
-                        @if($absen->jam_datang >= '09:01:00')
-                          <td align="center"><b>Alpa</b></td>
-                        @elseif($absen->jam_pulang == null)
-                          <td align="center"><b>Alpa</b></td>
-                        @elseif (($absen->jam_datang >= '08:01:00') && ($absen->jam_pulang <= '15:59:00'))
-                          <td align="center"><b>Terlambat dan Pulang Cepat</td>
-                        @elseif (($absen->jam_datang >= '08:01:00') && ($absen->jam_datang <= '09:00:00') && ($absen->jam_pulang == null))
-                          <td align="center"><b>Terlambat dan Pulang Cepat</td>
-                        @elseif($absen->jam_datang >= '08:01:00')
-                          <td align="center"><b>Terlambat</b></td>
-                        @elseif($absen->jam_pulang <= '15:01:00')
-                          <td align="center"><b>Pulang Cepat</b></td>
-                        @else
-                          <td align="center"></td>
-                        @endif
+                        @php
+                        if (!in_array($absen->tanggal, $tanggalapel)) {
+                          $tglnew = explode('/', $absen->tanggal);
+                          $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+                          // --- CHECK FRIDAY DATE ---
+                          if ((date('N', strtotime($tglformat)) != 5)) {
+                            $lower_telatdtg = 80100;
+                            $upper_telatdtg = 90100;
+                            $lower_plgcepat = 150000;
+                            $upper_plgcepat = 160000;
+
+                            $rawjamdtg = $absen->jam_datang;
+                            $jamdtg = str_replace(':', '', $rawjamdtg);
+                            $rawjamplg = $absen->jam_pulang;
+                            $jamplg = str_replace(':', '', $rawjamplg);
+
+                            if ($absen->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
+                              if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
+                                echo "<td align='center'> Alpa </td>";
+                              }
+                            } else if ($absen->jam_pulang==null || $jamplg > 190000) {
+                              if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
+                                echo "<td align='center'> Alpa Nih</td>";
+                              }
+                            } else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
+                              $intertelat = 0;
+                              $interpulcep = 0;
+                              $interbebas = 0;
+                              if (in_array($absen->tanggal, $tanggalintervensibebas)) $interbebas++;
+                              if (in_array($absen->tanggal, $tanggalintervensitelat)) $intertelat++;
+                              if (in_array($absen->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+                              if ($interbebas==0) {
+                                if ($intertelat==0 && $interpulcep==0) {
+                                  echo "<td align='center'> Terlambat & Pulang Cepat </td>";
+                                } else if ($intertelat!=0 && $interpulcep==0) {
+                                  echo "<td align='center'> Pulang Cepat </td>";
+                                } else if ($intertelat==0 && $interpulcep!=0) {
+                                  echo "<td align='center'> Terlambat </td>";
+                                }
+                              }
+                            } else if ($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) {
+                              if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
+                                echo "<td align='center'> Terlambat </td>";
+                              }
+                            } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > 70000 && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
+                              if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
+                                echo "<td align='center'> Pulang Cepat </td>";
+                              }
+                            }
+                          } else {
+                            $lower_telatdtg = 73100;
+                            $upper_telatdtg = 83100;
+                            $lower_plgcepat = 150000;
+                            $upper_plgcepat = 160000;
+
+                            $rawjamdtg = $absen->jam_datang;
+                            $jamdtg = str_replace(':', '', $rawjamdtg);
+                            $rawjamplg = $absen->jam_pulang;
+                            $jamplg = str_replace(':', '', $rawjamplg);
+
+                            if ($absen->jam_datang==null || $jamdtg < 63000 || $jamdtg > $upper_telatdtg) {
+                              if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
+                                echo "<td align='center'> Alpa </td>";
+                              }
+                            } else if ($absen->jam_pulang==null || $jamplg > 190000) {
+                              if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
+                                echo "<td align='center'> Alpa </td>";
+                              }
+                            } else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
+                              $intertelat = 0;
+                              $interpulcep = 0;
+                              $interbebas = 0;
+                              if (in_array($absen->tanggal, $tanggalintervensibebas)) $interbebas++;
+                              if (in_array($absen->tanggal, $tanggalintervensitelat)) $intertelat++;
+                              if (in_array($absen->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+                              if ($interbebas==0) {
+                                if ($intertelat==0 && $interpulcep==0) {
+                                  echo "<td align='center'> Terlambat & Pulang Cepat </td>";
+                                } else if ($intertelat!=0 && $interpulcep==0) {
+                                  echo "<td align='center'> Pulang Cepat </td>";
+                                } else if ($intertelat==0 && $interpulcep!=0) {
+                                  echo "<td align='center'> Terlambat </td>";
+                                }
+                              }
+                            } else if ($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) {
+                              if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
+                                echo "<td align='center'> Terlambat </td>";
+                              }
+                            } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > 63000 && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
+                              if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
+                                echo "<td align='center'> Pulang Cepat </td>";
+                              }
+                            }
+                          }
+                        } else {
+                          $tglnew = explode('/', $absen->tanggal);
+                          $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+
+                          $maxjamdatang = 83100;
+                          $upper_telatdtg = 90100;
+                          $lower_plgcepat = 150000;
+                          $upper_plgcepat = 160000;
+
+
+                          $rawjamdtg = $absen->jam_datang;
+                          $jamdtg = str_replace(':', '', $rawjamdtg);
+                          $rawjamplg = $absen->jam_pulang;
+                          $jamplg = str_replace(':', '', $rawjamplg);
+
+                          if (in_array($absen->mach_id, $mesinapel)) {
+                            if ($absen->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
+                              if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
+                                echo "<td align='center'>Alpa</td>";
+                              }
+                            } else if ($absen->jam_pulang==null || $jamplg > 190000) {
+                              if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
+                                echo "<td align='center'>Alpa</td>";
+                              }
+                            } else if ($jamdtg > $maxjamdatang && $jamplg > $upper_plgcepat) {
+                              if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
+                                echo "<td align='center'>Tidak Apel</td>";
+                              }
+                            } else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
+                              $intertelat = 0;
+                              $interpulcep = 0;
+                              $interbebas = 0;
+                              if (in_array($absen->tanggal, $tanggalintervensibebas)) $interbebas++;
+                              if (in_array($absen->tanggal, $tanggalintervensitelat)) $intertelat++;
+                              if (in_array($absen->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+                              if ($interbebas==0) {
+                                if ($intertelat==0 && $interpulcep==0) {
+                                  echo "<td align='center'>Terlambat dan Pulang Cepat</td>";
+                                } else if ($intertelat!=0 && $interpulcep==0) {
+                                  echo "<td align='center'>Pulang Cepat</td>";
+                                } else if ($intertelat==0 && $interpulcep!=0) {
+                                  echo "<td align='center'>Terlambat</td>";
+                                }
+                              }
+                            } else if ((($jamdtg < $maxjamdatang && $jamdtg > 70000) && $jamplg < $upper_plgcepat) || (($jamdtg < $maxjamdatang && $jamdtg > 70000) && $jamplg==null)) {
+                              if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
+                                echo "<td align='center'>Pulang Cepat</td>";
+                              }
+                            }
+                          } else {
+                            if ($absen->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
+                              if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
+                                echo "<td align='center'>Alpa</td>";
+                              }
+                            } else if ($absen->jam_pulang==null || $jamplg > 190000) {
+                              if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
+                                echo "<td align='center'>Alpa</td>";
+                              }
+                            } else if (($jamdtg <= $maxjamdatang || $jamdtg >= $maxjamdatang) && $jamplg > $upper_plgcepat) {
+                              if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
+                                echo "<td align='center'>Tidak Apel</td>";
+                              }
+                            } else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
+                              $intertelat = 0;
+                              $interpulcep = 0;
+                              $interbebas = 0;
+                              if (in_array($absen->tanggal, $tanggalintervensibebas)) $interbebas++;
+                              if (in_array($absen->tanggal, $tanggalintervensitelat)) $intertelat++;
+                              if (in_array($absen->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+                              if ($interbebas==0) {
+                                if ($intertelat==0 && $interpulcep==0) {
+                                  echo "<td align='center'>Terlambat dan Pulang Cepat</td>";
+                                } else if ($intertelat!=0 && $interpulcep==0) {
+                                  echo "<td align='center'>Pulang Cepat</td>";
+                                } else if ($intertelat==0 && $interpulcep!=0) {
+                                  echo "<td align='center'>Terlambat</td>";
+                                }
+                              }
+                            }
+                          }
+                        }
+                        @endphp
                       @endif
                     @endforeach
                   @endif
