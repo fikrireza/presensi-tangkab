@@ -42,25 +42,25 @@
                 $flagpengecualiantpp = 0;
               @endphp
               @foreach ($rekaptpp as $key)
-                <tr>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$number}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["nip"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["nama"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["tpp"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["telat"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["potongantelat"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["pulangcepat"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["potonganpulangcepat"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["telatpulangcepat"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["potongantelatpulangcepat"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["tidakhadir"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["potongantidakhadir"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["tidakapel"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["potongantidakapel"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["tidakapelempat"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["potongantidakapelempat"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["totalpotongantpp"]}}</td>
-                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 16px;">{{$key["totalterimatpp"]}}</td>
+                <tr style="border: 1px solid black;border-collapse: collapse;font-size: 15px;">
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$number}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["nip"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["nama"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["tpp"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["telat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["potongantelat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["pulangcepat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["potonganpulangcepat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["telatpulangcepat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["potongantelatpulangcepat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["tidakhadir"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["potongantidakhadir"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["tidakapel"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["potongantidakapel"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["tidakapelempat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["potongantidakapelempat"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["totalpotongantpp"]}}</td>
+                  <td align="center" style="border-bottom: 1px solid black;border-collapse: collapse;font-size: 15px;">{{$key["totalterimatpp"]}}</td>
                 </tr>
                 @php
                   $number++;
