@@ -170,9 +170,9 @@
                 <li class="{{ Route::currentRouteNamed('absenhari.administrator') ? 'active' : ''}}{{ Route::currentRouteNamed('absenhari.administratorstore') ? 'active' : ''}}">
                   <a href="{{ route('absenhari.administrator') }}"><i class="fa fa-circle-o"></i> <span>Absensi</span></a>
                 </li>
-                <li class="{{ Route::currentRouteNamed('absensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('absensi.filterAdministrator') ? 'active' : '' }}">
+                {{-- <li class="{{ Route::currentRouteNamed('absensi.index') ? 'active' : '' }}{{ Route::currentRouteNamed('absensi.filterAdministrator') ? 'active' : '' }}">
                   <a href="{{ route('absensi.index') }}"><i class="fa fa-circle-o"></i> <span>Rekap Absensi</span></a>
-                </li>
+                </li> --}}
                 <li class="{{ Route::currentRouteNamed('apel.pegawai') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawaiapel.detail') ? 'active' : ''}}{{ Route::currentRouteNamed('pegawaiapel.store') ? 'active' : ''}}"><a href="{{ route('apel.pegawai')}}"><i class="fa fa-circle-o"></i> Absen Apel Pegawai</a></li>
                 <li class="{{ Route::currentRouteNamed('laporanPegawai') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanPegawai.store') ? 'active' : '' }}">
                   <a href="{{ route('laporanPegawai') }}"><i class="fa fa-circle-o"></i> <span>Absensi Anda</span></a>
@@ -190,11 +190,11 @@
                 <li class="{{ Route::currentRouteNamed('absenhari.skpd') ? 'active' : '' }}{{ Route::currentRouteNamed('absenhari.skpdStore') ? 'active' : '' }}">
                   <a href="{{ route('absenhari.skpd') }}"><i class="fa fa-circle-o"></i> <span>Absensi</span></a>
                 </li>
-                <li class="{{ Route::currentRouteNamed('absensi.skpd') ? 'active' : '' }}">
+                {{-- <li class="{{ Route::currentRouteNamed('absensi.skpd') ? 'active' : '' }}">
                   <a href="{{ route('absensi.skpd') }}"><i class="fa fa-circle-o"></i> <span>Rekap Absensi</span></a>
-                </li>
+                </li> --}}
                 <li class="{{ Route::currentRouteNamed('apelskpd') ? 'active' : '' }}{{ Route::currentRouteNamed('apelskpd.store') ? 'active' : '' }}">
-                  <a href="{{ route('apelskpd') }}"><i class="fa fa-circle-o"></i> <span>Absen Apel Pegawai</span></a>
+                  <a href="{{ route('apelskpd') }}"><i class="fa fa-circle-o"></i> <span>Absensi Apel Pegawai</span></a>
                 </li>
                 <li class="{{ Route::currentRouteNamed('laporanPegawai') ? 'active' : '' }}{{ Route::currentRouteNamed('laporanPegawai.store') ? 'active' : '' }}">
                   <a href="{{ route('laporanPegawai') }}"><i class="fa fa-circle-o"></i> <span>Absensi Anda</span></a>
