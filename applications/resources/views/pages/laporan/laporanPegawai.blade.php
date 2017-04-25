@@ -168,7 +168,7 @@
                   @endfor
                 @endforeach
 
-                @if ($flaginter==0 && $flag==0)
+                @if ($flaginter==='0' && $flag==='0')
                 <td align="center"><span style="color:red;"><b>Alpa</b></span></td>
                 @elseif($flaginter==0)
                   @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
@@ -205,7 +205,7 @@
                               }
                             } else if ($absen->jam_pulang==null || $jamplg > 190000) {
                               if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
-                                echo "<td align='center'> Alpa Nih</td>";
+                                echo "<td align='center'> Alpa </td>";
                               }
                             } else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
                               $intertelat = 0;
