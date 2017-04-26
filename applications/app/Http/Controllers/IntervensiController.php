@@ -315,7 +315,7 @@ class IntervensiController extends Controller
             }
 
         }
-      if($days >= -2)
+      if($days >= -20)
       {
 
       } else {

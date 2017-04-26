@@ -435,7 +435,7 @@
                 @endif
               </td>
               <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d')))
-                <small class="label label-info">Belum Disetujui</small>
+                <small class="label label-info">Belum Ditanggapi</small>
               @elseif($key->flag_status == 1)
                 <small class="label label-success">Sudah Disetujui</small>
               @elseif($key->flag_status == 3)
