@@ -1,47 +1,47 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Be right back.</title>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Presensi Online | Kabupaten Tangerang</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="{{asset('bootstrap/css/bootstrap.min.css')}}">
+	<link rel="stylesheet" href="{{asset('bootstrap/css/font-awesome.min.css')}}">
+    <link rel="stylesheet" href="{{asset('bootstrap/css/ionicons.min.css')}}">
+    <link rel="stylesheet" href="{{asset('dist/css/AdminLTE.css')}}">
+    <link rel="stylesheet" href="{{asset('bootstrap/css/custom9tins.css')}}">
+    <link rel="stylesheet" href="{{asset('bootstrap/css/9tins.css')}}">
+    <link rel="stylesheet" href="{{asset('plugins/iCheck/square/blue.css')}}">
+</head>
+<style type="text/css">
+  .borderPurple {
+   border-style: solid;
+   border-color: #605CA8;
+   border-width: 4px;
+}
+</style>
+<body>
 
-        <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+<div class="container">
 
-        <style>
-            html, body {
-                height: 100%;
-            }
-
-            body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                color: #B0BEC5;
-                display: table;
-                font-weight: 100;
-                font-family: 'Lato', sans-serif;
-            }
-
-            .container {
-                text-align: center;
-                display: table-cell;
-                vertical-align: middle;
-            }
-
-            .content {
-                text-align: center;
-                display: inline-block;
-            }
-
-            .title {
-                font-size: 72px;
-                margin-bottom: 40px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="content">
-                <div class="title">Be right back.</div>
-            </div>
+	<div class="left">
+    <div class="login-box">
+        <div class="login-logo">
+          <img src="{{asset('images/logologinkabtangerang.png')}}" alt="Presensi Online" />
+          &nbsp;&nbsp;<b>Presensi Online</b>
         </div>
-    </body>
+      </div>
+	</div>
+	<div class="right">
+		<h1>This Website is Under Maintenance</h1>
+	</div>
+	<div class="footer">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 2.0
+    </div>
+		<h4><strong>Copyright © 2017 <a href="">Presensi Online</a>.</strong> All rights reserved.</h4>
+	</div>
+</div>
+
+</body>
 </html>
