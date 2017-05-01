@@ -11,6 +11,7 @@ use App\Models\Skpd;
 use App\Models\Intervensi;
 use App\Models\HariLibur;
 use App\Models\Apel;
+use App\Models\PresonLog;
 
 
 use Auth;
@@ -435,12 +436,13 @@ class AbsensiController extends Controller
                               ->orderby('preson_strukturals.nama', 'asc')
                               ->get();
 
-      $absensi = DB::select("select a.fid, nama, tanggal_log, jam_log
-                              from (select fid, nama from preson_pegawais where skpd_id = '$skpd_id') as a
-                              left join ta_log b on a.fid = b.fid
-                              where b.tanggal_log = '$tanggalini'");
+      $absensi = PresonLog::join('preson_pegawais', 'preson_pegawais.fid', '=', 'preson_log.fid')
+                          ->select('preson_log.*', 'preson_pegawais.nama as nama_pegawai')
+                          ->where('tanggal', $tanggalini)
+                          ->where('preson_pegawais.skpd_id', $skpd_id)
+                          ->get();
 
-      return view('pages.absensi.absenHariAdministrator', compact('getSkpd', 'absensi', 'tanggalini', 'pegawainya', 'skpd_id'));
+      return view('pages.absensi.absenHariAdministrator', compact('getSkpd', 'absensi', 'tanggalini', 'pegawainya', 'skpd_id', 'data'));
     }
 
 
