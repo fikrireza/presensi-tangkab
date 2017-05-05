@@ -1118,6 +1118,13 @@ class LaporanController extends Controller
           $harikerja[] = $key;
         }
       }
+      $harikerjaformatslash = array();
+      foreach ($harikerja as $key) {
+        $tglnew = explode('-', $key);
+        $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+        $harikerjaformatslash[] = $tglformat;
+      }
+
       // --- GET HARI KERJA SEHARUSNYA ---
 
       // --- GET PENGECUALIAN TPP ---
@@ -1203,7 +1210,7 @@ class LaporanController extends Controller
         $tanggalhadir = array();
         foreach ($getpresonlog as $presonlog) {
           // --- MAKE SURE IS NOT HOLIDAY DATE
-          if (($pegawai->fid == $presonlog->fid) && (!in_array($presonlog->tanggal, $tanggallibur))) {
+          if (($pegawai->fid == $presonlog->fid) && (!in_array($presonlog->tanggal, $tanggallibur)) && (in_array($presonlog->tanggal, $harikerjaformatslash))) {
             $tanggalhadir[] = $presonlog->tanggal;
             // --- CHECK APEL DATE
             if (!in_array($presonlog->tanggal, $tanggalapel)) {
@@ -1226,16 +1233,16 @@ class LaporanController extends Controller
                 // --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
 
                 if ($presonlog->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat)) && (in_array($presonlog->tanggal, $harikerja))) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
                     // echo "dianggapbolos-jamdtg: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
                   }
                 } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep)) && (in_array($presonlog->tanggal, $harikerja))) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
                     // echo "dianggapbolos-jamplg: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $dianggapbolos++;
                   }
-                } else if ((($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) && (in_array($presonlog->tanggal, $harikerja))) {
+                } else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
                   $intertelat = 0;
                   $interpulcep = 0;
                   $interbebas = 0;
@@ -1255,12 +1262,12 @@ class LaporanController extends Controller
                     }
                   }
                 } else if ($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat)) && (in_array($presonlog->tanggal, $harikerja))) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
                     // echo "telat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."<br>";
                     $telat++;
                   }
                 } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > 70000 && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep)) && (in_array($presonlog->tanggal, $harikerja))) {
+                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
                     // echo "pulangcepat: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
                     $pulangcepat++;
                   }
@@ -1660,6 +1667,13 @@ class LaporanController extends Controller
           $harikerja[] = $key;
         }
       }
+      $harikerjaformatslash = array();
+      foreach ($harikerja as $key) {
+        $tglnew = explode('-', $key);
+        $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+        $harikerjaformatslash[] = $tglformat;
+      }
+
       // --- GET HARI KERJA SEHARUSNYA ---
 
       // --- GET PENGECUALIAN TPP ---
@@ -1745,7 +1759,7 @@ class LaporanController extends Controller
         $tanggalhadir = array();
         foreach ($getpresonlog as $presonlog) {
           // --- MAKE SURE IS NOT HOLIDAY DATE
-          if (($pegawai->fid == $presonlog->fid) && (!in_array($presonlog->tanggal, $tanggallibur))) {
+          if (($pegawai->fid == $presonlog->fid) && (!in_array($presonlog->tanggal, $tanggallibur)) && (in_array($presonlog->tanggal, $harikerjaformatslash))) {
             $tanggalhadir[] = $presonlog->tanggal;
             // --- CHECK APEL DATE
             if (!in_array($presonlog->tanggal, $tanggalapel)) {
