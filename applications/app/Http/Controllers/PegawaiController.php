@@ -263,6 +263,11 @@ class PegawaiController extends Controller
       $set->actor = Auth::user()->id;
       $set->status = $request->status;
       $set->upload_dokumen = $photo_name;
+
+      if ($request->status==2 || $request->status==3 || $request->status==4) {
+        $set->tanggal_akhir_kerja = date('Y-m-d');
+      }
+
       $set->update();
 
       $update = user::where('pegawai_id', '=', $request->pegawai_id)->first();
