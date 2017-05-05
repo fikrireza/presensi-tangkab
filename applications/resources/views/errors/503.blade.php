@@ -33,7 +33,7 @@
       </div>
 	</div>
 	<div class="right">
-		<h1>This Website is Under Maintenance</h1>
+		<h1 style="min-height:220px;">This Website is Under Maintenance</h1>
 	</div>
 	<div class="footer">
     <div class="pull-right hidden-xs">

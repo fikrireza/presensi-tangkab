@@ -117,7 +117,7 @@
                 @endfor
               @endforeach
 
-              @if ($flaginter==='0' && $flag==='0')
+              @if ($flaginter==0 && $flag==0)
               <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"><span style="color:red;"><b>Alpa</b></span></td>
               @elseif($flaginter==0)
                 @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
