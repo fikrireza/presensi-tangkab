@@ -1462,23 +1462,23 @@ class LaporanController extends Controller
 
         $rowdata["telat"] = $telat;
         $potongtpptelat = ($pegawai->tpp_dibayarkan*60/100)*2/100*$telat;
-        $rowdata["potongantelat"] = number_format($potongtpptelat, 0, '.', '.');
-        $totalpotongantpp += $potongtpptelat;
+        $rowdata["potongantelat"] = number_format(floor($potongtpptelat), '0', '.', '.');
+        $totalpotongantpp += floor($potongtpptelat);
 
         $rowdata["pulangcepat"] = $pulangcepat;
         $potongtpppulcep = ($pegawai->tpp_dibayarkan*60/100)*2/100*$pulangcepat;
-        $rowdata["potonganpulangcepat"] = number_format($potongtpppulcep, 0, '.', '.');
-        $totalpotongantpp += $potongtpppulcep;
+        $rowdata["potonganpulangcepat"] = number_format(floor($potongtpppulcep), '0', '.', '.');
+        $totalpotongantpp += floor($potongtpppulcep);
 
         $rowdata["telatpulangcepat"] = $telatpulangcepat;
         $potongtppdtpc = ($pegawai->tpp_dibayarkan*60/100)*3/100*$telatpulangcepat;
-        $rowdata["potongantelatpulangcepat"] = number_format($potongtppdtpc, 0, '.', '.');
-        $totalpotongantpp += $potongtppdtpc;
+        $rowdata["potongantelatpulangcepat"] = number_format(floor($potongtppdtpc), '0', '.', '.');
+        $totalpotongantpp += floor($potongtppdtpc);
 
         $rowdata["tidakhadir"] = $totalbolos;
         $potongantppbolos = ($pegawai->tpp_dibayarkan*100/100)*3/100*$totalbolos;
-        $rowdata["potongantidakhadir"] = number_format($potongantppbolos, 0, '.', '.');
-        $totalpotongantpp += $potongantppbolos;
+        $rowdata["potongantidakhadir"] = number_format(floor($potongantppbolos), '0', '.', '.');
+        $totalpotongantpp += floor($potongantppbolos);
 
         $jumlahtidakapelempatkali = 0;
         if ($tidakapel>=4) {
@@ -1488,49 +1488,23 @@ class LaporanController extends Controller
 
         $rowdata["tidakapel"] = $tidakapel;
         $potongantppapel = ($pegawai->tpp_dibayarkan*60/100)*2.5/100*$tidakapel;
-        $rowdata["potongantidakapel"] = number_format(floor($potongantppapel), 0, '.', '.');
+        $rowdata["potongantidakapel"] = number_format(floor($potongantppapel), '0', '.', '.');
         $totalpotongantpp += floor($potongantppapel);
 
         $rowdata["tidakapelempat"] = $jumlahtidakapelempatkali;
         $potongantppapelempatkali = ($pegawai->tpp_dibayarkan*60/100)*25/100*$jumlahtidakapelempatkali;
-        $rowdata["potongantidakapelempat"] = floor($potongantppapelempatkali);
+        $rowdata["potongantidakapelempat"] = number_format(floor($potongantppapelempatkali), '0', '.', '.');
         $totalpotongantpp += floor($potongantppapelempatkali);
 
-        $rowdata["totalpotongantpp"] = number_format($totalpotongantpp, 0, '.', '.');
-        $rowdata["totalterimatpp"] = number_format(($pegawai->tpp_dibayarkan - $totalpotongantpp), 0, '.', '.');
+        $rowdata["totalpotongantpp"] = number_format(floor($totalpotongantpp), '0', '.', '.');
+        $rowdata["totalterimatpp"] = number_format($pegawai->tpp_dibayarkan - floor($totalpotongantpp), '0', '.', '.');
 
         // return "--- MAINTENANCE ----";
         $rekaptpp[] = $rowdata;
-        $grandtotalpotongantpp += $totalpotongantpp;
-        $grandtotaltppdibayarkan += ($pegawai->tpp_dibayarkan - $totalpotongantpp);
+        $grandtotalpotongantpp += floor($totalpotongantpp);
+        $grandtotaltppdibayarkan += ($pegawai->tpp_dibayarkan - floor($totalpotongantpp));
       }
       // --- END OF LOOP GET PEGAWAI ---
-
-      // echo "grand total potongan: ".$grandtotalpotongantpp."<br>";
-      // echo "grand total tpp: ".$grandtotaltppdibayarkan."<br>";
-      // return "--- MAINTENANCE ----";
-
-      // --- SAVE TO PRESON JURNAL ---
-      // $getJurnal = Jurnal::select('*')
-      //   ->where('skpd_id', $skpd_id)
-      //   ->where('bulan', $bulanexplode[0])
-      //   ->where('tahun', $bulanexplode[1])
-      //   ->where('flag_sesuai', 0)
-      //   ->first();
-      // if($getJurnal != null){
-      //   $updateJurnal = Jurnal::find($getJurnal->id);
-      //   $updateJurnal->jumlah_tpp = $grandtotaltppdibayarkan;
-      //   $updateJurnal->update();
-      // }else{
-      //   $saveJurnal = new Jurnal;
-      //   $saveJurnal->skpd_id  = $skpd_id;
-      //   $saveJurnal->bulan = $bulanexplode[0];
-      //   $saveJurnal->tahun = $bulanexplode[1];
-      //   $saveJurnal->jumlah_tpp = $grandtotaltppdibayarkan;
-      //   $saveJurnal->save();
-      // }
-      // --- SAVE TO PRESON JURNAL ---
-
 
       // SAVE TO PRESON_JURNAL
       $jumlah_bayarTPP = 0;
@@ -2011,23 +1985,23 @@ class LaporanController extends Controller
 
         $rowdata["telat"] = $telat;
         $potongtpptelat = ($pegawai->tpp_dibayarkan*60/100)*2/100*$telat;
-        $rowdata["potongantelat"] = number_format($potongtpptelat, 0, '.', '.');
-        $totalpotongantpp += $potongtpptelat;
+        $rowdata["potongantelat"] = number_format(floor($potongtpptelat), '0', '.', '.');
+        $totalpotongantpp += floor($potongtpptelat);
 
         $rowdata["pulangcepat"] = $pulangcepat;
         $potongtpppulcep = ($pegawai->tpp_dibayarkan*60/100)*2/100*$pulangcepat;
-        $rowdata["potonganpulangcepat"] = number_format($potongtpppulcep, 0, '.', '.');
-        $totalpotongantpp += $potongtpppulcep;
+        $rowdata["potonganpulangcepat"] = number_format(floor($potongtpppulcep), '0', '.', '.');
+        $totalpotongantpp += floor($potongtpppulcep);
 
         $rowdata["telatpulangcepat"] = $telatpulangcepat;
         $potongtppdtpc = ($pegawai->tpp_dibayarkan*60/100)*3/100*$telatpulangcepat;
-        $rowdata["potongantelatpulangcepat"] = number_format($potongtppdtpc, 0, '.', '.');
-        $totalpotongantpp += $potongtppdtpc;
+        $rowdata["potongantelatpulangcepat"] = number_format(floor($potongtppdtpc), '0', '.', '.');
+        $totalpotongantpp += floor($potongtppdtpc);
 
         $rowdata["tidakhadir"] = $totalbolos;
         $potongantppbolos = ($pegawai->tpp_dibayarkan*100/100)*3/100*$totalbolos;
-        $rowdata["potongantidakhadir"] = number_format($potongantppbolos, 0, '.', '.');
-        $totalpotongantpp += $potongantppbolos;
+        $rowdata["potongantidakhadir"] = number_format(floor($potongantppbolos), '0', '.', '.');
+        $totalpotongantpp += floor($potongantppbolos);
 
         $jumlahtidakapelempatkali = 0;
         if ($tidakapel>=4) {
@@ -2037,21 +2011,21 @@ class LaporanController extends Controller
 
         $rowdata["tidakapel"] = $tidakapel;
         $potongantppapel = ($pegawai->tpp_dibayarkan*60/100)*2.5/100*$tidakapel;
-        $rowdata["potongantidakapel"] = number_format(floor($potongantppapel), 0, '.', '.');
+        $rowdata["potongantidakapel"] = number_format(floor($potongantppapel), '0', '.', '.');
         $totalpotongantpp += floor($potongantppapel);
 
         $rowdata["tidakapelempat"] = $jumlahtidakapelempatkali;
         $potongantppapelempatkali = ($pegawai->tpp_dibayarkan*60/100)*25/100*$jumlahtidakapelempatkali;
-        $rowdata["potongantidakapelempat"] = floor($potongantppapelempatkali);
+        $rowdata["potongantidakapelempat"] = number_format(floor($potongantppapelempatkali), '0', '.', '.');
         $totalpotongantpp += floor($potongantppapelempatkali);
 
-        $rowdata["totalpotongantpp"] = number_format($totalpotongantpp, 0, '.', '.');
-        $rowdata["totalterimatpp"] = number_format(($pegawai->tpp_dibayarkan - $totalpotongantpp), 0, '.', '.');
+        $rowdata["totalpotongantpp"] = number_format(floor($totalpotongantpp), '0', '.', '.');
+        $rowdata["totalterimatpp"] = number_format($pegawai->tpp_dibayarkan - floor($totalpotongantpp), '0', '.', '.');
 
         // return "--- MAINTENANCE ----";
         $rekaptpp[] = $rowdata;
-        $grandtotalpotongantpp += $totalpotongantpp;
-        $grandtotaltppdibayarkan += ($pegawai->tpp_dibayarkan - $totalpotongantpp);
+        $grandtotalpotongantpp += floor($totalpotongantpp);
+        $grandtotaltppdibayarkan += ($pegawai->tpp_dibayarkan - floor($totalpotongantpp));
       }
 
       $nama_skpd = skpd::select('nama')->where('id', $skpd_id)->first();
