@@ -129,7 +129,11 @@
                   $flagpengecualiantpp = 0;
                 @endphp
                 @foreach ($rekaptpp as $key)
-                  <tr id="row{{$key['nip']}}">
+                  <tr id="row{{$key['nip']}}"
+                    @if ($key['status']==3)
+                      style="background:#ffabc1;"
+                    @endif
+                  >
                     <td>{{$number}}</td>
                     <td>
                       <a href="{{ route('laporan.cetakPegawai', ['download'=>'pdf', 'bulanhitung'=>$bulan, 'nip_sapk'=>$key["nip"]]) }}">{{$key["nip"]}}</a>
@@ -159,7 +163,7 @@
             </tbody>
           </table>
           <span>
-            <i>* KETERANGAN: Baris yang berwarna hijau adalah pegawai yang dikecualikan dari potongan TPP.</i>
+            <i class="text-muted">* KETERANGAN: Baris yang berwarna hijau adalah pegawai yang dikecualikan dari potongan TPP dan baris yang berwarna merah adalah pegawai yang berstatus Pensiun atau Meninggal.</i>
           </span>
         </div>
       </div>
