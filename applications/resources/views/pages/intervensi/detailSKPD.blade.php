@@ -236,11 +236,11 @@
               <td>{{ $key->tanggal_mulai }}</td>
               <td>{{ $key->tanggal_akhir }}</td>
               <td>@if ($key->flag_status == 0)
-                <small class="label label-info">Belum diSetujui</small>
+                <small class="label label-info">Belum Ditanggapi</small>
               @elseif($key->flag_status == 1)
-                <small class="label label-success">Sudah diSetujui</small>
+                <small class="label label-success">Sudah Disetujui</small>
               @else
-                <small class="label label-danger">Tidak diSetujui</small>
+                <small class="label label-danger">Tidak Disetujui</small>
               @endif</td>
             </tr>
             <?php $no++; ?>

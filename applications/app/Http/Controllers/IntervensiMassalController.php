@@ -123,11 +123,11 @@ class IntervensiMassalController extends Controller
             }
 
         }
-        if($days >= -2)
+        if($days >= -25)
         {
 
         } else {
-          return redirect()->route('intervensimassal.create')->with('gagaltgl',' Tanggal yang pilih lebih dari 3 hari sebelum hari ini.')->withInput();
+          return redirect()->route('intervensimassal.create')->with('gagaltgl',' Tanggal yang dipilih lebih dari 25 hari sebelum hari ini.')->withInput();
         }
       //end menentukan tanggal kurang dari 3 hari
 
