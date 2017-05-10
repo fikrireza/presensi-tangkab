@@ -97,7 +97,11 @@
                   $flagpengecualiantpp = 0;
                 @endphp
                 @foreach ($rekaptpp as $key)
-                  <tr id="row{{$key['nip']}}">
+                  <tr id="row{{$key['nip']}}"
+                    @if ($key['status']==3)
+                      style="background:#ffabc1;"
+                    @endif
+                  >
                     <td>{{$number}}</td>
                     <td>
                       <a href="{{ route('laporan.cetakPegawai', ['download'=>'pdf', 'bulanhitung'=>$bulan, 'nip_sapk'=>$key["nip"]]) }}">{{$key["nip"]}}</a>
