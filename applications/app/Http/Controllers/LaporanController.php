@@ -1524,12 +1524,14 @@ class LaporanController extends Controller
         $updateJurnal->jumlah_tpp = $grandtotaltppdibayarkan;
         $updateJurnal->update();
       }else{
-        $saveJurnal = new Jurnal;
-        $saveJurnal->skpd_id  = $skpd_id;
-        $saveJurnal->bulan = $bulanexplode[0];
-        $saveJurnal->tahun = $bulanexplode[1];
-        $saveJurnal->jumlah_tpp = $grandtotaltppdibayarkan;
-        $saveJurnal->save();
+		if($getJurnal->flag_sesuai == 0){
+			$saveJurnal = new Jurnal;
+			$saveJurnal->skpd_id  = $skpd_id;
+			$saveJurnal->bulan = $bulanexplode[0];
+			$saveJurnal->tahun = $bulanexplode[1];
+			$saveJurnal->jumlah_tpp = $grandtotaltppdibayarkan;
+			$saveJurnal->save();
+		}
       }
       // SAVE TO PRESON_JURNAL
 
