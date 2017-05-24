@@ -302,7 +302,7 @@ class RevisiIntervensiController extends Controller
       $file = $request->file('upload_revisi');
       if($file != null)
         {
-          $photo_name = Auth::user()->nip_sapk.'-'.'RevisiIntervensi'.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'-'.$request->upload_massal->getClientOriginalName().'.' . $file->getClientOriginalExtension();
+          $photo_name = Auth::user()->nip_sapk.'-'.'RevisiIntervensi'.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'-'.$request->upload_revisi->getClientOriginalName().'.' . $file->getClientOriginalExtension();
           $file->move('documents/', $photo_name);
           $set->berkas = $photo_name;
         }
