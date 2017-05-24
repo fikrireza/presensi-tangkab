@@ -311,6 +311,4 @@ class RevisiIntervensiController extends Controller
 
       return redirect()->route('revisiintervensi.index')->with('berhasil', 'Berhasil Mengubah Data Revisi Intervensis');
     }
-
-
 }

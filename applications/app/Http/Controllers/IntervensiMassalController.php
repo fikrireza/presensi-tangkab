@@ -270,6 +270,4 @@ class IntervensiMassalController extends Controller
 
       return redirect()->route('intervensimassal.index')->with('berhasil', 'Berhasil Mengubah Data Revisi Intervensis');
     }
-
-
 }
