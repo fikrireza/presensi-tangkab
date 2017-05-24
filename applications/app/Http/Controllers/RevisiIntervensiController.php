@@ -154,17 +154,6 @@ class RevisiIntervensiController extends Controller
           $countjumlhari = $request->jumlah_hari - $getcountharilibur;
           //end set Jumlah Hari Intervensi
 
-          // biar file yang diupload tidak ngeloop
-          $file = $request->file('upload_revisi');
-            if($file != null)
-            {
-                $photo_name = Auth::user()->nip_sapk.'-'.'RevisiIntervensi'.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'.' . $file->getClientOriginalExtension();
-                $file->move('documents/', $photo_name);
-              }else{
-                $photo_name = "-";
-            }
-          // biar file yang diupload tidak ngeloop
-
         foreach ($request->idpegawai as $key_pegawai) {
 
             // --- validasi ketersediaan tanggal intervensi
@@ -212,6 +201,17 @@ class RevisiIntervensiController extends Controller
             }
             // --- end of validasi ketersediaan tanggal intervensi
         }
+
+        // biar file yang diupload tidak ngeloop
+        $file = $request->file('upload_revisi');
+          if($file != null)
+          {
+              $photo_name = Auth::user()->nip_sapk.'-'.'RevisiIntervensi'.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'-'.$request->upload_revisi->getClientOriginalName().'.' . $file->getClientOriginalExtension();
+              $file->move('documents/', $photo_name);
+            }else{
+              $photo_name = "-";
+          }
+        // biar file yang diupload tidak ngeloop
 
         foreach ($request->idpegawai as $key_pegawai) {
           $valjamdtg="";
@@ -302,7 +302,7 @@ class RevisiIntervensiController extends Controller
       $file = $request->file('upload_revisi');
       if($file != null)
         {
-          $photo_name = Auth::user()->nip_sapk.'-'.'RevisiIntervensi'.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'.' . $file->getClientOriginalExtension();
+          $photo_name = Auth::user()->nip_sapk.'-'.'RevisiIntervensi'.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'-'.$request->upload_massal->getClientOriginalName().'.' . $file->getClientOriginalExtension();
           $file->move('documents/', $photo_name);
           $set->berkas = $photo_name;
         }
