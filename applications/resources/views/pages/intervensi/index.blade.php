@@ -434,7 +434,7 @@
                   -
                 @endif
               </td>
-              <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d')))
+              <td>@if (($key->flag_status == 0) && (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 45 days')) >= date('Y-m-d')))
                 <small class="label label-info">Belum Ditanggapi</small>
               @elseif($key->flag_status == 1)
                 <small class="label label-success">Sudah Disetujui</small>
@@ -444,7 +444,7 @@
                 <small class="label label-danger">Tidak Disetujui</small>
               @endif</td>
               <td>@if ($key->flag_status == 0)
-                  @if (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 20 days')) >= date('Y-m-d'))
+                  @if (date('Y-m-d', strtotime($key->tanggal_akhir. ' + 45 days')) >= date('Y-m-d'))
                     <a href="" data-value="{{ $key->id }}" class="btn btn-xs btn-warning editIntervensi" data-toggle="modal" data-target="#modaleditIntervensi"><i class="fa fa-edit"></i> Ubah</a>
                     <a href="" class="btn btn-xs btn-danger batalIntervensi" data-toggle="modal" data-target="#batalIntervensi" data-value="{{ $key->id }}"><i class="fa fa-close"></i> Batal</a>
                   @else

@@ -2,7 +2,7 @@
 
 <div class="row">
   <div class="col-md-12">
-    <h2 style="font-size:33px;">REKAP ABSENSI {{ strtoupper($nip_sapk) }} - {{ $fid->nama }}</h2>
+    <h2 style="font-size:33px;">REKAP ABSENSI | {{ strtoupper($nip_sapk) }} | {{ $fid->nama }} | {{ $fid->fid }}</h2>
     <div class="box box-primary box-solid">
       <div class="box-header">
         <h3 class="box-title" style="font-size:29px;">PERIODE TANGGAL {{ $start_dateR }} s/d {{ $end_dateR }}</h3>

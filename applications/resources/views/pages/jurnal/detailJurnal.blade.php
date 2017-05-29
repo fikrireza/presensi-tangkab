@@ -58,6 +58,12 @@
       <a href="" class="btn-lg btn-block bg-maroon sesuai" data-toggle="modal" data-target="#myModalSesuai" data-value="{{ $getJurnalSesuai->id }}">Apakah Sudah Sesuai ???</a>
     </div>
   </div>
+  @else
+  <div class="row">
+    <div class="col-md-12">
+      <button class="btn-lg btn-block bg-green sesuai" disabled="">Data Sudah Sesuai.</button>
+    </div>
+  </div>
   @endif
 
   <br>

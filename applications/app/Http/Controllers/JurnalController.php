@@ -141,7 +141,7 @@ class JurnalController extends Controller
           ->get();
 
         if ($getpegawai->isEmpty()) {
-          abort('404');
+          return redirect()->route('jurnal.index')->with('gagal', 'Data absen belum ada');
         }
 
         $getidpegawaiperskpd = array();
@@ -164,7 +164,7 @@ class JurnalController extends Controller
         // --- END OF GET DATA PRESON LOG ---
 
         if($getpresonlog->isEmpty()){
-          abort('404');
+          return redirect()->route('jurnal.index')->with('gagal', 'Data absen belum ada');
         }
 
         // --- GET TANGGAL APEL ----

@@ -123,11 +123,11 @@ class IntervensiMassalController extends Controller
             }
 
         }
-        if($days >= -2)
+        if($days >= -25)
         {
 
         } else {
-          return redirect()->route('intervensimassal.create')->with('gagaltgl',' Tanggal yang pilih lebih dari 3 hari sebelum hari ini.')->withInput();
+          return redirect()->route('intervensimassal.create')->with('gagaltgl',' Tanggal yang dipilih lebih dari 25 hari sebelum hari ini.')->withInput();
         }
       //end menentukan tanggal kurang dari 3 hari
 
@@ -139,17 +139,6 @@ class IntervensiMassalController extends Controller
           $getcountharilibur = HariLibur::whereBetween('libur', [$request->tanggal_mulai,$request->tanggal_akhir])->count();
           $countjumlhari = $request->jumlah_hari - $getcountharilibur;
           //end set Jumlah Hari Intervensi
-
-          // biar file yang diupload tidak ngeloop
-          $file = $request->file('upload_massal');
-            if($file != null)
-            {
-                $photo_name = Auth::user()->nip_sapk.'-'.'IntervensiMassal'.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'.' . $file->getClientOriginalExtension();
-                $file->move('documents/', $photo_name);
-              }else{
-                $photo_name = "-";
-            }
-          // biar file yang diupload tidak ngeloop
 
         foreach ($request->idpegawai as $key_pegawai) {
 
@@ -199,6 +188,18 @@ class IntervensiMassalController extends Controller
             }
             // --- end of validasi ketersediaan tanggal intervensi                 
         }
+
+        // biar file yang diupload tidak ngeloop
+        $file = $request->file('upload_massal');
+
+          if($file != null)
+          {
+              $photo_name = Auth::user()->nip_sapk.'-'.'IntervensiMassal'.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'-'.$request->upload_massal->getClientOriginalName().'.' . $file->getClientOriginalExtension();
+              $file->move('documents/', $photo_name);
+            }else{
+              $photo_name = "-";
+          }
+        // biar file yang diupload tidak ngeloop
 
         foreach ($request->idpegawai as $key_pegawai) 
         {
@@ -260,7 +261,7 @@ class IntervensiMassalController extends Controller
       $file = $request->file('upload_massal');
       if($file != null)
         {
-          $photo_name = Auth::user()->nip_sapk.'-'.'IntervensiMassal'.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'.' . $file->getClientOriginalExtension();
+          $photo_name = Auth::user()->nip_sapk.'-'.'IntervensiMassal'.'-'.$request->tanggal_mulai.'-'.$request->tanggal_akhir.'-'.$request->upload_massal->getClientOriginalName().'.' . $file->getClientOriginalExtension();
           $file->move('documents/', $photo_name);
           $set->berkas = $photo_name;
         }
@@ -269,6 +270,4 @@ class IntervensiMassalController extends Controller
 
       return redirect()->route('intervensimassal.index')->with('berhasil', 'Berhasil Mengubah Data Revisi Intervensis');
     }
-
-
 }

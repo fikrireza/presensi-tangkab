@@ -91,64 +91,26 @@
                   	'Fri' => 'Jum&#039;at',
                   	'Sat' => 'Sabtu'
                   );
+                  $flagAbsen = 0;
+                  $no++;
                    ?>
                 <td>{{ $dayList[$day] }}</td>
                 <td>{{ $tanggalini }}</td>
-                <td>
-                  @php
-                    $flagmasuk=0;
-                  @endphp
-                  @foreach ($absensi as $keys)
-                    @if ($keys->fid == $key->fid)
-                      @php
-                        $jammasuk_upper = 100000;
-                        $jammasuk_lower = 70000;
-                        $jamlog = (int) str_replace(':','',$keys->jam_log);
-                      @endphp
-                      @if ($jamlog<$jammasuk_upper && $jamlog>$jammasuk_lower)
-                        @php
-                          $flagmasuk=1;
-                        @endphp
-                        {{$keys->jam_log}}
-                        @php
-                          break;
-                        @endphp
-                      @endif
-                    @endif
-                  @endforeach
-                  @if ($flagmasuk==0)
-                    x
+                @foreach ($absensi as $absen)
+                  @if ($absen->fid == $key->fid)
+                    @php
+                      $flagAbsen++;
+                    @endphp
+                  <td align="center">{{ $absen->jam_datang == null ? 'x' : $absen->jam_datang }}</td>
+                  <td align="center">{{ $absen->jam_pulang == null ? 'x' : $absen->jam_pulang }}</td>
                   @endif
-                </td>
-                <td>
-                  @php
-                    $flagpulang=0;
-                  @endphp
-                  @foreach ($absensi as $keys)
-                    @if ($keys->fid == $key->fid)
-                      @php
-                        $jampulang_upper = 140000;
-                        $jamlog = (int)str_replace(':','',$keys->jam_log);
-                      @endphp
-                      @if ($jamlog>$jampulang_upper)
-                        @php
-                          $flagpulang=1;
-                        @endphp
-                        {{$keys->jam_log}}
-                        @php
-                          break;
-                        @endphp
-                      @endif
-                    @endif
-                  @endforeach
-                  @if ($flagpulang==0)
-                    x
-                  @endif
-                </td>
+
+                @endforeach
+                @if ($flagAbsen==0)
+                  <td align="center">x</td>
+                  <td align="center">x</td>
+                @endif
               </tr>
-              @php
-                $no++;
-              @endphp
             @endforeach
           </tbody>
         </table>
@@ -211,14 +173,14 @@ $('#start_date').datepicker({
           var title = $(this).text();
           $(this).html( '<input type="text" class="form-control" style="border:1px solid #3598DC; width:100%" />' );
       } );
-   
+
       // DataTable
       var table = $('#table_user').DataTable();
-   
+
       // Apply the search
       table.columns().every( function () {
           var that = this;
-   
+
           $( 'input', this.footer() ).on( 'keyup change', function () {
               if ( that.search() !== this.value ) {
                   that
