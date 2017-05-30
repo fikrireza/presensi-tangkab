@@ -2310,7 +2310,28 @@ class LaporanController extends Controller
 
       $absensi = collect($list);
 
-      return view('pages.laporan.laporanPegawai', compact('start_dateR', 'end_dateR', 'intervensi', 'absensi', 'hariLibur', 'nip_sapk', 'bulan', 'tanggalBulan', 'tanggalapel', 'mesinapel', 'tanggalintervensitelat', 'tanggalintervensipulcep', 'tanggalintervensibebas'));
+      // --- RAMADHAN 2017 ---
+      $periodramadhan = new DatePeriod(
+           new DateTime("2017-05-27"),
+           new DateInterval('P1D'),
+           new DateTime("2017-06-26 23:59:59")
+      );
+      $daterangeramadhan = array();
+      foreach($periodramadhan as $date) {$daterangeramadhan[] = $date->format('Y-m-d'); }
+      $ramadhan = array();
+      foreach ($daterangeramadhan as $key) {
+        if (date('N', strtotime($key)) < 6) {
+          $ramadhan[] = $key;
+        }
+      }
+      $ramadhanformatslash = array();
+      foreach ($ramadhan as $key) {
+        $tglnew = explode('-', $key);
+        $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+        $ramadhanformatslash[] = $tglformat;
+      }
+
+      return view('pages.laporan.laporanPegawai', compact('start_dateR', 'end_dateR', 'intervensi', 'absensi', 'hariLibur', 'nip_sapk', 'bulan', 'tanggalBulan', 'tanggalapel', 'mesinapel', 'tanggalintervensitelat', 'tanggalintervensipulcep', 'tanggalintervensibebas', 'ramadhanformatslash'));
     }
 
     public function cetakPegawai(Request $request)
@@ -2435,6 +2456,27 @@ class LaporanController extends Controller
 
       $absensi = collect($list);
 
+      // --- RAMADHAN 2017 ---
+      $periodramadhan = new DatePeriod(
+           new DateTime("2017-05-27"),
+           new DateInterval('P1D'),
+           new DateTime("2017-06-26 23:59:59")
+      );
+      $daterangeramadhan = array();
+      foreach($periodramadhan as $date) {$daterangeramadhan[] = $date->format('Y-m-d'); }
+      $ramadhan = array();
+      foreach ($daterangeramadhan as $key) {
+        if (date('N', strtotime($key)) < 6) {
+          $ramadhan[] = $key;
+        }
+      }
+      $ramadhanformatslash = array();
+      foreach ($ramadhan as $key) {
+        $tglnew = explode('-', $key);
+        $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+        $ramadhanformatslash[] = $tglformat;
+      }
+
       view()->share('start_dateR', $start_date);
       view()->share('end_dateR', $end_date);
       view()->share('absensi', $absensi);
@@ -2445,6 +2487,7 @@ class LaporanController extends Controller
       view()->share('fid', $fid);
       view()->share('tanggalapel', $tanggalapel);
       view()->share('mesinapel', $mesinapel);
+      view()->share('ramadhanformatslash', $ramadhanformatslash);
       view()->share('tanggalintervensitelat', $tanggalintervensitelat);
       view()->share('tanggalintervensipulcep', $tanggalintervensipulcep);
       view()->share('tanggalintervensibebas', $tanggalintervensibebas);

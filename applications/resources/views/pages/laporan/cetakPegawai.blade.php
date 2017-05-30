@@ -142,17 +142,23 @@
                           $upper_telatdtg = 90100;
                           $lower_plgcepat = 150000;
                           $upper_plgcepat = 160000;
+                          $batas_jamdtg = 70000;
+                          $batas_jamplg = 190000;
+
+                          if (in_array($absen->tanggal, $ramadhanformatslash)) {
+                            $upper_plgcepat = 150000;
+                          }
 
                           $rawjamdtg = $absen->jam_datang;
                           $jamdtg = str_replace(':', '', $rawjamdtg);
                           $rawjamplg = $absen->jam_pulang;
                           $jamplg = str_replace(':', '', $rawjamplg);
 
-                          if ($absen->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
+                          if ($absen->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
                               echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Alpa </td>";
                             }
-                          } else if ($absen->jam_pulang==null || $jamplg > 190000) {
+                          } else if ($absen->jam_pulang==null || $jamplg > $batas_jamplg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
                               echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Alpa</td>";
                             }
@@ -176,7 +182,7 @@
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
                               echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Terlambat </td>";
                             }
-                          } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > 70000 && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
+                          } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > $batas_jamdtg && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
                               echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Pulang Cepat </td>";
                             }
@@ -186,17 +192,23 @@
                           $upper_telatdtg = 83100;
                           $lower_plgcepat = 150000;
                           $upper_plgcepat = 160000;
+                          $batas_jamdtg = 63000;
+                          $batas_jamplg = 190000;
+
+                          if (in_array($absen->tanggal, $ramadhanformatslash)) {
+                            $upper_plgcepat = 153000;
+                          }
 
                           $rawjamdtg = $absen->jam_datang;
                           $jamdtg = str_replace(':', '', $rawjamdtg);
                           $rawjamplg = $absen->jam_pulang;
                           $jamplg = str_replace(':', '', $rawjamplg);
 
-                          if ($absen->jam_datang==null || $jamdtg < 63000 || $jamdtg > $upper_telatdtg) {
+                          if ($absen->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
                               echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Alpa </td>";
                             }
-                          } else if ($absen->jam_pulang==null || $jamplg > 190000) {
+                          } else if ($absen->jam_pulang==null || $jamplg > $batas_jamplg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
                               echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Alpa </td>";
                             }
@@ -220,7 +232,7 @@
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
                               echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Terlambat </td>";
                             }
-                          } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > 63000 && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
+                          } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > $batas_jamdtg && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
                               echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Pulang Cepat </td>";
                             }
@@ -234,6 +246,12 @@
                         $upper_telatdtg = 90100;
                         $lower_plgcepat = 150000;
                         $upper_plgcepat = 160000;
+                        $batas_jamdtg = 70000;
+                        $batas_jamplg = 190000;
+
+                        if (in_array($absen->tanggal, $ramadhanformatslash)) {
+                          $upper_plgcepat = 150000;
+                        }
 
 
                         $rawjamdtg = $absen->jam_datang;
@@ -242,7 +260,7 @@
                         $jamplg = str_replace(':', '', $rawjamplg);
 
                         if (in_array($absen->mach_id, $mesinapel)) {
-                          if ($absen->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
+                          if ($absen->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
                               echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Alpa</td>";
                             }
@@ -270,17 +288,17 @@
                                 echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Terlambat</td>";
                               }
                             }
-                          } else if ((($jamdtg < $maxjamdatang && $jamdtg > 70000) && $jamplg < $upper_plgcepat) || (($jamdtg < $maxjamdatang && $jamdtg > 70000) && $jamplg==null)) {
+                          } else if ((($jamdtg < $maxjamdatang && $jamdtg > $batas_jamdtg) && $jamplg < $upper_plgcepat) || (($jamdtg < $maxjamdatang && $jamdtg > $batas_jamdtg) && $jamplg==null)) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
                               echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Pulang Cepat</td>";
                             }
                           }
                         } else {
-                          if ($absen->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
+                          if ($absen->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
                               echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Alpa</td>";
                             }
-                          } else if ($absen->jam_pulang==null || $jamplg > 190000) {
+                          } else if ($absen->jam_pulang==null || $jamplg > $batas_jamplg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
                               echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Alpa</td>";
                             }
