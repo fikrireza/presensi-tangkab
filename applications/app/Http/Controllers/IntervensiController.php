@@ -112,28 +112,29 @@ class IntervensiController extends Controller
       //------ end menentukan tanggal kurang dari 3 hari
 
 
+      // [di non aktifkan per tanggal 31 mei 2017]
       // --- validasi izin tidak masuk kerja 2x sebulan
-      if ($request->jenis_intervensi==13) {
-        if ($request->jumlah_hari>2) {
-          return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin tidak masuk kerja melebihi batas maksimal.');
-        }
-
-        $datenow = date('m-Y');
-        $pegawaiid = Auth::user()->pegawai_id;
-        $countsum = DB::select("select sum(jumlah_hari) as 'total' from preson_intervensis
-                                        where DATE_FORMAT(tanggal_mulai,'%m-%Y') = '$datenow'
-                                        and pegawai_id = $pegawaiid and id_intervensi = 13");
-
-        $result = $countsum[0]->total;
-        if ($result>=2) {
-          return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin tidak masuk kerja melebihi batas maksimal.');
-        }
-      }
+      // if ($request->jenis_intervensi==13) {
+      //   if ($request->jumlah_hari>2) {
+      //     return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin tidak masuk kerja melebihi batas maksimal.');
+      //   }
+      //
+      //   $datenow = date('m-Y');
+      //   $pegawaiid = Auth::user()->pegawai_id;
+      //   $countsum = DB::select("select sum(jumlah_hari) as 'total' from preson_intervensis
+      //                                   where DATE_FORMAT(tanggal_mulai,'%m-%Y') = '$datenow'
+      //                                   and pegawai_id = $pegawaiid and id_intervensi = 13");
+      //
+      //   $result = $countsum[0]->total;
+      //   if ($result>=2) {
+      //     return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin tidak masuk kerja melebihi batas maksimal.');
+      //   }
+      // }
       // --- end of validasi izin tidak masuk kerja 2x sebulan
 
 
       // --- validasi izin datang telat/pulang cepat 2x sebulan
-      if ($request->jenis_intervensi==2 || $request->jenis_intervensi==3) {
+      if ($request->jenis_intervensi==2 || $request->jenis_intervensi==3 || $request->jenis_intervensi==13) {
         if ($request->jumlah_hari>2) {
           return redirect()->route('intervensi.index')->with('gagal', 'Jumlah izin datang telat atau pulang cepat melebihi batas maksimal.');
         }
@@ -142,7 +143,7 @@ class IntervensiController extends Controller
         $pegawaiid = Auth::user()->pegawai_id;
         $countsum = DB::select("select sum(jumlah_hari) as 'total' from preson_intervensis
                                 where DATE_FORMAT(tanggal_mulai,'%m-%Y') = '$datenow'
-                                and pegawai_id = $pegawaiid and (id_intervensi = 2 or id_intervensi = 3) and flag_status != 3");
+                                and pegawai_id = $pegawaiid and (id_intervensi = 2 or id_intervensi = 3 or id_intervensi = 13) and flag_status != 3");
 
         $result = $countsum[0]->total;
         if ($result>=2) {
