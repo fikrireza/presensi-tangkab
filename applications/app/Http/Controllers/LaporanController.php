@@ -1571,18 +1571,18 @@ class LaporanController extends Controller
       }
 
       $getJurnal = Jurnal::select('*')
-                          ->where('skpd_id', $skpd_id)
-                          ->where('bulan', $bulanexplode[0])
-                          ->where('tahun', $bulanexplode[1])
-                          ->where('flag_sesuai', 0)
-                          ->first();
+				  ->where('skpd_id', $skpd_id)
+				  ->where('bulan', $bulanexplode[0])
+				  ->where('tahun', $bulanexplode[1])
+				  ->first();
 
-      if($getJurnal != null){
-        $updateJurnal = Jurnal::find($getJurnal->id);
-        $updateJurnal->jumlah_tpp = $grandtotaltppdibayarkan;
-        $updateJurnal->update();
-      }else{
+		if($getJurnal != null){
 		if($getJurnal->flag_sesuai == 0){
+		  $updateJurnal = Jurnal::find($getJurnal->id);
+		  $updateJurnal->jumlah_tpp = $grandtotaltppdibayarkan;
+		  $updateJurnal->update();
+		}
+		}else{
 			$saveJurnal = new Jurnal;
 			$saveJurnal->skpd_id  = $skpd_id;
 			$saveJurnal->bulan = $bulanexplode[0];
@@ -1590,8 +1590,7 @@ class LaporanController extends Controller
 			$saveJurnal->jumlah_tpp = $grandtotaltppdibayarkan;
 			$saveJurnal->save();
 		}
-      }
-      // SAVE TO PRESON_JURNAL
+		// SAVE TO PRESON_JURNAL
 
       return view('pages.laporan.laporanAdmin')
         ->with('rekaptpp', $rekaptpp)
