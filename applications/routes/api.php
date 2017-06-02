@@ -18,3 +18,7 @@ Route::get('/log', ['uses' => 'ApiLogController@Log']);
 Route::post('/log', ['uses' => 'ApiLogController@postLog']);
 
 // Route::get('/createKey', ['uses' => 'ApiLogController@createKey']);
+
+
+Route::get('/pegawai-adbt/{key}', 'ApiAdbtController@getPegawai');
+Route::get('/createKey/adbt', 'ApiAdbtController@createKey');
