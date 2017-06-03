@@ -214,228 +214,285 @@ class LaporanController extends Controller
         }
         // --- END OF INTERVENSI FOR SPECIFIC PEGAWAI
 
-        // -- LOOP PRESON LOG
+        
         $dianggapbolos = 0;
         $telat = 0;
         $pulangcepat = 0;
         $telatpulangcepat = 0;
         $tidakapel = 0;
         $tanggalhadir = array();
-        foreach ($getpresonlog as $presonlog) {
-          // --- MAKE SURE IS NOT HOLIDAY DATE
-          if (($pegawai->fid == $presonlog->fid) && (!in_array($presonlog->tanggal, $tanggallibur))) {
-            $tanggalhadir[] = $presonlog->tanggal;
-            // --- CHECK APEL DATE
-            if (!in_array($presonlog->tanggal, $tanggalapel)) {
-              $tglnew = explode('/', $presonlog->tanggal);
-              $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
-              // --- CHECK FRIDAY DATE ---
-              if ((date('N', strtotime($tglformat)) != 5)) {
-                // --- SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT ---
-                $lower_telatdtg = 80100;
-                $upper_telatdtg = 90100;
-                $lower_plgcepat = 150000;
-                $upper_plgcepat = 160000;
-                // --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT ---
-
-                // --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
-                $rawjamdtg = $presonlog->jam_datang;
-                $jamdtg = str_replace(':', '', $rawjamdtg);
-                $rawjamplg = $presonlog->jam_pulang;
-                $jamplg = str_replace(':', '', $rawjamplg);
-                // --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
-
-                if ($presonlog->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    $dianggapbolos++;
-                  }
-                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
-                    $dianggapbolos++;
-                  }
-                } else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
-                  $intertelat = 0;
-                  $interpulcep = 0;
-                  $interbebas = 0;
-                  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
-                  if ($interbebas==0) {
-                    if ($intertelat==0 && $interpulcep==0) {
-                      $telatpulangcepat++;
-                    } else if ($intertelat!=0 && $interpulcep==0) {
-                      $pulangcepat++;
-                    } else if ($intertelat==0 && $interpulcep!=0) {
-                      $telat++;
-                    }
-                  }
-                } else if ($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    $telat++;
-                  }
-                } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > 70000 && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
-                    $pulangcepat++;
-                  }
-                }
-              } else {
-                // --- SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT JUMAT ---
-                $lower_telatdtg = 73100;
-                $upper_telatdtg = 83100;
-                $lower_plgcepat = 150000;
-                $upper_plgcepat = 160000;
-                // --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT JUMAT ---
-
-                // --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
-                $rawjamdtg = $presonlog->jam_datang;
-                $jamdtg = str_replace(':', '', $rawjamdtg);
-                $rawjamplg = $presonlog->jam_pulang;
-                $jamplg = str_replace(':', '', $rawjamplg);
-                // --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
-
-                if ($presonlog->jam_datang==null || $jamdtg < 63000 || $jamdtg > $upper_telatdtg) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    $dianggapbolos++;
-                  }
-                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
-                    $dianggapbolos++;
-                  }
-                } else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
-                  $intertelat = 0;
-                  $interpulcep = 0;
-                  $interbebas = 0;
-                  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
-                  if ($interbebas==0) {
-                    if ($intertelat==0 && $interpulcep==0) {
-                      $telatpulangcepat++;
-                    } else if ($intertelat!=0 && $interpulcep==0) {
-                      $pulangcepat++;
-                    } else if ($intertelat==0 && $interpulcep!=0) {
-                      $telat++;
-                    }
-                  }
-                } else if ($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    $telat++;
-                  }
-                } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > 63000 && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
-                    $pulangcepat++;
-                  }
-                }
-              }
-              // --- END OF CHECK FRIDAY DATE ---
-            } else {
-              $tglnew = explode('/', $presonlog->tanggal);
-              $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
-
-              // --- SET LOWER & UPPER BOUND APEL ---
-              $maxjamdatang = 83100;
-              $upper_telatdtg = 90100;
-              $lower_plgcepat = 150000;
-              $upper_plgcepat = 160000;
-              // --- END OF SET LOWER & UPPER BOUND APEL ---
-
-              // --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
-              $rawjamdtg = $presonlog->jam_datang;
-              $jamdtg = str_replace(':', '', $rawjamdtg);
-              $rawjamplg = $presonlog->jam_pulang;
-              $jamplg = str_replace(':', '', $rawjamplg);
-              // --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
-
-              if (in_array($presonlog->mach_id, $mesinapel)) {
-                if ($presonlog->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    $dianggapbolos++;
-                  }
-                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
-                    $dianggapbolos++;
-                  }
-                } else if ($jamdtg > $maxjamdatang && $jamplg > $upper_plgcepat) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    $tidakapel++;
-                  }
-                } else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
-                  $intertelat = 0;
-                  $interpulcep = 0;
-                  $interbebas = 0;
-                  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
-                  if ($interbebas==0) {
-                    if ($intertelat==0 && $interpulcep==0) {
-                      $telatpulangcepat++;
-                    } else if ($intertelat!=0 && $interpulcep==0) {
-                      $pulangcepat++;
-                    } else if ($intertelat==0 && $interpulcep!=0) {
-                      $telat++;
-                    }
-                  }
-                } else if ((($jamdtg < $maxjamdatang && $jamdtg > 70000) && $jamplg < $upper_plgcepat) || (($jamdtg < $maxjamdatang && $jamdtg > 70000) && $jamplg==null)) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
-                    $pulangcepat++;
-                  }
-                }
-              } else {
-                if ($presonlog->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    $dianggapbolos++;
-                  }
-                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
-                    $dianggapbolos++;
-                  }
-                } else if (($jamdtg <= $maxjamdatang || $jamdtg >= $maxjamdatang) && $jamplg > $upper_plgcepat) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    $tidakapel++;
-                  }
-                } else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
-                  $intertelat = 0;
-                  $interpulcep = 0;
-                  $interbebas = 0;
-                  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
-                  if ($interbebas==0) {
-                    if ($intertelat==0 && $interpulcep==0) {
-                      $telatpulangcepat++;
-                    } else if ($intertelat!=0 && $interpulcep==0) {
-                      $pulangcepat++;
-                    } else if ($intertelat==0 && $interpulcep!=0) {
-                      $telat++;
-                    }
-                  }
-                }
-              }
-            }
-            // --- END OF CHECK APEL DATE
+		
+		// --- RAMADHAN 2017 ---
+        $periodramadhan = new DatePeriod(
+             new DateTime("2017-05-27"),
+             new DateInterval('P1D'),
+             new DateTime("2017-06-26 23:59:59")
+        );
+        $daterangeramadhan = array();
+        foreach($periodramadhan as $date) {$daterangeramadhan[] = $date->format('Y-m-d'); }
+        $ramadhan = array();
+        foreach ($daterangeramadhan as $key) {
+          if (date('N', strtotime($key)) < 6) {
+            $ramadhan[] = $key;
           }
-          // --- END OF MAKE SURE IS NOT HOLIDAY DATE
         }
-        // -- END OF LOOP PRESON LOG
-
-        // --- COUNT TOTAL BOLOS ---
-        $arrharikerja = array();
-        foreach ($harikerja as $hk) {
-          $tglnew = explode('-', $hk);
+        $ramadhanformatslash = array();
+        foreach ($ramadhan as $key) {
+          $tglnew = explode('-', $key);
           $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
-          $arrharikerja[] = $tglformat;
+          $ramadhanformatslash[] = $tglformat;
         }
-        $tidakhadir = array_diff($arrharikerja, $tanggalhadir);
-        $murnibolos = 0;
-        foreach ($tidakhadir as $bolos) {
-          if (!in_array($bolos, $tanggalintervensibebas)) {
-            // echo "murnibolos: ".$pegawai->fid."---".$bolos."<br>";
-            $murnibolos++;
-          }
-        }
-        $totalbolos = $murnibolos+$dianggapbolos;
-        // --- END OF COUNT TOTAL BOLOS ---
+        // return $ramadhanformatslash;
+        // --- END OF RAMADHAN 2017 ---
 
+        // --- CHECK STATUS PEGAWAI PENSIUN OR MENINGGAL---
+        $rowdata["status"] = $pegawai->status;
+        $tanggalakhirkerja = $pegawai->tanggal_akhir_kerja;
+        $monthyearakhirkerja=0;
+        $monthyearcetaktpp=0;
+        if ($tanggalakhirkerja!=null) {
+          $monthyearakhirkerja = date('Y-m', strtotime($tanggalakhirkerja));
+          $monthyearcetaktpp = date('Y-m', strtotime($tanggal_mulai));
+        }
+
+        if (($pegawai->status==3 || $pegawai->status==4) && ($monthyearakhirkerja<=$monthyearcetaktpp)) {
+          $tppdibayarkan = 0;
+        } else {
+			// -- LOOP PRESON LOG
+			foreach ($getpresonlog as $presonlog) {
+			  // --- MAKE SURE IS NOT HOLIDAY DATE
+			  if (($pegawai->fid == $presonlog->fid) && (!in_array($presonlog->tanggal, $tanggallibur))) {
+				$tanggalhadir[] = $presonlog->tanggal;
+				// --- CHECK APEL DATE
+				if (!in_array($presonlog->tanggal, $tanggalapel)) {
+				  $tglnew = explode('/', $presonlog->tanggal);
+				  $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+				  // --- CHECK FRIDAY DATE ---
+				  if ((date('N', strtotime($tglformat)) != 5)) {
+					// --- SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT ---
+					$lower_telatdtg = 80100;
+					$upper_telatdtg = 90100;
+					$lower_plgcepat = 150000;
+					$upper_plgcepat = 160000;
+					$batas_jamdtg = 70000;
+					$batas_jamplg = 190000;
+
+					if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
+					$upper_plgcepat = 150000;
+					}
+					// --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT ---
+
+					// --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
+					$rawjamdtg = $presonlog->jam_datang;
+					$jamdtg = str_replace(':', '', $rawjamdtg);
+					$rawjamplg = $presonlog->jam_pulang;
+					$jamplg = str_replace(':', '', $rawjamplg);
+					// --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
+
+					if ($presonlog->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						$dianggapbolos++;
+					  }
+					} else if ($presonlog->jam_pulang==null || $jamplg > $batas_jamplg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+						$dianggapbolos++;
+					  }
+					} else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
+					  $intertelat = 0;
+					  $interpulcep = 0;
+					  $interbebas = 0;
+					  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+					  if ($interbebas==0) {
+						if ($intertelat==0 && $interpulcep==0) {
+						  $telatpulangcepat++;
+						} else if ($intertelat!=0 && $interpulcep==0) {
+						  $pulangcepat++;
+						} else if ($intertelat==0 && $interpulcep!=0) {
+						  $telat++;
+						}
+					  }
+					} else if ($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						$telat++;
+					  }
+					} else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > $batas_jamdtg && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+						$pulangcepat++;
+					  }
+					}
+				  } else {
+					// --- SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT JUMAT ---
+					$lower_telatdtg = 73100;
+					$upper_telatdtg = 83100;
+					$lower_plgcepat = 150000;
+					$upper_plgcepat = 160000;
+					$batas_jamdtg = 63000;
+					$batas_jamplg = 190000;
+
+					if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
+					$upper_plgcepat = 153000;
+					}
+					// --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT JUMAT ---
+
+					// --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
+					$rawjamdtg = $presonlog->jam_datang;
+					$jamdtg = str_replace(':', '', $rawjamdtg);
+					$rawjamplg = $presonlog->jam_pulang;
+					$jamplg = str_replace(':', '', $rawjamplg);
+					// --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
+
+					if ($presonlog->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						$dianggapbolos++;
+					  }
+					} else if ($presonlog->jam_pulang==null || $jamplg > $batas_jamplg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+						$dianggapbolos++;
+					  }
+					} else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
+					  $intertelat = 0;
+					  $interpulcep = 0;
+					  $interbebas = 0;
+					  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+					  if ($interbebas==0) {
+						if ($intertelat==0 && $interpulcep==0) {
+						  $telatpulangcepat++;
+						} else if ($intertelat!=0 && $interpulcep==0) {
+						  $pulangcepat++;
+						} else if ($intertelat==0 && $interpulcep!=0) {
+						  $telat++;
+						}
+					  }
+					} else if ($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						$telat++;
+					  }
+					} else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > $batas_jamdtg && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+						$pulangcepat++;
+					  }
+					}
+				  }
+				  // --- END OF CHECK FRIDAY DATE ---
+				} else {
+				  $tglnew = explode('/', $presonlog->tanggal);
+				  $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+
+				  // --- SET LOWER & UPPER BOUND APEL ---
+				  $maxjamdatang = 83100;
+				  $upper_telatdtg = 90100;
+				  $lower_plgcepat = 150000;
+				  $upper_plgcepat = 160000;
+				  $batas_jamdtg = 70000;
+				  $batas_jamplg = 190000;
+
+				  if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
+					$upper_plgcepat = 150000;
+				  }
+				  // --- END OF SET LOWER & UPPER BOUND APEL ---
+
+				  // --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
+				  $rawjamdtg = $presonlog->jam_datang;
+				  $jamdtg = str_replace(':', '', $rawjamdtg);
+				  $rawjamplg = $presonlog->jam_pulang;
+				  $jamplg = str_replace(':', '', $rawjamplg);
+				  // --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
+
+				  if (in_array($presonlog->mach_id, $mesinapel)) {
+					if ($presonlog->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						$dianggapbolos++;
+					  }
+					} else if ($presonlog->jam_pulang==null || $jamplg > $batas_jamplg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+						$dianggapbolos++;
+					  }
+					} else if ($jamdtg > $maxjamdatang && $jamplg > $upper_plgcepat) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						$tidakapel++;
+					  }
+					} else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
+					  $intertelat = 0;
+					  $interpulcep = 0;
+					  $interbebas = 0;
+					  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+					  if ($interbebas==0) {
+						if ($intertelat==0 && $interpulcep==0) {
+						  $telatpulangcepat++;
+						} else if ($intertelat!=0 && $interpulcep==0) {
+						  $pulangcepat++;
+						} else if ($intertelat==0 && $interpulcep!=0) {
+						  $telat++;
+						}
+					  }
+					} else if ((($jamdtg < $maxjamdatang && $jamdtg > $batas_jamdtg) && $jamplg < $upper_plgcepat) || (($jamdtg < $maxjamdatang && $jamdtg > $batas_jamdtg) && $jamplg==null)) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+						$pulangcepat++;
+					  }
+					}
+				  } else {
+					if ($presonlog->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						$dianggapbolos++;
+					  }
+					} else if ($presonlog->jam_pulang==null || $jamplg > $batas_jamplg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+						$dianggapbolos++;
+					  }
+					} else if (($jamdtg <= $maxjamdatang || $jamdtg >= $maxjamdatang) && $jamplg > $upper_plgcepat) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						$tidakapel++;
+					  }
+					} else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
+					  $intertelat = 0;
+					  $interpulcep = 0;
+					  $interbebas = 0;
+					  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+					  if ($interbebas==0) {
+						if ($intertelat==0 && $interpulcep==0) {
+						  $telatpulangcepat++;
+						} else if ($intertelat!=0 && $interpulcep==0) {
+						  $pulangcepat++;
+						} else if ($intertelat==0 && $interpulcep!=0) {
+						  $telat++;
+						}
+					  }
+					}
+				  }
+				}
+				// --- END OF CHECK APEL DATE
+			  }
+			  // --- END OF MAKE SURE IS NOT HOLIDAY DATE
+			}
+			// -- END OF LOOP PRESON LOG
+
+			// --- COUNT TOTAL BOLOS ---
+			$arrharikerja = array();
+			foreach ($harikerja as $hk) {
+			  $tglnew = explode('-', $hk);
+			  $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+			  $arrharikerja[] = $tglformat;
+			}
+			$tidakhadir = array_diff($arrharikerja, $tanggalhadir);
+			$murnibolos = 0;
+			foreach ($tidakhadir as $bolos) {
+			  if (!in_array($bolos, $tanggalintervensibebas)) {
+				// echo "murnibolos: ".$pegawai->fid."---".$bolos."<br>";
+				$murnibolos++;
+			  }
+			}
+			$totalbolos = $murnibolos+$dianggapbolos;
+			// --- END OF COUNT TOTAL BOLOS ---
+		}
+		// --- END OF CHECK STATUS PEGAWAI PENSIUN ---
         $totalpotongantpp = 0;
 
         if (in_array($pegawai->nip_sapk, $arrpengecualian)) {
@@ -690,241 +747,298 @@ class LaporanController extends Controller
         }
         // --- END OF INTERVENSI FOR SPECIFIC PEGAWAI
 
-        // -- LOOP PRESON LOG
+        
         $dianggapbolos = 0;
         $telat = 0;
         $pulangcepat = 0;
         $telatpulangcepat = 0;
         $tidakapel = 0;
         $tanggalhadir = array();
-        foreach ($getpresonlog as $presonlog) {
-          // --- MAKE SURE IS NOT HOLIDAY DATE
-          if (($pegawai->fid == $presonlog->fid) && (!in_array($presonlog->tanggal, $tanggallibur))) {
-            $tanggalhadir[] = $presonlog->tanggal;
-            // --- CHECK APEL DATE
-            if (!in_array($presonlog->tanggal, $tanggalapel)) {
-              $tglnew = explode('/', $presonlog->tanggal);
-              $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
-              // --- CHECK FRIDAY DATE ---
-              if ((date('N', strtotime($tglformat)) != 5)) {
-                // --- SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT ---
-                $lower_telatdtg = 80100;
-                $upper_telatdtg = 90100;
-                $lower_plgcepat = 150000;
-                $upper_plgcepat = 160000;
-                // --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT ---
-
-                // --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
-                $rawjamdtg = $presonlog->jam_datang;
-                $jamdtg = str_replace(':', '', $rawjamdtg);
-                $rawjamplg = $presonlog->jam_pulang;
-                $jamplg = str_replace(':', '', $rawjamplg);
-                // --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
-
-                if ($presonlog->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    $dianggapbolos++;
-                  }
-                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
-                    $dianggapbolos++;
-                  }
-                } else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
-                  $intertelat = 0;
-                  $interpulcep = 0;
-                  $interbebas = 0;
-                  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
-                  if ($interbebas==0) {
-                    if ($intertelat==0 && $interpulcep==0) {
-                      $telatpulangcepat++;
-                    } else if ($intertelat!=0 && $interpulcep==0) {
-                      $pulangcepat++;
-                    } else if ($intertelat==0 && $interpulcep!=0) {
-                      $telat++;
-                    }
-                  }
-                } else if ($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    $telat++;
-                  }
-                } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > 70000 && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
-                    $pulangcepat++;
-                  }
-                }
-              } else {
-                // --- SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT JUMAT ---
-                $lower_telatdtg = 73100;
-                $upper_telatdtg = 83100;
-                $lower_plgcepat = 150000;
-                $upper_plgcepat = 160000;
-                // --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT JUMAT ---
-
-                // --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
-                $rawjamdtg = $presonlog->jam_datang;
-                $jamdtg = str_replace(':', '', $rawjamdtg);
-                $rawjamplg = $presonlog->jam_pulang;
-                $jamplg = str_replace(':', '', $rawjamplg);
-                // --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
-
-                if ($presonlog->jam_datang==null || $jamdtg < 63000 || $jamdtg > $upper_telatdtg) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    $dianggapbolos++;
-                  }
-                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
-                    $dianggapbolos++;
-                  }
-                } else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
-                  $intertelat = 0;
-                  $interpulcep = 0;
-                  $interbebas = 0;
-                  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
-                  if ($interbebas==0) {
-                    if ($intertelat==0 && $interpulcep==0) {
-                      $telatpulangcepat++;
-                    } else if ($intertelat!=0 && $interpulcep==0) {
-                      $pulangcepat++;
-                    } else if ($intertelat==0 && $interpulcep!=0) {
-                      $telat++;
-                    }
-                  }
-                } else if ($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    $telat++;
-                  }
-                } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > 63000 && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
-                    $pulangcepat++;
-                  }
-                }
-              }
-              // --- END OF CHECK FRIDAY DATE ---
-            } else {
-              $tglnew = explode('/', $presonlog->tanggal);
-              $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
-
-              // --- SET LOWER & UPPER BOUND APEL ---
-              $maxjamdatang = 83100;
-              $upper_telatdtg = 90100;
-              $lower_plgcepat = 150000;
-              $upper_plgcepat = 160000;
-              // --- END OF SET LOWER & UPPER BOUND APEL ---
-
-              // --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
-              $rawjamdtg = $presonlog->jam_datang;
-              $jamdtg = str_replace(':', '', $rawjamdtg);
-              $rawjamplg = $presonlog->jam_pulang;
-              $jamplg = str_replace(':', '', $rawjamplg);
-              // --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
-
-              if (in_array($presonlog->mach_id, $mesinapel)) {
-                if ($presonlog->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    // echo "dianggapbolos-jamdtg-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                    $dianggapbolos++;
-                  }
-                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
-                    // echo "dianggapbolos-jamplg-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                    $dianggapbolos++;
-                  }
-                } else if ($jamdtg > $maxjamdatang && $jamplg > $upper_plgcepat) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    // echo "tidak-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                    $tidakapel++;
-                  }
-                } else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
-                  $intertelat = 0;
-                  $interpulcep = 0;
-                  $interbebas = 0;
-                  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
-                  if ($interbebas==0) {
-                    if ($intertelat==0 && $interpulcep==0) {
-                      // echo "telat-pulcep-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                      $telatpulangcepat++;
-                    } else if ($intertelat!=0 && $interpulcep==0) {
-                      // echo "pulcep-(dtpc)-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                      $pulangcepat++;
-                    } else if ($intertelat==0 && $interpulcep!=0) {
-                      // echo "telat-(dtpc)-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                      $telat++;
-                    }
-                  }
-                } else if ((($jamdtg < $maxjamdatang && $jamdtg > 70000) && $jamplg < $upper_plgcepat) || (($jamdtg < $maxjamdatang && $jamdtg > 70000) && $jamplg==null)) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
-                    // echo "pulcep-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                    $pulangcepat++;
-                  }
-                }
-              } else {
-                if ($presonlog->jam_datang==null || $jamdtg < 70000 || $jamdtg > $upper_telatdtg) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    // echo "dianggapbolos-jamdtg-bukanmesinapel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                    $dianggapbolos++;
-                  }
-                } else if ($presonlog->jam_pulang==null || $jamplg > 190000) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
-                    // echo "dianggapbolos-jamplg-bukanmesinapel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                    $dianggapbolos++;
-                  }
-                } else if (($jamdtg <= $maxjamdatang || $jamdtg >= $maxjamdatang) && $jamplg > $upper_plgcepat) {
-                  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
-                    // echo "tidak-apel-bukanmesinapel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                    $tidakapel++;
-                  }
-                } else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
-                  $intertelat = 0;
-                  $interpulcep = 0;
-                  $interbebas = 0;
-                  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
-                  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
-                  if ($interbebas==0) {
-                    if ($intertelat==0 && $interpulcep==0) {
-                      // echo "telat-pulcep-bukanmesinapel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                      $telatpulangcepat++;
-                    } else if ($intertelat!=0 && $interpulcep==0) {
-                      // echo "pulcep-(dtpc)-bukanmesinapel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                      $pulangcepat++;
-                    } else if ($intertelat==0 && $interpulcep!=0) {
-                      // echo "telat-(dtpc)-bukanmesinapel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
-                      $telat++;
-                    }
-                  }
-                }
-              }
-            }
-            // --- END OF CHECK APEL DATE
+		
+		// --- RAMADHAN 2017 ---
+        $periodramadhan = new DatePeriod(
+             new DateTime("2017-05-27"),
+             new DateInterval('P1D'),
+             new DateTime("2017-06-26 23:59:59")
+        );
+        $daterangeramadhan = array();
+        foreach($periodramadhan as $date) {$daterangeramadhan[] = $date->format('Y-m-d'); }
+        $ramadhan = array();
+        foreach ($daterangeramadhan as $key) {
+          if (date('N', strtotime($key)) < 6) {
+            $ramadhan[] = $key;
           }
-          // --- END OF MAKE SURE IS NOT HOLIDAY DATE
         }
-        // -- END OF LOOP PRESON LOG
-
-        // --- COUNT TOTAL BOLOS ---
-        $arrharikerja = array();
-        foreach ($harikerja as $hk) {
-          $tglnew = explode('-', $hk);
+        $ramadhanformatslash = array();
+        foreach ($ramadhan as $key) {
+          $tglnew = explode('-', $key);
           $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
-          $arrharikerja[] = $tglformat;
+          $ramadhanformatslash[] = $tglformat;
         }
-        $tidakhadir = array_diff($arrharikerja, $tanggalhadir);
-        $murnibolos = 0;
-        foreach ($tidakhadir as $bolos) {
-          if (!in_array($bolos, $tanggalintervensibebas)) {
-            // echo "murnibolos: ".$pegawai->fid."---".$bolos."<br>";
-            $murnibolos++;
-          }
-        }
-        $totalbolos = $murnibolos+$dianggapbolos;
-        // --- END OF COUNT TOTAL BOLOS ---
+        // return $ramadhanformatslash;
+        // --- END OF RAMADHAN 2017 ---
 
+        // --- CHECK STATUS PEGAWAI PENSIUN OR MENINGGAL---
+        $rowdata["status"] = $pegawai->status;
+        $tanggalakhirkerja = $pegawai->tanggal_akhir_kerja;
+        $monthyearakhirkerja=0;
+        $monthyearcetaktpp=0;
+        if ($tanggalakhirkerja!=null) {
+          $monthyearakhirkerja = date('Y-m', strtotime($tanggalakhirkerja));
+          $monthyearcetaktpp = date('Y-m', strtotime($tanggal_mulai));
+        }
+
+        if (($pegawai->status==3 || $pegawai->status==4) && ($monthyearakhirkerja<=$monthyearcetaktpp)) {
+          $tppdibayarkan = 0;
+        } else {
+			// -- LOOP PRESON LOG
+			foreach ($getpresonlog as $presonlog) {
+			  // --- MAKE SURE IS NOT HOLIDAY DATE
+			  if (($pegawai->fid == $presonlog->fid) && (!in_array($presonlog->tanggal, $tanggallibur))) {
+				$tanggalhadir[] = $presonlog->tanggal;
+				// --- CHECK APEL DATE
+				if (!in_array($presonlog->tanggal, $tanggalapel)) {
+				  $tglnew = explode('/', $presonlog->tanggal);
+				  $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+				  // --- CHECK FRIDAY DATE ---
+				  if ((date('N', strtotime($tglformat)) != 5)) {
+					// --- SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT ---
+					$lower_telatdtg = 80100;
+					$upper_telatdtg = 90100;
+					$lower_plgcepat = 150000;
+					$upper_plgcepat = 160000;
+					$batas_jamdtg = 70000;
+					$batas_jamplg = 190000;
+
+					if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
+					$upper_plgcepat = 150000;
+					}
+					// --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT ---
+
+					// --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
+					$rawjamdtg = $presonlog->jam_datang;
+					$jamdtg = str_replace(':', '', $rawjamdtg);
+					$rawjamplg = $presonlog->jam_pulang;
+					$jamplg = str_replace(':', '', $rawjamplg);
+					// --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
+
+					if ($presonlog->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						$dianggapbolos++;
+					  }
+					} else if ($presonlog->jam_pulang==null || $jamplg > $batas_jamplg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+						$dianggapbolos++;
+					  }
+					} else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
+					  $intertelat = 0;
+					  $interpulcep = 0;
+					  $interbebas = 0;
+					  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+					  if ($interbebas==0) {
+						if ($intertelat==0 && $interpulcep==0) {
+						  $telatpulangcepat++;
+						} else if ($intertelat!=0 && $interpulcep==0) {
+						  $pulangcepat++;
+						} else if ($intertelat==0 && $interpulcep!=0) {
+						  $telat++;
+						}
+					  }
+					} else if ($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						$telat++;
+					  }
+					} else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > $batas_jamdtg && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+						$pulangcepat++;
+					  }
+					}
+				  } else {
+					// --- SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT JUMAT ---
+					$lower_telatdtg = 73100;
+					$upper_telatdtg = 83100;
+					$lower_plgcepat = 150000;
+					$upper_plgcepat = 160000;
+					$batas_jamdtg = 63000;
+					$batas_jamplg = 190000;
+
+					if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
+					$upper_plgcepat = 153000;
+					}
+					// --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT JUMAT ---
+
+					// --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
+					$rawjamdtg = $presonlog->jam_datang;
+					$jamdtg = str_replace(':', '', $rawjamdtg);
+					$rawjamplg = $presonlog->jam_pulang;
+					$jamplg = str_replace(':', '', $rawjamplg);
+					// --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
+
+					if ($presonlog->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						$dianggapbolos++;
+					  }
+					} else if ($presonlog->jam_pulang==null || $jamplg > $batas_jamplg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+						$dianggapbolos++;
+					  }
+					} else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
+					  $intertelat = 0;
+					  $interpulcep = 0;
+					  $interbebas = 0;
+					  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+					  if ($interbebas==0) {
+						if ($intertelat==0 && $interpulcep==0) {
+						  $telatpulangcepat++;
+						} else if ($intertelat!=0 && $interpulcep==0) {
+						  $pulangcepat++;
+						} else if ($intertelat==0 && $interpulcep!=0) {
+						  $telat++;
+						}
+					  }
+					} else if ($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						$telat++;
+					  }
+					} else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > $batas_jamdtg && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+						$pulangcepat++;
+					  }
+					}
+				  }
+				  // --- END OF CHECK FRIDAY DATE ---
+				} else {
+				  $tglnew = explode('/', $presonlog->tanggal);
+				  $tglformat = $tglnew[2].'-'.$tglnew[1].'-'.$tglnew[0];
+
+				  // --- SET LOWER & UPPER BOUND APEL ---
+				  $maxjamdatang = 83100;
+				  $upper_telatdtg = 90100;
+				  $lower_plgcepat = 150000;
+				  $upper_plgcepat = 160000;
+				$batas_jamdtg = 70000;
+				$batas_jamplg = 190000;
+
+				if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
+				$upper_plgcepat = 150000;
+				}
+				  // --- END OF SET LOWER & UPPER BOUND APEL ---
+
+				  // --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
+				  $rawjamdtg = $presonlog->jam_datang;
+				  $jamdtg = str_replace(':', '', $rawjamdtg);
+				  $rawjamplg = $presonlog->jam_pulang;
+				  $jamplg = str_replace(':', '', $rawjamplg);
+				  // --- END OF KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
+
+				  if (in_array($presonlog->mach_id, $mesinapel)) {
+					if ($presonlog->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						// echo "dianggapbolos-jamdtg-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+						$dianggapbolos++;
+					  }
+					} else if ($presonlog->jam_pulang==null || $jamplg > $batas_jamplg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+						// echo "dianggapbolos-jamplg-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+						$dianggapbolos++;
+					  }
+					} else if ($jamdtg > $maxjamdatang && $jamplg > $upper_plgcepat) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						// echo "tidak-apel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+						$tidakapel++;
+					  }
+					} else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
+					  $intertelat = 0;
+					  $interpulcep = 0;
+					  $interbebas = 0;
+					  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+					  if ($interbebas==0) {
+						if ($intertelat==0 && $interpulcep==0) {
+						  // echo "telat-pulcep-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+						  $telatpulangcepat++;
+						} else if ($intertelat!=0 && $interpulcep==0) {
+						  // echo "pulcep-(dtpc)-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+						  $pulangcepat++;
+						} else if ($intertelat==0 && $interpulcep!=0) {
+						  // echo "telat-(dtpc)-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+						  $telat++;
+						}
+					  }
+					} else if ((($jamdtg < $maxjamdatang && $jamdtg > $batas_jamdtg) && $jamplg < $upper_plgcepat) || (($jamdtg < $maxjamdatang && $jamdtg > $batas_jamdtg) && $jamplg==null)) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+						// echo "pulcep-apel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+						$pulangcepat++;
+					  }
+					}
+				  } else {
+					if ($presonlog->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						// echo "dianggapbolos-jamdtg-bukanmesinapel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+						$dianggapbolos++;
+					  }
+					} else if ($presonlog->jam_pulang==null || $jamplg > $batas_jamplg) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensipulcep))) {
+						// echo "dianggapbolos-jamplg-bukanmesinapel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+						$dianggapbolos++;
+					  }
+					} else if (($jamdtg <= $maxjamdatang || $jamdtg >= $maxjamdatang) && $jamplg > $upper_plgcepat) {
+					  if ((!in_array($presonlog->tanggal, $tanggalintervensibebas)) && (!in_array($presonlog->tanggal, $tanggalintervensitelat))) {
+						// echo "tidak-apel-bukanmesinapel: ".$presonlog->fid."--machid: ".$presonlog->mach_id."---".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+						$tidakapel++;
+					  }
+					} else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
+					  $intertelat = 0;
+					  $interpulcep = 0;
+					  $interbebas = 0;
+					  if (in_array($presonlog->tanggal, $tanggalintervensibebas)) $interbebas++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensitelat)) $intertelat++;
+					  if (in_array($presonlog->tanggal, $tanggalintervensipulcep)) $interpulcep++;
+					  if ($interbebas==0) {
+						if ($intertelat==0 && $interpulcep==0) {
+						  // echo "telat-pulcep-bukanmesinapel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+						  $telatpulangcepat++;
+						} else if ($intertelat!=0 && $interpulcep==0) {
+						  // echo "pulcep-(dtpc)-bukanmesinapel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+						  $pulangcepat++;
+						} else if ($intertelat==0 && $interpulcep!=0) {
+						  // echo "telat-(dtpc)-bukanmesinapel: ".$presonlog->fid."--".$presonlog->tanggal."--jamdatang:".$jamdtg."--jampulang:".$jamplg."<br>";
+						  $telat++;
+						}
+					  }
+					}
+				  }
+				}
+				// --- END OF CHECK APEL DATE
+			  }
+			  // --- END OF MAKE SURE IS NOT HOLIDAY DATE
+			}
+			// -- END OF LOOP PRESON LOG
+		
+			// --- COUNT TOTAL BOLOS ---
+			$arrharikerja = array();
+			foreach ($harikerja as $hk) {
+			  $tglnew = explode('-', $hk);
+			  $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+			  $arrharikerja[] = $tglformat;
+			}
+			$tidakhadir = array_diff($arrharikerja, $tanggalhadir);
+			$murnibolos = 0;
+			foreach ($tidakhadir as $bolos) {
+			  if (!in_array($bolos, $tanggalintervensibebas)) {
+				// echo "murnibolos: ".$pegawai->fid."---".$bolos."<br>";
+				$murnibolos++;
+			  }
+			}
+			$totalbolos = $murnibolos+$dianggapbolos;
+			// --- END OF COUNT TOTAL BOLOS ---
+		}
+		// --- END OF CHECK STATUS PEGAWAI PENSIUN ---
         $totalpotongantpp = 0;
 
         if (in_array($pegawai->nip_sapk, $arrpengecualian)) {
