@@ -3,6 +3,14 @@
 @section('title')
   <title>Detail Laporan</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <style media="screen">
+    .link a {
+      text-decoration-color: black;
+    }
+    .sesuai {
+      background-color: brown;
+    }
+  </style>
 @endsection
 
 @section('content')
@@ -98,18 +106,18 @@
               <tr>
                 <td>{{ $no }}</td>
                 <td><b>{{ $jurnal->nama }}</b></td>
-                <td><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '01-2017')) }}">{{ number_format(round($jurnal->tpp_januari), 0, ',', '.') }}</a></td>
-                <td><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '02-2017')) }}">{{ number_format(round($jurnal->tpp_februari), 0, ',', '.') }}</a></td>
-                <td><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '03-2017')) }}">{{ number_format(round($jurnal->tpp_maret), 0, ',', '.') }}</a></td>
-                <td><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '04-2017')) }}">{{ number_format(round($jurnal->tpp_april), 0, ',', '.') }}</a></td>
-                <td><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '05-2017')) }}">{{ number_format(round($jurnal->tpp_mei), 0, ',', '.') }}</a></td>
-                <td><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '06-2017')) }}">{{ number_format(round($jurnal->tpp_juni), 0, ',', '.') }}</a></td>
-                <td><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '07-2017')) }}">{{ number_format(round($jurnal->tpp_juli), 0, ',', '.') }}</a></td>
-                <td><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '08-2017')) }}">{{ number_format(round($jurnal->tpp_agustus), 0, ',', '.') }}</a></td>
-                <td><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '09-2017')) }}">{{ number_format(round($jurnal->tpp_september), 0, ',', '.') }}</a></td>
-                <td><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '10-2017')) }}">{{ number_format(round($jurnal->tpp_oktober), 0, ',', '.') }}</a></td>
-                <td><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '11-2017')) }}">{{ number_format(round($jurnal->tpp_november), 0, ',', '.') }}</a></td>
-                <td><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '12-2017')) }}">{{ number_format(round($jurnal->tpp_desember), 0, ',', '.') }}</a></td>
+                <td class="{{ ($jurnal->flag_januari == 0) ? 'sesuai' : '' }}"><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '01-2017')) }}">{{ number_format(round($jurnal->tpp_januari), 0, ',', '.') }}</a></td>
+                <td class="{{ ($jurnal->flag_februari == 0) ? 'sesuai' : '' }}"><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '02-2017')) }}">{{ number_format(round($jurnal->tpp_februari), 0, ',', '.') }}</a></td>
+                <td class="{{ ($jurnal->flag_maret == 0) ? 'sesuai' : '' }}"><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '03-2017')) }}">{{ number_format(round($jurnal->tpp_maret), 0, ',', '.') }}</a></td>
+                <td class="{{ ($jurnal->flag_april == 0) ? 'sesuai' : '' }}"><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '04-2017')) }}">{{ number_format(round($jurnal->tpp_april), 0, ',', '.') }}</a></td>
+                <td class="{{ ($jurnal->flag_mei == 0) ? 'sesuai' : '' }}"><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '05-2017')) }}">{{ number_format(round($jurnal->tpp_mei), 0, ',', '.') }}</a></td>
+                <td class="{{ ($jurnal->flag_juni == 0) ? 'sesuai' : '' }}"><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '06-2017')) }}">{{ number_format(round($jurnal->tpp_juni), 0, ',', '.') }}</a></td>
+                <td class="{{ ($jurnal->flag_juli == 0) ? 'sesuai' : '' }}"><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '07-2017')) }}">{{ number_format(round($jurnal->tpp_juli), 0, ',', '.') }}</a></td>
+                <td class="{{ ($jurnal->flag_agustus == 0) ? 'sesuai' : '' }}"><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '08-2017')) }}">{{ number_format(round($jurnal->tpp_agustus), 0, ',', '.') }}</a></td>
+                <td class="{{ ($jurnal->flag_september == 0) ? 'sesuai' : '' }}"><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '09-2017')) }}">{{ number_format(round($jurnal->tpp_september), 0, ',', '.') }}</a></td>
+                <td class="{{ ($jurnal->flag_oktober == 0) ? 'sesuai' : '' }}"><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '10-2017')) }}">{{ number_format(round($jurnal->tpp_oktober), 0, ',', '.') }}</a></td>
+                <td class="{{ ($jurnal->flag_november == 0) ? 'sesuai' : '' }}"><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '11-2017')) }}">{{ number_format(round($jurnal->tpp_november), 0, ',', '.') }}</a></td>
+                <td class="{{ ($jurnal->flag_desember == 0) ? 'sesuai' : '' }}"><a href="{{ route('jurnal.getJurnal', array('skpd_id' => $jurnal->id, 'bulan' => '12-2017')) }}">{{ number_format(round($jurnal->tpp_desember), 0, ',', '.') }}</a></td>
                 @php
                   $grand = $jurnal->tpp_januari+$jurnal->tpp_februari+$jurnal->tpp_maret+$jurnal->tpp_april+$jurnal->tpp_mei+$jurnal->tpp_juni+$jurnal->tpp_juli+$jurnal->tpp_agustus+$jurnal->tpp_september+$jurnal->tpp_oktober+$jurnal->tpp_november+$jurnal->tpp_desember;
                 @endphp

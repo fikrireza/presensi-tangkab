@@ -34,65 +34,65 @@ class JurnalController extends Controller
 
     public function index()
     {
-      $getJurnal = DB::select("SELECT skpd.id, skpd.nama, tpp_januari, tpp_februari, tpp_maret, tpp_april, tpp_mei, tpp_juni, tpp_juli, tpp_agustus, tpp_september, tpp_oktober, tpp_november, tpp_desember
+      $getJurnal = DB::select("SELECT skpd.id, skpd.nama, tpp_januari, flag_januari, tpp_februari, flag_februari, tpp_maret, flag_maret, tpp_april, flag_april, tpp_mei, flag_mei, tpp_juni, flag_juni, tpp_juli, flag_juli, tpp_agustus, flag_agustus, tpp_september, flag_september, tpp_oktober, flag_oktober, tpp_november, flag_november, tpp_desember, flag_desember
     	FROM (select id, nama from preson_skpd where preson_skpd.status = 1 AND preson_skpd.flag_shift = 0) as skpd
 
-    	LEFT OUTER JOIN (select preson_jurnal.jumlah_tpp as tpp_januari, preson_skpd.id as id from preson_jurnal, preson_skpd
+    	LEFT OUTER JOIN (select preson_jurnal.flag_sesuai as flag_januari, preson_jurnal.jumlah_tpp as tpp_januari, preson_skpd.id as id from preson_jurnal, preson_skpd
     										where bulan = '01'
     										and tahun = '2017'
     										and preson_skpd.id = preson_jurnal.skpd_id) as Januari
     	ON skpd.id = Januari.id
-    	LEFT OUTER JOIN (select preson_jurnal.jumlah_tpp as tpp_februari, preson_skpd.id as id from preson_jurnal, preson_skpd
+    	LEFT OUTER JOIN (select preson_jurnal.flag_sesuai as flag_februari, preson_jurnal.jumlah_tpp as tpp_februari, preson_skpd.id as id from preson_jurnal, preson_skpd
     										where bulan = '02'
     										and tahun = '2017'
     										and preson_skpd.id = preson_jurnal.skpd_id) as Februari
     	ON skpd.id = Februari.id
-    	LEFT OUTER JOIN (select preson_jurnal.jumlah_tpp as tpp_maret, preson_skpd.id as id from preson_jurnal, preson_skpd
+    	LEFT OUTER JOIN (select preson_jurnal.flag_sesuai as flag_maret, preson_jurnal.jumlah_tpp as tpp_maret, preson_skpd.id as id from preson_jurnal, preson_skpd
     										where bulan = '03'
     										and tahun = '2017'
     										and preson_skpd.id = preson_jurnal.skpd_id) as Maret
     	ON skpd.id = Maret.id
-      LEFT OUTER JOIN (select preson_jurnal.jumlah_tpp as tpp_april, preson_skpd.id as id from preson_jurnal, preson_skpd
+      LEFT OUTER JOIN (select preson_jurnal.flag_sesuai as flag_april, preson_jurnal.jumlah_tpp as tpp_april, preson_skpd.id as id from preson_jurnal, preson_skpd
     										where bulan = '04'
     										and tahun = '2017'
     										and preson_skpd.id = preson_jurnal.skpd_id) as April
     	ON skpd.id = April.id
-      LEFT OUTER JOIN (select preson_jurnal.jumlah_tpp as tpp_mei, preson_skpd.id as id from preson_jurnal, preson_skpd
+      LEFT OUTER JOIN (select preson_jurnal.flag_sesuai as flag_mei, preson_jurnal.jumlah_tpp as tpp_mei, preson_skpd.id as id from preson_jurnal, preson_skpd
     										where bulan = '05'
     										and tahun = '2017'
     										and preson_skpd.id = preson_jurnal.skpd_id) as Mei
     	ON skpd.id = Mei.id
-      LEFT OUTER JOIN (select preson_jurnal.jumlah_tpp as tpp_juni, preson_skpd.id as id from preson_jurnal, preson_skpd
+      LEFT OUTER JOIN (select preson_jurnal.flag_sesuai as flag_juni, preson_jurnal.jumlah_tpp as tpp_juni, preson_skpd.id as id from preson_jurnal, preson_skpd
     										where bulan = '06'
     										and tahun = '2017'
     										and preson_skpd.id = preson_jurnal.skpd_id) as Juni
     	ON skpd.id = Juni.id
-      LEFT OUTER JOIN (select preson_jurnal.jumlah_tpp as tpp_juli, preson_skpd.id as id from preson_jurnal, preson_skpd
+      LEFT OUTER JOIN (select preson_jurnal.flag_sesuai as flag_juli, preson_jurnal.jumlah_tpp as tpp_juli, preson_skpd.id as id from preson_jurnal, preson_skpd
     										where bulan = '07'
     										and tahun = '2017'
     										and preson_skpd.id = preson_jurnal.skpd_id) as Juli
     	ON skpd.id = Juli.id
-      LEFT OUTER JOIN (select preson_jurnal.jumlah_tpp as tpp_agustus, preson_skpd.id as id from preson_jurnal, preson_skpd
+      LEFT OUTER JOIN (select preson_jurnal.flag_sesuai as flag_agustus, preson_jurnal.jumlah_tpp as tpp_agustus, preson_skpd.id as id from preson_jurnal, preson_skpd
     										where bulan = '08'
     										and tahun = '2017'
     										and preson_skpd.id = preson_jurnal.skpd_id) as Agustus
     	ON skpd.id = Agustus.id
-      LEFT OUTER JOIN (select preson_jurnal.jumlah_tpp as tpp_september, preson_skpd.id as id from preson_jurnal, preson_skpd
+      LEFT OUTER JOIN (select preson_jurnal.flag_sesuai as flag_september, preson_jurnal.jumlah_tpp as tpp_september, preson_skpd.id as id from preson_jurnal, preson_skpd
     										where bulan = '09'
     										and tahun = '2017'
     										and preson_skpd.id = preson_jurnal.skpd_id) as September
     	ON skpd.id = September.id
-      LEFT OUTER JOIN (select preson_jurnal.jumlah_tpp as tpp_oktober, preson_skpd.id as id from preson_jurnal, preson_skpd
+      LEFT OUTER JOIN (select preson_jurnal.flag_sesuai as flag_oktober, preson_jurnal.jumlah_tpp as tpp_oktober, preson_skpd.id as id from preson_jurnal, preson_skpd
     										where bulan = '10'
     										and tahun = '2017'
     										and preson_skpd.id = preson_jurnal.skpd_id) as Oktober
     	ON skpd.id = Oktober.id
-      LEFT OUTER JOIN (select preson_jurnal.jumlah_tpp as tpp_november, preson_skpd.id as id from preson_jurnal, preson_skpd
+      LEFT OUTER JOIN (select preson_jurnal.flag_sesuai as flag_november, preson_jurnal.jumlah_tpp as tpp_november, preson_skpd.id as id from preson_jurnal, preson_skpd
     										where bulan = '11'
     										and tahun = '2017'
     										and preson_skpd.id = preson_jurnal.skpd_id) as November
     	ON skpd.id = November.id
-      LEFT OUTER JOIN (select preson_jurnal.jumlah_tpp as tpp_desember, preson_skpd.id as id from preson_jurnal, preson_skpd
+      LEFT OUTER JOIN (select preson_jurnal.flag_sesuai as flag_desember, preson_jurnal.jumlah_tpp as tpp_desember, preson_skpd.id as id from preson_jurnal, preson_skpd
     										where bulan = '12'
     										and tahun = '2017'
     										and preson_skpd.id = preson_jurnal.skpd_id) as Desember
