@@ -302,8 +302,8 @@ class JurnalController extends Controller
           $telatpulangcepat = 0;
           $tidakapel = 0;
           $tanggalhadir = array();
-		  
-		  
+
+
 		  // --- RAMADHAN 2017 ---
 		$periodramadhan = new DatePeriod(
 			 new DateTime("2017-05-27"),
@@ -355,12 +355,12 @@ class JurnalController extends Controller
                   $upper_telatdtg = 90100;
                   $lower_plgcepat = 150000;
                   $upper_plgcepat = 160000;
-				  $batas_jamdtg = 70000;
-				$batas_jamplg = 190000;
+          				$batas_jamdtg = 70000;
+          				$batas_jamplg = 190000;
 
-				if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
-				$upper_plgcepat = 150000;
-				}
+          				if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
+          				$upper_plgcepat = 150000;
+          				}
                   // --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT ---
 
                   // --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
@@ -409,12 +409,14 @@ class JurnalController extends Controller
                   $upper_telatdtg = 83100;
                   $lower_plgcepat = 150000;
                   $upper_plgcepat = 160000;
-				  $batas_jamdtg = 63000;
-				$batas_jamplg = 190000;
+          				$batas_jamdtg = 63000;
+          				$batas_jamplg = 190000;
 
-				if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
-				$upper_plgcepat = 153000;
-				}
+          				if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
+                  $lower_telatdtg = 80100;
+                  $upper_telatdtg = 90100;
+          				$upper_plgcepat = 153000;
+          				}
                   // --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT JUMAT ---
 
                   // --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
@@ -468,12 +470,12 @@ class JurnalController extends Controller
                 $upper_telatdtg = 90100;
                 $lower_plgcepat = 150000;
                 $upper_plgcepat = 160000;
-				$batas_jamdtg = 70000;
-			  $batas_jamplg = 190000;
+        				$batas_jamdtg = 70000;
+        			  $batas_jamplg = 190000;
 
-			  if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
-				$upper_plgcepat = 150000;
-			  }
+        			  if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
+        				$upper_plgcepat = 150000;
+        			  }
                 // --- END OF SET LOWER & UPPER BOUND APEL ---
 
                 // --- KODE INI (((MUNGKIN))) PENYEBAB ERROR KALO JAM DATANG ATAU JAM PULANGNYA NULL ---
@@ -555,7 +557,7 @@ class JurnalController extends Controller
           }
           // -- END OF LOOP PRESON LOG
 
-		
+
           // --- COUNT TOTAL BOLOS ---
           $arrharikerja = array();
           foreach ($harikerja as $hk) {
@@ -573,7 +575,7 @@ class JurnalController extends Controller
           $totalbolos = $murnibolos+$dianggapbolos;
           // --- END OF COUNT TOTAL BOLOS ---
 		}
-		
+
           $totalpotongantpp = 0;
 
           if (in_array($pegawai->nip_sapk, $arrpengecualian)) {
