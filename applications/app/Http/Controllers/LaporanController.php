@@ -214,14 +214,14 @@ class LaporanController extends Controller
         }
         // --- END OF INTERVENSI FOR SPECIFIC PEGAWAI
 
-        
+
         $dianggapbolos = 0;
         $telat = 0;
         $pulangcepat = 0;
         $telatpulangcepat = 0;
         $tidakapel = 0;
         $tanggalhadir = array();
-		
+
 		// --- RAMADHAN 2017 ---
         $periodramadhan = new DatePeriod(
              new DateTime("2017-05-27"),
@@ -332,7 +332,9 @@ class LaporanController extends Controller
 					$batas_jamplg = 190000;
 
 					if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
-					$upper_plgcepat = 153000;
+            $lower_telatdtg = 80100;
+            $upper_telatdtg = 90100;
+					  $upper_plgcepat = 153000;
 					}
 					// --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT JUMAT ---
 
@@ -747,14 +749,14 @@ class LaporanController extends Controller
         }
         // --- END OF INTERVENSI FOR SPECIFIC PEGAWAI
 
-        
+
         $dianggapbolos = 0;
         $telat = 0;
         $pulangcepat = 0;
         $telatpulangcepat = 0;
         $tidakapel = 0;
         $tanggalhadir = array();
-		
+
 		// --- RAMADHAN 2017 ---
         $periodramadhan = new DatePeriod(
              new DateTime("2017-05-27"),
@@ -865,7 +867,9 @@ class LaporanController extends Controller
 					$batas_jamplg = 190000;
 
 					if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
-					$upper_plgcepat = 153000;
+            $lower_telatdtg = 80100;
+            $upper_telatdtg = 90100;
+					  $upper_plgcepat = 153000;
 					}
 					// --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT JUMAT ---
 
@@ -1019,7 +1023,7 @@ class LaporanController extends Controller
 			  // --- END OF MAKE SURE IS NOT HOLIDAY DATE
 			}
 			// -- END OF LOOP PRESON LOG
-		
+
 			// --- COUNT TOTAL BOLOS ---
 			$arrharikerja = array();
 			foreach ($harikerja as $hk) {
@@ -1441,6 +1445,8 @@ class LaporanController extends Controller
                   $batas_jamplg = 190000;
 
                   if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
+                    $lower_telatdtg = 80100;
+                    $upper_telatdtg = 90100;
                     $upper_plgcepat = 153000;
                   }
                   // --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT JUMAT ---
@@ -2022,6 +2028,8 @@ class LaporanController extends Controller
                   $batas_jamplg = 190000;
 
                   if (in_array($presonlog->tanggal, $ramadhanformatslash)) {
+                    $lower_telatdtg = 80100;
+                    $upper_telatdtg = 90100;
                     $upper_plgcepat = 153000;
                   }
                   // --- END OF SET LOWER & UPPER BOUND JAM TELAT & PULANG CEPAT JUMAT ---

@@ -247,6 +247,8 @@
                             $batas_jamplg = 190000;
 
                             if (in_array($absen->tanggal, $ramadhanformatslash)) {
+                              $lower_telatdtg = 80100;
+                              $upper_telatdtg = 90100;
                               $upper_plgcepat = 153000;
                             }
 
