@@ -197,6 +197,8 @@
 
                           if (in_array($absen->tanggal, $ramadhanformatslash)) {
                             $upper_plgcepat = 153000;
+                            $upper_telatdtg = 90100;
+                            $upper_plgcepat = 153000;
                           }
 
                           $rawjamdtg = $absen->jam_datang;
@@ -264,7 +266,7 @@
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
                               echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Alpa</td>";
                             }
-                          } else if ($absen->jam_pulang==null || $jamplg > 190000) {
+                          } else if ($absen->jam_pulang==null || $jamplg > $batas_jamplg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
                               echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Alpa</td>";
                             }
