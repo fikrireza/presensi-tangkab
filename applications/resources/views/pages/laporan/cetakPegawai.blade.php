@@ -71,8 +71,8 @@
                   @php
                     $flag++;
                   @endphp
-                  <td  align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">@if($absen->jam_datang != null) {{ $absen->jam_datang }} @else x @endif</td>
-                  <td  align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">@if($absen->jam_pulang != null) {{ $absen->jam_pulang }} @else x @endif</td>
+                  <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">@if($absen->jam_datang != null) {{ $absen->jam_datang }} @else x @endif</td>
+                  <td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">@if($absen->jam_pulang != null) {{ $absen->jam_pulang }} @else x @endif</td>
                 @endif
 
                 @if (($dayList[$day] == 'Sabtu') || ($dayList[$day] == 'Minggu'))
@@ -156,11 +156,11 @@
 
                           if ($absen->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
-                              echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Alpa </td>";
+                              echo '<td align="center" "style=border: 1px solid black;border-collapse: collapse;font-size: 24px;"> Alpa </td>';
                             }
                           } else if ($absen->jam_pulang==null || $jamplg > $batas_jamplg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
-                              echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Alpa</td>";
+                              echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"> Alpa</td>';
                             }
                           } else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
                             $intertelat = 0;
@@ -171,20 +171,20 @@
                             if (in_array($absen->tanggal, $tanggalintervensipulcep)) $interpulcep++;
                             if ($interbebas==0) {
                               if ($intertelat==0 && $interpulcep==0) {
-                                echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Terlambat & Pulang Cepat </td>";
+                                echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"> Terlambat & Pulang Cepat </td>';
                               } else if ($intertelat!=0 && $interpulcep==0) {
-                                echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Pulang Cepat </td>";
+                                echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"> Pulang Cepat </td>';
                               } else if ($intertelat==0 && $interpulcep!=0) {
-                                echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Terlambat </td>";
+                                echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"> Terlambat </td>';
                               }
                             }
                           } else if ($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
-                              echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Terlambat </td>";
+                              echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"> Terlambat </td>';
                             }
                           } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > $batas_jamdtg && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
-                              echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Pulang Cepat </td>";
+                              echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"> Pulang Cepat </td>';
                             }
                           }
                         } else {
@@ -196,7 +196,7 @@
                           $batas_jamplg = 190000;
 
                           if (in_array($absen->tanggal, $ramadhanformatslash)) {
-                            $upper_plgcepat = 153000;
+                            $lower_telatdtg = 80100;
                             $upper_telatdtg = 90100;
                             $upper_plgcepat = 153000;
                           }
@@ -208,11 +208,11 @@
 
                           if ($absen->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
-                              echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Alpa </td>";
+                              echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"> Alpa </td>';
                             }
                           } else if ($absen->jam_pulang==null || $jamplg > $batas_jamplg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
-                              echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Alpa </td>";
+                              echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"> Alpa </td>';
                             }
                           } else if (($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) && (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || $jamplg < $upper_plgcepat)) {
                             $intertelat = 0;
@@ -223,20 +223,20 @@
                             if (in_array($absen->tanggal, $tanggalintervensipulcep)) $interpulcep++;
                             if ($interbebas==0) {
                               if ($intertelat==0 && $interpulcep==0) {
-                                echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Terlambat & Pulang Cepat </td>";
+                                echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"> Terlambat & Pulang Cepat </td>';
                               } else if ($intertelat!=0 && $interpulcep==0) {
-                                echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Pulang Cepat </td>";
+                                echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"> Pulang Cepat </td>';
                               } else if ($intertelat==0 && $interpulcep!=0) {
-                                echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Terlambat </td>";
+                                echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"> Terlambat </td>';
                               }
                             }
                           } else if ($jamdtg > $lower_telatdtg && $jamdtg < $upper_telatdtg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
-                              echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Terlambat </td>";
+                              echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"> Terlambat </td>';
                             }
                           } else if (($jamplg > $lower_plgcepat && $jamplg < $upper_plgcepat) || (($jamdtg > $batas_jamdtg && $jamdtg < $lower_telatdtg) && $jamplg < $upper_plgcepat)) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
-                              echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'> Pulang Cepat </td>";
+                              echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;"> Pulang Cepat </td>';
                             }
                           }
                         }
@@ -264,15 +264,15 @@
                         if (in_array($absen->mach_id, $mesinapel)) {
                           if ($absen->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
-                              echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Alpa</td>";
+                              echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">Alpa</td>';
                             }
                           } else if ($absen->jam_pulang==null || $jamplg > $batas_jamplg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
-                              echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Alpa</td>";
+                              echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">Alpa</td>';
                             }
                           } else if ($jamdtg > $maxjamdatang && $jamplg > $upper_plgcepat) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
-                              echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Tidak Apel</td>";
+                              echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">Tidak Apel</td>';
                             }
                           } else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
                             $intertelat = 0;
@@ -283,30 +283,30 @@
                             if (in_array($absen->tanggal, $tanggalintervensipulcep)) $interpulcep++;
                             if ($interbebas==0) {
                               if ($intertelat==0 && $interpulcep==0) {
-                                echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Terlambat dan Pulang Cepat</td>";
+                                echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">Terlambat dan Pulang Cepat</td>';
                               } else if ($intertelat!=0 && $interpulcep==0) {
-                                echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Pulang Cepat</td>";
+                                echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">Pulang Cepat</td>';
                               } else if ($intertelat==0 && $interpulcep!=0) {
-                                echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Terlambat</td>";
+                                echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">Terlambat</td>';
                               }
                             }
                           } else if ((($jamdtg < $maxjamdatang && $jamdtg > $batas_jamdtg) && $jamplg < $upper_plgcepat) || (($jamdtg < $maxjamdatang && $jamdtg > $batas_jamdtg) && $jamplg==null)) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
-                              echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Pulang Cepat</td>";
+                              echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">Pulang Cepat</td>';
                             }
                           }
                         } else {
                           if ($absen->jam_datang==null || $jamdtg < $batas_jamdtg || $jamdtg > $upper_telatdtg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
-                              echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Alpa</td>";
+                              echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">Alpa</td>';
                             }
                           } else if ($absen->jam_pulang==null || $jamplg > $batas_jamplg) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensipulcep))) {
-                              echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Alpa</td>";
+                              echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">Alpa</td>';
                             }
                           } else if (($jamdtg <= $maxjamdatang || $jamdtg >= $maxjamdatang) && $jamplg > $upper_plgcepat) {
                             if ((!in_array($absen->tanggal, $tanggalintervensibebas)) && (!in_array($absen->tanggal, $tanggalintervensitelat))) {
-                              echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Tidak Apel</td>";
+                              echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">Tidak Apel</td>';
                             }
                           } else if ($jamdtg > $maxjamdatang && $jamplg < $upper_plgcepat) {
                             $intertelat = 0;
@@ -317,11 +317,11 @@
                             if (in_array($absen->tanggal, $tanggalintervensipulcep)) $interpulcep++;
                             if ($interbebas==0) {
                               if ($intertelat==0 && $interpulcep==0) {
-                                echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Terlambat dan Pulang Cepat</td>";
+                                echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">Terlambat dan Pulang Cepat</td>';
                               } else if ($intertelat!=0 && $interpulcep==0) {
-                                echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Pulang Cepat</td>";
+                                echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">Pulang Cepat</td>';
                               } else if ($intertelat==0 && $interpulcep!=0) {
-                                echo "<td align='center' style='border: 1px solid black;border-collapse: collapse;font-size: 24px;'>Terlambat</td>";
+                                echo '<td align="center" style="border: 1px solid black;border-collapse: collapse;font-size: 24px;">Terlambat</td>';
                               }
                             }
                           }

@@ -280,7 +280,28 @@ class HomeController extends Controller
 
           $absensi = collect($list);
 
-          return view('home', compact('absensi', 'pegawai', 'tanggalBulan', 'intervensi', 'hariLibur', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'bulan', 'tanggalBulan', 'tanggalapel', 'mesinapel', 'tanggalintervensitelat', 'tanggalintervensipulcep', 'tanggalintervensibebas'));
+          // --- RAMADHAN 2017 ---
+          $periodramadhan = new DatePeriod(
+               new DateTime("2017-05-27"),
+               new DateInterval('P1D'),
+               new DateTime("2017-06-26 23:59:59")
+          );
+          $daterangeramadhan = array();
+          foreach($periodramadhan as $date) {$daterangeramadhan[] = $date->format('Y-m-d'); }
+          $ramadhan = array();
+          foreach ($daterangeramadhan as $key) {
+            if (date('N', strtotime($key)) < 6) {
+              $ramadhan[] = $key;
+            }
+          }
+          $ramadhanformatslash = array();
+          foreach ($ramadhan as $key) {
+            $tglnew = explode('-', $key);
+            $tglformat = $tglnew[2].'/'.$tglnew[1].'/'.$tglnew[0];
+            $ramadhanformatslash[] = $tglformat;
+          }
+
+          return view('home', compact('absensi', 'pegawai', 'tanggalBulan', 'intervensi', 'hariLibur', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'bulan', 'tanggalBulan', 'tanggalapel', 'mesinapel', 'tanggalintervensitelat', 'tanggalintervensipulcep', 'tanggalintervensibebas', 'ramadhanformatslash'));
         }
     }
 
