@@ -44,22 +44,11 @@ class HomeController extends Controller
         $fid = Auth::user()->fid;
         $skpd_id   = Auth::user()->skpd_id;
 
-        if(session('status') == 'administrator' || session('status') == 'superuser' || session('status') == 'sekretaris')
-        {
-          $jumlahPegawai = pegawai::count();
-          $jumlahTPP = DB::select("select sum(preson_pegawais.tpp_dibayarkan) as jumlah_tpp from preson_pegawais");
-        }
-        elseif(session('status') == 'admin')
-        {
-          $jumlahPegawai = pegawai::where('skpd_id', Auth::user()->skpd_id)->count();
-          $jumlahTPP = DB::select("select sum(preson_pegawais.tpp_dibayarkan) as jumlah_tpp from preson_pegawais where preson_pegawais.skpd_id = '$skpd_id'");
-        }
-
         $tpp = pegawai::where('id', $pegawai_id)->select('tpp_dibayarkan', 'fid')->first();
 
         $filterSKPD = pegawai::join('preson_skpd', 'preson_skpd.id', '=', 'preson_pegawais.skpd_id')
-                            ->select('preson_skpd.*', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.fid', 'preson_pegawais.tpp_dibayarkan')
-                            ->get();
+        ->select('preson_skpd.*', 'preson_pegawais.nama as nama_pegawai', 'preson_pegawais.fid', 'preson_pegawais.tpp_dibayarkan')
+        ->get();
 
         $month = date('m');
         $year = date('Y');
@@ -70,78 +59,79 @@ class HomeController extends Controller
         $end_time = strtotime("+1 month", $start_time);
         $pegawai = pegawai::select('preson_skpd.nama as nama_skpd')->join('preson_skpd', 'preson_pegawais.skpd_id', '=', 'preson_skpd.id')->get();
 
-
         if(session('status') == 'administrator' || session('status') == 'superuser' || session('status') == 'sekretaris')
         {
+          $jumlahPegawai = pegawai::count();
+          $jumlahTPP = DB::select("SELECT sum(preson_pegawais.tpp_dibayarkan) as jumlah_tpp from preson_pegawais");
+          $jumlahTPPDibayarkan = DB::select("SELECT sum(jumlah_tpp) as jumlah_tpp FROM preson_jurnal WHERE bulan = $month AND tahun = $year");
+
           $tanggalini = date('d/m/Y');
           $tanggalinter = date('Y-m-d');
 
-          $jumlahintervensi = DB::select("select c.nama, count(*) as 'jumlah_intervensi'
-                                          from preson_intervensis a
-                                          join preson_pegawais b on a.pegawai_id = b.id
-                                          join preson_skpd c on b.skpd_id = c.id
-                                          where a.tanggal_mulai <= '$tanggalinter'
-                                          and a.tanggal_akhir >= '$tanggalinter'
-                                          group by c.nama");
+          $totalBaru = DB::select("SELECT skpd.id, skpd.nama as nama_skpd,
+                                    IFNULL(tabel_jumlah_pegawai.jumlah_pegawai, 0) as jumlah_pegawai,
+                                    IFNULL(tabel_jumlah_hadir.jumlah_hadir, 0) as jumlah_hadir,
+                                    IFNULL(jumlah_pegawai - jumlah_hadir, 0) as jumlah_bolos,
+                                    IFNULL(tabel_jumlah_intervensi.jumlah_intervensi, 0) as jumlah_intervensi
+                                    -- , last_update
 
-          $jumlahPegawaiSKPD = DB::select("select b.nama as skpd, a.skpd_id, count(a.skpd_id) as jumlah_pegawai
-                                          from preson_pegawais a, preson_skpd b
-                                          where a.skpd_id = b.id
-                                          and b.status = 1
-                                          group by skpd_id");
+                                	FROM (select id, nama from preson_skpd where status = 1) as skpd
 
-          $absensi = DB::select("select id, skpd, count(*) as 'jumlah_hadir'
-                                  from
-                                  (select c.id, c.nama as skpd, count(*) as kk
-                                  from ta_log a join preson_pegawais b
-                                  on a.fid = b.fid
-                                  join preson_skpd c on b.skpd_id = c.id
-                                  where tanggal_log='$tanggalini'
-                                  group by c.nama, a.fid) as ab
-                                  group by skpd");
+                                	LEFT OUTER JOIN (select b.nama as skpd, a.skpd_id, b.id, count(a.skpd_id) as jumlah_pegawai
+                                										from preson_pegawais a, preson_skpd b
+                                										where a.skpd_id = b.id
+                                										and b.status = 1
+                                										group by skpd_id) as tabel_jumlah_pegawai
+                                	ON skpd.id = tabel_jumlah_pegawai.id
 
-          $skpdall = DB::select("select a.id as 'id_skpd', a.nama as 'nama_skpd', b.nama as 'nama_pegawai', count(*) as 'jumlah_pegawai'
-                                  from preson_skpd a
-                                  left join preson_pegawais b
-                                  on a.id = b.skpd_id
-                                  where a.status = 1
-                                  group by a.nama");
+                                	LEFT OUTER JOIN (SELECT id, skpd, count(*) as jumlah_hadir
+                                										FROM
+                                											(select c.id, c.nama as skpd, count(*) as kk
+                                												from preson_log a join preson_pegawais b
+                                												on a.fid = b.fid
+                                												join preson_skpd c on b.skpd_id = c.id
+                                												where a.tanggal = '$tanggalini'
+                                												group by c.nama, a.fid) as ab
+                                										GROUP BY skpd) as tabel_jumlah_hadir
+                                	ON skpd.id = tabel_jumlah_hadir.id
 
-          $totalHadir = collect($absensi)->sum('jumlah_hadir');
+                                	LEFT OUTER JOIN (select c.id, c.nama, count(*) as 'jumlah_intervensi'
+                                										from preson_intervensis a
+                                										join preson_pegawais b on a.pegawai_id = b.id
+                                										join preson_skpd c on b.skpd_id = c.id
+                                										where a.tanggal_mulai <= '$tanggalinter'
+                                										and a.tanggal_akhir >= '$tanggalinter'
+                                										group by c.nama) as tabel_jumlah_intervensi
+                                	ON skpd.id = tabel_jumlah_intervensi.id
 
-          $lastUpdate = DB::select("select c.id, c.nama, max(str_to_date(a.DateTime, '%d/%m/%Y %H:%i:%s')) as last_update
-                                    from ta_log a, preson_pegawais b, preson_skpd c
-                                    where c.id = b.skpd_id
-                                    and b.fid = a.Fid
-                                    GROUP BY c.id");
+                                	-- LEFT OUTER JOIN (select c.id, c.nama, max(str_to_date(a.datetime, '%d/%m/%Y %H:%i:%s')) as last_update
+                                	-- 									from preson_log a, preson_pegawais b, preson_skpd c
+                                	-- 									where c.id = b.skpd_id
+                                	-- 									and b.fid = a.fid
+                                	-- 									and a.tanggal = '$tanggalini'
+                                	-- 									GROUP BY c.id) as tabel_last_update
+                                	-- ON skpd.id = tabel_last_update.id
+                                order by skpd.nama ASC");
 
-          return view('home', compact('skpdall', 'absensi', 'pegawai', 'jumlahintervensi', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'jumlahPegawaiSKPD', 'lastUpdate', 'totalHadir'));
+          $totalHadir = collect($totalBaru)->sum('jumlah_hadir');
+
+          return view('home', compact('jumlahPegawai', 'tpp', 'jumlahTPP', 'totalHadir', 'jumlahPegawaiSKPD', 'totalBaru', 'jumlahTPPDibayarkan'));
+
         }
-        else if(session('status') == 'admin')
+        elseif(session('status') == 'admin')
         {
+          $jumlahPegawai = pegawai::where('skpd_id', Auth::user()->skpd_id)->count();
+          $jumlahTPP = DB::select("select sum(preson_pegawais.tpp_dibayarkan) as jumlah_tpp from preson_pegawais where preson_pegawais.skpd_id = '$skpd_id'");
+          $jumlahTPPDibayarkan = DB::select("SELECT sum(jumlah_tpp) as jumlah_tpp FROM preson_jurnal WHERE bulan = $month AND tahun = $year AND skpd_id = '$skpd_id'");
+
+
           $tanggalini = date('d/m/Y');
-          $absensi = DB::select("SELECT pegawai.fid, pegawai.nama as nama_pegawai, Tanggal_Log,
-                                				tabel_Jam_Datang.Jam_Datang, tabel_Jam_Pulang.Jam_Pulang
-                                	FROM (select nama, fid from preson_pegawais where preson_pegawais.skpd_id = $skpd_id) as pegawai
-                                	LEFT OUTER JOIN (select Tanggal_Log, ta_log.Fid as Fid from ta_log, preson_pegawais
-                                										where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
-                                 									  and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
-                                										and ta_log.Fid = preson_pegawais.fid
-                                										and preson_pegawais.skpd_id = $skpd_id) as tabel_Tanggal_Log
-                                	ON pegawai.fid = tabel_Tanggal_Log.Fid
-                                	LEFT OUTER JOIN (select Jam_Log as Jam_Datang, ta_log.Fid as Fid from ta_log, preson_pegawais
-                                										where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
-                                										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') < '10:00:00'
-                                										and ta_log.Fid = preson_pegawais.fid
-                                										and preson_pegawais.skpd_id = $skpd_id) as tabel_Jam_Datang
-                                	ON pegawai.fid = tabel_Jam_Datang.Fid
-                                	LEFT OUTER JOIN (select Jam_Log as Jam_Pulang, ta_log.Fid as Fid from ta_log, preson_pegawais
-                                										where DATE_FORMAT(STR_TO_DATE(Tanggal_Log,'%d/%m/%Y'), '%d/%m/%Y') = '$tanggalini'
-                                										and TIME_FORMAT(STR_TO_DATE(Jam_Log,'%H:%i:%s'), '%H:%i:%s') > '14:00:00'
-                                										and ta_log.Fid = preson_pegawais.fid
-                                										and preson_pegawais.skpd_id = $skpd_id) as tabel_Jam_Pulang
-                                	ON pegawai.fid = tabel_Jam_Pulang.Fid
-                                	GROUP BY nama_pegawai");
+          $absensi = DB::select("SELECT a.fid, a.nama as nama_pegawai, b.tanggal, b.jam_datang, b.jam_pulang
+                                  FROM preson_pegawais a, preson_log b
+                                  WHERE a.fid = b.fid
+                                  AND b.tanggal = '$tanggalini'
+                                  AND a.skpd_id = '$skpd_id'
+                                  ORDER BY jam_datang ASC");
           $absensi = collect($absensi);
 
           $totalHadir = DB::select("select count(*) as 'jumlah_hadir'
@@ -154,15 +144,17 @@ class HomeController extends Controller
                                     and b.skpd_id = $skpd_id
                                     group by c.nama, a.fid) as ab");
           $totalHadir = $totalHadir[0]->jumlah_hadir;
+
           $getunreadintervensi = intervensi::join('preson_pegawais', 'preson_pegawais.id', '=', 'preson_intervensis.pegawai_id')
                                              ->where('preson_intervensis.flag_view', 0)
                                              ->where('preson_pegawais.skpd_id', Auth::user()->skpd_id)
                                              ->where('preson_intervensis.pegawai_id', '!=', Auth::user()->pegawai_id)
                                              ->count();
 
-          return view('home', compact('getunreadintervensi', 'absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'totalHadir'));
-        }else{
-
+          return view('home', compact('getunreadintervensi', 'absensi', 'pegawai', 'list', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'totalHadir', 'jumlahTPPDibayarkan'));
+        }
+        else
+        {
           $fid = pegawai::select('id','fid','skpd_id')->where('nip_sapk', $nip_sapk)->first();
           $bulan = $month."/".$year;
           $bulanexplode = explode("/", $bulan);
@@ -303,6 +295,7 @@ class HomeController extends Controller
 
           return view('home', compact('absensi', 'pegawai', 'tanggalBulan', 'intervensi', 'hariLibur', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'bulan', 'tanggalBulan', 'tanggalapel', 'mesinapel', 'tanggalintervensitelat', 'tanggalintervensipulcep', 'tanggalintervensibebas', 'ramadhanformatslash'));
         }
+
     }
 
     public function detailabsensi($id)
@@ -314,15 +307,16 @@ class HomeController extends Controller
       }
 
       $tanggalini = date('d/m/Y');
-      $pegawai = pegawai::where('skpd_id', $id)->get();
-      $absensi = DB::select("select a.fid, nama, tanggal_log, jam_log
-                              from (select fid, nama from preson_pegawais where skpd_id = $id) as a
-                              left join ta_log b on a.fid = b.fid
-                              where b.tanggal_log = '$tanggalini'");
+
+      $logBaru = DB::select("SELECT a.fid, a.nama, b.tanggal, b.jam_datang, b.jam_pulang
+                              FROM preson_pegawais a, preson_log b
+                              WHERE a.fid = b.fid
+                              AND a.skpd_id = $getskpd->id
+                              AND b.tanggal = '$tanggalini'
+                              ORDER BY b.jam_datang ASC");
 
       return view('pages.absensi.detailabsen')
-        ->with('absensi', $absensi)
-        ->with('pegawai', $pegawai)
+        ->with('logBaru', $logBaru)
         ->with('getskpd', $getskpd);
     }
 
