@@ -155,6 +155,8 @@ class HomeController extends Controller
         }
         else
         {
+          $jumlahTPPDibayarkan = DB::select("SELECT sum(jumlah_tpp) as jumlah_tpp FROM preson_jurnal WHERE bulan = $month AND tahun = $year AND skpd_id = '$skpd_id'");
+
           $fid = pegawai::select('id','fid','skpd_id')->where('nip_sapk', $nip_sapk)->first();
           $bulan = $month."/".$year;
           $bulanexplode = explode("/", $bulan);
@@ -293,7 +295,7 @@ class HomeController extends Controller
             $ramadhanformatslash[] = $tglformat;
           }
 
-          return view('home', compact('absensi', 'pegawai', 'tanggalBulan', 'intervensi', 'hariLibur', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'bulan', 'tanggalBulan', 'tanggalapel', 'mesinapel', 'tanggalintervensitelat', 'tanggalintervensipulcep', 'tanggalintervensibebas', 'ramadhanformatslash'));
+          return view('home', compact('absensi', 'pegawai', 'tanggalBulan', 'intervensi', 'hariLibur', 'tpp', 'jumlahPegawai', 'jumlahTPP', 'bulan', 'tanggalBulan', 'tanggalapel', 'mesinapel', 'tanggalintervensitelat', 'tanggalintervensipulcep', 'tanggalintervensibebas', 'ramadhanformatslash', 'jumlahTPPDibayarkan'));
         }
 
     }
@@ -309,10 +311,9 @@ class HomeController extends Controller
       $tanggalini = date('d/m/Y');
 
       $logBaru = DB::select("SELECT a.fid, a.nama, b.tanggal, b.jam_datang, b.jam_pulang
-                              FROM preson_pegawais a, preson_log b
-                              WHERE a.fid = b.fid
-                              AND a.skpd_id = $getskpd->id
-                              AND b.tanggal = '$tanggalini'
+                              from (select fid, nama from preson_pegawais where skpd_id = '$getskpd->id') as a
+                              left join preson_log b on a.fid = b.fid
+                              where b.tanggal = '$tanggalini'
                               ORDER BY b.jam_datang ASC");
 
       return view('pages.absensi.detailabsen')

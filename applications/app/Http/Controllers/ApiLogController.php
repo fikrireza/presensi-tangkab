@@ -40,11 +40,27 @@ class ApiLogController extends Controller
       if((!$api_keys->isEmpty()) && ($request->Fid != null) && ($request->Tanggal_Log != null) && ($request->Jam_Log != null) && ($request->DateTime != null)){
 
         // Mach_id 801 Khusus RSUD Balaraja
-        $save = DB::select("INSERT INTO ta_log (Id, Mach_id, Fid, Tanggal_Log, Jam_Log, DateTime)
-                            SELECT * FROM (SELECT '', '801', '$request->Fid', '$request->Tanggal_Log', '$request->Jam_Log', '$request->DateTime') AS tmp
-                            WHERE NOT EXISTS (
-                            	SELECT * FROM ta_log WHERE Mach_id = '801' AND Fid = '$request->Fid' AND Tanggal_Log = '$request->Tanggal_Log' AND Jam_Log = '$request->Jam_Log' AND DateTime = '$request->DateTime'
-                            ) LIMIT 1;");
+        // $save = DB::select("INSERT INTO ta_log (Id, Mach_id, Fid, Tanggal_Log, Jam_Log, DateTime)
+        //                     SELECT * FROM (SELECT '', '801', '$request->Fid', '$request->Tanggal_Log', '$request->Jam_Log', '$request->DateTime') AS tmp
+        //                     WHERE NOT EXISTS (
+        //                     	SELECT * FROM ta_log WHERE Mach_id = '801' AND Fid = '$request->Fid' AND Tanggal_Log = '$request->Tanggal_Log' AND Jam_Log = '$request->Jam_Log' AND DateTime = '$request->DateTime'
+        //                     ) LIMIT 1;");
+        $save = TaLog::where([
+                                ['Mach_id', '=', '801'],
+                                ['Fid', '=', $request->Fid],
+                                ['Tanggal_Log', '=', $request->Tanggal_Log],
+                                ['Jam_Log', '=', $request->Jam_Log],
+                                ['DateTime', '=', $request->DateTime]
+                            ])->first();
+        if(!$save){
+          $new = new TaLog;
+          $new->Mach_id = '801';
+          $new->Fid = $request->Fid;
+          $new->Tanggal_Log = $request->Tanggal_Log;
+          $new->Jam_Log = $request->Jam_Log;
+          $new->DateTime = $request->DateTime;
+          $new->save();
+        }
 
         $data  = [ 'Fid'  => $request->input('Fid'),
                   'Tanggal_Log'  => $request->input('Tanggal_Log'),
