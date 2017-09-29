@@ -46,12 +46,12 @@ class HomeController extends Controller
 
         if(session('status') == 'administrator' || session('status') == 'superuser' || session('status') == 'sekretaris')
         {
-          $jumlahPegawai = pegawai::count();
+          $jumlahPegawai = pegawai::where('status', 1)->count();
           $jumlahTPP = DB::select("select sum(preson_pegawais.tpp_dibayarkan) as jumlah_tpp from preson_pegawais");
         }
         elseif(session('status') == 'admin')
         {
-          $jumlahPegawai = pegawai::where('skpd_id', Auth::user()->skpd_id)->count();
+          $jumlahPegawai = pegawai::where('skpd_id', Auth::user()->skpd_id)->where('status', 1)->count();
           $jumlahTPP = DB::select("select sum(preson_pegawais.tpp_dibayarkan) as jumlah_tpp from preson_pegawais where preson_pegawais.skpd_id = '$skpd_id'");
         }
 
