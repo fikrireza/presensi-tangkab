@@ -24,6 +24,16 @@ use Carbon\Carbon;
 
 class IntervensiController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
       $intervensi = intervensi::where('pegawai_id', Auth::user()->pegawai_id)->orderby('id', 'desc')->get();

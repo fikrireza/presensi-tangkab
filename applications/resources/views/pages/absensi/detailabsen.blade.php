@@ -46,7 +46,7 @@
             @php
               $no=1;
             @endphp
-            @foreach ($pegawai as $key)
+            {{-- @foreach ($pegawai as $key)
               <tr>
                 <td>{{$no}}</td>
                 <td>{{ $key->nama }}</td>
@@ -110,6 +110,18 @@
               @php
                 $no++;
               @endphp
+            @endforeach --}}
+            @foreach ($logBaru as $key)
+            <tr>
+              <td>{{ $no }}</td>
+              <td>{{ $key->nama }}</td>
+              <td>{{ $key->tanggal }}</td>
+              <td>{{ $key->jam_datang ? $key->jam_datang : 'x' }}</td>
+              <td>{{ $key->jam_pulang ? $key->jam_pulang : 'x'}}</td>
+            </tr>
+            @php
+              $no++;
+            @endphp
             @endforeach
           </tbody>
         </table>

@@ -48,6 +48,14 @@
         </div>
       </div>
     </div>
+    <div class="col-lg-3 col-md-3 col-xs-12">
+      <div class="small-box bg-maroon">
+        <div class="inner">
+          <h3><sup style="font-size: 20px">Rp. {{ number_format($jumlahTPPDibayarkan[0]->jumlah_tpp,0,',','.')}},-</sup></h3>
+          <p>Yang Dibayarkan</p>
+        </div>
+      </div>
+    </div>
     @endif
     @if (session('status') == 'pegawai' || session('status') == 'bpkad')
     <div class="col-lg-3 col-md-3 col-xs-12">
@@ -62,6 +70,16 @@
       <div class="small-box bg-maroon">
         <div class="inner">
           <h3><sup style="font-size: 20px">Rp. 0,-</sup></h3>
+          <p>Yang Dibayarkan</p>
+        </div>
+      </div>
+    </div>
+    @endif
+    @if (session('status') == 'bpkad')
+    <div class="col-lg-3 col-md-3 col-xs-12">
+      <div class="small-box bg-maroon">
+        <div class="inner">
+          <h3><sup style="font-size: 20px">Rp. {{ number_format($jumlahTPPDibayarkan[0]->jumlah_tpp,0,',','.')}},-</sup></h3>
           <p>Yang Dibayarkan</p>
         </div>
       </div>
@@ -123,8 +141,8 @@
               <td>{{ $key->nama_pegawai }}</td>
               <td>{{ $dayList[$day] }}</td>
               <td>{{ $today = date('d/m/Y')}}</td>
-              <td>@if($key->Jam_Datang != null) {{ $key->Jam_Datang }} @else x @endif</td>
-              <td>@if($key->Jam_Pulang != null) {{ $key->Jam_Pulang }} @else x @endif</td>
+              <td>@if($key->jam_datang != null) {{ $key->jam_datang }} @else x @endif</td>
+              <td>@if($key->jam_pulang != null) {{ $key->jam_pulang }} @else x @endif</td>
             </tr>
             <?php $no++; ?>
             @endforeach
@@ -140,7 +158,7 @@
               <th>Jumlah Hadir</th>
               <th>Jumlah Absen</th>
               <th>Jumlah Intervensi</th>
-              <th>Tanggal Update</th>
+              {{-- <th>Tanggal Update</th> --}}
             </tr>
           </thead>
           <tfoot>
@@ -151,93 +169,27 @@
               <th></th>
               <th></th>
               <th></th>
-              <th></th>
+              {{-- <th></th> --}}
             </tr>
           </tfoot>
           <tbody>
             <?php $no = 1; ?>
-            @foreach ($skpdall as $key)
-              <tr>
-                <td>{{$no}}</td>
-                <td><a href="{{ route('detail.absensi', ['id' => $key->id_skpd])}}">{{$key->nama_skpd}}</a></td>
-                <td>
-                  @if (!is_null($key->nama_pegawai))
-                    {{$key->jumlah_pegawai}}
-                  @else
-                    0
-                  @endif
-                </td>
-                <td>
-                  @php
-                    $flagjumlahhadir=0;
-                    $jumlahhadir=0;
-                  @endphp
-                  @foreach ($absensi as $keys)
-                    @if ($keys->id == $key->id_skpd)
-                      {{$keys->jumlah_hadir}}
-                      @php
-                        $flagjumlahhadir=1;
-                        $jumlahhadir = $keys->jumlah_hadir
-                      @endphp
-                    @endif
-                  @endforeach
-                  @if ($flagjumlahhadir==0)
-                    {{$flagjumlahhadir}}
-                  @endif
-                </td>
-                <td>
-                  @php
-                    $count=0;
-                  @endphp
-                  @foreach ($pegawai as $keys)
-                    @if ($key->nama_skpd == $keys->nama_skpd)
-                      @php
-                        $count++;
-                      @endphp
-                    @endif
-                  @endforeach
-                  @php
-                    $jumlahabsen = $count - $jumlahhadir;
-                    echo $jumlahabsen;
-                  @endphp
-                </td>
-                <td>
-                  @php
-                    $countintervensi = 0;
-                  @endphp
-                  @foreach ($jumlahintervensi as $keys)
-                    @if ($keys->nama == $key->nama_skpd)
-                      @php
-                        $countintervensi++;
-                      @endphp
-                    @endif
-                  @endforeach
-                  {{$countintervensi}}
-                </td>
-                <td>
-                  @php
-                    $flagtanggalupdate=0;
-                  @endphp
-                  @foreach ($lastUpdate as $update)
-                    @if ($update->id == $key->id_skpd)
-                      {{ date("d-m-Y H:i:s", strtotime($update->last_update))}}
-                      @php
-                        $flagtanggalupdate=1;
-                      @endphp
-                    @endif
-                  @endforeach
-                  @if ($flagtanggalupdate==0)
-                    -
-                  @endif
-                </td>
-              </tr>
-              @php
-                $no++;
-              @endphp
+            @foreach ($totalBaru as $key)
+            <tr>
+              <td>{{ $no }}</td>
+              <td><a href="{{ route('detail.absensi', ['id' => $key->id])}}">{{$key->nama_skpd}}</a></td>
+              <td>{{ $key->jumlah_pegawai }}</td>
+              <td>{{ $key->jumlah_hadir }}</td>
+              <td>{{ $key->jumlah_bolos }}</td>
+              <td>{{ $key->jumlah_intervensi }}</td>
+              {{-- <td>{{ $key->last_update }}</td> --}}
+            </tr>
+            @php
+              $no++
+            @endphp
             @endforeach
           </tbody>
         </table>
-
         @elseif(session('status') == 'pegawai' || session('status') == 'bpkad')
           <table class="table table-bordered">
             <thead>
