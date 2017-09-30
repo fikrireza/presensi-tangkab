@@ -588,18 +588,18 @@ class JurnalController extends Controller
 
           $rowdata["telat"] = $telat;
           $potongtpptelat = ($pegawai->tpp_dibayarkan*60/100)*2/100*$telat;
-          $rowdata["potongantelat"] = number_format($potongtpptelat, 0, '.', '.');
-          $totalpotongantpp += $potongtpptelat;
+          $rowdata["potongantelat"] = number_format(floor($potongtpptelat), 0, '.', '.');
+          $totalpotongantpp += floor($potongtpptelat);
 
           $rowdata["pulangcepat"] = $pulangcepat;
           $potongtpppulcep = ($pegawai->tpp_dibayarkan*60/100)*2/100*$pulangcepat;
-          $rowdata["potonganpulangcepat"] = number_format($potongtpppulcep, 0, '.', '.');
-          $totalpotongantpp += $potongtpppulcep;
+          $rowdata["potonganpulangcepat"] = number_format(floor($potongtpppulcep), 0, '.', '.');
+          $totalpotongantpp += floor($potongtpppulcep);
 
           $rowdata["telatpulangcepat"] = $telatpulangcepat;
           $potongtppdtpc = ($pegawai->tpp_dibayarkan*60/100)*3/100*$telatpulangcepat;
-          $rowdata["potongantelatpulangcepat"] = number_format($potongtppdtpc, 0, '.', '.');
-          $totalpotongantpp += $potongtppdtpc;
+          $rowdata["potongantelatpulangcepat"] = number_format(floor($potongtppdtpc), 0, '.', '.');
+          $totalpotongantpp += floor($potongtppdtpc);
 
           $rowdata["tidakhadir"] = $totalbolos;
           $potongantppbolos = ($pegawai->tpp_dibayarkan*100/100)*3/100*$totalbolos;
