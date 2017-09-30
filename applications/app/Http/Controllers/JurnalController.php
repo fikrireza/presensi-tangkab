@@ -603,8 +603,8 @@ class JurnalController extends Controller
 
           $rowdata["tidakhadir"] = $totalbolos;
           $potongantppbolos = ($pegawai->tpp_dibayarkan*100/100)*3/100*$totalbolos;
-          $rowdata["potongantidakhadir"] = number_format($potongantppbolos, 0, '.', '.');
-          $totalpotongantpp += $potongantppbolos;
+          $rowdata["potongantidakhadir"] = number_format(floor($potongantppbolos), 0, '.', '.');
+          $totalpotongantpp += floor($potongantppbolos);
 
           $jumlahtidakapelempatkali = 0;
           if ($tidakapel>=4) {

@@ -532,8 +532,8 @@ class LaporanController extends Controller
 
         $rowdata["tidakhadir"] = $totalbolos;
         $potongantppbolos = ($pegawai->tpp_dibayarkan*100/100)*3/100*$totalbolos;
-        $rowdata["potongantidakhadir"] = number_format(round($potongantppbolos), 0, '.', '.');
-        $totalpotongantpp += round($potongantppbolos);
+        $rowdata["potongantidakhadir"] = number_format(floor($potongantppbolos), 0, '.', '.');
+        $totalpotongantpp += floor($potongantppbolos);
 
         $jumlahtidakapelempatkali = 0;
         if ($tidakapel>=4) {
@@ -1070,8 +1070,8 @@ class LaporanController extends Controller
 
         $rowdata["tidakhadir"] = $totalbolos;
         $potongantppbolos = ($pegawai->tpp_dibayarkan*100/100)*3/100*$totalbolos;
-        $rowdata["potongantidakhadir"] = number_format(round($potongantppbolos), 0, '.', '.');
-        $totalpotongantpp += round($potongantppbolos);
+        $rowdata["potongantidakhadir"] = number_format(floor($potongantppbolos), 0, '.', '.');
+        $totalpotongantpp += floor($potongantppbolos);
 
         $jumlahtidakapelempatkali = 0;
         if ($tidakapel>=4) {
@@ -1655,8 +1655,8 @@ class LaporanController extends Controller
 
         $rowdata["tidakhadir"] = $totalbolos;
         $potongantppbolos = ($tppdibayarkan*100/100)*3/100*$totalbolos;
-        $rowdata["potongantidakhadir"] = number_format(round($potongantppbolos), '0', '.', '.');
-        $totalpotongantpp += round($potongantppbolos);
+        $rowdata["potongantidakhadir"] = number_format(floor($potongantppbolos), '0', '.', '.');
+        $totalpotongantpp += floor($potongantppbolos);
 
         $jumlahtidakapelempatkali = 0;
         if ($tidakapel>=4) {
@@ -2238,8 +2238,8 @@ class LaporanController extends Controller
 
         $rowdata["tidakhadir"] = $totalbolos;
         $potongantppbolos = ($tppdibayarkan*100/100)*3/100*$totalbolos;
-        $rowdata["potongantidakhadir"] = number_format(round($potongantppbolos), '0', '.', '.');
-        $totalpotongantpp += round($potongantppbolos);
+        $rowdata["potongantidakhadir"] = number_format(floor($potongantppbolos), '0', '.', '.');
+        $totalpotongantpp += floor($potongantppbolos);
 
         $jumlahtidakapelempatkali = 0;
         if ($tidakapel>=4) {
